@@ -16,8 +16,8 @@ export class UserList {
   otp: string;
   otp_expiration: string;
   corporate_id: string;
-  dealer_code: number | undefined | null;
-  dealer_id: string;
+  // dealer_code: number | undefined | null;
+  // dealer_id: string;
   role_id: string;
   role_name: string;
   team_id: string;
@@ -26,7 +26,7 @@ export class UserList {
   lname: string;
 
   team?: Teams;
-  role: any;
+  role: string;
 
   constructor() {
     this.user_id = '';
@@ -39,13 +39,16 @@ export class UserList {
     this.otp_validated = '';
     this.otp = '';
     this.otp_expiration = '';
-    this.dealer_code = undefined;
+    // this.dealer_code = undefined;
     this.corporate_id = '';
-    this.dealer_id = '';
+    // this.dealer_id = '';
     this.role_id = '';
     this.role_name = '';
-    (this.team_id = ''), (this.team_name = '');
+    this.team_id = '';
+    this.team_name = '';
     this.fname = '';
     this.lname = '';
+
+    this.role = '';
   }
 }

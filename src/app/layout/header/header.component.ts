@@ -1,4 +1,11 @@
-import { Component, ChangeDetectionStrategy , Inject, OnInit, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  ChangeDetectorRef,
+} from '@angular/core';
 import {
   ActivatedRoute,
   NavigationEnd,
@@ -35,7 +42,7 @@ export class HeaderComponent implements OnInit {
     this.context.onSideBarClick$.subscribe(({ pageTitle }) => {
       console.log('Current Heading Updated:', pageTitle);
       this.currentHeading = pageTitle;
-         this.cdr.markForCheck();
+      this.cdr.markForCheck();
     });
 
     this.updateTitle();

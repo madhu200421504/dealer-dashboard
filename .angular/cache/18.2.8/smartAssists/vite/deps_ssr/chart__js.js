@@ -599,7 +599,7 @@ var Color = class _Color {
   }
 };
 
-// node_modules/chart.js/dist/chunks/helpers.segment.js
+// node_modules/chart.js/dist/chunks/helpers.dataset.js
 function noop() {
 }
 var uid = /* @__PURE__ */ (() => {
@@ -3008,6 +3008,37 @@ function styleChanged(style, prevStyle) {
     return cache.indexOf(value);
   };
   return JSON.stringify(style, replacer) !== JSON.stringify(prevStyle, replacer);
+}
+function getSizeForArea(scale, chartArea, field) {
+  return scale.options.clip ? scale[field] : chartArea[field];
+}
+function getDatasetArea(meta, chartArea) {
+  const {
+    xScale,
+    yScale
+  } = meta;
+  if (xScale && yScale) {
+    return {
+      left: getSizeForArea(xScale, chartArea, "left"),
+      right: getSizeForArea(xScale, chartArea, "right"),
+      top: getSizeForArea(yScale, chartArea, "top"),
+      bottom: getSizeForArea(yScale, chartArea, "bottom")
+    };
+  }
+  return chartArea;
+}
+function getDatasetClipArea(chart, meta) {
+  const clip = meta._clip;
+  if (clip.disabled) {
+    return false;
+  }
+  const area = getDatasetArea(meta, chart.chartArea);
+  return {
+    left: clip.left === false ? 0 : area.left - (clip.left === true ? 0 : clip.left),
+    right: clip.right === false ? chart.width : area.right + (clip.right === true ? 0 : clip.right),
+    top: clip.top === false ? 0 : area.top - (clip.top === true ? 0 : clip.top),
+    bottom: clip.bottom === false ? chart.height : area.bottom + (clip.bottom === true ? 0 : clip.bottom)
+  };
 }
 
 // node_modules/chart.js/dist/chart.js
@@ -8615,7 +8646,7 @@ function needContext(proxy, names2) {
   }
   return false;
 }
-var version = "4.4.8";
+var version = "4.4.9";
 var KNOWN_POSITIONS = ["top", "bottom", "left", "right", "chartArea"];
 function positionIsHorizontal(position, axis) {
   return position === "top" || position === "bottom" || KNOWN_POSITIONS.indexOf(position) === -1 && axis === "x";
@@ -8673,24 +8704,6 @@ function determineLastEvent(e, lastEvent, inChartArea, isClick) {
     return lastEvent;
   }
   return e;
-}
-function getSizeForArea(scale, chartArea, field) {
-  return scale.options.clip ? scale[field] : chartArea[field];
-}
-function getDatasetArea(meta, chartArea) {
-  const {
-    xScale,
-    yScale
-  } = meta;
-  if (xScale && yScale) {
-    return {
-      left: getSizeForArea(xScale, chartArea, "left"),
-      right: getSizeForArea(xScale, chartArea, "right"),
-      top: getSizeForArea(yScale, chartArea, "top"),
-      bottom: getSizeForArea(yScale, chartArea, "bottom")
-    };
-  }
-  return chartArea;
 }
 var Chart = class {
   static defaults = defaults;
@@ -9217,27 +9230,20 @@ var Chart = class {
   }
   _drawDataset(meta) {
     const ctx = this.ctx;
-    const clip = meta._clip;
-    const useClip = !clip.disabled;
-    const area = getDatasetArea(meta, this.chartArea);
     const args = {
       meta,
       index: meta.index,
       cancelable: true
     };
+    const clip = getDatasetClipArea(this, meta);
     if (this.notifyPlugins("beforeDatasetDraw", args) === false) {
       return;
     }
-    if (useClip) {
-      clipArea(ctx, {
-        left: clip.left === false ? 0 : area.left - clip.left,
-        right: clip.right === false ? this.width : area.right + clip.right,
-        top: clip.top === false ? 0 : area.top - clip.top,
-        bottom: clip.bottom === false ? this.height : area.bottom + clip.bottom
-      });
+    if (clip) {
+      clipArea(ctx, clip);
     }
     meta.controller.draw();
-    if (useClip) {
+    if (clip) {
       unclipArea(ctx);
     }
     args.cancelable = false;
@@ -11157,6 +11163,8 @@ function computeCircularBoundary(source) {
 function _drawfill(ctx, source, area) {
   const target = _getTarget(source);
   const {
+    chart,
+    index: index2,
     line,
     scale,
     axis
@@ -11168,6 +11176,8 @@ function _drawfill(ctx, source, area) {
     above = color2,
     below = color2
   } = fillOption || {};
+  const meta = chart.getDatasetMeta(index2);
+  const clip = getDatasetClipArea(chart, meta);
   if (target && line.points.length) {
     clipArea(ctx, area);
     doFill(ctx, {
@@ -11177,7 +11187,8 @@ function _drawfill(ctx, source, area) {
       below,
       area,
       scale,
-      axis
+      axis,
+      clip
     });
     unclipArea(ctx);
   }
@@ -11189,7 +11200,8 @@ function doFill(ctx, cfg) {
     above,
     below,
     area,
-    scale
+    scale,
+    clip
   } = cfg;
   const property = line._loop ? "angle" : cfg.axis;
   ctx.save();
@@ -11200,7 +11212,8 @@ function doFill(ctx, cfg) {
       target,
       color: above,
       scale,
-      property
+      property,
+      clip
     });
     ctx.restore();
     ctx.save();
@@ -11211,7 +11224,8 @@ function doFill(ctx, cfg) {
     target,
     color: below,
     scale,
-    property
+    property,
+    clip
   });
   ctx.restore();
 }
@@ -11256,7 +11270,8 @@ function fill(ctx, cfg) {
     target,
     property,
     color: color2,
-    scale
+    scale,
+    clip
   } = cfg;
   const segments = _segments(line, target, property);
   for (const {
@@ -11273,7 +11288,7 @@ function fill(ctx, cfg) {
     const notShape = target !== true;
     ctx.save();
     ctx.fillStyle = backgroundColor;
-    clipBounds(ctx, scale, notShape && _getBounds(property, start, end));
+    clipBounds(ctx, scale, clip, notShape && _getBounds(property, start, end));
     ctx.beginPath();
     const lineLoop = !!line.pathSegment(ctx, src);
     let loop;
@@ -11297,19 +11312,34 @@ function fill(ctx, cfg) {
     ctx.restore();
   }
 }
-function clipBounds(ctx, scale, bounds) {
-  const {
-    top,
-    bottom
-  } = scale.chart.chartArea;
+function clipBounds(ctx, scale, clip, bounds) {
+  const chartArea = scale.chart.chartArea;
   const {
     property,
     start,
     end
   } = bounds || {};
-  if (property === "x") {
+  if (property === "x" || property === "y") {
+    let left, top, right, bottom;
+    if (property === "x") {
+      left = start;
+      top = chartArea.top;
+      right = end;
+      bottom = chartArea.bottom;
+    } else {
+      left = chartArea.left;
+      top = start;
+      right = chartArea.right;
+      bottom = end;
+    }
     ctx.beginPath();
-    ctx.rect(start, top, end - start, bottom - top);
+    if (clip) {
+      left = Math.max(left, clip.left);
+      right = Math.min(right, clip.right);
+      top = Math.max(top, clip.top);
+      bottom = Math.min(bottom, clip.bottom);
+    }
+    ctx.rect(left, top, right - left, bottom - top);
     ctx.clip();
   }
 }
@@ -14988,15 +15018,15 @@ export {
 
 @kurkle/color/dist/color.esm.js:
   (*!
-   * @kurkle/color v0.3.2
+   * @kurkle/color v0.3.4
    * https://github.com/kurkle/color#readme
-   * (c) 2023 Jukka Kurkela
+   * (c) 2024 Jukka Kurkela
    * Released under the MIT License
    *)
 
-chart.js/dist/chunks/helpers.segment.js:
+chart.js/dist/chunks/helpers.dataset.js:
   (*!
-   * Chart.js v4.4.8
+   * Chart.js v4.4.9
    * https://www.chartjs.org
    * (c) 2025 Chart.js Contributors
    * Released under the MIT License
@@ -15004,7 +15034,7 @@ chart.js/dist/chunks/helpers.segment.js:
 
 chart.js/dist/chart.js:
   (*!
-   * Chart.js v4.4.8
+   * Chart.js v4.4.9
    * https://www.chartjs.org
    * (c) 2025 Chart.js Contributors
    * Released under the MIT License

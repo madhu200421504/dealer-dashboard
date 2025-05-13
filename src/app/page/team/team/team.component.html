@@ -12,12 +12,12 @@
       </ol>
     </div>
     <div class="row mb-5 align-items-center">
-      <div class="col-xl-2 mb-4 mb-xl-0">
+      <!-- <div class="col-xl-2 mb-4 mb-xl-0">
         <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
           data-target=".bd-example-modal-lg"
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons"><i class="fa fa-plus mr-1"></i>Add
           Team</a>
-      </div>
+      </div> -->
       <div class="col-xl-2 mb-4 mb-xl-0">
         <div class="media-body ml-1">
           <p class="mb-1 fs-14 text-center">Total Team</p>
@@ -74,7 +74,7 @@
               <tr>
                 <th>Sr No</th>
                 <th>Team Name</th>
-                <th>Team Lead(email)</th>
+                <!-- <th>Team Lead(email)</th> -->
                 <th>Action</th>
               </tr>
             </thead>
@@ -89,7 +89,7 @@
               <tr *ngFor="let team of teamList(); let i = index">
                 <td>{{ i + 1 }}</td>
                 <td>{{team.team_name }}</td>
-                <td>{{ team.team_lead_email }}</td>
+                <!-- <td>{{ team.team_lead_email }}</td> -->
 
                 <td class="d-flex">
                   <a href="javascript:void(0);" data-target=".bd-example-modal-lg" data-toggle="modal"
@@ -169,7 +169,7 @@
                 (change)="onTeamChange()" [ngClass]="{
                   'is-invalid':
                     useForm.get('team_lead_email')?.touched &&
-                    useForm.get('team__lead_email')?.invalid
+                    useForm.get('team_lead_email')?.invalid
                 }">
                 <option value="" disabled selected>Select team email</option>
 

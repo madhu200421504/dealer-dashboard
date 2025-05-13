@@ -24,6 +24,8 @@ import { AuthGuard } from './component/guard/auth.guard';
 import { RoleComponent } from './page/role/role.component';
 import { DatatableComponent } from './page/datatable/datatable.component';
 import { TeamComponent } from './page/team/team/team.component';
+import { TargetComponent } from './page/target/target.component';
+import { VerifyEmailComponent } from './page/verify-email/verify-email.component';
 
 // export const routes: Routes = [
 //   { path: '', component: Login1Component, pathMatch: 'full' },
@@ -170,9 +172,23 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
+        path: 'target',
+        component: TargetComponent,
+        data: { title: 'target' },
+        canActivate: [AuthGuard],
+      },
+
+      {
         path: 'profile',
         component: ProfileComponent,
         data: { title: 'Profile' },
+        canActivate: [AuthGuard],
+      },
+
+      {
+        path: 'verify-email',
+        component: VerifyEmailComponent,
+        data: { title: 'Verify-email' },
         canActivate: [AuthGuard],
       },
       {

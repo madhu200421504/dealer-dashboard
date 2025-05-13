@@ -7,6 +7,7 @@ import { Leads } from '../class/leads';
 import { UserList } from '../class/multiuser';
 import { Opportunities } from '../class/opportunities';
 import { Role } from '../class/role';
+import { Target } from '../class/target';
 import { Tasks } from '../class/tasks';
 import { Teams } from '../class/team';
 import { Teamss } from '../class/teamss';
@@ -82,6 +83,24 @@ export interface VehicleResponse {
 
   // vehicle: Vehicles[];
 }
+
+export interface TargetResponse {
+  status: number; // ✅ Required to avoid the error
+  message: string;
+  data: {
+    count: number;
+    rows: Target[];
+    enquiries: number;
+    testDrives: number; // Ensure the exact key as in the backend
+    orders: number;
+  };
+
+  // vehicle: Vehicles[];
+}
+
+
+
+
 
 export interface Lead {
   dealer_id: string;
@@ -175,6 +194,8 @@ export interface UserResponse {
     dealer_code: string | number; // Depending on how it's returned (string or number)
     dealer_name: string;
     password?: string;
+    fname: string;
+    lname: string;
   }>;
 }
 
@@ -229,6 +250,48 @@ export interface MultiTeamResponse {
     totalPages: number;
     currentPage: number;
     rows: Teams[];
+  };
+}
+export interface Lead {
+  dealer_id: string;
+  dealer_name: string;
+  value: number;
+  dealer_code: number;
+  location: string;
+  mobile: string;
+  phone: string;
+  rank: number;
+}
+export interface DashboardData {
+  status: number;
+  message: string;
+  data: {
+    leads: { [key: string]: { value: number } };
+    testDrives: { [key: string]: { value: number } };
+    orders: { [key: string]: { value: number } };
+    rankings: {
+      leads: Array<{
+        dealer_id: string;
+        dealer_name: string;
+        value: number;
+        dealer_code: number;
+        location: string;
+        mobile: string;
+        phone: string;
+        rank: number;
+      }>;
+      testDrives: Array<{
+        dealer_id: string;
+        dealer_name: string;
+        value: number;
+        dealer_code: number;
+        location: string;
+        mobile: string;
+        phone: string;
+        rank: number;
+      }>;
+      orders: any[]; // Define a more specific type if possible
+    };
   };
 }
 

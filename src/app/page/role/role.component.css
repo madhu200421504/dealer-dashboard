@@ -1,0 +1,14 @@
+.sidebar {
+  width: 250px; /* Adjust based on sidebar width */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #f8f9fa;
+}
+
+.content-body {
+  margin-left: 350px; /* Match sidebar width */
+  padding: 20px;
+  flex-grow: 1;
+}

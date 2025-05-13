@@ -49,7 +49,6 @@ export class DealerComponent implements OnInit {
   isEditMode: boolean = false;
   useForm: FormGroup;
   previousValue: string = '';
-  
 
   constructor(private modalService: NgbModal) {
     this.useForm = new FormGroup({

@@ -1,12 +1,12 @@
 import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
-  BaseIcon,
-  ChevronRightIcon
-} from "./chunk-IU4W4ORX.js";
-import {
   Tooltip,
   TooltipModule
 } from "./chunk-B6GWA6UN.js";
+import {
+  BaseIcon,
+  ChevronRightIcon
+} from "./chunk-IU4W4ORX.js";
 import "./chunk-BVSBAIWK.js";
 import {
   PrimeTemplate,

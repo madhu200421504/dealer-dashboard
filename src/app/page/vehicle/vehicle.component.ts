@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { DataTablesModule } from 'angular-datatables';
+import { Modal } from 'bootstrap';
+import { ChangeDetectorRef } from '@angular/core';
+
 import { Config } from 'datatables.net';
 import {
   FormControl,
@@ -66,7 +69,7 @@ export class VehicleComponent implements OnInit {
   // Form Group
   useForm: FormGroup = new FormGroup({});
 
-  constructor() {
+  constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.initializeForm();
   }
 
@@ -181,13 +184,9 @@ export class VehicleComponent implements OnInit {
 
   // Close Modal
 
-  closeModal() {
-    ($('.bd-example-modal-lg') as any).modal('hide');
-  }
-
-  openModals() {
-    ($('.bd-example-modal-sm') as any).modal('show');
-  }
+  // openModals() {
+  //   ($('.bd-example-modal-sm') as any).modal('show');
+  // }
 
   // Save New Vehicle
   // onSave(): void {
@@ -339,7 +338,7 @@ export class VehicleComponent implements OnInit {
 
     this.masterSrv.createNewVehicle(formData).subscribe({
       next: () => {
-        this.toastr.success('User created successfully!', 'Success');
+        this.toastr.success('Vehicle created successfully!', 'Success');
         this.getAllVehicle();
         this.closeModal();
       },
@@ -476,32 +475,32 @@ export class VehicleComponent implements OnInit {
     this.selectedVehicleForDeletion = vehicle;
   }
 
-  deleteVehicleId() {
-    console.log(
-      'this is the selected vehicle',
-      this.selectedVehicleForDeletion
-    );
+  // deleteVehicleId() {
+  //   console.log(
+  //     'this is the selected vehicle',
+  //     this.selectedVehicleForDeletion
+  //   );
 
-    if (
-      this.selectedVehicleForDeletion &&
-      this.selectedVehicleForDeletion.vehicle_id
-    ) {
-      this.masterSrv
-        .deleteVehicle(this.selectedVehicleForDeletion.vehicle_id)
-        .subscribe(
-          (res: VehicleResponse) => {
-            this.toastr.success('Vehicle deleted successfully', 'Success');
-            this.getAllVehicle();
-          },
-          (error) => {
-            // alert(error.message || 'Failed to delete vehicle');
-            this.toastr.error('Server Error', 'Error');
-          }
-        );
-    } else {
-      alert('No vehicle selected for deletion');
-    }
-  }
+  //   if (
+  //     this.selectedVehicleForDeletion &&
+  //     this.selectedVehicleForDeletion.vehicle_id
+  //   ) {
+  //     this.masterSrv
+  //       .deleteVehicle(this.selectedVehicleForDeletion.vehicle_id)
+  //       .subscribe(
+  //         (res: VehicleResponse) => {
+  //           this.toastr.success('Vehicle deleted successfully', 'Success');
+  //           this.getAllVehicle();
+  //         },
+  //         (error) => {
+  //           // alert(error.message || 'Failed to delete vehicle');
+  //           this.toastr.error('Server Error', 'Error');
+  //         }
+  //       );
+  //   } else {
+  //     alert('No vehicle selected for deletion');
+  //   }
+  // }
 
   // Edit Single Vehicle
   // onEdit(id: string): void {
@@ -561,37 +560,206 @@ export class VehicleComponent implements OnInit {
   //   );
   // }
 
+  // TEAMS KA VEHCILE CODE
+  // deleteVehicleId() {
+  //   console.log(
+  //     'this is the select user',
+  //     this.selectVehicleForDeletion,
+  //     this.selectedVehicleForDeletion
+  //   );
+  //   if (
+  //     this.selectedVehicleForDeletion &&
+  //     this.selectedVehicleForDeletion.vehicle_id
+  //   ) {
+  //     this.masterSrv
+  //       .deleteVehicle(this.selectedVehicleForDeletion.vehicle_id)
+  //       .subscribe(
+  //         (res: VehicleResponse) => {
+  //           this.toastr.success('vehicle deleted successfully', 'Success');
+  //           this.getAllVehicle();
+  //         },
+  //         (error) => {
+  //           // alert(error.message || 'Failed to delete users'); comment for server side error not come
+  //           this.toastr.error('Server Error', 'Error');
+  //         }
+  //       );
+  //   } else {
+  //     alert('No vehicle selected for deletion');
+  //   }
+  // }
+  // deleteVehicleId() {
+  //   console.log(
+  //     'This is the selected vehicle:',
+  //     this.selectVehicleForDeletion,
+  //     this.selectedVehicleForDeletion
+  //   );
+
+  //   if (
+  //     this.selectedVehicleForDeletion &&
+  //     this.selectedVehicleForDeletion.vehicle_id
+  //   ) {
+  //     // ✅ Immediately hide the modal (before API call)
+  //     ($('#deleteModal') as any).modal('hide'); // Hide modal using jQuery
+
+  //     // 🔄 Proceed with API call to delete vehicle
+  //     this.masterSrv
+  //       .deleteVehicle(this.selectedVehicleForDeletion.vehicle_id)
+  //       .subscribe(
+  //         (res: VehicleResponse) => {
+  //           this.toastr.success('Vehicle deleted successfully', 'Success');
+  //           this.getAllVehicle(); // Refresh vehicle list
+  //         },
+  //         (error) => {
+  //           this.toastr.error('Server Error', 'Error');
+  //         }
+  //       );
+  //   } else {
+  //     alert('No vehicle selected for deletion');
+  //   }
+  // }
+  // deleteVehicleId() {
+  //   console.log(
+  //     'this is the selected vehicle',
+  //     this.selectVehicleForDeletion,
+  //     this.selectedVehicleForDeletion
+  //   );
+
+  //   if (
+  //     this.selectedVehicleForDeletion &&
+  //     this.selectedVehicleForDeletion.vehicle_id
+  //   ) {
+  //     this.masterSrv
+  //       .deleteVehicle(this.selectedVehicleForDeletion.vehicle_id)
+  //       .subscribe(
+  //         (res: VehicleResponse) => {
+  //           this.toastr.success('Vehicle deleted successfully', 'Success');
+  //           this.getAllVehicle();
+
+  //           // Use jQuery to hide the modal
+  //           $('#deleteModal').modal('hide'); // Hide the modal
+
+  //           // Remove the backdrop manually using jQuery
+  //           $('.modal-backdrop').remove();
+
+  //           // Optionally, remove modal-open class if needed
+  //           $('body').removeClass('modal-open');
+  //         },
+  //         (error) => {
+  //           this.toastr.error('Server Error', 'Error');
+  //         }
+  //       );
+  //   } else {
+  //     alert('No vehicle selected for deletion');
+  //   }
+  // }
+
+  // closeModal() {
+  //   // Properly hide modal
+  //   $('.bd-example-modal-lg').modal('hide');
+  //   $('#deleteModal').modal('hide'); // Add this line if you're using #deleteModal as well
+
+  //   // Ensure body changes are reset
+  //   $('body').removeClass('modal-open');
+  //   $('body').css('padding-right', '');
+
+  //   // Remove backdrop with slight delay to ensure modal is hidden first
+  //   setTimeout(() => {
+  //     $('.modal-backdrop').remove();
+  //   }, 150);
+  // }
+
+  deleteVehicleId() {
+    console.log(
+      'this is the select user',
+      this.selectVehicleForDeletion,
+      this.selectedVehicleForDeletion
+    );
+    console.log(
+      'Deleting User ID:',
+      this.selectedVehicleForDeletion?.vehicle_id
+    );
+
+    if (
+      this.selectedVehicleForDeletion &&
+      this.selectedVehicleForDeletion.vehicle_id
+    ) {
+      this.masterSrv
+        .deleteVehicle(this.selectedVehicleForDeletion.vehicle_id)
+        .subscribe(
+          (res: VehicleResponse) => {
+            this.toastr.success('User deleted successfully', 'Success');
+            this.getAllVehicle();
+          },
+          (error) => {
+            // alert(error.message || 'Failed to delete users'); comment for server side error not come
+            this.toastr.error('Server Error', 'Error');
+          }
+        );
+    } else {
+      alert('No users selected for deletion');
+    }
+  }
+
+  // Close modal
+  closeModal() {
+    ($('.bd-example-modal-lg') as any).modal('hide');
+  }
+  // onEdit(vehicle: Vehicle) {
+  //   console.log('Edit button clicked. Team ID:', vehicle?.vehicle_id); // Debug log
+  //   this.isEditMode = true; // Ensure edit mode is set
+
+  //   // Set team object to the selected team to preserve data
+  //   this.vehicleObj = { ...vehicle };
+
+  //   // Fetch team details by ID (this should be the 'team/id' API call)
+  //   this.masterSrv.getVehicleById(vehicle.vehicle_id).subscribe(
+  //     (res: SingleVehicleResponse) => {
+  //       if (res?.status === 200 && res.data) {
+  //         const vehicleDetails = res.data;
+
+  //         this.vehicleObj = { ...vehicleDetails };
+
+  //         this.useForm.patchValue({
+  //           vehicle_name: vehicleDetails.vehicle_name,
+  //           VIN: vehicleDetails.VIN,
+  //           type: vehicleDetails.type,
+  //           YOM: this.formatDate(vehicleDetails.YOM),
+  //           chasis_number: vehicleDetails.chasis_number,
+  //         });
+
+  //         console.log('Vehicle data patched successfully:', vehicleDetails);
+  //       } else {
+  //         console.warn('No vehicle details found for this ID');
+  //       }
+  //     },
+  //     (err) => {
+  //       console.error('Error fetching vehicle details:', err);
+  //     }
+  //   );
+  // }
+
   onEdit(vehicle: Vehicle) {
-    console.log('Edit button clicked. Team ID:', vehicle?.vehicle_id); // Debug log
-    this.isEditMode = true; // Ensure edit mode is set
+    this.isEditMode = true; // Set the edit mode flag
+    console.log('user.userObj before setting:', vehicle?.vehicle_id);
 
-    // Set team object to the selected team to preserve data
-    this.vehicleObj = { ...vehicle };
+    // Copy user data to userObj
+    this.vehicleObj = { ...vehicle }; // Spread operator to avoid reference issues
 
-    // Fetch team details by ID (this should be the 'team/id' API call)
-    this.masterSrv.getVehicleById(vehicle.vehicle_id).subscribe(
-      (res: SingleVehicleResponse) => {
-        if (res?.status === 200 && res.data) {
-          const vehicleDetails = res.data;
+    // Store the previous name for comparison
+    this.previousValue = vehicle.vehicle_name;
 
-          this.vehicleObj = { ...vehicleDetails };
+    // Initialize the form with current user data
+    this.useForm.patchValue({
+      vehicle_name: vehicle.vehicle_name,
+      VIN: vehicle.VIN,
+      type: vehicle.type,
+      YOM: this.formatDate(vehicle.YOM),
+      chasis_number: vehicle.chasis_number,
+    });
 
-          this.useForm.patchValue({
-            vehicle_name: vehicleDetails.vehicle_name,
-            VIN: vehicleDetails.VIN,
-            type: vehicleDetails.type,
-            YOM: this.formatDate(vehicleDetails.YOM),
-            chasis_number: vehicleDetails.chasis_number,
-          });
-
-          console.log('Vehicle data patched successfully:', vehicleDetails);
-        } else {
-          console.warn('No vehicle details found for this ID');
-        }
-      },
-      (err) => {
-        console.error('Error fetching vehicle details:', err);
-      }
+    console.log(
+      'vehicleobj.vehicle_id after setting:',
+      this.vehicleObj?.vehicle_id
     );
   }
   isVehicleNameChanged(): boolean {

@@ -18,7 +18,6 @@ import { ToastrService } from 'ngx-toastr';
 //   message?: string;
 // }
 
-
 interface LoginResponse {
   status: number;
   message: string;
@@ -28,7 +27,7 @@ interface LoginResponse {
 }
 
 interface LoginData {
-  email: string;
+  dealer_email: string;
   password: string;
   otp: number | null;
   confirmPassword: string;
@@ -36,7 +35,7 @@ interface LoginData {
 }
 
 interface verifyData {
-  email: string;
+  dealer_email: string;
 }
 
 @Component({
@@ -52,7 +51,7 @@ export class Login1Component {
     | undefined;
 
   loginObj: LoginData = {
-    email: '',
+    dealer_email: '',
     password: '',
     otp: 0,
     confirmPassword: '',
@@ -60,7 +59,7 @@ export class Login1Component {
   };
 
   verifyObj: verifyData = {
-    email: '',
+    dealer_email: '',
   };
 
   // View control flags
@@ -70,7 +69,7 @@ export class Login1Component {
   countdown = 0;
   private countdownInterval: any;
 
-  private readonly API_BASE_URL = 'https://api.smartassistapp.in/api/';
+  private readonly API_BASE_URL = 'https://uat.smartassistapp.in/api/';
   private readonly SESSION_TIMEOUT = 60 * 60 * 1000;
 
   private readonly http = inject(HttpClient);
@@ -122,7 +121,7 @@ export class Login1Component {
 
   private resetForm() {
     this.loginObj = {
-      email: '',
+      dealer_email: '',
       newPwd: '',
       otp: null,
       confirmPassword: '',
@@ -131,9 +130,9 @@ export class Login1Component {
   }
 
   private resetFormExceptEmail() {
-    const email = this.loginObj.email;
+    const email = this.loginObj.dealer_email;
     this.resetForm();
-    this.loginObj.email = email;
+    this.loginObj.dealer_email = email;
   }
 
   // Password visibility toggles
@@ -147,14 +146,14 @@ export class Login1Component {
 
   // Form validation methods
   private validateLoginInput(): boolean {
-    if (!this.loginObj.email || !this.loginObj.password) {
+    if (!this.loginObj.dealer_email || !this.loginObj.password) {
       this.toastr.error(
         'Please enter both email and password',
         'Validation Error'
       );
       return false;
     }
-    if (!this.isValidEmail(this.loginObj.email)) {
+    if (!this.isValidEmail(this.loginObj.dealer_email)) {
       this.toastr.error(
         'Please enter a valid email address',
         'Validation Error'
@@ -208,15 +207,26 @@ export class Login1Component {
 
   onLogin() {
     if (!this.validateLoginInput()) return;
-  
+
+    // Modify the loginObj to match the expected payload structure
+    const loginObj = {
+      dealer_email: this.loginObj.dealer_email, // Use dealer_email instead of email
+      password: this.loginObj.password,
+    };
+
+    console.log('Payload:', loginObj); // 👉 This will show the updated payload
+
     this.http
-      .post<LoginResponse>(`${this.API_BASE_URL}login/super-admin`, this.loginObj)
+      .post<LoginResponse>(`${this.API_BASE_URL}login/dealer`, loginObj)
       .subscribe({
         next: (response) => {
           if (response.status === 200 && response.data?.token) {
             this.handleSuccessfulLogin(response.data.token);
           } else {
-            this.toastr.error(response.message || 'Invalid credentials', 'Error');
+            this.toastr.error(
+              response.message || 'Invalid credentials',
+              'Error'
+            );
           }
         },
         error: (error) => {
@@ -228,7 +238,10 @@ export class Login1Component {
   }
 
   onVerifyEmail() {
-    if (!this.verifyObj.email || !this.isValidEmail(this.verifyObj.email)) {
+    if (
+      !this.verifyObj.dealer_email ||
+      !this.isValidEmail(this.verifyObj.dealer_email)
+    ) {
       this.toastr.error(
         'Please enter a valid email address',
         'Validation Error'
@@ -237,8 +250,8 @@ export class Login1Component {
     }
 
     this.http
-      .post(`${this.API_BASE_URL}login/s-admin/forgot-pwd/verify-email`, {
-        email: this.verifyObj.email,
+      .post(`${this.API_BASE_URL}login/dealer/forgot-pwd/verify-email`, {
+        dealer_email: this.verifyObj.dealer_email,
       })
       .subscribe({
         next: () => {
@@ -249,7 +262,7 @@ export class Login1Component {
         error: (error) => {
           // console.error('Email verification error:', error);
           console.log(error.error.error);
-          const errorMessage = error.error.error
+          const errorMessage = error.error.error;
           this.toastr.error(errorMessage, 'Error');
         },
       });
@@ -263,12 +276,12 @@ export class Login1Component {
 
     const otpPayload = {
       otp: Number(this.loginObj.otp),
-      email: this.verifyObj.email,
+      dealer_email: this.verifyObj.dealer_email,
     };
 
     this.http
       .post(
-        `${this.API_BASE_URL}login/s-admin/forgot-pwd/verify-otp`,
+        `${this.API_BASE_URL}login/dealer/forgot-pwd/verify-otp`,
         otpPayload
       )
       .subscribe({
@@ -333,14 +346,14 @@ export class Login1Component {
     if (!this.validateNewPassword()) return;
 
     const resetPasswordData = {
-      email: this.verifyObj.email,
+      dealer_email: this.verifyObj.dealer_email,
       newPwd: this.loginObj.newPwd,
       confirmPwd: this.loginObj.confirmPassword,
     };
 
     this.http
       .put<any>(
-        `${this.API_BASE_URL}login/s-admin/forgot-pwd/new-pwd`,
+        `${this.API_BASE_URL}login/dealer/forgot-pwd/new-pwd`,
         resetPasswordData
       )
       .subscribe({
@@ -359,8 +372,7 @@ export class Login1Component {
           } else if (error.status === 404) {
             this.toastr.error('User not found', 'Error');
           } else {
-            const errorMessage =
-              error.error.error;
+            const errorMessage = error.error.error;
             this.toastr.error(errorMessage, 'Error');
           }
         },

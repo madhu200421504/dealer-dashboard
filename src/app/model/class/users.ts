@@ -12,7 +12,7 @@ export class Users {
   role_name: string;
   team_name: string;
   team_id: string;
-  dealer_id: string;
+  // dealer_id: string;
   fname: string;
   lname: string;
   // role: string;
@@ -36,7 +36,7 @@ export class Users {
     this.role_id = '';
     this.role_name = '';
     this.team_name = '';
-    this.dealer_id = '';
+    // this.dealer_id = '';
     this.team_id = '';
     this.fname = '';
     this.lname = '';

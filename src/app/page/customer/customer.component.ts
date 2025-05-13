@@ -299,38 +299,43 @@ export class CustomerComponent implements OnInit {
       }
     );
   }
+  // selectedCustomerForDeletion: Accounts | null = null;
+
+  // selectCustomerForDeletion(accounts: Accounts) {
+  //   this.selectedCustomerForDeletion = accounts;
+  //   console.log(
+  //     'Selected vehicle for deletion:',
+  //     this.selectedCustomerForDeletion
+  //   );
+  // }
   selectedCustomerForDeletion: Accounts | null = null;
 
-  selectCustomerForDeletion(accounts: Accounts) {
-    this.selectedCustomerForDeletion = accounts;
-    console.log(
-      'Selected vehicle for deletion:',
-      this.selectedCustomerForDeletion
-    );
+  selectCustomerForDeletion(account: Accounts) {
+    this.selectedCustomerForDeletion = account;
   }
 
-  deleteCustomerId() {
-    if (
-      this.selectedCustomerForDeletion &&
-      this.selectedCustomerForDeletion.account_id
-    ) {
-      this.masterSrv
-        .deleteCustomer(this.selectedCustomerForDeletion.account_id)
-        .subscribe(
-          (res: AccountsResponse) => {
-            this.loadDealers();
-            this.loadCustomers();
-            this.closeModal();
-          },
-          (error) => {
-            console.error('Delete vehicle error:', error);
-            alert(error.message || 'Failed to delete vehicle');
-          }
-        );
-    } else {
-      alert('No vehicle selected for deletion');
-    }
-  }
+  // deleteCustomerId() {
+  //   if (
+  //     this.selectedCustomerForDeletion &&
+  //     this.selectedCustomerForDeletion.account_id
+  //   ) {
+  //     this.masterSrv
+  //       .deleteCustomer(this.selectedCustomerForDeletion.account_id)
+  //       .subscribe(
+  //         (res: AccountsResponse) => {
+  //           this.loadDealers();
+  //           this.loadCustomers();
+  //           // this.closeModal();
+  //         },
+  //         (error) => {
+  //           console.error('Delete vehicle error:', error);
+  //           alert(error.message || 'Failed to delete vehicle');
+  //         }
+  //       );
+  //   } else {
+  //     alert('No vehicle selected for deletion');
+  //   }
+  // }
 
   // onUpdate() {
   //   if (this.useForm.invalid) {
@@ -438,6 +443,36 @@ export class CustomerComponent implements OnInit {
   //     }
   //   );
   // }
+  deleteCustomerId() {
+    console.log(
+      'this is the select user',
+      this.selectCustomerForDeletion,
+      this.selectedCustomerForDeletion
+    );
+    if (
+      this.selectedCustomerForDeletion &&
+      this.selectedCustomerForDeletion.account_id
+    ) {
+      this.masterSrv
+        .deleteCustomer(this.selectedCustomerForDeletion.account_id)
+        .subscribe(
+          (res: AccountsResponse) => {
+            this.toastr.success('Accounts deleted successfully', 'Success');
+            this.getAllCustomer();
+
+            // ✅ Modal cleanup code
+            $('#deleteModal').modal('hide');
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+          },
+          (error) => {
+            this.toastr.error('Server Error', 'Error');
+          }
+        );
+    } else {
+      alert('No accounts selected for deletion');
+    }
+  }
 
   onUpdate() {
     console.log('onupdate called ');
@@ -627,12 +662,12 @@ export class CustomerComponent implements OnInit {
     console.log('Form Data being sent to API:', formData);
     this.masterSrv.createCustomer(formData).subscribe({
       next: () => {
-        this.toastr.success('User created successfully!', 'Success');
+        this.toastr.success('Accounts created successfully!', 'Success');
         this.getAllCustomer();
         this.closeModal();
       },
       error: (err) => {
-        console.error('User creation error:', err);
+        console.error('Accounts creation error:', err);
         this.toastr.error(
           err.message || 'Failed to create user',
           'Creation Error'

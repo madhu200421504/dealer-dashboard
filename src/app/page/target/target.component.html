@@ -1,0 +1,231 @@
+<div class="container-fluid">
+    <!-- <div class="content-body"> -->
+    <div class="content-body">
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="javascript:void(0)" style="cursor: auto">Utils</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <a href="javascript:void(0)"
+                        style="cursor: auto; font-weight: 700 !important; color: black">Target</a>
+                </li>
+            </ol>
+        </div>
+        <div class="row mb-5 align-items-center">
+            <div class="col-xl-2 mb-4 mb-xl-0">
+                <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button"
+                    data-toggle="modal" data-target=".bd-example-modal-lg"
+                    class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons"><i
+                        class="fa fa-plus mr-1"></i>Add
+                    Target</a>
+            </div>
+            <div class="col-xl-2 mb-4 mb-xl-0">
+                <!-- <div class="media-body ml-1">
+                    <p class="mb-1 fs-14 text-center">Total Team</p>
+                    <h3 class="mb-0 text-black font-w600 fs-20 text-center">
+                        {{ count() }}
+                    </h3>
+                </div> -->
+            </div>
+            <!-- <div class="col-xl-10">
+      <div class="card m-0">
+        <div class="card-body py-3 py-md-2">
+          <div class="row align-items-center">
+            <div class="col-md-5 mb-3 mb-md-0">
+              <div class="media align-items-end">
+                <span class="mr-2 mb-1">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clip-path="url(#clip0)"></g>
+                    <defs>
+                      <clipPath id="clip0">
+                        <rect width="24" height="24" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </span>
+                <div class="media-body ml-1">
+                  <p class="mb-1 fs-14">Total Users</p>
+                  <h3 class="mb-0 text-black font-w600 fs-20">
+                    {{ totalUser() }}
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+        </div>
+
+
+
+        <!-- API integration work starts here -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table id="example5" class="table display mb-4 table-responsive-xl dataTablesCard fs-14">
+                        <thead>
+                            <tr>
+                                <th>Sr No</th>
+                                <th>Enquiries</th>
+                                <th>Test Drives</th>
+                                <th>Orders</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(targetList().length === 0){
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <p>No Users Found</p>
+                                </td>
+                            </tr>
+                            }@else(){
+                            <tr *ngFor="let target of targetList(); let i = index">
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ target.enquiries }}</td>
+                                <td>{{ target.testDrives}}</td> <!-- Correct usage of bracket notation -->
+                                <td>{{ target.orders }}</td>
+
+                                <td class="d-flex">
+                                    <a href="javascript:void(0);" data-target=".bd-example-modal-lg" data-toggle="modal"
+                                        class="btn btn-primary shadow btn-xs sharp mr-1" (click)="onEdit(target)"><i
+                                            class="fa fa-pencil"></i></a>
+                                    <!-- <a href="javascript:void(0);" type="button" class="btn btn-primary mb-2"
+                                        data-toggle="modal" data-target=".bd-example-modal-sm"
+                                        class="btn btn-danger shadow btn-xs sharp"
+                                        (click)="selectteamForDeletion(team)"><i class="fa fa-trash"></i></a> -->
+                                    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-sm">
+                                            <div class="modal-content">
+                                                <div class="modal-header text-center" style="margin-inline: auto">
+                                                    <h5 class="modal-title text-center">Delete User</h5>
+                                                </div>
+                                                <div class="modal-body">HEY ARE YOU OKAY..!</div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-primary"
+                                                        data-dismiss="modal">
+                                                        Cancel
+                                                    </button>
+                                                    <!-- <button type="button" class="btn btn-outline-danger"
+                                                        (click)="deleteTeamid()" data-dismiss="modal">
+                                                        Delete
+                                                    </button> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- <div class="modal fade" style="margin-block: 2em"> -->
+<div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="text-align: center; width: 100%">
+                    {{ targetobj.enquiries || targetobj.testDrives ? "Edit User" : "Add New Target" }}
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="x">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="useForm">
+                    <div class="row">
+                        <!-- Name -->
+                        <div class="col-md-6 form-group">
+                            <label for="enquiries" class="form-label">enquiries</label>
+                            <input id="enquiries" class="form-control form-control-lg" type="number"
+                                formControlName="enquiries" placeholder="enquiries" [ngClass]="{
+                  'is-invalid':
+                    useForm.get('enquiries')?.touched &&
+                    useForm.get('enquiries')?.invalid
+                }" required />
+                            <div class="text-danger" *ngIf="
+                  useForm.get('enquiries')?.invalid && useForm.get('enquiries')?.touched
+                ">
+                                <span *ngIf="useForm.get('enquiries')?.errors?.['required']">Team Name is
+                                    required.</span>
+                            </div>
+                        </div>
+
+                        <!-- LAST NAME -->
+                        <div class="col-md-6 form-group">
+                            <label for="testDrives" class="form-label">test drives</label>
+                            <input id="testDrives" class="form-control form-control-lg" type="number"
+                                formControlName="testDrives" placeholder="testDrives" [ngClass]="{
+                                          'is-invalid':
+                                            useForm.get('testDrives')?.touched &&
+                                            useForm.get('testDrives')?.invalid
+                                        }" required />
+                            <div class="text-danger" *ngIf="
+                                          useForm.get('testDrives')?.invalid && useForm.get('testDrives')?.touched
+                                        ">
+                                <span *ngIf="useForm.get('testDrives')?.errors?.['required']">Team Name is
+                                    required.</span>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-6 form-group">
+                            <label for="orders" class="form-label">orders</label>
+                            <input id="orders" class="form-control form-control-lg" type="number"
+                                formControlName="orders" placeholder="orders" [ngClass]="{
+                                                                  'is-invalid':
+                                                                    useForm.get('orders')?.touched &&
+                                                                    useForm.get('orders')?.invalid
+                                                                }" required />
+                            <div class="text-danger" *ngIf="
+                                                                  useForm.get('orders')?.invalid && useForm.get('orders')?.touched
+                                                                ">
+                                <span *ngIf="useForm.get('orders')?.errors?.['required']">Team Name is
+                                    required.</span>
+                            </div>
+                        </div>
+
+
+                        <!-- ROLE -->
+
+
+                        <div class="modal-footer">
+                            <ng-container *ngIf="isEditMode">
+                                <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
+                                    (click)="onUpdate()">
+                                    Edit
+                                </button>
+                            </ng-container>
+                            <ng-container *ngIf="!isEditMode">
+                                <button type="button" id="bd-example-modal-lg" class="btn btn-outline-primary"
+                                    (click)="onSave()">
+                                    Save
+                                </button>
+                            </ng-container>
+                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal"
+                                (click)="closeModal()">
+                                Close
+                            </button>
+                        </div>
+
+                    </div>

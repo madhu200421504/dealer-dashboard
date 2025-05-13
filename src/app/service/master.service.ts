@@ -22,6 +22,7 @@ import {
   SingleAccountResponse,
   SingleTeamResponse,
   SingleVehicleResponse,
+  TargetResponse,
 } from '../model/interface/master';
 import { Vehicle } from '../model/class/vehicle';
 import { dealers } from '../model/class/dealers';
@@ -35,12 +36,13 @@ import { Role } from '../model/class/role';
 import { Teams } from '../model/class/team';
 import { Users } from '../model/class/users';
 import { SingleUserComponent } from '../page/single-user/single-user.component';
+import { Target } from '../model/class/target';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MasterService {
-  apiUrl: string = 'https://uat.smartassistapp.in/api/superAdmin/';
+  apiUrl: string = 'https://uat.smartassistapp.in/api/';
 
   constructor(
     private http: HttpClient,
@@ -81,9 +83,12 @@ export class MasterService {
 
   getTeamById(id: string): Observable<SingleTeamResponse> {
     const headers = this.getAuthHeaders();
-    return this.http.get<SingleTeamResponse>(`${this.apiUrl}teams/${id}`, {
-      headers,
-    });
+    return this.http.get<SingleTeamResponse>(
+      `${this.apiUrl}dealer/teams/${id}`,
+      {
+        headers,
+      }
+    );
   }
 
   getVehicleById(id: string): Observable<SingleVehicleResponse> {
@@ -207,7 +212,7 @@ export class MasterService {
   // VEHICLES ALL GET
   getAllVehicle(): Observable<VehicleResponse> {
     const headers = this.getAuthHeaders();
-    return this.http.get<VehicleResponse>(this.apiUrl + 'vehicles/all', {
+    return this.http.get<VehicleResponse>(this.apiUrl + 'dealer/vehicles/all', {
       headers,
     });
   }
@@ -223,16 +228,20 @@ export class MasterService {
   // NEW VHEICLES CERATE
   createNewVehicle(obj: Vehicle): Observable<Vehicle> {
     const headers = this.getAuthHeaders();
-    return this.http.post<Vehicle>(this.apiUrl + 'vehicles/create', obj, {
-      headers,
-    });
+    return this.http.post<Vehicle>(
+      this.apiUrl + 'dealer/vehicles/create',
+      obj,
+      {
+        headers,
+      }
+    );
   }
 
   // DELETE VECHILE BY ID
   deleteVehicle(vehicleId: string): Observable<VehicleResponse> {
     const headers = this.getAuthHeaders();
     return this.http.put<VehicleResponse>(
-      `${this.apiUrl}vehicles/${vehicleId}/delete`,
+      `${this.apiUrl}dealer/vehicles/${vehicleId}/delete`,
       {},
       { headers }
     );
@@ -242,13 +251,21 @@ export class MasterService {
   updateVehicle(obj: Vehicle): Observable<MultivehicleResponse> {
     const headers = this.getAuthHeaders();
     return this.http.put<MultivehicleResponse>(
-      `${this.apiUrl}vehicles/${obj.vehicle_id}/update`,
+      `${this.apiUrl}dealer/vehicles/${obj.vehicle_id}/update`,
       obj,
       { headers }
     );
   }
 
-  // update team
+  // update target
+  updateTarget(obj: Target): Observable<TargetResponse> {
+    const headers = this.getAuthHeaders();
+    return this.http.post<TargetResponse>(
+      this.apiUrl + 'dealer/targets/new',
+      obj,
+      { headers }
+    );
+  }
 
   // EVENT BY ID
   eventById(id: string): Observable<EventResponse> {
@@ -297,13 +314,13 @@ export class MasterService {
 
   getMultipleUser(): Observable<MultiuserResponse> {
     const headers = this.getAuthHeaders();
-    return this.http.get<MultiuserResponse>(this.apiUrl + 'users/all', {
+    return this.http.get<MultiuserResponse>(this.apiUrl + 'dealer/users/all', {
       headers,
     });
   }
   getMultipleTeams(): Observable<TeamsResponse> {
     const headers = this.getAuthHeaders();
-    return this.http.get<TeamsResponse>(this.apiUrl + 'teams/all', {
+    return this.http.get<TeamsResponse>(this.apiUrl + 'dealer/teams/all', {
       headers,
     });
   }
@@ -317,7 +334,7 @@ export class MasterService {
   // }
   createNewUser(obj: UserList): Observable<Users> {
     const headers = this.getAuthHeaders();
-    return this.http.post<Users>(this.apiUrl + 'users/create', obj, {
+    return this.http.post<Users>(this.apiUrl + 'dealer/users/create', obj, {
       headers,
     });
   }
@@ -325,15 +342,19 @@ export class MasterService {
   // CREATING NEW TEAM
   createNewTeam(obj: Teams): Observable<TeamsResponse> {
     const headers = this.getAuthHeaders();
-    return this.http.post<TeamsResponse>(this.apiUrl + 'teams/new', obj, {
-      headers,
-    });
+    return this.http.post<TeamsResponse>(
+      this.apiUrl + 'dealer/createTeam',
+      obj,
+      {
+        headers,
+      }
+    );
   }
 
   updateUser(obj: UserList): Observable<MultiuserResponse> {
     const headers = this.getAuthHeaders();
     return this.http.put<MultiuserResponse>(
-      `${this.apiUrl}users/${obj.user_id}/update`,
+      `${this.apiUrl}dealer/users/${obj.user_id}/update`,
       obj,
       { headers }
     );
@@ -342,7 +363,7 @@ export class MasterService {
   updateTeam(obj: Teams): Observable<TeamsResponse> {
     const headers = this.getAuthHeaders();
     return this.http.put<TeamsResponse>(
-      `${this.apiUrl}teams/${obj.team_id}/update`,
+      `${this.apiUrl}dealer/teams/${obj.team_id}/update`,
       obj,
       { headers }
     );
@@ -376,17 +397,24 @@ export class MasterService {
   // TEAMS ALL
   getAllTeams() {
     const headers = this.getAuthHeaders();
-    return this.http.get<TeamsResponse>(this.apiUrl + 'teams/all', {
+    return this.http.get<TeamsResponse>(this.apiUrl + 'dealer/teams/all', {
       headers,
     });
   }
 
   // USERS BY ID DELETE
+  // deleteUser(user_id: string): Observable<MultiuserResponse> {
+  //   const headers = this.getAuthHeaders();
+  //   return this.http.put<MultiuserResponse>(
+  //     `${this.apiUrl}dealer/users/${user_id}/delete`,
+  //     {},
+  //     { headers }
+  //   );
+  // }
   deleteUser(user_id: string): Observable<MultiuserResponse> {
-    const headers = this.getAuthHeaders();
-    return this.http.put<MultiuserResponse>(
-      `${this.apiUrl}users/${user_id}/delete`,
-      {},
+    const headers = this.getAuthHeaders(); // Assuming this function provides the correct headers
+    return this.http.delete<MultiuserResponse>(
+      `${this.apiUrl}dealer/users/${user_id}/delete`, // Ensure this is the correct endpoint
       { headers }
     );
   }
@@ -395,7 +423,7 @@ export class MasterService {
   deleteTeam(team_id: string): Observable<TeamsResponse> {
     const headers = this.getAuthHeaders();
     return this.http.put<TeamsResponse>(
-      `${this.apiUrl}teams/${team_id}/delete`,
+      `${this.apiUrl}dealer/teams/${team_id}/delete`,
       {},
       { headers }
     );
@@ -460,16 +488,42 @@ export class MasterService {
 
   getAllRole() {
     const headers = this.getAuthHeaders();
-    return this.http.get<roleResponse>(this.apiUrl + 'role/all', {
+    return this.http.get<roleResponse>(this.apiUrl + 'dealer/role/all', {
+      headers,
+    });
+  }
+
+  // TARGET
+
+  getAllTarget() {
+    const headers = this.getAuthHeaders();
+    return this.http.get<TargetResponse>(this.apiUrl + 'dealer/targets/all', {
       headers,
     });
   }
 
   createRole(obj: Role): Observable<roleResponse[]> {
     const headers = this.getAuthHeaders();
-    return this.http.post<roleResponse[]>(this.apiUrl + 'roles/new', obj, {
-      headers,
-    });
+    return this.http.post<roleResponse[]>(
+      this.apiUrl + 'dealer/roles/new',
+      obj,
+      {
+        headers,
+      }
+    );
+  }
+
+  // create target
+
+  createNewTarget(obj: Target): Observable<TargetResponse[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.post<TargetResponse[]>(
+      this.apiUrl + 'dealer/targets/new',
+      obj,
+      {
+        headers,
+      }
+    );
   }
   // getAllTeams()<TeamResponse> {
   //   const headers = this.getAuthHeaders();

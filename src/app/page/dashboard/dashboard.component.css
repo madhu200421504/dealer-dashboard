@@ -1,42 +1,71 @@
-/* MY STYLE */
-.stat-card {
-  background-color: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 0.5rem 1.2rem rgba(0, 0, 0, 0.08);
-  padding: 1.5rem;
-  min-height: 130px;
+.wrapper {
+  display: flex;
 }
 
-.stat-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #6c757d;
-  margin-bottom: 0.25rem;
-  text-transform: uppercase;
+.sidebar {
+  width: 250px; /* Adjust based on sidebar width */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #f8f9fa;
 }
 
-.stat-value {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #32325d;
+.content-body {
+  margin-left: 350px; /* Match sidebar width */
+  padding: 20px;
+  flex-grow: 1;
+}
+.card-header {
+  display: flex;
+  justify-content: flex-start; /* Align content to the left */
+  align-items: center; /* Vertically center the content */
 }
 
-.stat-change {
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
+.card-header .card-title {
+  margin-left: 10px; /* Optional: adds a slight margin between icon and text */
+}
+.card {
+  border-radius: 6px !important; /* or 4px if you want even sharper corners */
+}
+.custom-btn {
+  background-color: #f8f9fa; /* light grey bg */
+  color: #6c757d; /* light grey text */
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.text-success {
-  color: #2dce89 !important;
+.custom-btn:hover {
+  background-color: #007bff; /* blue bg on hover */
+  color: white; /* white text on hover */
+}
+#dataTable,
+#dataTable thead,
+#dataTable tbody,
+#dataTable th,
+#dataTable td,
+#dataTable tr {
+  border: none !important;
+}
+#doughnutChart {
+  width: 400px !important; /* Fixed width */
+  height: 400px !important; /* Fixed height */
+  margin: 0 auto; /* Center it horizontally */
+}
+.card-height {
+  height: 510px; /* Adjust height as needed */
 }
 
-.text-danger {
-  color: #f5365c !important;
-}
+@media (max-width: 768px) {
+  .sidebar {
+    display: none; /* Hide sidebar on mobile */
+  }
 
-.text-muted {
-  color: #8898aa !important;
-}
-.small-font {
-  font-size: 13px;
+  .content-body {
+    margin-left: 0; /* Remove margin to use full width */
+    padding: 10px; /* Adjust padding for mobile */
+  }
 }

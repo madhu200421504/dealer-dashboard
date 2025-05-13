@@ -14,20 +14,19 @@
     <div class="row mb-5 align-items-center">
       <div class="col-xl-2 mb-4 mb-xl-0 mt-10">
         <a style="cursor: pointer; color: white !important" type="button" data-toggle="modal"
-          data-target=".bd-example-modal-lg"
-          class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons"><i class="fa fa-plus mr-1"></i>Add
-          Role</a>
+          data-target=".bd-example-modal-lg" class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
+          <i class="fa fa-plus mr-1"></i>Add Role
+        </a>
       </div>
       <div class="col-xl-2 mb-4 mb-xl-0">
         <div class="media-body ml-1">
-          <p class="mb-1 fs-14 text-center">Total Role</p>
+          <p class="mb-1 fs-14 text-center">Total Roles</p>
           <h3 class="mb-0 text-black font-w600 fs-20 text-center">{{count()}}</h3>
         </div>
       </div>
     </div>
 
-    <!-- role table -->
-
+    <!-- Role Table -->
     <div class="row">
       <div class="col-lg-12">
         <div class="table-responsive">
@@ -39,14 +38,14 @@
                 <th>Description</th>
               </tr>
             </thead>
-
-            @for (role of roleList(); track $index) {
-            <tr>
-              <td>{{ $index + 1 }}</td>
-              <td>{{ role.role_name }}</td>
-              <td>{{ role.description }}</td>
-            </tr>
-            }
+            <tbody>
+              <!-- Loop over roles -->
+              <tr *ngFor="let role of roleList(); let index = index">
+                <td>{{ index + 1 }}</td>
+                <td>{{ role.role_name }}</td>
+                <td>{{ role.description }}</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
@@ -54,14 +53,13 @@
   </div>
 </div>
 
-<!-- modal -->
-
+<!-- Add Role Modal -->
 <div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" style="align-items: center; margin-inline: auto">
-          Add new Role
+          Add New Role
         </h5>
         <button type="button" class="close" data-dismiss="modal">
           <span class="x">&times;</span>
@@ -75,22 +73,15 @@
             <!-- Role Name with Dropdown -->
             <div class="col-md-6 form-group">
               <label for="role_name" class="form-label">Role Name*</label>
-
-              <!-- Dropdown (Select) for Role Name -->
               <select id="role_name" class="form-control form-control-lg" formControlName="role_name" [ngClass]="{
-                  'is-invalid': useForm.get('role_name')?.touched && useForm.get('role_name')?.invalid
-                }">
+                'is-invalid': useForm.get('role_name')?.touched && useForm.get('role_name')?.invalid
+              }">
                 <option value="" disabled selected>Select Role</option>
-                <!-- Dynamic Role List -->
-                <!-- <option *ngFor="let role of roleList()" [value]="role.role_name">
-                  {{ role.role_name }}
-                </option> -->
                 <!-- Static Fallback List (if required) -->
                 <option *ngFor="let dealer of staticDealerList" [value]="dealer.dealer_code">
                   {{ dealer.dealer_code }}
                 </option>
               </select>
-
               <div class="text-danger" *ngIf="useForm.get('role_name')?.touched && useForm.get('role_name')?.invalid">
                 <span>Role Name is required.</span>
               </div>
@@ -107,14 +98,11 @@
         </form>
       </div>
 
-      <!-- Modal footer buttons -->
-      <!-- In the modal footer -->
+      <!-- Modal Footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-primary" (click)="onSave()" (click)="closeModal()">
           Save
         </button>
-
-
         <button type="button" class="btn btn-outline-danger" data-dismiss="modal">
           Close
         </button>

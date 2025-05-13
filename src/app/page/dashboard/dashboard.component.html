@@ -1,204 +1,239 @@
-<div class="sidebar">
-  <!-- Sidebar Content Here -->
-</div>
+<!-- DEALER ADMIN -->
 
 
-<div class="content-body rightside-event">
+<div class="content-body">
+  <!-- Main Container -->
   <div class="container-fluid">
+
+    <!-- Filters Section (MTD, QTD, YTD) -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card p-2"
+          style="background: white; display: inline-flex; flex-direction: row; align-items: center; gap: 30px; min-width: 200px; border-radius: 6px; padding-left:30px;">
+          <button class="custom-btn" (click)="applyFilter('MTD')">MTD</button>
+          <button class="custom-btn" (click)="applyFilter('QTD')">QTD</button>
+          <button class="custom-btn" (click)="applyFilter('YTD')">YTD</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Three Cards Section -->
     <div class="row">
-      <div class="col-xl-12">
-        <!-- Contenido Principal del Dashboard -->
-        <div class="main-content " id="main-content">
-          <!-- Cards Superiores -->
-
-
-          <!-- Contenedor de Gráfica de Ventas del Ultimo Mes -->
-          <!-- <div class="sales-chart-container" id="sales-chart-container">
-            <div class="sales-line-chart">
-              <h2>Sales Last Month</h2>
-              <canvas class="canvas-1" id="lineChart"></canvas>
+      <!-- Enquiries Card -->
+      <div class="col-lg-3 col-sm-6 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title" style="padding-top:20px;">
+              <i class="fas fa-envelope"></i> ENQUIRIES
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-start" style="margin-left:30px;">
+              <!-- Displaying dynamic leads count -->
+              <h3 style="font-size: 2.5rem; font-weight: bold; margin-top:-22px;">
+                {{ getFilteredLeads() }}
+              </h3>
+              <!-- Dynamically show the percentage change -->
+              <span [ngClass]="getChangeData(mtdLeads(), prevLeads()).color">
+                {{ getChangeData(mtdLeads(), prevLeads()).value }}
+              </span>
+              <span class="text-muted" style="font-size: 18px; display: inline;">
+                Since last month
+              </span>
             </div>
           </div>
         </div>
+      </div>
 
+      <!-- Test Drives Card -->
+      <div class="col-lg-3 col-sm-6 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title" style="padding-top:20px;"><i class="fas fa-car"></i> TEST DRIVES</h4>
+          </div>
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-start" style="margin-left:30px;">
+              <h3 style="font-size: 2.5rem; font-weight: bold; margin-top:-22px;">{{ getFilteredTestDrives() }}</h3>
+              <span [ngClass]="getChangeData(mtdTestDrives(), prevTestDrives()).color">
+                {{ getChangeData(mtdTestDrives(), prevTestDrives()).value }}
+              </span>
+              <span class='text-muted' style='font-size: 18px;'>Since last month</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Card -->
+      <div class="col-lg-3 col-sm-6 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title" style="padding-top:20px;"><i class="fas fa-shopping-cart"></i> ORDERS</h4>
+          </div>
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-start" style="margin-left:30px;">
+              <h3 style="font-size: 2.5rem; font-weight: bold; margin-top:-22px;">{{ getFilteredOrders() }}</h3>
+              <span [ngClass]="getChangeData(mtdOrders(), prevOrders()).color">
+                {{ getChangeData(mtdOrders(), prevOrders()).value }}
+              </span>
+              <span class='text-muted' style='font-size: 18px;'>Since last month</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-lg-3 col-sm-6 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title" style="padding-top:20px;"><i class="fas fa-user-slash "></i> LOST LEADS
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-start" style="margin-left:30px;">
+              <h3 style="font-size: 2.5rem; font-weight: bold; margin-top:-22px;">{{ getFilteredOrders() }}</h3>
+              <span [ngClass]="getChangeData(mtdOrders(), prevOrders()).color">
+                {{ getChangeData(mtdOrders(), prevOrders()).value }}
+              </span>
+              <span class='text-muted' style='font-size: 18px;'>Since last month</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div> -->
-          <!-- <div class="row">
-    <div class="col-12">
-      <div class="row">
-        <div class="col-xl-6 col-lg-12 col-sm-12">
-          <div class="card">
-            <div class="card-header">
-              <h4 class="card-title">Total Leads Chart</h4>
-            </div>
-            <div class="card-body">
-              <canvas id="barChart_2"></canvas>
-            </div>
+
+    <!-- Stylish Conversion Ratios Doughnut Chart -->
+    <div class="row justify-content-left mb-4">
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-bottom text-center">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-chart-pie me-2" style="color: #000;"></i>
+              Conversion Ratios Overview
+            </h5>
           </div>
-        </div> -->
-          <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-          <div class="card">
-            <div class="card-header">
-              <h4 class="card-title">Vehicles </h4>
-            </div>
-            <div class="card-body">
-              <canvas id="pie_chart"></canvas>
-            </div>
+          <div class="card-body d-flex justify-content-center align-items-center" style="min-height: 300px;">
+            <canvas id="conversionDoughnutChart" style="max-height: 240px;"></canvas>
           </div>
-        </div> -->
-          <div class="container mt-5" style="margin-left:60px;">
-            <div class="row g-4">
-              <!-- Enquiries -->
-              <div class="col-12 col-md-3">
-                <div class="stat-card">
-                  <div class="stat-title">Enquiries</div>
-                  <div class="stat-value">{{ totalLeads()}}</div>
-                  <div class="small-font"
-                    [innerHTML]="calculateChange(totalLeads(), prevLeads()) + ' <span class=\'text-muted\' style=\'font-size: 10px;;\'>Since last month</span>'">
-                  </div>
+        </div>
+      </div>
+    </div>
 
-                </div>
-              </div>
 
-              <!-- Test Drives -->
-              <div class="col-12 col-md-3">
-                <div class="stat-card">
-                  <div class="stat-title">Test Drives</div>
-                  <div class="stat-value">{{ totalTestDrives()}}</div>
-                  <!-- <div class="stat-change text-danger">▼ 2.1% <span class="text-muted">Since last month</span></div> -->
-                  <div class="small-font"
-                    [innerHTML]="calculateChange(totalTestDrives(), prevTestDrives()) + ' <span class=\'text-muted\' style=\'font-size: 10px;;\'>Since last month</span>'">
-                  </div>
-                </div>
-              </div>
 
-              <!-- Orders -->
-              <div class="col-12 col-md-3">
-                <div class="stat-card">
-                  <div class="stat-title">Orders</div>
-                  <div class="stat-value">{{ totalOrders()}}</div>
-                  <!-- <div class="stat-change text-success">▲ 1.5% <span class="text-muted">Since last week</span></div> -->
-                  <div class="small-font"
-                    [innerHTML]="calculateChange(totalOrders(), prevOrders()) + ' <span class=\'text-muted\' style=\'font-size: 10px;;\'>Since last month</span>'">
-                  </div>
-                </div>
-              </div>
-
-              <!-- Conversion -->
-              <!-- <div class="col-12 col-md-3">
-                <div class="stat-card">
-                  <div class="stat-title">Conversion %</div>
-                  <div class="stat-value">{{ dashboardData?.testDrivesToOrder }}%</div>
-                  <div class="stat-change text-warning">▲ 0.5% <span class="text-muted">Compared to previous</span>
-                  </div>
-                </div>
-              </div> -->
-            </div>
+    <!-- Doughnut Chart and Data Table Section (Separate Row) -->
+    <!-- <div class="row">
+      <div class="col-lg-5 col-md-12 mb-4">
+        <div class="card card-height">
+          <div class="card-header">
+            <h4 class="card-title"><i class="fas fa-chart-pie"></i> Doughnut Chart</h4>
           </div>
+          <div class="card-body">
+            <canvas id="doughnutChart"></canvas>
+          </div>
+        </div>
+      </div> -->
 
-
-
-          <div class="content-body rightside-event">
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-xl-12">
-                  <div class="main-content" id="main-content">
-
-                    <!-- Add the row for Pie Chart and Table -->
-                    <div class="row">
-                      <!-- Pie Chart Column -->
-                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" style="margin-left:-100px;">
-                        <div class="card">
-                          <div class="card-header">
-                            <h4 class="card-title">Total Users Chart</h4>
-                          </div>
-                          <div class="card-body">
-                            <div class="chart-point">
-                              <div>
-                                <canvas id="doughnut_chart"></canvas>
-                              </div>
-                              <ul class="chart-point-list">
-                                <li>
-                                  <i class="fa fa-circle text-success mr-1"></i>
-                                  {{ totalTestDrives() }} Test Drives
-                                </li>
-                                <li>
-                                  <i class="fa fa-circle text-danger mr-1"></i>
-                                  {{ totalOrders() }} Orders
-                                </li>
-                                <!-- <li>
-                                  <i class="fa fa-circle text-warning mr-1"></i> 25% Opportunities
-                                </li> -->
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
+    <!-- Data Table -->
+    <!-- <div class="col-md-7">
+        <div class="card w-100" style="min-height: 500px;background-color: #ffffff; ">
+          <div class="card-header d-flex justify-content-between">
+            <h4 class="card-title" style="white-space: nowrap;">Dealership Ranking</h4>
+            <select class="form-control" style="max-width: 150px;" [(ngModel)]="selectedOption"
+              (ngModelChange)="updateDataBasedOnSelection()">
+              <option value="leads-MTD">Leads - MTD</option>
+              <option value="leads-QTD">Leads - QTD</option>
+              <option value="leads-YTD">Leads - YTD</option>
+              <option value="testDrives-MTD">Test Drives - MTD</option>
+              <option value="testDrives-QTD">Test Drives - QTD</option>
+              <option value="testDrives-YTD">Test Drives - YTD</option>
+              <option value="orders-MTD">Orders - MTD</option>
+              <option value="orders-QTD">Orders - QTD</option>
+              <option value="orders-YTD">Orders - YTD</option>
+            </select>
+          </div>
+          <div class="card-body" style="padding: 20px; border: none;">
+            <table id="example" class="table table-striped" style="width: 100%; border: none; margin: 0;">
+              <thead>
+                <tr>
+                  <th>Dealer Name</th>
+                  <th>Dealer Code</th>
+                  <th>Location</th>
+                  <th>Phone</th>
+                  <th>Count</th>
+                  <th>Rank</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of displayedData">
+                  <td>{{ row.dealer_name }}</td>
+                  <td>{{ row.dealer_code }}</td>
+                  <td>{{ row.location }}</td>
+                  <td>{{ row.phone }}</td>
+                  <td>{{ row.value }}</td>
+                  <td>
+                    <div class="progress" style="height: 20px;">
+                      <div class="progress-bar" role="progressbar"
+                        [style.width.%]="getProgressPercentage(row.value, maxValue)"
+                        [style.background-color]="'#28a745'" [attr.aria-valuenow]="row.value"
+                        [attr.aria-valuemax]="maxValue">
+                        {{ getProgressPercentage(row.value, maxValue) | number: '1.0-0' }}%
                       </div>
-
-                      <!-- Table Column -->
-                      <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" style="margin-top:50px;">
-                        <div class="card">
-                          <div class="card-header">
-                            <h4 class="card-title">User Data Table</h4>
-                          </div>
-                          <div class="card-body">
-                            <table id="example" class="table table-striped" style="width:100%">
-                              <thead>
-                                <tr>
-                                  <th>Name</th>
-                                  <th>Position</th>
-                                  <th>Office</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Tiger Nixon</td>
-                                  <td>System Architect</td>
-                                  <td>Edinburgh</td>
-                                </tr>
-                                <tr>
-                                  <td>Garrett Winters</td>
-                                  <td>Accountant</td>
-                                  <td>Tokyo</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </div> -->
-
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div> -->
 
-            <!-- <table class="table table-striped" style="width:100%">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let row of data | slice:0:pageSize">
-                <td>{{ row.name }}</td>
-                <td>{{ row.position }}</td>
-                <td>{{ row.office }}</td>
-              </tr>
-            </tbody>
-          </table>
 
-          <nav>
-            <ul class="pagination">
-              <li class="page-item">
-                <button class="page-link" (click)="pageSize = 4">1</button>
-              </li>
-              <li class="page-item">
-                <button class="page-link" (click)="pageSize = 8">2</button>
-              </li>
-            </ul>
-          </nav> -->
+
+    <!-- Chart.js Script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const leadToTestDriveRatio = 60; // You can set dynamic values here
+      const testDriveToOrderRatio = 40;
+
+      const ctx = document.getElementById('conversionDoughnutChart').getContext('2d');
+      const conversionDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Lead to Test Drive', 'Test Drive to Order'],
+          datasets: [{
+            label: 'Conversion Ratio',
+            data: [leadToTestDriveRatio, testDriveToOrderRatio],
+            backgroundColor: ['#4e73df', '#1cc88a'],
+            borderColor: ['#fff', '#fff'],
+            borderWidth: 2,
+            hoverOffset: 20
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  return `${context.label}: ${context.parsed}%`;
+                }
+              }
+            },
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 20,
+                boxWidth: 12,
+                font: {
+                  size: 13
+                }
+              }
+            },
+            title: {
+              display: false
+            }
+          },
+          cutout: '60%'
+        }
+      });
+    </script>

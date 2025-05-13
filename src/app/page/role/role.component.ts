@@ -1,8 +1,14 @@
 import { Component, inject, OnInit, signal, Signal } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MasterService } from '../../service/master.service';
 import { ToastrService } from 'ngx-toastr';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { Role } from '../../model/class/role';
 import { roleResponse } from '../../model/interface/master';
 import { HttpClient } from '@angular/common/http';
@@ -14,13 +20,11 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.css'],
 })
-
 export class RoleComponent implements OnInit {
-   private http = inject(HttpClient);
+  private http = inject(HttpClient);
   useForm: FormGroup = new FormGroup({});
-  roleList = signal<Role[]>([]); 
+  roleList = signal<Role[]>([]);
   count = signal<number>(0);
-  
 
   // service
   private masterSrv = inject(MasterService);
@@ -29,14 +33,13 @@ export class RoleComponent implements OnInit {
   constructor() {
     this.initializeForm();
   }
- 
+
   staticDealerList = [
     { dealer_code: 'Admin' },
     { dealer_code: 'SalesManager' },
     { dealer_code: 'Salesperson' },
-    { dealer_code: 'GM' }
+    { dealer_code: 'GM' },
   ];
-  
 
   ngOnInit(): void {
     this.loadRole();
@@ -48,7 +51,7 @@ export class RoleComponent implements OnInit {
       description: new FormControl('', [Validators.required]),
     });
   }
-// Example for setting the role list dynamically
+  // Example for setting the role list dynamically
 
   closeModal() {
     ($('.bd-example-modal-lg') as any).modal('hide');
@@ -58,18 +61,18 @@ export class RoleComponent implements OnInit {
   //   ($('.bd-example-modal-sm') as any).
   //   ('show');
   // }
- openModals() {
-  ($('.bd-example-modal-sm') as any).modal('show');
-}
+  openModals() {
+    ($('.bd-example-modal-sm') as any).modal('show');
+  }
 
-  loadRole(){
+  loadRole() {
     this.masterSrv.getAllRole().subscribe({
-      next : (res: roleResponse) => {
+      next: (res: roleResponse) => {
         this.count.set(res.data.count);
         this.roleList.set(res.data.rows);
       },
       error: (err) => {
-        this.toastr.error(err.error.error , 'Error')
+        this.toastr.error(err.error.error, 'Error');
       },
     });
   }
@@ -78,10 +81,10 @@ export class RoleComponent implements OnInit {
     this.masterSrv.createRole(this.useForm.value).subscribe({
       next: () => {
         this.loadRole();
-        this.toastr.success('User created successfully!', 'Success');
+        this.toastr.success('Role created successfully!', 'Success');
       },
       error: (err) => {
-        this.toastr.error(err.error.error , 'Error');
+        this.toastr.error(err.error.error, 'Error');
       },
     });
   }

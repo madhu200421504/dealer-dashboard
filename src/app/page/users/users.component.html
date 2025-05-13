@@ -74,7 +74,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Dealer Code</th>
+                <!-- <th>Dealer Code</th> -->
                 <th>Action</th>
               </tr>
             </thead>
@@ -91,7 +91,7 @@
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.user_role }}</td>
-                <td>{{ user.dealer_code }}</td>
+                <!-- <td>{{ user.dealer_code }}</td> -->
                 <td class="d-flex">
                   <a href="javascript:void(0);" data-target=".bd-example-modal-lg" data-toggle="modal"
                     class="btn btn-primary shadow btn-xs sharp mr-1" (click)="onEdit(user)"><i
@@ -210,9 +210,7 @@
                 <span>Role Name is required.</span>
               </div>
             </div>
-          </div>
 
-          <div class="row">
             <!-- Account No -->
             <!-- <div class="col-md-6 form-group">
               <label for="account_id" class="form-label">Account No</label>
@@ -262,10 +260,9 @@
                 <span *ngIf="useForm.get('email')?.errors?.['email']">Please enter a valid email address.</span>
               </div>
             </div>
-          </div>
 
-          <!-- TEAM -->
-          <div class="row">
+            <!-- TEAM -->
+
             <div class="col-md-6 form-group">
               <label for="team_name" class="form-label">Team name</label>
               <select id="team_name" class="form-control form-control-lg" formControlName="team_id"
@@ -289,11 +286,11 @@
                 <span>Team is required.</span>
               </div>
             </div>
-          </div>
-          <!-- USER ID FIELD  -->
 
-          <!-- DEALER -->
-          <div class="row">
+            <!-- USER ID FIELD  -->
+
+            <!-- DEALER -->
+            <!-- <div class="row">
             <div class="col-md-6 form-group">
               <label for="dealer_code" class="form-label">Dealer Code</label>
               <select id="dealer_id" class="form-control form-control-lg" formControlName="dealer_id"
@@ -313,8 +310,8 @@
                   useForm.get('dealer_id')?.invalid
                 ">
                 <span>Dealer is required.</span>
-              </div>
-            </div>
+              </div> -->
+            <!-- </div> -->
 
             <!-- Phone -->
             <div class="col-md-6 form-group">
@@ -359,11 +356,11 @@
                 </span>
               </div>
             </div>
-          </div>
-        </form>
-      </div>
+            <!-- </div>
+        </form> -->
+            <!-- </div> -->
 
-      <!-- <div class="modal-footer">
+            <!-- <div class="modal-footer">
         <ng-container *ngIf="dealerObj.dealer_id; else saveButton">
           <button type="button" class="btn btn-outline-primary" data-dismiss="modal" (click)="onUpdate()"
             [disabled]="!isUserNameChanged()">
@@ -382,20 +379,20 @@
       </div>
     </div>
   </div> -->
-      <div class="modal-footer">
-        <ng-container *ngIf="userObj?.user_id; else saveButton">
-          <button type="button" class="btn btn-outline-primary" data-dismiss="modal" (click)="onUpdate()"
-            [disabled]="!isUserNameChanged()">
-            Edit
-          </button>
-        </ng-container>
-        <button type="button" class="btn btn-outline-danger" data-dismiss="modal" (click)="closeModal()">
-          Close
-        </button>
-        <ng-template #saveButton>
-          <button type="button" class="btn btn-outline-primary" (click)="onSave()"
-            [attr.data-dismiss]="useForm.valid ? 'modal' : null">
-            Save
-          </button>
-        </ng-template>
-      </div>
+            <div class="modal-footer">
+              <ng-container *ngIf="userObj?.user_id; else saveButton">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal" (click)="onUpdate()"
+                  [disabled]="!isUserNameChanged()">
+                  Edit
+                </button>
+              </ng-container>
+              <button type="button" class="btn btn-outline-danger" data-dismiss="modal" (click)="closeModal()">
+                Close
+              </button>
+              <ng-template #saveButton>
+                <button type="button" class="btn btn-outline-primary" (click)="onSave()"
+                  [attr.data-dismiss]="useForm.valid ? 'modal' : null">
+                  Save
+                </button>
+              </ng-template>
+            </div>

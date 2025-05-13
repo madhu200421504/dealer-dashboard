@@ -1,115 +1,25 @@
-.buttons:hover{
-    color: white !important;
-
-}
-.buttons{
-    color: black !important;
-}
-
-.custom-disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
+.sidebar {
+  width: 250px; /* Adjust based on sidebar width */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #f8f9fa;
 }
 
-.is-invalid {
-  border: 1px solid red !important;
-}
-span {
-    font-size: .8rem;
-    margin-left: .5rem;
+.content-body {
+  margin-left: 350px; /* Match sidebar width */
+  padding: 20px;
+  flex-grow: 1;
 }
 
-/* Modal general styling */
-.custom-modal .modal-dialog {
-  max-width: 90%; /* Default width */
-  margin: 1.5rem auto;
-}
-
-.custom-modal .modal-content {
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Form styling */
-.custom-modal .form-group {
-  flex: 1;
-  margin-bottom: 1rem;
-}
-
-.custom-modal .form-label {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-  
-
-/* Responsive Design */
-@media (min-width: 768px) {
-  .custom-modal .modal-dialog {
-    max-width: 700px;
+@media (max-width: 768px) {
+  .sidebar {
+    display: none; /* Hide sidebar on mobile */
   }
 
-  .custom-modal .modal-content {
-    padding: 2rem;
+  .content-body {
+    margin-left: 0; /* Remove margin to use full width */
+    padding: 10px; /* Adjust padding for mobile */
   }
-
-  .custom-modal .form-group {
-    margin-right: 1rem;
-  }
-}
-
-@media (max-width: 767px) {
-  .custom-modal .modal-dialog {
-    max-width: 100%;
-  }
-
-  .custom-modal .form-group {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-
-  .custom-modal .modal-footer {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .custom-modal .modal-footer button {
-    margin-bottom: 0.5rem;
-  }
-}
-
-
-/* General modal styling */
-.custom-modal .modal-dialog {
-  max-width: 95%;
-  margin: 1.5rem auto;
-}
-
-.custom-modal .modal-content {
-  padding: 1.5rem;
-  border-radius: 8px;
-}
-
-/* Responsive adjustments */
-@media (min-width: 768px) {
-  .custom-modal .modal-dialog {
-    max-width: 700px;
-  }
-}
-
-@media (max-width: 767px) {
-  .custom-modal .modal-footer {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .custom-modal .modal-footer button {
-    margin-bottom: 0.5rem;
-  }
-}
-
-.x{ 
-  font-size: 20px !important;
-  font-weight: 500;
 }

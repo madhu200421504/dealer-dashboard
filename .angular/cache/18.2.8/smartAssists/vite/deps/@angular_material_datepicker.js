@@ -158,7 +158,6 @@ import {
   ɵɵtwoWayProperty,
   ɵɵviewQuery
 } from "./chunk-STL63EUQ.js";
-import "./chunk-IXUSS67I.js";
 import {
   animationFrameScheduler,
   asapScheduler,
@@ -166,6 +165,7 @@ import {
   isObservable,
   merge
 } from "./chunk-O6VDDHVS.js";
+import "./chunk-IXUSS67I.js";
 import {
   ConnectableObservable,
   Observable,

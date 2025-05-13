@@ -6,7 +6,7 @@ import { ContextService } from '../../service/context.service';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [FormsModule , RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,7 +20,7 @@ export class SidebarComponent {
     this.context.onSideBarClick$.next({ role, pageTitle });
   }
 
-   onTeamChange(role: string, pageTitle: string) {
+  onTeamChange(role: string, pageTitle: string) {
     this.context.onSideBarClick$.next({ role, pageTitle });
   }
 
