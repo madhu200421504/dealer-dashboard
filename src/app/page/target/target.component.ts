@@ -510,7 +510,7 @@ export class TargetComponent implements OnInit {
         this.closeModal();
 
         // Show success message
-        this.toastr.success('Vehicle created successfully!', 'Success');
+        this.toastr.success('Target created successfully!', 'Success');
 
         // Load the updated data
         // Note: You likely only need one of these methods, not both
@@ -518,7 +518,7 @@ export class TargetComponent implements OnInit {
         // this.getAllTarget(); // You probably don't need this if loadTarget() does the job
       },
       error: (err) => {
-        console.error('User creation error:', err);
+        console.error('Target creation error:', err);
         this.toastr.error(
           err.message || 'Failed to create user',
           'Creation Error'
