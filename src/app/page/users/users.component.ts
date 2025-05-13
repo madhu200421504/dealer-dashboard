@@ -150,7 +150,7 @@ export class UsersComponent implements OnInit {
       // role_id: new FormControl(null, [Validators.required]),
 
       // dealer_id: new FormControl(null, [Validators.required]),
-      team_id: new FormControl(null, [Validators.required]),
+      // team_id: new FormControl(null, [Validators.required]),
       // team_id: new FormControl(null, [Validators.required]),
       // dealer_id: new FormControl(null),
       // team_name: new FormControl(null, [Validators.required]),

@@ -79,11 +79,11 @@ export class TeamComponent {
       //   Validators.minLength(2),
       //   Validators.maxLength(50),
       // ]),
-      team_lead_email: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-      ]),
+      // team_lead_email: new FormControl('', [
+      //   Validators.required,
+      //   Validators.minLength(2),
+      //   Validators.maxLength(50),
+      // ]),
 
       // role: new FormControl('', [Validators.required]),
     });
@@ -542,23 +542,30 @@ export class TeamComponent {
       this.toastr.warning(
         'Please fill all required fields correctly',
         'Validation'
-      ); // Mark all fields as touched
-      return; // Don't proceed if the form is invalid
+      );
+      return;
     }
     console.log('📦 Payload Before API Call:', this.useForm.value);
 
     const formData = this.useForm.value;
     console.log('Form Data being sent to API:', formData);
     this.masterSrv.createNewTeam(formData).subscribe({
-      next: () => {
-        this.toastr.success('team created successfully!', 'Success');
-        this.getAllTeams();
+      next: (response) => {
+        this.toastr.success('Team created successfully!', 'Success');
+        // Use displayAllTeams() instead of getAllTeams() to update the table immediately
+        this.displayAllTeams();
         this.closeModal();
+
+        // Force change detection to ensure UI updates
+        setTimeout(() => {
+          this.cdr.detectChanges();
+          this.cdr.markForCheck();
+        }, 0);
       },
       error: (err) => {
-        console.error('User creation error:', err);
+        console.error('Team creation error:', err);
         this.toastr.error(
-          err.message || 'Failed to create user',
+          err.message || 'Failed to create team',
           'Creation Error'
         );
       },
