@@ -8,7 +8,19 @@
 }
 
 .content-body {
-  margin-left: 350px; /* Match sidebar width */
+  margin-left: 14%; /* Match sidebar width */
   padding: 20px;
   flex-grow: 1;
+}
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100% !important;
+  table-layout: auto;
+}
+body {
+  overflow-x: hidden;
 }

@@ -335,11 +335,11 @@ export class TeamComponent {
           this.totalUser.set(res.data.count);
           this.userList.set(res.data.rows);
         } else {
-          this.toastr.warning('No users found', 'Information');
+          this.toastr.warning('No teams found', 'Information');
         }
       },
       error: (err) => {
-        console.error('Users fetch error:', err);
+        console.error('teams fetch error:', err);
         this.toastr.error(err.message || 'Failed to fetch users', 'Error');
       },
     });
@@ -354,7 +354,7 @@ export class TeamComponent {
     if (this.selectedteamForDeletion && this.selectedteamForDeletion.team_id) {
       this.masterSrv.deleteTeam(this.selectedteamForDeletion.team_id).subscribe(
         (res: TeamsResponse) => {
-          this.toastr.success('User deleted successfully', 'Success');
+          this.toastr.success('Team deleted successfully', 'Success');
           this.displayAllTeams();
         },
         (error) => {
@@ -363,7 +363,7 @@ export class TeamComponent {
         }
       );
     } else {
-      alert('No users selected for deletion');
+      alert('No Team selected for deletion');
     }
   }
 
@@ -375,12 +375,12 @@ export class TeamComponent {
           this.totalUser.set(res.data.count);
           this.teamList.set(res.data.rows);
         } else {
-          this.toastr.warning('No users found', 'Information');
+          this.toastr.warning('No team found', 'Information');
         }
       },
       error: (err) => {
-        console.error('Users fetch error:', err);
-        this.toastr.error(err.message || 'Failed to fetch users', 'Error');
+        console.error('team fetch error:', err);
+        this.toastr.error(err.message || 'Failed to fetch team', 'Error');
       },
     });
   }

@@ -8,11 +8,10 @@
 }
 
 .content-body {
-  margin-left: 350px; /* Match sidebar width */
+  margin-left: 14%; /* Match sidebar width */
   padding: 20px;
   flex-grow: 1;
 }
-
 @media (max-width: 768px) {
   .sidebar {
     display: none; /* Hide sidebar on mobile */

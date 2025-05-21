@@ -389,11 +389,11 @@ export class VehicleComponent implements OnInit {
           this.totalVehicle.set(res.data.count);
           this.vehicleList.set(res.data.rows);
         } else {
-          this.toastr.warning('No users found', 'Information');
+          this.toastr.warning('No Vehicle found', 'Information');
         }
       },
       error: (err) => {
-        console.error('Users fetch error:', err);
+        console.error('Vehicle fetch error:', err);
         this.toastr.error(err.message || 'Failed to fetch users', 'Error');
       },
     });
@@ -687,7 +687,7 @@ export class VehicleComponent implements OnInit {
         .deleteVehicle(this.selectedVehicleForDeletion.vehicle_id)
         .subscribe(
           (res: VehicleResponse) => {
-            this.toastr.success('User deleted successfully', 'Success');
+            this.toastr.success('Vehicle deleted successfully', 'Success');
             this.getAllVehicle();
           },
           (error) => {
@@ -696,7 +696,7 @@ export class VehicleComponent implements OnInit {
           }
         );
     } else {
-      alert('No users selected for deletion');
+      alert('No Vehicle selected for deletion');
     }
   }
 

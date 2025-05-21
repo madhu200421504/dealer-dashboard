@@ -12,15 +12,6 @@
   </div>
 
   <div *ngIf="selectedSection === 'home'" style="margin-top:120px;margin-left:-380px;" class="content-section active">
-    <!-- <h2>Welcome to Home</h2>
-    <p>This is the home section content.</p> -->
-
-
-    <!-- <div class="header">
-      <span class="back-button">←</span>
-      <button class="nav-button">Home</button>
-      <span class="nav-tab">Analysis</span>
-    </div> -->
     <div class="main-content">
       <div class="container" style="max-width: 1800px; margin: 0 auto;margin-top:-20px;margin-left:80px">
         <!-- your dashboard content -->
@@ -74,49 +65,123 @@
           <div class="actions" style="  background-color: #f9f9f9;">
             <div class="action-row">
 
-              <div class="person-info">
-                <div class="person-name"><span style="color:black;"><b>Rahullll Sharma</b></span> | Discovery</div>
-                <!-- <div class="person-role">Discovery</div> -->
-                <div class="action-area">
-                  <span class="action-label">Action: </span>
-                  <button class="action-button test-drive">Test Drive</button>
+              <!-- TODAY TEST DRIVES  -->
+              <div class="person-info" *ngIf="selectedUser?.name">
+                <h3 style="color: red;">First Box (Today + Upcoming)</h3>
+                <div *ngIf="todayTestDrives.length > 0">
+                  <div *ngFor="let td of todayTestDrives" style="margin-bottom: 1em;">
+                    <!-- Name and Subject on same line -->
+                    <p>
+                      <b style="color: black; text-transform: capitalize;">{{ selectedUser?.name }}</b> |
+                      <span style="color: black;">{{ td.subject }}</span>
+                    </p>
+                    <!-- PMI on next line -->
+                    <p><span style="color: black;">PMI:</span> {{ td.PMI || 'N/A' }}</p>
+                  </div>
+                </div>
+
+                <div *ngIf="upcomingTestDrives.length > 0">
+                  <h4>Upcoming Test Drives:</h4>
+                  <div *ngFor="let testDrive of upcomingTestDrives">
+                    <p>{{ testDrive.subject }} - {{ testDrive.start_date || 'No Date' }}</p>
+                  </div>
                 </div>
               </div>
 
-              <!-- <div class="person-info">
-              <div class="person-name">Vikas Dubey</div>
-              <div class="person-role">Defender</div>
-              Action: <button class="action-button follow-up">Follow up</button>
-            </div> -->
-              <div class="person-info">
-                <div class="person-name"><span style="color:black;"><b>Rassshul Sharma</b></span> | Discovery</div>
-                <!-- <div class="person-role">Discovery</div> -->
-                <div class="action-area">
-                  <span class="action-label">Action: </span>
-                  <button class="action-button test-drive">Test Drive</button>
+
+              <!-- SECOND BOX - UPCOMING  -->
+              <div class="person-info" *ngIf="selectedUser?.name">
+                <h3 style="color: green;">Second Box (Today + Upcoming)</h3>
+                <div *ngIf="todayTestDrives.length > 0">
+                  <div *ngFor="let td of todayTestDrives" style="margin-bottom: 1em;">
+                    <p>
+                      <b style="color: black; text-transform: capitalize;">{{ selectedUser?.name }}</b> |
+                      <span style="color: black;">{{ td.subject }}</span>
+                    </p>
+                    <!-- PMI on next line -->
+                    <p><span style="color: black;">PMI:</span> {{ td.PMI || 'N/A' }}</p>
+                  </div>
+                </div>
+
+                <div *ngIf="upcomingTestDrives.length > 0">
+                  <h4>Upcoming Test Drives:</h4>
+                  <div *ngFor="let testDrive of upcomingTestDrives">
+                    <p>{{ testDrive.subject }} - {{ testDrive.start_date || 'No Date' }}</p>
+                  </div>
                 </div>
               </div>
 
-              <!-- <div class="show-more">
-              Also show Upcoming/Overdue
-            </div> -->
-
-              <div class="person-info">
-                <div class="person-name"><span style="color:black;"><b>Rahul Sharma</b></span> | Discovery</div>
-                <!-- <div class="person-role">Discovery</div> -->
-                <div class="action-area">
-                  <span class="action-label">Action: </span>
-                  <button class="action-button test-drive">Test Drive</button>
+              <!-- OVERDUE  -->
+              <div class="person-info"
+                *ngIf="selectedUser?.name && selectedUser?.overdueTestDrives as overdueTestDrives">
+                <h3 style="color: blue;">Overdue Test Drives</h3>
+                <div *ngIf="overdueTestDrives.length > 0; else noOverdue">
+                  <div *ngFor="let td of overdueTestDrives" style="margin-bottom: 1em;">
+                    <p>
+                      <b style="color: black; text-transform: capitalize;">{{ selectedUser?.name }}</b> |
+                      <span style="color: black;">{{ td.subject }}</span>
+                    </p>
+                    <p><span style="color: black;">PMI:</span> {{ td.PMI || 'N/A' }}</p>
+                  </div>
                 </div>
+                <ng-template #noOverdue>
+                  <p style="color: gray;">No overdue test drives to display.</p>
+                </ng-template>
               </div>
+
 
             </div>
           </div>
         </div>
       </div>
+      <div></div>
+      <div class="card"
+        style="margin-top: 30px; background-color: #fff; padding: 20px; box-shadow: 0 0 8px #ccc; margin-left:100px; width:1520px;">
+        <div class="card-title" style="display:flex; justify-content: space-between; align-items: center;">
+          <span>User Details Table</span>
+          <select [(ngModel)]="filterOption" style="padding: 5px; font-size: 14px; border:none; border-radius:2px;">
+            <option value="today">Today</option>
+            <option value="oneWeek">One Week</option>
+            <option value="all">All</option>
+          </select>
+        </div>
+        <table class="table table-striped" style="width: 100%; margin-top: 10px;">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>VIN</th>
+              <th>Registration no</th>
+              <th>Reserved by</th>
+              <th>Date</th>
+              <th>Start time</th>
+              <th>End time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Show "No data found" if no test drives for selected filter -->
+            <tr *ngIf="getFilteredTestDrives().length === 0">
+              <td colspan="7" style="text-align: center;">No data found</td>
+            </tr>
 
-    </div>
-  </div>
+            <!-- Loop over filtered test drives and show rows -->
+            <tr *ngFor="let testDrive of getFilteredTestDrives()">
+              <td>{{ testDrive.subject || 'N/A' }}</td>
+              <td>{{ testDrive.VIN || 'N/A' }}</td>
+              <td>{{ testDrive.PMI || 'N/A' }}</td>
+              <td>{{ testDrive.assigned_to || 'N/A' }}</td>
+              <td>{{ testDrive.start_date | date:'yyyy-MM-dd' }}</td>
+              <td>{{ testDrive.start_time }}</td>
+              <td>{{ testDrive.end_time }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div> <!-- end container -->
+  </div> <!-- end main-content -->
+
+
+
 
   <div *ngIf="selectedSection === 'analysis'" class="dashboard-content content-section active">
     <!-- CONTENT FOR ANALYSIS -->
@@ -124,40 +189,51 @@
       <!-- Metrics and Filters Row (Combined) -->
       <div class="metrics-row">
         <div class="metric-box">
-          <div class="metric-value">10</div>
+          <div class="metric-value">{{ dashboardMetrics.enquiries }}</div>
           <div class="metric-label">Enquiries</div>
         </div>
         <div class="metric-box">
-          <div class="metric-value">2</div>
+          <div class="metric-value">{{ dashboardMetrics.testDrives }}</div>
           <div class="metric-label">Test Drives</div>
         </div>
         <div class="metric-box">
-          <div class="metric-value">1</div>
+          <div class="metric-value">{{ dashboardMetrics.newOrders }}</div>
           <div class="metric-label">New Orders</div>
         </div>
         <div class="metric-box">
-          <div class="metric-value">0</div>
+          <div class="metric-value">{{ dashboardMetrics.cancellations }}</div>
           <div class="metric-label">Cancellation</div>
         </div>
         <div class="metric-box">
-          <div class="metric-value">1</div>
+          <div class="metric-value">{{ dashboardMetrics.netOrders }}</div>
           <div class="metric-label">Net Order</div>
         </div>
         <div class="metric-box">
-          <div class="metric-value">1</div>
+          <div class="metric-value">{{ dashboardMetrics.retail }}</div>
           <div class="metric-label">Retail</div>
         </div>
-        <!-- Filters added inline with metrics -->
-        <!-- background-color: #f4f4f4 -->
-        <div class="filter-section" style="width:80px">
+
+
+
+        <div class="filter-section">
           <div class="filters-title">Filters</div>
           <div class="time-filters">
-            <button class="filter-button active">Today</button>
-            <button class="filter-button">MTD</button>
-            <button class="filter-button">QTD</button>
-            <button class="filter-button">YTD</button>
+            <button class="filter-button" [class.active]="activeFilter === 'Today'" (click)="onFilterClick('Today')">
+              Today
+            </button>
+            <button class="filter-button" [class.active]="activeFilter === 'MTD'" (click)="onFilterClick('MTD')">
+              MTD
+            </button>
+            <button class="filter-button" [class.active]="activeFilter === 'QTD'" (click)="onFilterClick('QTD')">
+              QTD
+            </button>
+            <button class="filter-button" [class.active]="activeFilter === 'YTD'" (click)="onFilterClick('YTD')">
+              YTD
+            </button>
           </div>
-          <!-- <div class="select-container">
+        </div>
+
+        <!-- <div class="select-container">
             <select class="sm-select">
               <option disabled selected>Select a SM</option>
               <option>All SMs</option>
@@ -167,89 +243,111 @@
             </select>
             <div class="select-arrow">▼</div>
           </div> -->
-        </div>
       </div>
-
-      <!-- Performance Panels -->
-      <div class="performance-panels">
-        <div class="performance-panel">
-          <h2 class="panel-title">Compare Performance</h2>
-          <div class="panel-content">
-            Performance comparison charts would go here
-          </div>
-        </div>
-
-        <div class="performance-panel">
-          <h2 class="panel-title">Performance Analysis</h2>
-          <div class="panel-content">
-            <table border="1" cellpadding="8" cellspacing="0"
-              style="width:100%; border-collapse: collapse; text-align: center; margin-top: 120px;">
-              <thead>
-                <tr>
-                  <th rowspan="2" style="width: 20%;"></th>
-                  <th colspan="2" style="padding:10px;color:black;">Performance</th>
-                  <th colspan="2" style="padding:10px;color:black;">Rank</th>
-                </tr>
-                <tr>
-                  <th style="padding:10px;color:black;">Dealership</th>
-                  <th style="padding:10px;color:black;">All India</th>
-                  <th style="padding:10px;color:black;">Dealership</th>
-                  <th style="padding:10px;color:black;">All India</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="text-align: left; padding:12px; color:black;">Enquiries</td>
-                  <td>120</td>
-                  <td>300</td>
-                  <td>5</td>
-                  <td>10</td>
-                </tr>
-                <tr>
-                  <td style="text-align: left; padding:12px; color:black;">Test Drive</td>
-                  <td>80</td>
-                  <td>220</td>
-                  <td>8</td>
-                  <td>15</td>
-                </tr>
-                <tr>
-                  <td style="text-align: left; padding:12px; color:black;">New Orders</td>
-                  <td>50</td>
-                  <td>150</td>
-                  <td>7</td>
-                  <td>12</td>
-                </tr>
-                <tr>
-                  <td style="text-align: left; padding:12px; color:black;">Cancellations</td>
-                  <td>5</td>
-                  <td>20</td>
-                  <td>12</td>
-                  <td>18</td>
-                </tr>
-                <tr>
-                  <td style="text-align: left; padding:12px; color:black;">Net Orders</td>
-                  <td>45</td>
-                  <td>130</td>
-                  <td>6</td>
-                  <td>11</td>
-                </tr>
-                <tr>
-                  <td style="text-align: left; padding:12px; color:black;">Retail</td>
-                  <td>40</td>
-                  <td>120</td>
-                  <td>9</td>
-                  <td>14</td>
-                </tr>
-                <!-- Add more rows as needed -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
     </div>
+
+    <!-- Performance Panels -->
+    <div class="performance-panels">
+      <div class="performance-panel">
+
+        <!-- Row with KPI and two dropdowns inside performance-panel -->
+
+
+
+        <div style="display: flex; align-items: flex-start; gap: 20px; margin-left: 80px; margin-top: 80px;">
+          <div style="min-width: 80px;">
+            <div style="font-weight: bold; font-size: 1.1rem; color: #987654; margin-top: 10px">KPI</div>
+            <div style="font-weight: normal; font-size: 1rem; color: #987654;">
+              <div style="margin-top: 25px;">Enquiries</div>
+              <div style="margin-top: 25px;">Test Drives</div>
+              <div style="margin-top: 25px;">New Orders</div>
+              <div style="margin-top: 25px;">Cancellations</div>
+              <div style="margin-top: 25px;">Net Orders</div>
+              <div style="margin-top: 25px;">Retail</div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 20px; align-items: flex-start; margin-top: 3px;">
+            <select [(ngModel)]="selectedPs1" style="padding: 6px 10px; font-size: 1rem; min-width: 120px;">
+              <option value="" disabled selected>PS1</option>
+              <option *ngFor="let user of users" [value]="user.user_id">{{ user.name }}</option>
+            </select>
+
+
+            <select style="padding: 5px; min-width: 120px; border: 1px solid #ccc;">
+              <option>PS 2</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Existing header and content -->
+        <!-- <h2 class="panel-title">Compare Performance</h2>
+        <div class="panel-content">
+          Performance comparison charts would go here
+        </div> -->
+      </div>
+
+      <div class="performance-panel">
+        <h2 class="panel-title">Performance Analysis</h2>
+        <div class="panel-content">
+          <table border="1" cellpadding="8" cellspacing="0"
+            style="width:100%; border-collapse: collapse; text-align: center; margin-top: 120px;">
+            <thead>
+              <tr>
+                <th rowspan="2" style="width: 20%;"></th>
+                <th colspan="2" style="padding:10px;color:black;">Performance</th>
+                <th colspan="2" style="padding:10px;color:black;">Rank</th>
+              </tr>
+              <tr>
+                <th style="padding:10px;color:black;">Dealership</th>
+                <th style="padding:10px;color:black;">All India</th>
+                <!-- <th style="padding:10px;color:black;">Dealership</th> -->
+                <th style="padding:10px;color:black;">All India</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">Enquiries</td>
+                <td>{{ dashboardMetrics.enquiries }}</td>
+                <td>{{ dashboardMetrics.allIndiaBestPerformace.enquiriesCount }}</td>
+                <td>{{ dashboardMetrics.allIndiaRank.enquiriesRank }}</td>
+              </tr>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">Test Drive</td>
+                <td>{{ dashboardMetrics.testDrives }}</td>
+                <td>{{ dashboardMetrics.allIndiaBestPerformace.testDrivesCount }}</td>
+                <td>{{ dashboardMetrics.allIndiaRank.testDrivesRank }}</td>
+              </tr>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">New Orders</td>
+                <td>{{ dashboardMetrics.newOrders }}</td>
+                <td>{{ dashboardMetrics.allIndiaBestPerformace.newOrdersCount }}</td>
+                <td>{{ dashboardMetrics.allIndiaRank.newOrdersRank }}</td>
+              </tr>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">Cancellations</td>
+                <td>{{ dashboardMetrics.cancellations }}</td>
+                <td>{{ dashboardMetrics.allIndiaBestPerformace.cancellationsCount }}</td>
+                <td>{{ dashboardMetrics.allIndiaRank.cancellationsRank }}</td>
+              </tr>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">Net Orders</td>
+                <td>{{ dashboardMetrics.netOrders }}</td>
+                <td>{{ dashboardMetrics.allIndiaBestPerformace.retailCount }}</td>
+                <td>{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
+
+              </tr>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">Retail</td>
+                <td>{{ dashboardMetrics.retail }}</td>
+                <td>{{ dashboardMetrics.allIndiaBestPerformace.retailCount }}</td>
+                <td>{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div>
-
-
-
 </div>

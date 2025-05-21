@@ -378,12 +378,12 @@ export class TargetComponent implements OnInit {
           this.totalTarget.set(res.data.count);
           this.targetList.set(res.data.rows);
         } else {
-          this.toastr.warning('No users found', 'Information');
+          this.toastr.warning('No target found', 'Information');
         }
       },
       error: (err) => {
-        console.error('Users fetch error:', err);
-        this.toastr.error(err.message || 'Failed to fetch users', 'Error');
+        console.error('target fetch error:', err);
+        this.toastr.error(err.message || 'Failed to fetch target', 'Error');
       },
     });
   }

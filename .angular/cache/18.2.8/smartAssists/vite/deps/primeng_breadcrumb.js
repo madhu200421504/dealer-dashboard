@@ -3,12 +3,6 @@ import {
   TooltipModule
 } from "./chunk-XBNHHTJ5.js";
 import {
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-CUSEFX5W.js";
-import {
   BaseIcon,
   ChevronRightIcon
 } from "./chunk-HL7R35UW.js";
@@ -18,6 +12,12 @@ import {
   SharedModule,
   UniqueComponentId
 } from "./chunk-MOSB6RC3.js";
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-CUSEFX5W.js";
 import "./chunk-TUG5LR7Y.js";
 import "./chunk-IYQOYZME.js";
 import {

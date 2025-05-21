@@ -8,11 +8,10 @@
 }
 
 .content-body {
-  margin-left: 350px; /* Match sidebar width */
+  margin-left: 14%; /* Match sidebar width */
   padding: 20px;
   flex-grow: 1;
 }
-
 @media (max-width: 768px) {
   .sidebar {
     display: none; /* Hide sidebar on mobile */
@@ -22,6 +21,9 @@
     margin-left: 0; /* Remove margin to use full width */
     padding: 10px; /* Adjust padding for mobile */
   }
+}
+body {
+  margin-top: 200px;
 }
 
 /*  */
@@ -111,7 +113,6 @@
 .filter-section {
   background-color: white;
 }
-
 
 .metric-box {
   background-color: white;
@@ -297,11 +298,13 @@
   background-color: #e6e6e6;
   padding: 1.5rem;
   border-radius: 8px;
-  height: 500px;
+  height: 600px;
+  padding-bottom: 300px; /* <-- Add this */
 
   /* width: 6000px !important; */
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); */
 }
+
 .avatar {
   width: 50px;
   height: 50px;
@@ -947,4 +950,11 @@ table th {
   .sm-select {
     width: 100%;
   }
+}
+select {
+  position: relative;
+  z-index: 1000; /* make sure dropdown is above other elements */
+}
+.dropdown-row {
+  margin-bottom: 150px; /* or more */
 }

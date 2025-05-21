@@ -68,8 +68,21 @@ export class RoleComponent implements OnInit {
   loadRole() {
     this.masterSrv.getAllRole().subscribe({
       next: (res: roleResponse) => {
-        this.count.set(res.data.count);
-        this.roleList.set(res.data.rows);
+        // 🔍 Filter out duplicate role names
+        const uniqueRoles: Role[] = [];
+        const seen = new Set<string>();
+
+        for (const role of res.data.rows) {
+          const name = role.role_name.trim().toLowerCase(); // normalize name
+          if (!seen.has(name)) {
+            seen.add(name);
+            uniqueRoles.push(role);
+          }
+        }
+
+        // ✅ Update the count and signal with unique roles
+        this.count.set(uniqueRoles.length);
+        this.roleList.set(uniqueRoles);
       },
       error: (err) => {
         this.toastr.error(err.error.error, 'Error');
@@ -78,13 +91,20 @@ export class RoleComponent implements OnInit {
   }
 
   onSave() {
+    if (this.useForm.invalid) {
+      this.useForm.markAllAsTouched(); // show validation errors if any
+      return;
+    }
+
     this.masterSrv.createRole(this.useForm.value).subscribe({
       next: () => {
-        this.loadRole();
+        this.loadRole(); // refresh the role list
         this.toastr.success('Role created successfully!', 'Success');
+        this.useForm.reset(); // clear the form
+        this.closeModal(); // close the modal (make sure this method works)
       },
       error: (err) => {
-        this.toastr.error(err.error.error, 'Error');
+        this.toastr.error(err.error.error || 'Failed to create role.', 'Error');
       },
     });
   }

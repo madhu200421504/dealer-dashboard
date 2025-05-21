@@ -382,3 +382,43 @@ export interface User {
   fname: string;
   lname: string;
 }
+// Represents a single Test Drive item
+export interface TestDrive {
+  subject: string;
+  start_date?: string; // optional because not always present
+  start_time?: string;
+  end_time?: string;
+  assigned_to?: string;
+  VIN?: string | null;
+  PMI?: string | null;
+  name?: string; // present in selectedUser's test drives
+}
+
+// Represents the selectedUser object containing test drives
+export interface SelectedUser {
+  todayTestDrives: TestDrive[];
+  upcomingTestDrives: TestDrive[];
+  overdueTestDrives: TestDrive[];
+}
+
+// Represents each user in the user list
+
+// Represents the entire API response structure
+export interface ApiResponse {
+  status: number;
+  message: string;
+  data: {
+    tableTestDrives_today: TestDrive[];
+    tableTestDrives_oneweek: TestDrive[];
+    selectedUser: SelectedUser;
+    user: User[];
+  };
+}
+export interface DashboardMetrics {
+  enquiries: number;
+  testDrives: number;
+  newOrders: number;
+  cancellations: number;
+  netOrders: number;
+  retail: number;
+}
