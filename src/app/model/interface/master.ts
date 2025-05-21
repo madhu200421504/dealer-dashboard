@@ -98,10 +98,6 @@ export interface TargetResponse {
   // vehicle: Vehicles[];
 }
 
-
-
-
-
 export interface Lead {
   dealer_id: string;
   count: number;
@@ -376,4 +372,13 @@ export interface ProfileResponse {
 
 export interface ForgotPasswordRequest {
   email: string;
+}
+
+// DASHBOARD
+
+export interface User {
+  user_id: string;
+  name: string;
+  fname: string;
+  lname: string;
 }

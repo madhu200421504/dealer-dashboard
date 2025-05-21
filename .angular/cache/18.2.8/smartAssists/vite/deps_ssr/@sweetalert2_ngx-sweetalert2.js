@@ -2,7 +2,7 @@ import { createRequire } from 'module';const require = createRequire(import.meta
 import {
   CommonModule,
   NgTemplateOutlet
-} from "./chunk-KKRJ4LPL.js";
+} from "./chunk-Y5GTXJDS.js";
 import {
   ApplicationRef,
   ChangeDetectionStrategy,
@@ -34,13 +34,13 @@ import {
   ɵɵlistener,
   ɵɵproperty,
   ɵɵtemplate
-} from "./chunk-6ZFWCITV.js";
-import {
-  require_cjs
-} from "./chunk-5IW5ZEPE.js";
+} from "./chunk-SVPRDJHU.js";
 import {
   require_operators
 } from "./chunk-UOPINYA3.js";
+import {
+  require_cjs
+} from "./chunk-5IW5ZEPE.js";
 import "./chunk-RPWZ4CMX.js";
 import {
   __async,
