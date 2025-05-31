@@ -35,6 +35,9 @@ import { Teams } from '../../model/class/team'; // ✅ Import the correct interf
 import { Role } from '../../model/class/role';
 import { error } from 'node:console';
 import { HttpHeaders } from '@angular/common/http';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+
+declare var $: any;
 
 @Component({
   selector: 'app-users',
@@ -47,6 +50,7 @@ import { HttpHeaders } from '@angular/common/http';
     FloatLabelModule,
     ReactiveFormsModule,
     NgbModalModule,
+    NgxDatatableModule,
   ],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
@@ -77,7 +81,9 @@ export class UsersComponent implements OnInit {
   totalrole: any;
   previousValue: any;
   user_id: string = ''; // Ensure this is properly initialized with the user ID
+  dataTable: any;
 
+  columns: any[] = [];
   constructor(
     private aleartsrv: AleartSrvService,
     private cdr: ChangeDetectorRef
@@ -255,24 +261,38 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  //   loadRole() {
+  //     this.masterSrv.getAllRole().subscribe({
+  //       next: (res: roleResponse) => {
+  //         if (res && res.data.rows && res.data.rows) {
+  //           this.roleList.set(res.data.rows);
+  //           console.log('Fetched role:', this.roleList());
+
+  //           this.totalrole.set(res.data.count);
+  // =        } else {
+  //           this.toastr.warning('No role found', 'Information');
+  //         }
+  //       },
+  //       error: (err) => {
+  //         console.error('Error fetching roles:', err);
+  //         this.toastr.error(err.error.error, 'Error');
+  //       },
+  //     });
+  //   }
   loadRole() {
     this.masterSrv.getAllRole().subscribe({
       next: (res: roleResponse) => {
-        if (res && res.data.rows && res.data.rows) {
-          this.roleList.set(res.data.rows);
-          // Set the dealer list from response
-          console.log('Fetched role:', this.roleList());
-          // Log the dealer list
-
-          this.totalrole.set(res.data.count);
-          // Set the total dealer count
+        if (res && res.data && Array.isArray(res.data)) {
+          this.roleList.set(res.data);
+          console.log('Fetched roles:', this.roleList());
+          this.totalrole.set(res.data.length); // Assuming count is length of array
         } else {
-          this.toastr.warning('No role found', 'Information');
+          this.toastr.warning('No roles found', 'Information');
         }
       },
       error: (err) => {
         console.error('Error fetching roles:', err);
-        this.toastr.error(err.error.error, 'Error');
+        this.toastr.error(err.error?.error || 'Error fetching roles', 'Error');
       },
     });
   }
@@ -943,4 +963,5 @@ export class UsersComponent implements OnInit {
   isEmailChange(): boolean {
     return this.useForm.get('email')?.value !== this.previousEmail;
   }
+  
 }

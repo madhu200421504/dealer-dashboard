@@ -1,5 +1,52 @@
+/* In your main CSS file (e.g., styles.css or app.component.css) */
+body {
+  /* Or a top-level wrapper div that contains both sidebar and content */
+  display: flex; /* Makes its direct children (sidebar, content-body) arrange in a row */
+  min-height: 100vh; /* Ensures the page takes at least full viewport height */
+  margin: 0; /* Remove default browser margin */
+  padding: 0; /* Remove default browser padding */
+}
+
 .sidebar {
-  width: 250px; /* Adjust based on sidebar width */
+  width: 250px;
+  flex-shrink: 0; /* IMPORTANT: Prevents the sidebar from shrinking below 250px */
+  /* Remove position: fixed, top, left, height: 100% if body is display: flex */
+  /* If you absolutely need position: fixed for other reasons, then the solution is different (see option 2 below) */
+  background-color: #f8f9fa;
+  z-index: 1000; /* Ensure it stays on top */
+}
+
+.content-body {
+  flex-grow: 1; /* IMPORTANT: Allows content-body to take all remaining space */
+  /* REMOVE margin-left: 250px; when using this flexbox approach */
+  padding: 20px; /* Your desired padding for the content */
+  box-sizing: border-box; /* Ensures padding is included in the element's total width/height */
+  overflow-x: hidden; /* Prevents scrollbar on content-body itself if inner content overflows */
+}
+
+/* This media query is good for small screens to hide the sidebar */
+@media (max-width: 768px) {
+  body {
+    /* Or your top-level wrapper */
+    flex-direction: column; /* Stacks items vertically on small screens */
+  }
+
+  .sidebar {
+    width: 100%; /* Sidebar takes full width */
+    height: auto; /* Height adapts to content */
+    position: static; /* No longer fixed on small screens */
+  }
+
+  .content-body {
+    margin-left: 0; /* No margin needed when stacked */
+    width: 100%; /* Takes full width */
+    padding: 10px; /* Adjust padding for mobile */
+  }
+}
+
+/* MY OLD CSS CODE */
+.sidebar {
+  width: 250px;
   position: fixed;
   top: 0;
   left: 0;
@@ -8,18 +55,18 @@
 }
 
 .content-body {
-  margin-left: 14%; /* Match sidebar width */
+  margin-left: 14%;
   padding: 20px;
   flex-grow: 1;
 }
 
 @media (max-width: 768px) {
   .sidebar {
-    display: none; /* Hide sidebar on mobile */
+    display: none;
   }
 
   .content-body {
-    margin-left: 0; /* Remove margin to use full width */
-    padding: 10px; /* Adjust padding for mobile */
+    margin-left: 0;
+    padding: 10px;
   }
 }

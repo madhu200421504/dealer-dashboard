@@ -355,11 +355,16 @@ export interface SingleVehicleResponse {
   data: Vehicle; // 👈 instead of TeamDetails or rows
 }
 
+// export interface roleResponse {
+//   data: {
+//     count: number;
+//     rows: Role[];
+//   };
+// }
 export interface roleResponse {
-  data: {
-    count: number;
-    rows: Role[];
-  };
+  status: number;
+  message: string;
+  data: Role[]; // data is an array of Role objects
 }
 
 export interface ProfileResponse {
@@ -393,9 +398,20 @@ export interface TestDrive {
   PMI?: string | null;
   name?: string; // present in selectedUser's test drives
 }
+export interface Performance {
+  user_id: string;
+  enquiries: number;
+  testDrives: number;
+  newOrders: number;
+  cancellations: number;
+  retail: number;
+}
 
 // Represents the selectedUser object containing test drives
 export interface SelectedUser {
+  user_id: string;
+  dealer_id: string;
+  name: string;
   todayTestDrives: TestDrive[];
   upcomingTestDrives: TestDrive[];
   overdueTestDrives: TestDrive[];

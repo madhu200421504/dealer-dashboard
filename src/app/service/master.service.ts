@@ -216,6 +216,14 @@ export class MasterService {
       headers,
     });
   }
+  // GET ALL ROLES
+  getAllRoles(): Observable<roleResponse> {
+    const headers = this.getAuthHeaders();
+
+    return this.http.get<roleResponse>(
+      'https://uat.smartassistapp.in/api/dealer/role/all'
+    );
+  }
 
   // VEHCILES BY ID GET
   getSingleVehicle(id: string): Observable<Vehicle> {
