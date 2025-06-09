@@ -147,7 +147,8 @@
             <!-- ROLE -->
             <div class="col-md-6 form-group">
               <label for="role_name" class="form-label">Role Name*</label>
-              <select id="role_name" class="form-control form-control-lg" formControlName="role_id" [ngClass]="{
+              <select id="role_name" class="form-control form-control-lg" formControlName="role_id"
+                placeholder="role name" [ngClass]="{
                   'is-invalid':
                     useForm.get('role_name')?.touched &&
                     useForm.get('role_name')?.invalid
@@ -186,7 +187,7 @@
             <div class="col-md-6 form-group">
               <label for="team_name" class="form-label">Team name</label>
               <select id="team_name" class="form-control form-control-lg" formControlName="team_id"
-                (change)="onTeamChange()" [ngClass]="{
+                (change)="onTeamChange()" placeholder="team name" [ngClass]="{
                   'is-invalid':
                     useForm.get('team_name')?.touched &&
                     useForm.get('team_name')?.invalid

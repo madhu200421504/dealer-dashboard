@@ -41,6 +41,8 @@
                 <th>Vehicle Types</th>
                 <th>VIN</th>
                 <th>chasis_number</th>
+                <th>Start_date</th>
+                <th>End_date</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -59,6 +61,8 @@
                 <td>{{ vehicle.type }}</td>
                 <td>{{ vehicle.VIN }}</td>
                 <td>{{vehicle.chasis_number}}</td>
+                <td>{{vehicle.demo_start_date}}</td>
+                <td>{{vehicle.demo_end_date}}</td>
 
                 <td class="d-flex">
                   <a href="javascript:void(0);" type="button" data-toggle="modal" data-target=".bd-example-modal-lg"
@@ -175,18 +179,83 @@
                       </div>
                     </div>
 
-
-                    <div class="col-md-6 form-group">
+                    <!-- MY CODE -->
+                    <!-- <div class="col-md-6 form-group">
                       <label for="chasis_number" class="form-label">Chasis Number</label>
                       <input id="chasis_number" class="form-control form-control-lg" type="text"
                         placeholder="Enter Chassis Number" formControlName="chasis_number"
                         [ngClass]="{'is-invalid': useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid}" />
 
-                      <!-- <div class="text-danger"
-                                              *ngIf="useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid">
-                                              <span>chasis_number is required.</span> -->
+
+                    </div> -->
+                    <div class="row">
+                      <div class="col-md-6 form-group">
+                        <label for="chasis_number" class="form-label">Chasis Number</label>
+                        <input id="chasis_number" class="form-control form-control-lg" type="text"
+                          placeholder="Enter Chassis Number" formControlName="chasis_number"
+                          [ngClass]="{'is-invalid': useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid}" />
+
+                        <!-- <select style="cursor: pointer" id="typeSelect" formControlName="type"
+                          class="form-control form-control-lg" [ngClass]="{
+                                    'is-invalid':
+                                      useForm.get('type')?.touched && useForm.get('type')?.invalid
+                                  }">
+                          <option value="null" disabled>Select Type</option>
+                          <option value="petrol">Petrol</option>
+                          <option value="diesel">Diesel</option>
+                          <option value="EV">EV</option>
+                        </select> -->
+                        <!-- Error Message -->
+                        <div class="text-danger" *ngIf="
+                                    useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid
+                                  ">
+                          <span>chasis number is required.</span>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 form-group">
+                        <label for="demo_start_date" class="form-label">Start date</label>
+                        <input id="demo_start_date" class="form-control form-control-lg" type="date"
+                          placeholder="start date" formControlName="demo_start_date" [ngClass]="{
+                                    'is-invalid':
+                                      useForm.get('demo_start_date')?.touched && useForm.get('demo_start_date')?.invalid
+                                  }" />
+
+                        <div class="text-danger"
+                          *ngIf="useForm.get('demo_start_date')?.touched && useForm.get('demo_start_date')?.invalid">
+                          <span>start date is required.</span>
+                        </div>
+
+                      </div>
                     </div>
+
+                    <div class="col-md-6 form-group">
+                      <label for="demo_end_date" class="form-label">End date</label>
+                      <input id="demo_end_date" class="form-control form-control-lg" type="date" placeholder="end date"
+                        formControlName="demo_end_date" [ngClass]="{
+                                                                        'is-invalid':
+                                                                          useForm.get('demo_end_date')?.touched && useForm.get('demo_end_date')?.invalid
+                                                                      }" />
+
+                      <div class="text-danger"
+                        *ngIf="useForm.get('demo_end_date')?.touched && useForm.get('demo_end_date')?.invalid">
+                        <span>end date is required.</span>
+                      </div>
+
+                    </div>
+
                   </div>
+                  <!-- <div class="col-md-6 form-group" style="margin-top:-30px;">
+                    <label for="end_date" class="form-label">End date</label>
+                    <input id="end_date" class="form-control form-control-lg" type="date" placeholder="end date"
+                      formControlName="end_date"
+                      [ngClass]="{'is-invalid': useForm.get('end_date')?.touched && useForm.get('end_date')?.invalid}" />
+
+
+                  </div> -->
+
+                  <!-- MY CODE -->
+
                   <!-- ADDED ONE MORE FIELD -->
                   <!-- <div class="form-group col-md-6">
                       <label for="chasis_number" class="form-label">Chasis number</label>

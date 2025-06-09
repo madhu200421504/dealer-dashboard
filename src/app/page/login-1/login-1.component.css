@@ -275,3 +275,41 @@ a:hover {
     padding: 10px; /* Adjust padding for mobile */
   }
 }
+
+/*  */
+/*
+  Media Query for iPad Pro (and similar large tablets)
+  This covers both landscape (min-width: 1024px) and portrait (max-width: 1024px with min-width: 768px for most tablets)
+*/
+
+/* For large tablets like iPad Pro (landscape) and smaller laptops */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .login-content {
+    /*
+        To move the form upwards, you can use:
+        1. margin-top: A negative value will pull it up.
+        2. transform: translateY(): More precise for visual adjustments, can be combined with other transforms.
+        3. Adjusting align-items or justify-content of its flex/grid parent: If its parent is a flex/grid container.
+      */
+
+    /* Option 1: Using margin-top (simplest for this scenario) */
+    margin-top: -350px; /* Adjust this value as needed. A negative value moves it up. */
+    /* If the parent is a flex container and you want to push it to the start: */
+    /* align-self: flex-start; */
+  }
+
+  /* You might also need to adjust the illustration if it now looks too low */
+  .img {
+    /* Example: move image slightly upwards too if needed */
+    margin-top: -300px;
+  }
+}
+
+/* For iPad Pro (portrait) and smaller tablets */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .login-content {
+    /* Apply similar or different adjustments for portrait mode */
+    margin-top: -50px; /* Maybe a smaller upward shift than landscape */
+    /* If in portrait, the layout is likely stacked, so vertical margins are more relevant */
+  }
+}

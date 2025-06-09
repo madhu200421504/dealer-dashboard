@@ -12,16 +12,17 @@
   padding: 20px;
   flex-grow: 1;
 }
-@media (max-width: 768px) {
+
+/* @media (max-width: 768px) {
   .sidebar {
-    display: none; /* Hide sidebar on mobile */
+    display: none; 
   }
 
   .content-body {
-    margin-left: 0; /* Remove margin to use full width */
-    padding: 10px; /* Adjust padding for mobile */
+    margin-left: 0; 
+    padding: 10px; 
   }
-}
+} */
 body {
   margin-top: 200px;
 }
@@ -219,7 +220,7 @@ body {
 }
 
 /* Responsive adjustments */
-@media (max-width: 992px) {
+/* @media (max-width: 992px) {
   .performance-panels {
     grid-template-columns: 1fr;
   }
@@ -234,23 +235,22 @@ body {
     position: static;
     margin-top: 1.5rem;
   }
-}
+} */
 
-@media (max-width: 576px) {
+/* @media (max-width: 576px) {
   .metrics-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Tablet and smaller */
 @media (max-width: 768px) {
   .metrics-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-}
+} */
 
 /* Mobile phones */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .dashboard-content {
     padding: 0.5rem;
   }
@@ -279,7 +279,7 @@ body {
   .metric-label {
     font-size: 0.7rem;
   }
-}
+} */
 
 .performance-panels {
   width: 69vw;
@@ -318,35 +318,32 @@ body {
 }
 
 /* Mobile & small tablets */
-@media (max-width: 768px) {
-  /* Stack metric boxes one per row */
+/* @media (max-width: 768px) {
   .metrics-grid {
     display: flex;
     flex-direction: column;
     gap: 10px;
     align-items: center;
-    /* center all items horizontally */
-  }
+    }
 
   .metric-box {
     width: 70%;
-    /* or adjust width as needed */
     max-width: 300px;
-    /* optional max width for better control */
     margin: 0 auto;
-    /* centers the box horizontally */
+  }
+  .main {
+    margin-left: -2000px;
   }
 
-  /* Stack performance panels one above the other */
   .performance-panels {
     flex-direction: column;
     width: 100%;
     gap: 1.5rem;
   }
-}
+} */
 
 /* Extra small phones */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .dashboard-content {
     padding: 0.5rem;
   }
@@ -371,17 +368,15 @@ body {
   .metrics-container {
     padding-left: 20px;
   }
-}
+} */
 
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .metrics-container {
     width: 100% !important;
     padding: 1rem;
-    /* optionally reduce padding */
     box-sizing: border-box;
-    /* ensures padding included in width */
   }
-}
+} */
 
 /* claude */
 body {
@@ -431,16 +426,16 @@ body {
   /* Space for fixed header */
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .sidebar {
-    display: none; /* Hide sidebar on mobile */
+    display: none; 
   }
 
   .content-body {
-    margin-left: 0; /* Remove margin to use full width */
-    padding: 10px; /* Adjust padding for mobile */
+    margin-left: 0;
+    padding: 10px; 
   }
-}
+} */
 
 .main-content {
   margin-left: 250px;
@@ -742,7 +737,7 @@ table th {
   font-size: 14px;
 }
 /* Tablets (up to 991px) */
-@media (max-width: 991px) {
+/* @media (max-width: 991px) {
   .content-section {
     margin-left: 0;
     margin-top: 80px;
@@ -773,10 +768,10 @@ table th {
     flex-direction: column;
     gap: 15px;
   }
-}
+} */
 
 /* Mobile Devices (up to 767px) */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .content-section {
     margin-left: 0 !important;
     margin-top: 60px;
@@ -817,16 +812,16 @@ table th {
     font-size: 13px;
     padding: 5px 10px;
   }
-}
+} */
 
-.action-row {
+/* .action-row {
   display: flex;
-  gap: 0; /* no space between boxes */
+  gap: 0; 
 }
 
 .person-info {
-  flex: 0 0 auto; /* do not grow or shrink, keep natural width */
-  width: 300px; /* fixed width for each box, adjust as needed */
+  flex: 0 0 auto; 
+  width: 300px; 
   margin: 0;
   padding: 10px;
   box-sizing: border-box;
@@ -835,7 +830,7 @@ table th {
 .dashboard-container {
   max-width: 1200px;
   margin: 0 auto;
-}
+} */
 
 /* Metrics row styling */
 .metrics-row {
@@ -923,7 +918,7 @@ table th {
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .metrics-row {
     flex-direction: column;
   }
@@ -945,12 +940,12 @@ table th {
     margin-left: 0;
     margin-top: 10px;
     width: 100%;
-  }
+  } */
 
-  .sm-select {
+/* .sm-select {
     width: 100%;
   }
-}
+} */
 select {
   position: relative;
   z-index: 1000; /* make sure dropdown is above other elements */
@@ -1052,3 +1047,284 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
 }
 
 /*  */
+.selected-user {
+  background-color: #cce5ff;
+  border: 2px solid #3399ff;
+  border-radius: 8px;
+  padding: 5px;
+  width: 90px;
+}
+
+/* res */
+.container-fluid {
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* @media (min-width: 1200px) {
+  .container-fluid {
+    max-width: 1200px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .container-fluid {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .container-fluid {
+    max-width: 720px;
+  }
+} */
+/* 
+@media (max-width: 767px) {
+  .container-fluid {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .container {
+    margin-left: none;
+  }
+} */
+
+/*  */
+/* Phone: stack fully vertical */
+@media only screen and (max-width: 600px) {
+  .metrics-row {
+    width: 100% !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .metric-box {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .metric-box:last-child {
+    width: 100% !important;
+  }
+}
+
+/* Tablet: stack in two columns */
+@media only screen and (min-width: 601px) and (max-width: 1024px) {
+  .metrics-row {
+    width: 100% !important;
+    flex-wrap: wrap;
+    gap: 15px !important;
+  }
+
+  .metric-box {
+    width: calc(50% - 15px) !important; /* two columns with gap */
+    box-sizing: border-box;
+  }
+
+  /* Last filter box can be full width on tablet for clarity */
+  .metric-box:last-child {
+    width: 100% !important;
+  }
+}
+/* THE ABOVE CODE IS FIXED */
+
+@media (max-width: 600px) {
+  .performance-panels {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* space between stacked panels */
+    margin-left: 0 !important; /* reset any margin left if needed */
+    width: 100% !important;
+  }
+
+  .performance-panel {
+    width: 100% !important; /* full width on phone */
+    margin-left: 0 !important; /* reset left margin */
+  }
+
+  /* The internal flex container that holds KPI and dropdowns */
+  .performance-panel > div[style*="display: flex"] {
+    flex-direction: column !important;
+    margin-left: 0 !important;
+  }
+
+  /* For the KPI labels and dropdown columns, stack vertically */
+  .performance-panel > div[style*="display: flex"] > div {
+    min-width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  /* Center text on small devices */
+  .performance-panel h2.panel-title {
+    text-align: center;
+  }
+}
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+
+@media (max-width: 600px) {
+  .performance-panel {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  /* Reduce padding and margin on table to fit mobile better */
+  .performance-panel table {
+    margin-top: 20px !important;
+    padding: 10px !important;
+    height: auto !important;
+  }
+
+  /* Optional: reduce font size on small screens */
+  .performance-panel table th,
+  .performance-panel table td {
+    padding: 6px !important;
+    font-size: 14px;
+  }
+}
+@media (max-width: 600px) {
+  .performance-panel {
+    width: 100% !important;
+    padding: 0 10px; /* small horizontal padding on phone */
+    margin-left: 0 !important;
+    height: 200px !important;
+  }
+
+  .performance-panel table {
+    width: 100% !important;
+    margin-top: 20px !important;
+    padding: 0 !important; /* remove big padding */
+    height: auto !important;
+  }
+
+  .performance-panel th,
+  .performance-panel td {
+    padding: 6px 4px !important; /* reduce padding */
+    font-size: 14px; /* smaller font on phone */
+  }
+
+  /* Wrap the table in a scroll container */
+  .performance-panel .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+  }
+}
+/* THE ABOVE CODE IS ALSO FIXED */
+/* HEADER TAB */
+@media screen and (max-width: 767px) {
+  .header,
+  .nav-buttons {
+    box-sizing: border-box; /* include padding in width */
+    max-width: 100vw; /* restrict width to viewport */
+    overflow-x: hidden; /* prevent horizontal scroll */
+    padding-left: 10px; /* optional: small padding */
+    padding-right: 10px;
+  }
+
+  .nav-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .nav-button {
+    width: 100%;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+}
+
+/* home today actions */
+@media (max-width: 768px) {
+  /* Force grid for first row to 4 columns */
+  .profiles > div:first-child {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 15px !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Force grid for second row to 4 columns */
+  .profiles > div:last-child {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 15px !important;
+  }
+
+  /* Adjust avatar size for phones */
+  .avatar {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 24px !important;
+  }
+
+  /* Name styling */
+  .name {
+    max-width: 80px;
+    font-size: 12px;
+    word-wrap: break-word;
+    white-space: normal;
+    margin-top: 5px;
+  }
+
+  /* Container padding for phones */
+  .container {
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* For very small phones - 2 icons per row */
+@media (max-width: 400px) {
+  .profiles > div:first-child,
+  .profiles > div:last-child {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* USER detials */
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr); /* desktop: 15 columns */
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+/* Phone screen: 4 icons per row */
+@media (max-width: 768px) {
+  .user-grid {
+    grid-template-columns: repeat(4, 1fr) !important; /* 4 columns on phones */
+    gap: 15px !important;
+  }
+
+  .avatar {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 24px !important;
+  }
+
+  .name {
+    max-width: 80px;
+    font-size: 12px;
+    margin-top: 5px;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+}
+
+/* Very small phones: 2 columns */
+@media (max-width: 400px) {
+  .user-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}

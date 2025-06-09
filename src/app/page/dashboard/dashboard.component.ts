@@ -100,8 +100,11 @@ export class DashboardComponent implements OnInit {
   dropdownOpen = false;
   hoveredUser: any = null;
   allTestDrives: any[] = []; // To hold all test drive data for the table
+  performance: any[] = []; // Your backend data
+  searchTextUserDetails: string = '';
+  fullUsers: any[] = []; // Full original user list from API
 
-  selectedPs1: any = '';
+  // selectedPs1: any = '';
   // selectedPs2: string = '';
   loading: boolean = true; // <-- declare loading flag
   activeFilter: 'Today' | 'MTD' | 'QTD' | 'YTD' = 'Today'; // default value
@@ -127,8 +130,14 @@ export class DashboardComponent implements OnInit {
       retailRank: 0,
     },
   };
-  selectedPs2: string[] = [];
+  // selectedPs2: string[] = [];
+  selectedPs1: string = '';
+  selectedPs1Name: string = '';
+  visibleUserCount: number = 15; // Start with 15 users shown
 
+  selectedPs2: string[] = [];
+  selectedPs2Names: string[] = [];
+  selectedPs2Name: string = '';
   ps1Progress: number = 0;
   ps2Progress: number = 0;
   ps1Value: number = 0;
@@ -159,11 +168,18 @@ export class DashboardComponent implements OnInit {
   testDriveItemsPerPage: number = 5;
   testDriveTotalPages: number = 0;
   currentPage = 1;
+  testDrivesToday: any[] = [];
+  testDrivesOneWeek: any[] = [];
   usersPerPage = 40;
+  searchTextToday: string = '';
+  todayUsers: any[] = []; // full list of users for Today’s Actions
+  filteredTodayUsers: any[] = [];
+  filterTodayUsers: any;
   constructor(private http: HttpClient, private route: ActivatedRoute) {}
   ngOnInit(): void {
     this.fetchUsers();
     this.fetchDashboardData();
+    this.loadTestDriveData();
 
     console.log('Loading dashboard metrics with default filter Today');
     this.loadDashboardMetrics('Today');
@@ -208,6 +224,9 @@ export class DashboardComponent implements OnInit {
         next: (res) => {
           console.log('API response:', res);
           this.users = res.data?.user || [];
+          // this.filteredUsers = [...this.users]; // ✅ initialize filtered list
+          this.fullUsers = res.data?.user || [];
+          this.users = [...this.fullUsers]; // initialize filtered users with full list
           this.fullData = res.data;
         },
         error: (err) => {
@@ -215,15 +234,25 @@ export class DashboardComponent implements OnInit {
         },
       });
   }
-
+  showMoreUsers(): void {
+    const nextChunk = 15; // Number of users to load each time
+    if (this.visibleUserCount + nextChunk <= this.paginatedUsers.length) {
+      this.visibleUserCount += nextChunk;
+    } else {
+      this.visibleUserCount = this.paginatedUsers.length;
+    }
+  }
   showUserDetails(userId: string, name: string) {
     console.log('Clicked user:', userId);
+
+    this.selectedUserId = userId; // ✅ Add this line to track which user is selected
 
     const token = sessionStorage.getItem('token');
     if (!token) {
       console.error('No auth token found');
       return;
     }
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
@@ -254,7 +283,6 @@ export class DashboardComponent implements OnInit {
             this.selectedUserData = [];
           }
 
-          // *** ADD THESE TWO LINES RIGHT HERE ***
           this.fullData = res.data; // save full data to use for filtering
           this.loadFilteredTestDrives(this.filterOption); // load filtered test drives (default 'today')
 
@@ -267,6 +295,7 @@ export class DashboardComponent implements OnInit {
         },
       });
   }
+
   selectUser(userId: string) {
     this.selectedPs1 = userId; // or selectedUserId depending on your variable name
     console.log('Selected User ID on selectUser:', userId);
@@ -303,13 +332,47 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // get ps1WidthPercent() {
+  //   return (this.ps1Count / this.maxCount) * 100;
+  // }
+
+  // get ps2WidthPercent() {
+  //   return (this.ps2Count / this.maxCount) * 100;
+  // }
+  get ps1Total() {
+    return this.performance.reduce((sum, item) => sum + item.enquiries, 0);
+  }
+
+  get ps2Total() {
+    return this.performance.reduce((sum, item) => sum + item.testDrives, 0);
+  }
+
+  // Calculate width percentages based on backend data
   get ps1WidthPercent() {
-    return (this.ps1Count / this.maxCount) * 100;
+    // Method 1: Based on maximum expected value
+    const maxExpectedValue = 100; // Set your maximum expected count
+    const percentage = (this.ps1Total / maxExpectedValue) * 100;
+    return Math.min(percentage, 100); // Cap at 100%
   }
 
   get ps2WidthPercent() {
-    return (this.ps2Count / this.maxCount) * 100;
+    const maxExpectedValue = 100; // Same as PS1
+    const percentage = (this.ps2Total / maxExpectedValue) * 100;
+    return Math.min(percentage, 100);
   }
+  filteredUsers = [...this.users];
+
+  // applyTableFilters() {
+  //   const search = this.searchText.trim().toLowerCase();
+  //   if (!search) {
+  //     this.filteredUsers = [...this.users];
+  //   } else {
+  //     this.filteredUsers = this.users.filter((user) =>
+  //       user.name.toLowerCase().includes(search)
+  //     );
+  //   }
+  // }
+
   // Method to build userIds param string (duplicates allowed)
   buildUserIdsParam(): string {
     const userIds = [];
@@ -352,28 +415,62 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
+  selectUser2(userId: string, userName: string) {
+    const index = this.selectedPs2.indexOf(userId);
 
-  selectUser2(userId: string) {
-    // toggle userId in selectedPs2 array
+    if (index === -1) {
+      this.selectedPs2.push(userId);
+      this.selectedPs2Names.push(userName); // ← also push name
+    } else {
+      this.selectedPs2.splice(index, 1);
+
+      // Remove the name at the same index
+      const nameIndex = this.selectedPs2Names.indexOf(userName);
+      if (nameIndex !== -1) {
+        this.selectedPs2Names.splice(nameIndex, 1);
+      }
+    }
+
+    this.callApi(); // optional, if needed to refetch data
+  }
+
+  // Example method to select PS1 user
+  // selectPs1(userId: string, name: string) {
+  //   this.selectedPs1 = userId;
+  //   this.selectedPs1Name = name;
+  //   this.selectedPs2 = '';
+  //   this.selectedPs2Name = '';
+  //   this.callApi();
+  // }
+  selectPs1(userId: string, name: string) {
+    this.selectedPs1 = userId;
+    this.selectedPs1Name = name;
+
+    // Clear PS2 selections when PS1 is changed
+    this.selectedPs2 = [];
+    this.selectedPs2Names = [];
+
+    this.callApi();
+  }
+
+  // PS2 selection
+  // selectPs2(userId: string, name: string) {
+  //   this.selectedPs2 = userId;
+  //   this.selectedPs2Name = name;
+  //   this.callApi();
+  // }
+  selectPs2(userId: string, name: string) {
     const index = this.selectedPs2.indexOf(userId);
     if (index === -1) {
       this.selectedPs2.push(userId);
+      this.selectedPs2Names.push(name);
     } else {
       this.selectedPs2.splice(index, 1);
+      this.selectedPs2Names.splice(index, 1); // Safe as long as push order is consistent
     }
     this.callApi();
   }
-  // Example method to select PS1 user
-  selectPs1(userId: string) {
-    this.selectedPs1 = userId;
-    this.selectedPs2 = []; // Clear PS2 selection when PS1 is selected
-    this.callApi();
-  }
 
-  selectPs2(userId: string) {
-    this.selectedPs2 = [userId]; // Selecting one PS2 user at a time for now
-    this.callApi();
-  }
   loadTestDrives(data: ApiResponse['data']) {
     if (!this.selectedUser) return;
 
@@ -387,6 +484,7 @@ export class DashboardComponent implements OnInit {
     // Use upcoming test drives from selectedUser (or empty array)
     this.upcomingTestDrives = this.selectedUser.upcomingTestDrives || [];
   }
+
   loadFilteredTestDrives(filter: 'today' | 'oneWeek' | 'all') {
     if (!this.fullData || !this.selectedUser) {
       this.testDrives = [];
@@ -441,6 +539,7 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
+
   fetchDashboardData() {
     const token = sessionStorage.getItem('token');
     if (!token) {
@@ -684,9 +783,9 @@ export class DashboardComponent implements OnInit {
   // }
 
   applyTableFilters(): void {
+    // --- Test Drives filtering ---
     let tempTestDrives = [...this.allTestDrives]; // Start with all test drives
 
-    // Apply search filter
     if (this.searchText) {
       const lowerCaseSearchText = this.searchText.toLowerCase();
       tempTestDrives = tempTestDrives.filter(
@@ -699,7 +798,6 @@ export class DashboardComponent implements OnInit {
       );
     }
 
-    // Apply date filter (Today, One Week, All)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const oneWeekLater = new Date(today);
@@ -721,12 +819,26 @@ export class DashboardComponent implements OnInit {
         );
       });
     }
-    // 'all' option doesn't require further filtering by date
+    // 'all' option does nothing here
 
     this.filteredTableTestDrives = tempTestDrives;
-    this.currentPage = 1; // Reset to first page on filter/search change
-    // this.calculateTotalPages();
+    this.currentPage = 1;
     this.paginateTableData();
+
+    // --- User search filtering ---
+    if (this.searchText) {
+      const searchLower = this.searchText.toLowerCase();
+      // Filter and update this.users itself to filtered users
+      this.users = this.fullUsers.filter((user) =>
+        user.name?.toLowerCase().includes(searchLower)
+      );
+    } else {
+      // Reset to full list if no search
+      this.users = [...this.fullUsers];
+    }
+
+    // Reset current page to 1 whenever filter changes
+    this.currentPage = 1;
   }
 
   // calculateTotalPages(): void {
@@ -747,6 +859,22 @@ export class DashboardComponent implements OnInit {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     return this.filteredTableTestDrives.slice(startIndex, endIndex);
+  }
+  loadTestDriveData() {
+    this.http
+      .get<any>('https://uat.smartassistapp.in/api/dealer/dealer-Home')
+      .subscribe({
+        next: (response) => {
+          console.log('API response for table:', response); // <-- Log full response
+          this.testDrivesToday = response.data.tableTestDrives_today || [];
+          console.log('testDrivesToday:', this.testDrivesToday); // <-- Log extracted array
+          this.applyTableFilters();
+        },
+        error: (error) => {
+          console.error('API error:', error);
+          // You can also display an error message to users here if needed
+        },
+      });
   }
 
   // Navigation for pagination

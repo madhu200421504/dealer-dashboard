@@ -14,6 +14,8 @@ export class Vehicle {
   corporate_id: string;
   deleted: boolean;
   chasis_number: string;
+  demo_start_date: string;
+  demo_end_date: string;
 
   constructor() {
     this.deleted = false;
@@ -26,5 +28,7 @@ export class Vehicle {
     this.updated_at = '';
     this.corporate_id = '';
     this.chasis_number = '';
+    this.demo_start_date = '';
+    this.demo_end_date = '';
   }
 }

@@ -94,6 +94,8 @@ export class VehicleComponent implements OnInit {
       YOM: new FormControl('', [Validators.required]),
       // chasis_number: new FormControl('', [Validators.required]), // Ensure this is correct
       chasis_number: new FormControl('', [Validators.required]),
+      demo_start_date: new FormControl('', [Validators.required]),
+      demo_end_date: new FormControl('', [Validators.required]),
     });
   }
 
@@ -154,6 +156,8 @@ export class VehicleComponent implements OnInit {
         VIN: vehicle.VIN || '',
         type: vehicle.type || '',
         YOM: this.formatDate(vehicle.YOM) || '',
+        start_date: vehicle.demo_start_date || '',
+        end_date: vehicle.demo_end_date || '',
         // chasis_number: vehicle.chasis_number || '',
         // chasis_number: vehicle.chasis_number?.toString() || '',
         // chasis_number: vehicle.chasis_number
@@ -321,6 +325,7 @@ export class VehicleComponent implements OnInit {
   onSave() {
     console.log('onsave being called');
     console.log(this.useForm.value);
+    console.log('Form end_date value:', this.useForm.get('end_date')?.value);
 
     if (this.useForm.invalid) {
       this.markFormGroupTouched(this.useForm);
@@ -343,7 +348,7 @@ export class VehicleComponent implements OnInit {
         this.closeModal();
       },
       error: (err) => {
-        console.error('User creation error:', err);
+        console.error('Vehicle creation error:', err);
         this.toastr.error(
           err.message || 'Failed to create user',
           'Creation Error'
@@ -737,6 +742,13 @@ export class VehicleComponent implements OnInit {
   //     }
   //   );
   // }
+  // Helper method to format date string for input[type=date]
+  formatDateForInput(date: string | null): string {
+    if (!date) return '';
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return ''; // Handle invalid dates
+    return d.toISOString().split('T')[0]; // returns YYYY-MM-DD
+  }
 
   onEdit(vehicle: Vehicle) {
     this.isEditMode = true; // Set the edit mode flag
@@ -755,6 +767,11 @@ export class VehicleComponent implements OnInit {
       type: vehicle.type,
       YOM: this.formatDate(vehicle.YOM),
       chasis_number: vehicle.chasis_number,
+      start_date: vehicle.demo_start_date,
+      end_date: vehicle.demo_end_date,
+      // end_date: vehicle.end_date
+      //   ? this.formatDateForInput(vehicle.end_date)
+      //   : '',
     });
 
     console.log(
