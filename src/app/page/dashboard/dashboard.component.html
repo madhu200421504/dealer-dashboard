@@ -156,7 +156,7 @@
                       <span style="color: black;">{{ td.subject }}</span>
                     </p>
                     <p><span style="color: black;">PMI:</span> {{ td.PMI || 'N/A' }}</p>
-                    <p><span style="color: black;">Date:</span> {{ td.start_date | date:'yyyy-MM-dd' }}</p>
+                    <!-- <p><span style="color: black;">Date:</span> {{ td.start_date | date:'yyyy-MM-dd' }}</p> -->
                   </div>
                 </div>
                 <ng-template #noOverdue>
@@ -327,6 +327,7 @@
             <button class="filter-button" [class.active]="activeFilter === 'Today'" (click)="onFilterClick('Today')">
               Today
             </button>
+            
             <button class="filter-button" [class.active]="activeFilter === 'MTD'" (click)="onFilterClick('MTD')">
               MTD
             </button>

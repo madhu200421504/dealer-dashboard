@@ -90,12 +90,22 @@ export class DashboardComponent implements OnInit {
   fullData: ApiResponse['data'] | null = null;
   reservations: any[] = []; // your original data array
   filteredReservations: any[] = []; // the filtered array to bind to the table
-  filterOption: 'today' | 'oneWeek' | 'all' = 'today'; // Add this line here
+  filterOption: 'today' | 'oneWeek' = 'today';
   testDrives: any[] = []; // <-- Declare testDrives here
   dashboardData: any = {
     tableTestDrives_today: [],
     tableTestDrives_oneweek: [],
   };
+  selectedFilter: string = ''; // Store the selected filter
+  selectedUserId: string = ''; // Store the selected userId
+  ps2Available: boolean = false;
+  enquiriesCount: number = 0;
+  testDrivesCount: number = 0;
+  newOrdersCount: number = 0;
+  cancellationsCount: number = 0;
+  netOrdersCount: number = 0;
+  retailCount: number = 0;
+
   showUserForm = false;
   dropdownOpen = false;
   hoveredUser: any = null;
@@ -151,13 +161,12 @@ export class DashboardComponent implements OnInit {
   filteredTableTestDrives: any[] = []; // <--- ADD THIS PROPERTY
   ps1Count = 0;
   ps2Count = 0;
-  ps2Available: boolean = false; // Holds boolean if PS2 count > 0  maxCount = 100;
   psList: any[] = [];
   roles: any[] = [];
   selectedPs: string = '';
   selectedRole: string = '';
   showRoleForm: boolean = false;
-  selectedUserId = '';
+  // selectedUserId = '';
   isGridView: boolean = true; // Toggle between grid and table view
   userSearchTerm: string = '';
   userSortColumn: string = '';
@@ -217,7 +226,7 @@ export class DashboardComponent implements OnInit {
 
     this.http
       .get<ApiResponse>(
-        'https://uat.smartassistapp.in/api/dealer/dealer-Home',
+        'https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard',
         { headers }
       )
       .subscribe({
@@ -244,8 +253,7 @@ export class DashboardComponent implements OnInit {
   }
   showUserDetails(userId: string, name: string) {
     console.log('Clicked user:', userId);
-
-    this.selectedUserId = userId; // ✅ Add this line to track which user is selected
+    this.selectedUserId = userId;
 
     const token = sessionStorage.getItem('token');
     if (!token) {
@@ -259,32 +267,42 @@ export class DashboardComponent implements OnInit {
 
     this.http
       .get<ApiResponse>(
-        `https://uat.smartassistapp.in/api/dealer/dealer-Home?user_id=${userId}`,
+        `https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard?user_id=${userId}`,
         { headers }
       )
       .subscribe({
         next: (res) => {
           console.log('Full API response:', res);
-          console.log('selectedUser:', res.data.selectedUser);
-
           const selectedUserFromApi = res?.data?.selectedUser || null;
+
           if (selectedUserFromApi) {
             this.selectedUser = {
               ...selectedUserFromApi,
-              name, // <-- add the user name here explicitly
+              name, // override name
             };
+
+            // ✅ THIS is the missing part
+            this.todayTestDrives = selectedUserFromApi.todayTestDrives || [];
+            this.upcomingTestDrives =
+              selectedUserFromApi.upcomingTestDrives || [];
+            this.overdueTestDrives =
+              selectedUserFromApi.overdueTestDrives || [];
+
             this.selectedUserData = [
-              ...this.selectedUser.todayTestDrives,
-              ...this.selectedUser.upcomingTestDrives,
-              ...this.selectedUser.overdueTestDrives,
+              ...this.todayTestDrives,
+              ...this.upcomingTestDrives,
+              ...this.overdueTestDrives,
             ];
           } else {
             this.selectedUser = null;
+            this.todayTestDrives = [];
+            this.upcomingTestDrives = [];
+            this.overdueTestDrives = [];
             this.selectedUserData = [];
           }
 
-          this.fullData = res.data; // save full data to use for filtering
-          this.loadFilteredTestDrives(this.filterOption); // load filtered test drives (default 'today')
+          this.fullData = res.data;
+          this.loadFilteredTestDrives(this.filterOption);
 
           if (res.data?.tableTestDrives_today && this.selectedUser) {
             this.loadTestDrives(res.data);
@@ -296,15 +314,100 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+  // selectUser(userId: string) {
+  //   this.selectedPs1 = userId;
+  //   console.log('Selected User ID on selectUser:', userId);
+  //   this.fetchCounts(userId);
+  //   this.dropdownOpen = false;
+  // }
+  // onFilterClick(filter: string) {
+  //   this.activeFilter = filter;
+  //   console.log('Selected filter:', this.activeFilter);
+
+  //   if (this.selectedPs1) {
+  //     this.fetchFilteredData(this.selectedPs1, this.activeFilter);
+  //   }
+  // }
+
+  // Function to handle user (PS1) selection
+  // Inside your component
   selectUser(userId: string) {
-    this.selectedPs1 = userId; // or selectedUserId depending on your variable name
-    console.log('Selected User ID on selectUser:', userId);
-    this.fetchCounts(userId);
-    this.dropdownOpen = false; // close dropdown after selection
+    this.selectedPs1 = userId; // Store the selected user ID (PS1)
+    console.log('Selected user:', userId);
+
+    // Close the dropdown after selecting a user
+    this.dropdownOpen = false;
+
+    // If a filter is selected, trigger the API call
+    if (this.activeFilter) {
+      this.fetchFilteredData(userId, this.activeFilter);
+    }
   }
 
-  fetchCounts(userId: string) {
-    const url = `https://uat.smartassistapp.in/api/dealer/dealer-analysis?userIds=${userId}`;
+  // Function to make the API call based on user and filter
+  fetchFilteredData(userId: string, filterType: string) {
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}&type=${filterType}`;
+    const token = sessionStorage.getItem('token');
+
+    if (!token) {
+      console.error('No token found in sessionStorage');
+      return;
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    console.log('Calling API with URL:', url);
+
+    // Making the API call
+    this.http.get<any>(url, { headers }).subscribe({
+      next: (data) => {
+        // Log the API response for debugging
+        console.log('API response:', data);
+
+        if (data && data.data) {
+          const dashboardData = data.data;
+
+          // Mapping values from the API to component variables
+          this.enquiriesCount = dashboardData.enquiries;
+          this.testDrivesCount = dashboardData.testDrives;
+          this.newOrdersCount = dashboardData.newOrders;
+          this.cancellationsCount = dashboardData.cancellations;
+          this.netOrdersCount = dashboardData.netOrders;
+          this.retailCount = dashboardData.retail;
+
+          // Logging the values for debugging
+          console.log('Enquiries:', this.enquiriesCount);
+          console.log('Test Drives:', this.testDrivesCount);
+          console.log('New Orders:', this.newOrdersCount);
+          console.log('Cancellations:', this.cancellationsCount);
+          console.log('Net Orders:', this.netOrdersCount);
+          console.log('Retail:', this.retailCount);
+
+          // Optionally, you can update values for "allIndiaBestPerformance" if needed
+          const bestPerformance = dashboardData.allIndiaBestPerformace;
+          if (bestPerformance) {
+            console.log('Best performance data:', bestPerformance);
+          }
+        } else {
+          console.error('No valid dashboard data found');
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching data:', error);
+      },
+    });
+  }
+
+  fetchCounts(userId: string, filterType: string = '') {
+    // Construct the URL dynamically based on the selected filter type
+    let url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}`;
+
+    // If there's a filter selected, add it to the URL
+    if (filterType) {
+      url += `&type=${filterType}`;
+    }
 
     const token = sessionStorage.getItem('token'); // or 'access_token' based on your app
     if (!token) {
@@ -330,6 +433,20 @@ export class DashboardComponent implements OnInit {
         console.error('API error:', error);
       },
     });
+  }
+
+  // Method to handle the user selection
+  onUserChange(userId: string) {
+    this.selectedUserId = userId; // Store the selected userId
+    this.fetchCounts(userId, this.selectedFilter); // Call API with selected user and filter
+  }
+
+  // Method to handle filter selection
+  onFilterChange(filter: string) {
+    this.selectedFilter = filter; // Store the selected filter
+    if (this.selectedUserId) {
+      this.fetchCounts(this.selectedUserId, filter); // If a user is selected, make the API call
+    }
   }
 
   // get ps1WidthPercent() {
@@ -485,7 +602,7 @@ export class DashboardComponent implements OnInit {
     this.upcomingTestDrives = this.selectedUser.upcomingTestDrives || [];
   }
 
-  loadFilteredTestDrives(filter: 'today' | 'oneWeek' | 'all') {
+  loadFilteredTestDrives(filter: 'today' | 'oneWeek') {
     if (!this.fullData || !this.selectedUser) {
       this.testDrives = [];
       return;
@@ -508,10 +625,10 @@ export class DashboardComponent implements OnInit {
       ].filter((td) => td.assigned_to?.toLowerCase() === selectedUserName);
     }
   }
-  onFilterChange(newFilter: 'today' | 'oneWeek' | 'all') {
-    this.filterOption = newFilter;
-    this.loadFilteredTestDrives(this.filterOption);
-  }
+  // onFilterChange(newFilter: 'today' | 'oneWeek') {
+  //   this.filterOption = newFilter;
+  //   this.loadFilteredTestDrives(this.filterOption);
+  // }
 
   onFilterClick(filter: 'Today' | 'MTD' | 'QTD' | 'YTD') {
     this.activeFilter = filter;
@@ -569,11 +686,11 @@ export class DashboardComponent implements OnInit {
         return this.dashboardData.tableTestDrives_today || [];
       case 'oneWeek':
         return this.dashboardData.tableTestDrives_oneweek || [];
-      case 'all':
-        return [
-          ...(this.dashboardData.tableTestDrives_today || []),
-          ...(this.dashboardData.tableTestDrives_oneweek || []),
-        ];
+      // case 'all':
+      //   return [
+      //     ...(this.dashboardData.tableTestDrives_today || []),
+      //     ...(this.dashboardData.tableTestDrives_oneweek || []),
+      //   ];
       default:
         return [];
     }
@@ -589,7 +706,7 @@ export class DashboardComponent implements OnInit {
       Authorization: `Bearer ${token}`,
     });
 
-    let url = `https://uat.smartassistapp.in/api/dealer/dealer-analysis`;
+    let url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard`;
     if (filter !== 'Today') {
       url += `?type=${filter}`;
     }
@@ -790,36 +907,32 @@ export class DashboardComponent implements OnInit {
       const lowerCaseSearchText = this.searchText.toLowerCase();
       tempTestDrives = tempTestDrives.filter(
         (td) =>
-          td.subject.toLowerCase().includes(lowerCaseSearchText) ||
-          td.name.toLowerCase().includes(lowerCaseSearchText) ||
-          td.VIN.toLowerCase().includes(lowerCaseSearchText) ||
-          td.PMI.toLowerCase().includes(lowerCaseSearchText) ||
-          td.assigned_to.toLowerCase().includes(lowerCaseSearchText)
+          td.subject?.toLowerCase().includes(lowerCaseSearchText) ||
+          td.name?.toLowerCase().includes(lowerCaseSearchText) ||
+          td.VIN?.toLowerCase().includes(lowerCaseSearchText) ||
+          td.PMI?.toLowerCase().includes(lowerCaseSearchText) ||
+          td.assigned_to?.toLowerCase().includes(lowerCaseSearchText)
       );
     }
 
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const oneWeekLater = new Date(today);
-    oneWeekLater.setDate(today.getDate() + 7);
+    const todayStr = today.toISOString().split('T')[0]; // Format: 'YYYY-MM-DD'
 
     if (this.filterOption === 'today') {
-      tempTestDrives = tempTestDrives.filter((td) => {
-        const tdDate = new Date(td.start_date);
-        tdDate.setHours(0, 0, 0, 0);
-        return tdDate.getTime() === today.getTime();
-      });
+      tempTestDrives = tempTestDrives.filter(
+        (td) => td.start_date === todayStr
+      );
     } else if (this.filterOption === 'oneWeek') {
+      const todayTime = new Date(todayStr).getTime();
+      const oneWeekLater = new Date(todayStr);
+      oneWeekLater.setDate(oneWeekLater.getDate() + 7);
+      const oneWeekTime = oneWeekLater.getTime();
+
       tempTestDrives = tempTestDrives.filter((td) => {
-        const tdDate = new Date(td.start_date);
-        tdDate.setHours(0, 0, 0, 0);
-        return (
-          tdDate.getTime() >= today.getTime() &&
-          tdDate.getTime() <= oneWeekLater.getTime()
-        );
+        const tdTime = new Date(td.start_date).getTime();
+        return tdTime >= todayTime && tdTime <= oneWeekTime;
       });
     }
-    // 'all' option does nothing here
 
     this.filteredTableTestDrives = tempTestDrives;
     this.currentPage = 1;
@@ -828,16 +941,13 @@ export class DashboardComponent implements OnInit {
     // --- User search filtering ---
     if (this.searchText) {
       const searchLower = this.searchText.toLowerCase();
-      // Filter and update this.users itself to filtered users
       this.users = this.fullUsers.filter((user) =>
         user.name?.toLowerCase().includes(searchLower)
       );
     } else {
-      // Reset to full list if no search
       this.users = [...this.fullUsers];
     }
 
-    // Reset current page to 1 whenever filter changes
     this.currentPage = 1;
   }
 
@@ -862,17 +972,29 @@ export class DashboardComponent implements OnInit {
   }
   loadTestDriveData() {
     this.http
-      .get<any>('https://uat.smartassistapp.in/api/dealer/dealer-Home')
+      .get<any>(
+        'https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard'
+      )
       .subscribe({
         next: (response) => {
-          console.log('API response for table:', response); // <-- Log full response
+          console.log('API response for table:', response);
+
           this.testDrivesToday = response.data.tableTestDrives_today || [];
-          console.log('testDrivesToday:', this.testDrivesToday); // <-- Log extracted array
-          this.applyTableFilters();
+          this.testDrivesOneWeek = response.data.tableTestDrives_oneweek || [];
+
+          // 👇 Important: Store all data initially in allTestDrives
+          this.allTestDrives = [
+            ...this.testDrivesToday,
+            ...this.testDrivesOneWeek,
+          ];
+
+          this.fullUsers = response.data.user || [];
+          this.users = [...this.fullUsers]; // show all users initially
+
+          this.applyTableFilters(); // Now filters will work!
         },
         error: (error) => {
           console.error('API error:', error);
-          // You can also display an error message to users here if needed
         },
       });
   }

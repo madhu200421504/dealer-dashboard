@@ -157,7 +157,7 @@ export class UsersComponent implements OnInit {
 
       // dealer_id: new FormControl(null, [Validators.required]),
       // team_id: new FormControl(null, [Validators.required]),
-      // team_id: new FormControl(null, [Validators.required]),
+      team_id: new FormControl(null, [Validators.required]),
       // dealer_id: new FormControl(null),
       // team_name: new FormControl(null, [Validators.required]),
       user_role: new FormControl(null, [Validators.required]),
@@ -963,5 +963,4 @@ export class UsersComponent implements OnInit {
   isEmailChange(): boolean {
     return this.useForm.get('email')?.value !== this.previousEmail;
   }
-  
 }
