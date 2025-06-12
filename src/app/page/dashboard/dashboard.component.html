@@ -28,7 +28,7 @@
           </div> -->
 
 
-        <div class="card" style="background-color: #f9f9f9; padding: 15px;">
+        <div class="card" style="background-color:#fff; padding: 15px; box-shadow: 0 0 8px #ccc;">
           <!-- Header with Title and Search -->
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div class="card-title" style="font-size: 18px; font-weight: bold;">Today's Actions</div>
@@ -37,115 +37,69 @@
               <input type="text" [(ngModel)]="searchText" (input)="applyTableFilters()" placeholder="Search by name..."
                 style="padding: 6px 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; width: 200px;" />
             </div>
+
           </div>
 
           <!-- User Icons Rows: both rows inside the same card -->
-          <div class="profiles" style="margin: 20px 0;">
-            <!-- First Row: 15 users -->
-            <!-- <div style="display: grid; grid-template-columns: repeat(15, 1fr); gap: 30px; margin-bottom: 20px;"> -->
-            <div class="user-grid">
+          <!-- Grid wrapper added here -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px;">
+            <div class="profile" *ngFor="let user of displayedUsers"
+              [ngClass]="{ 'selected-user': user.user_id === selectedUserId }" style="text-align: center;">
 
-              <div class="profile" *ngFor="let user of paginatedUsers.slice(0, 15)"
-                [ngClass]="{ 'selected-user': user.user_id === selectedUserId }" style="text-align: center;">
-                <div class="avatar" (click)="showUserDetails(user.user_id, user.name)" style="
-                  width: 70px;
-                  height: 70px;
-                  background-color: #ddd;
-                  border-radius: 50%;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  margin: 0 auto;
-                  font-size: 36px;
-                  cursor: pointer;
-                ">
-                  <i class="fa-solid fa-user"></i>
-                </div>
-
-                <!-- Name with wrapping -->
-                <div class="name" style="
-                  margin-top: 8px;
-                  font-size: 14px;
-                  max-width: 80px;
-                  margin-left: auto;
-                  margin-right: auto;
-                  word-wrap: break-word;
-                  overflow-wrap: break-word;
-                  white-space: normal;
-                ">
-                  {{ user.name }}
-                </div>
+              <!-- Avatar with dashboard-friendly background -->
+              <div class="avatar" (click)="showUserDetails(user.user_id, user.name)"
+                style="width: 70px; height: 70px; background-color:rgb(135,206,250); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 36px; cursor: pointer;">
+                <i class="fa-solid fa-user" style="color: #4e73df;"></i>
               </div>
-            </div>
 
-
-            <!-- Second Row: 25 users -->
-            <div style="display: grid; grid-template-columns: repeat(25, 1fr); gap: 30px;">
-              <div class="profile" *ngFor="let user of paginatedUsers.slice(15, 40)"
-                [ngClass]="{ 'selected-user': user.user_id === selectedUserId }" style="text-align: center;">
-                <div class="avatar" (click)="showUserDetails(user.user_id, user.name)" style="
-                                width: 70px;
-                                height: 70px;
-                                background-color: #ddd;
-                                border-radius: 50%;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                margin: 0 auto;
-                                font-size: 32px;
-                                cursor: pointer;
-                              ">
-                  <i class="fa-solid fa-user"></i>
-                </div>
-
-                <div class="name" style="
-                                  margin-top: 6px;
-                                  font-size: 14px;
-                                  word-wrap: break-word;
-                                  overflow-wrap: break-word;
-                                  max-width: 80px;
-                                  margin: 6px auto 0;
-                                  white-space: normal;
-                                ">
-                  {{ user.name }} </div>
+              <div class="name"
+                style="margin-top: 8px; font-size: 14px; max-width: 80px; margin-left: auto; margin-right: auto; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+                {{ user.name }}
               </div>
             </div>
           </div>
-          <div class="actions" style=" background-color: #f9f9f9;">
+
+
+          <div class="actions" style=" background-color: #fff;">
             <div class="action-row">
 
               <div class="person-info" *ngIf="selectedUser?.name">
                 <h3 style="color:black;">Today</h3>
+
                 <div *ngIf="todayTestDrives.length > 0">
                   <div *ngFor="let td of todayTestDrives" style="margin-bottom: 1em;">
                     <p>
-                      <b style="color: black; text-transform: capitalize;">{{ selectedUser?.name }}</b> |
+                      <b style="color: black; text-transform: capitalize;">{{ td.name }}</b> |
                       <span style="color: black;">{{ td.subject }}</span>
                     </p>
                     <p><span style="color: black;">PMI:</span> {{ td.PMI || 'N/A' }}</p>
                   </div>
                 </div>
+
                 <div *ngIf="todayTestDrives.length === 0">
                   <p style="color: gray;">No test drives for today.</p>
                 </div>
+
               </div>
+
 
               <div class="person-info" *ngIf="selectedUser?.name">
                 <h3 style="color:black;">Upcoming</h3>
                 <div *ngIf="upcomingTestDrives.length > 0">
                   <div *ngFor="let testDrive of upcomingTestDrives" style="margin-bottom: 1em;">
                     <p>
-                      <b style="color: black; text-transform: capitalize;">{{ selectedUser?.name }}</b> |
+                      <b style="color: black; text-transform: capitalize;">{{ testDrive.name }}</b> |
                       <span style="color: black;">{{ testDrive.subject }}</span>
                     </p>
                     <p><span style="color: black;">PMI:</span> {{ testDrive.PMI || 'N/A' }}</p>
-                    <p><span style="color: black;">Date:</span> {{ testDrive.start_date | date:'yyyy-MM-dd' }}</p>
+                    <!-- <p><span style="color: black;">Date:</span> {{ testDrive.start_date | date:'yyyy-MM-dd' }}</p> -->
                   </div>
                 </div>
                 <div *ngIf="upcomingTestDrives.length === 0">
                   <p style="color: gray;">No upcoming test drives.</p>
                 </div>
               </div>
+
 
               <div class="person-info" *ngIf="selectedUser?.name && selectedUser?.overdueTestDrives ">
                 <h3 style="color: black;">Overdue</h3>
@@ -160,7 +114,7 @@
                   </div>
                 </div>
                 <ng-template #noOverdue>
-                  <p style="color: gray;">No overdue test drives to display.</p>
+                  <p style="color: gray;">No overdue test drives.</p>
                 </ng-template>
               </div>
 
@@ -185,6 +139,18 @@
                 </button>
               </div>
  -->
+              <div class="user-container" [class.expanded]="showMore">
+                <!-- <div class="user-item" *ngFor="let user of displayedUsers">
+                  {{ user.name }}
+                </div> -->
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; margin-top: 10px; padding: 5px;">
+                <button class="btn btn-primary" (click)="toggleShowMore()" style="padding: 5px 12px; font-size: 14px;">
+                  {{ showMore ? 'Show Less' : 'Show More' }}
+                </button>
+              </div>
+
 
 
             </div>
@@ -195,17 +161,17 @@
       <div class="card"
         style="margin-top: 30px; background-color: #fff; padding: 20px; box-shadow: 0 0 8px #ccc; margin-left:100px; width:1520px;">
         <div class="card-title" style="display:flex; justify-content: space-between; align-items: center;">
-          <span>User Details Table</span>
+          <span>Test Drive Schedule</span>
           <div style="display: flex; align-items: center; gap: 10px;">
             <!-- <input type="text" [(ngModel)]="searchText" (input)="applyTableFilters()" placeholder="Search..."
               style="padding: 5px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"> -->
-            <input type="text" [(ngModel)]="searchTextUserDetails" (input)="applyTableFilters()" placeholder="Search..."
-              style="padding: 5px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
+            <!-- <input type="text" [(ngModel)]="searchTextUserDetails" (input)="applyTableFilters()" placeholder="Search..."
+              style="padding: 5px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"> -->
 
             <select [(ngModel)]="filterOption" (change)="applyTableFilters()"
               style="padding: 5px; font-size: 14px; border:none; border-radius:2px;">
               <option value="today">Today</option>
-              <option value="oneWeek">One Week</option>
+              <option value="oneWeek">Upcoming Week</option>
               <!-- <option value="all">All</option> -->
             </select>
           </div>
@@ -349,271 +315,91 @@
           Compare Performance
         </h2>
 
-        <div style=" display: flex; align-items: flex-start; gap: 20px; margin-left: 80px; margin-top: 80px;">
-          <!-- <h2 class="panel-title">Compare Performance</h2> -->
+        <table border="1" cellpadding="8" cellspacing="0"
+          style="width: 100%; border-collapse: collapse; text-align: center;height:500px;">
+          <thead>
+            <tr>
+              <!-- KPI Header -->
+              <th style="width: 30%; padding: 10px; color: black;">KPI</th>
 
-          <!-- KPI Labels Column -->
-          <div style="min-width: 120px;">
-            <div
-              style="font-weight: bold; font-size: 1.1rem; color: #987654; margin-top: 10px; height: 40px; display: flex; align-items: center;">
-              KPI</div>
-            <div style="font-weight: normal; font-size: 1rem; color: #987654;">
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center;color:black;">Enquiries
-              </div>
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center;color:black;">Test Drives
-              </div>
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center;color:black;">New Orders
-              </div>
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center;color:black;">
-                Cancellations
-              </div>
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center;color:black;">Net Orders
-              </div>
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center;color:black;">Retail
-              </div>
-            </div>
-          </div>
+              <!-- PS1 Dropdown -->
+              <th style="padding: 10px;">
+                <div style="position: relative;">
+                  <div (click)="dropdownOpen1 = !dropdownOpen1"
+                    style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc; background-color: #f5f5f5; cursor: pointer; user-select: none; border-radius: 20px;">
 
-          <!-- PS1 Column -->
-          <div style="min-width: 200px;">
-            <!-- PS1 Dropdown -->
-            <div style="position: relative; display: inline-block; width: 200px;">
-              <div (click)="dropdownOpen = !dropdownOpen"
-                style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc; background-color:#1e88e5; color:white;
-                                  cursor: pointer; user-select: none; text-align: center; border-radius: 20px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                <span>{{ getUserName(selectedPs1) || 'PS1' }}</span>
-                <span style="margin-left: 10px; font-size: 0.7rem;">&#x25BC;</span>
-              </div>
-              <div *ngIf="dropdownOpen" class="custom-scroll" style="position: absolute; top: 100%; left: 0; right: 0; max-height: 280px;
-                                  overflow-y: auto; border: 1px solid #ccc; background: white;
-                                  z-index: 1000; text-align: center;">
-                <div *ngFor="let user of users" (click)="selectUser(user.user_id)"
-                  style="padding: 6px 10px; cursor: pointer;"
-                  [style.backgroundColor]="user.user_id === selectedPs1 ? '#ddd' : 'white'"
-                  (mouseenter)="hoveredUser = user.user_id" (mouseleave)="hoveredUser = null">
-                  {{ user.name }}
+                    {{ getUserName(selectedPs1) || 'PS1' }}
+                    <span style="margin-left: 8px;">&#x25BC;</span>
+                  </div>
+                  <div *ngIf="dropdownOpen1" class="custom-scroll" style="position: absolute; top: 100%; left: 0; right: 0; max-height: 200px;
+                            overflow-y: auto; border: 1px solid #ccc; background: white; z-index: 1000;">
+                    <div *ngFor="let user of users" (click)="selectUser(user.user_id); dropdownOpen1 = false"
+                      style="padding: 6px 10px; cursor: pointer;"
+                      [style.backgroundColor]="selectedPs1 === user.user_id ? '#ddd' : 'white'">
+                      {{ user.name }}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </th>
 
-            <!-- PS1 Data Display with Progress Bars -->
-            <!-- ENQWUIRES -->
-            <div *ngIf="selectedPs1 || selectedPs2.length > 0"
-              style="margin-top: 25px; font-weight: normal; font-size: 1rem; color: #333;">
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center; position: relative;">
-                <div style="position: relative; width: 100%; height: 30px; overflow: hidden;">
-
-                  <!-- PS1 Bar -->
-                  <!-- <div *ngIf="selectedPs1"
-                    style="position: absolute; top: 0; left: 0; height: 100%; background-color: #1e88e5; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: white; font-weight: 500; border: 1px solid white;"
-                    [style.width.%]="ps1WidthPercent">
-                    {{ ps1Count }}
-                  </div> -->
-                  <div *ngIf="selectedPs1"
-                    style="position: absolute; top: 0; left: 0; height: 100%; background-color: #1e88e5; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: black; font-weight: 500; border: 1px solid white;"
-                    [style.width.%]="ps1WidthPercent">
-                    {{ ps1Total }}
+              <!-- PS2 Dropdown -->
+              <th style="padding: 10px;">
+                <div style="position: relative;">
+                  <div (click)="dropdownOpen2 = !dropdownOpen2"
+                    style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc; background-color: #f5f5f5; cursor: pointer; user-select: none; border-radius: 20px;">
+                    {{ selectedPs2Names.length > 0 ? selectedPs2Names[0] : 'PS2' }}
+                    <span style="margin-left: 8px;">&#x25BC;</span>
                   </div>
 
-                  <!-- PS2 Bar -->
-                  <!-- <div *ngIf="selectedPs2.length > 0"
-                    style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: black; font-weight: 500; border: 1px solid whitesmoke;"
-                    [style.width.%]="ps2WidthPercent">
-                    {{ ps2Total }}
-                  </div> -->
-                  <!-- PS2 Bar -->
-                  <div *ngIf="selectedPs2.length > 0"
-                    style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: #333; font-weight: 500; border: 1px solid whitesmoke; "
-                    [style.width.%]="ps2WidthPercent">
-                    {{ ps2Total }}
+                  <div *ngIf="dropdownOpen2" class="custom-scroll"
+                    style="position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; background: white; z-index: 1000;">
+                    <div *ngFor="let user of users" (click)="selectPs2(user.user_id, user.name); dropdownOpen2 = false"
+                      style="padding: 6px 10px; cursor: pointer;"
+                      [style.backgroundColor]="selectedPs2.includes(user.user_id) ? '#ddd' : 'white'">
+                      {{ user.name }}
+                    </div>
                   </div>
-
-
                 </div>
-              </div>
+              </th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align: left; padding: 12px; color: black;">Enquiries</td>
+              <td style="font-weight: bold; color: black;">{{ enquiriesCount }}</td>
+              <td style="font-weight: bold; color: black;">{{ enquiriesCountPs2 }}</td>
+            </tr>
+            <tr>
+              <td style="text-align: left; padding: 12px; color: black;">Test Drives</td>
+              <td style="font-weight: bold; color: black;">{{ testDrivesCount }}</td>
+              <td style="font-weight: bold; color: black;">{{ testDrivesCountPs2 }}</td>
+            </tr>
+            <tr>
+              <td style="text-align: left; padding: 12px; color: black;">New Orders</td>
+              <td style="font-weight: bold; color: black;">{{ newOrdersCount }}</td>
+              <td style="font-weight: bold; color: black;">{{ newOrdersCountPs2 }}</td>
+            </tr>
+            <tr>
+              <td style="text-align: left; padding: 12px; color: black;">Cancellations</td>
+              <td style="font-weight: bold; color: black;">{{ cancellationsCount }}</td>
+              <td style="font-weight: bold; color: black;">{{ cancellationsCountPs2 }}</td>
+            </tr>
+            <tr>
+              <td style="text-align: left; padding: 12px; color: black;">Net Orders</td>
+              <td style="font-weight: bold; color: black;">{{ netOrdersCount }}</td>
+              <td style="font-weight: bold; color: black;">{{ netOrdersCountPs2 }}</td>
+            </tr>
+            <tr>
+              <td style="text-align: left; padding: 12px; color: black;">Retail</td>
+              <td style="font-weight: bold; color: black;">{{ retailCount }}</td>
+              <td style="font-weight: bold; color: black;">{{ retailCountPs2}}</td>
+            </tr>
+          </tbody>
+        </table>
 
 
 
-
-
-
-              <!-- Test Drives -->
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center; position: relative;">
-                <div style="position: relative; width: 100%; height: 30px; overflow: hidden;">
-
-                  <!-- PS1 Bar -->
-                  <div *ngIf="selectedPs1"
-                    style="position: absolute; top: 0; left: 0; height: 100%; background-color: #1e88e5; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: black; font-weight: 500; border: 1px solid white;"
-                    [style.width.%]="ps1WidthPercent">
-                    {{ ps1Total }}
-                  </div>
-
-                  <!-- PS2 Bar -->
-                  <!-- <div *ngIf="selectedPs2.length > 0"
-                                    style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: black; font-weight: 500; border: 1px solid whitesmoke;"
-                                    [style.width.%]="ps2WidthPercent">
-                                    {{ ps2Total }}
-                                  </div> -->
-                  <!-- PS2 Bar -->
-                  <div *ngIf="selectedPs2.length > 0"
-                    style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: #333; font-weight: 500; border: 1px solid whitesmoke; "
-                    [style.width.%]="ps2WidthPercent">
-                    {{ ps2Total }}
-                  </div>
-
-
-                </div>
-              </div>
-
-              <!-- New Orders -->
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center; position: relative;">
-                <div style="position: relative; width: 100%; height: 30px; overflow: hidden;">
-
-                  <!-- PS1 Bar -->
-                  <div *ngIf="selectedPs1"
-                    style="position: absolute; top: 0; left: 0; height: 100%; background-color: #1e88e5; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: black; font-weight: 500; border: 1px solid white;"
-                    [style.width.%]="ps1WidthPercent">
-                    {{ ps1Total }}
-                  </div>
-
-                  <!-- PS2 Bar -->
-                  <!-- <div *ngIf="selectedPs2.length > 0"
-                                      style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: black; font-weight: 500; border: 1px solid whitesmoke;"
-                                      [style.width.%]="ps2WidthPercent">
-                                      {{ ps2Total }}
-                                    </div> -->
-                  <!-- PS2 Bar -->
-                  <div *ngIf="selectedPs2.length > 0"
-                    style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: #333; font-weight: 500; border: 1px solid whitesmoke; "
-                    [style.width.%]="ps2WidthPercent">
-                    {{ ps2Total }}
-                  </div>
-
-
-                </div>
-              </div>
-
-
-              <!-- Cancellations -->
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center; position: relative;">
-                <div style="position: relative; width: 100%; height: 30px; overflow: hidden;">
-
-                  <!-- PS1 Bar -->
-                  <div *ngIf="selectedPs1"
-                    style="position: absolute; top: 0; left: 0; height: 100%; background-color: #1e88e5; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: black; font-weight: 500; border: 1px solid white;"
-                    [style.width.%]="ps1WidthPercent">
-                    {{ ps1Total }}
-                  </div>
-
-                  <!-- PS2 Bar -->
-                  <!-- <div *ngIf="selectedPs2.length > 0"
-                                    style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: black; font-weight: 500; border: 1px solid whitesmoke;"
-                                    [style.width.%]="ps2WidthPercent">
-                                    {{ ps2Total }}
-                                  </div> -->
-                  <!-- PS2 Bar -->
-                  <div *ngIf="selectedPs2.length > 0"
-                    style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: #333; font-weight: 500; border: 1px solid whitesmoke; "
-                    [style.width.%]="ps2WidthPercent">
-                    {{ ps2Total }}
-                  </div>
-
-
-                </div>
-              </div>
-
-
-              <!-- Net Orders -->
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center; position: relative;">
-                <div style="position: relative; width: 100%; height: 30px; overflow: hidden;">
-
-                  <!-- PS1 Bar -->
-                  <div *ngIf="selectedPs1"
-                    style="position: absolute; top: 0; left: 0; height: 100%; background-color: #1e88e5; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: black; font-weight: 500; border: 1px solid white;"
-                    [style.width.%]="ps1WidthPercent">
-                    {{ ps1Total }}
-                  </div>
-
-                  <!-- PS2 Bar -->
-                  <!-- <div *ngIf="selectedPs2.length > 0"
-                                      style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: black; font-weight: 500; border: 1px solid whitesmoke;"
-                                      [style.width.%]="ps2WidthPercent">
-                                      {{ ps2Total }}
-                                    </div> -->
-                  <!-- PS2 Bar -->
-                  <div *ngIf="selectedPs2.length > 0"
-                    style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: #333; font-weight: 500; border: 1px solid whitesmoke; "
-                    [style.width.%]="ps2WidthPercent">
-                    {{ ps2Total }}
-                  </div>
-
-                </div>
-              </div>
-              <!-- Retail -->
-              <div style="margin-top: 25px; height: 40px; display: flex; align-items: center; position: relative;">
-                <div style="position: relative; width: 100%; height: 30px; overflow: hidden;">
-
-                  <!-- PS1 Bar -->
-                  <div *ngIf="selectedPs1"
-                    style="position: absolute; top: 0; left: 0; height: 100%; background-color: #1e88e5; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: black; font-weight: 500; border: 1px solid white;"
-                    [style.width.%]="ps1WidthPercent">
-                    {{ ps1Total }}
-                  </div>
-
-                  <!-- PS2 Bar -->
-                  <!-- <div *ngIf="selectedPs2.length > 0"
-                                      style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: black; font-weight: 500; border: 1px solid whitesmoke;"
-                                      [style.width.%]="ps2WidthPercent">
-                                      {{ ps2Total }}
-                                    </div> -->
-                  <!-- PS2 Bar -->
-                  <div *ngIf="selectedPs2.length > 0"
-                    style="position: absolute; top: 7px; bottom: 7px; left: 0; background-color: white; display: flex; align-items: center; justify-content: center; padding: 0 8px; color: #333; font-weight: 500; border: 1px solid whitesmoke; "
-                    [style.width.%]="ps2WidthPercent">
-                    {{ ps2Total }}
-                  </div>
-
-
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-
-          <!-- PS2 Column - Keep the dropdown but hide the data display since it's now in PS1 column -->
-          <div style="min-width: 200px;">
-            <!-- PS2 Dropdown -->
-            <!-- PS2 Dropdown -->
-            <div style="position: relative; display: inline-block; width: 200px;">
-              <div (click)="dropdownOpen2 = !dropdownOpen2"
-                style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc;
-                    cursor: pointer; user-select: none; text-align: center; border-radius: 20px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                <span>{{ selectedPs2Names.length > 0 ? selectedPs2Names.join(', ') : 'PS2' }}</span>
-                <span style="margin-left: 10px; font-size: 0.7rem;">&#x25BC;</span>
-              </div>
-
-              <div *ngIf="dropdownOpen2" class="custom-scroll" style="position: absolute; top: 100%; left: 0; right: 0; max-height: 280px;
-                    overflow-y: auto; border: 1px solid #ccc; background: white;
-                    z-index: 1000; text-align: center;">
-                <div *ngFor="let user of users" (click)="selectUser2(user.user_id, user.name); dropdownOpen2 = false"
-                  style="padding: 6px 10px; cursor: pointer;"
-                  [style.backgroundColor]="selectedPs2.includes(user.user_id) ? '#ddd' : 'white'"
-                  (mouseenter)="hoveredUser = user.user_id" (mouseleave)="hoveredUser = null">
-                  {{ user.name }}
-                </div>
-              </div>
-            </div>
-
-
-
-
-
-            <!-- Empty space to maintain layout - PS2 data is now shown as overlay in PS1 column -->
-            <div style="margin-top: 25px; height: 300px;"></div>
-          </div>
-
-        </div>
       </div>
 
       <div class="performance-panel" style="width:800px;">

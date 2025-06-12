@@ -105,6 +105,7 @@ export class VehicleComponent implements OnInit {
       next: (res: VehicleResponse) => {
         this.count.set(res.data.count);
         this.vehicleList.set(res.data.rows);
+        // this.applyFilters(); // <-- Filter + Paginate
       },
       error: (err) => {
         this.toastr.error('Failed to load vehicles', 'Error');
@@ -156,13 +157,12 @@ export class VehicleComponent implements OnInit {
         VIN: vehicle.VIN || '',
         type: vehicle.type || '',
         YOM: this.formatDate(vehicle.YOM) || '',
-        start_date: vehicle.demo_start_date || '',
-        end_date: vehicle.demo_end_date || '',
-        // chasis_number: vehicle.chasis_number || '',
-        // chasis_number: vehicle.chasis_number?.toString() || '',
-        // chasis_number: vehicle.chasis_number
-        //   ? vehicle.chasis_number.toString()
-        //   : '',
+        demo_start_date: vehicle.demo_start_date
+          ? this.formatDate(vehicle.demo_start_date)
+          : '',
+        demo_end_date: vehicle.demo_end_date
+          ? this.formatDate(vehicle.demo_end_date)
+          : '',
         chasis_number: vehicle.chasis_number || '',
       });
     } else {
@@ -767,8 +767,8 @@ export class VehicleComponent implements OnInit {
       type: vehicle.type,
       YOM: this.formatDate(vehicle.YOM),
       chasis_number: vehicle.chasis_number,
-      start_date: vehicle.demo_start_date,
-      end_date: vehicle.demo_end_date,
+      demo_start_date: vehicle.demo_start_date,
+      demo_end_date: vehicle.demo_end_date,
       // end_date: vehicle.end_date
       //   ? this.formatDateForInput(vehicle.end_date)
       //   : '',

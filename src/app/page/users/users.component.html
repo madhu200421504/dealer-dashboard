@@ -28,10 +28,32 @@
       </div>
     </div>
 
-    <!-- API integration work starts here -->
-
+    <!-- Table Section -->
     <div class="row">
       <div class="col-12">
+        <!-- Items per page selector -->
+        <div class="row mb-3">
+          <div class="col-md-6 d-flex align-items-center">
+            <label class="mr-2">Show</label>
+            <select class="form-control" style="width: auto; display: inline-block;"
+              (change)="onItemsPerPageChange($event)">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+            <label class="ml-2">entries</label>
+          </div>
+
+          <div class="col-md-6 d-flex justify-content-end align-items-center">
+            <input type="text" class="form-control search-input" style="width: 250px; margin-left: 490px;"
+              placeholder="Search users..." [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+          </div>
+
+        </div>
+
+
+
         <div class="table-responsive">
           <table id="example5" class="table display mb-4 dataTablesCard fs-14 w-100">
             <thead>
@@ -44,19 +66,18 @@
               </tr>
             </thead>
             <tbody>
-              @if(userList().length === 0){
-              <tr>
+              <tr *ngIf="paginatedUsers.length === 0">
                 <td colspan="5" class="text-center">
                   <p>No Users Found</p>
                 </td>
               </tr>
-              }@else(){
-              <tr *ngFor="let user of userList(); let i = index">
-                <td>{{ i + 1 }}</td>
+              <tr *ngFor="let user of paginatedUsers; let i = index">
+                <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.user_role }}</td>
                 <td>
+
                   <div class="d-flex">
                     <a href="javascript:void(0);" data-target=".bd-example-modal-lg" data-toggle="modal"
                       class="btn btn-primary shadow btn-xs sharp mr-1" (click)="onEdit(user)"><i
@@ -67,15 +88,46 @@
                   </div>
                 </td>
               </tr>
-              }
+
             </tbody>
           </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="row" style="margin-top:20px;">
+          <div class="col-md-6">
+            <div class="dataTables_info">
+              Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
+              {{ min(currentPage * itemsPerPage, userList().length) }} of
+              {{ userList().length }} entries
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+            <div class="dataTables_paginate paging_simple_numbers float-right">
+              <ul class="pagination">
+                <li class="paginate_button page-item previous" [class.disabled]="currentPage === 1">
+                  <a class="page-link" (click)="previousPage()">Previous</a>
+                </li>
+
+                <li class="paginate_button page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
+                  <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+                </li>
+
+                <li class="paginate_button page-item next" [class.disabled]="currentPage === totalPages">
+                  <a class="page-link" (click)="nextPage()">Next</a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Your existing modals remain the same -->
 <!-- Delete Modal -->
 <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">

@@ -234,11 +234,11 @@
                       <input id="demo_end_date" class="form-control form-control-lg" type="date" placeholder="end date"
                         formControlName="demo_end_date" [ngClass]="{
                                                                         'is-invalid':
-                                                                          useForm.get('demo_end_date')?.touched && useForm.get('demo_end_date')?.invalid
+                                                                          useForm.get('end_date')?.touched && useForm.get('end_date')?.invalid
                                                                       }" />
 
                       <div class="text-danger"
-                        *ngIf="useForm.get('demo_end_date')?.touched && useForm.get('demo_end_date')?.invalid">
+                        *ngIf="useForm.get('end_date')?.touched && useForm.get('end_date')?.invalid">
                         <span>end date is required.</span>
                       </div>
 

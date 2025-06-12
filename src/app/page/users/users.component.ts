@@ -70,7 +70,13 @@ export class UsersComponent implements OnInit {
   // Service injections
   masterSrv = inject(MasterService);
   private readonly toastr = inject(ToastrService);
-
+  currentPage = 1;
+  itemsPerPage = 10;
+  totalItems = 0;
+  // searchTerm: string = '';
+  searchTerm: string = '';
+  filteredUsers: any[] = []; // will hold the filtered user list
+  paginatedUsers: any[] = []; // your current paginated users (already existing)
   // Form and user management properties
   useForm: FormGroup = new FormGroup({});
   userObj: UserList = new UserList();
@@ -82,6 +88,8 @@ export class UsersComponent implements OnInit {
   previousValue: any;
   user_id: string = ''; // Ensure this is properly initialized with the user ID
   dataTable: any;
+  totalPages: number = 0;
+  pages: number[] = [];
 
   columns: any[] = [];
   constructor(
@@ -97,6 +105,8 @@ export class UsersComponent implements OnInit {
     // this.getAllDealer();
     this.getAllTeams();
     this.loadRole();
+    this.filteredUsers = this.userList(); // make sure userList() returns an array
+    this.paginateUsers();
 
     // Add this to subscribe to the role_id field's value changes
     this.useForm.get('role_id')?.valueChanges.subscribe((roleId) => {
@@ -279,6 +289,7 @@ export class UsersComponent implements OnInit {
   //       },
   //     });
   //   }
+
   loadRole() {
     this.masterSrv.getAllRole().subscribe({
       next: (res: roleResponse) => {
@@ -351,6 +362,98 @@ export class UsersComponent implements OnInit {
   //     console.log('🆕 New user Mode: Reset userObj', this.userObj);
   //   }
   // }
+  onSearchChange() {
+    this.filterUsers();
+    this.currentPage = 1; // reset to first page after search
+    this.paginateUsers();
+  }
+
+  filterUsers() {
+    if (!this.searchTerm) {
+      this.filteredUsers = this.userList();
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredUsers = this.userList().filter((user) => {
+        return (
+          user.name.toLowerCase().includes(term) ||
+          user.email.toLowerCase().includes(term) ||
+          (user.user_role?.toLowerCase().includes(term) ?? false)
+        );
+      });
+    }
+    this.currentPage = 1; // Reset to first page after search
+    this.paginateUsers();
+  }
+
+  paginateUsers() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedUsers = this.filteredUsers.slice(startIndex, endIndex);
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  updatePages() {
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+    this.pages = Array(this.totalPages)
+      .fill(0)
+      .map((x, i) => i + 1);
+  }
+
+  // Call this in ngOnInit or after fetching user data initially
+  initializeUsers() {
+    this.filteredUsers = this.userList();
+    this.paginateUsers();
+  }
+  // get paginatedUsers() {
+  //   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  //   const endIndex = startIndex + this.itemsPerPage;
+  //   return this.userList().slice(startIndex, endIndex);
+  // }
+
+  // get totalPages() {
+  //   return Math.ceil(this.userList().length / this.itemsPerPage);
+  // }
+
+  // get pages() {
+  //   const pages = [];
+  //   for (let i = 1; i <= this.totalPages; i++) {
+  //     pages.push(i);
+  //   }
+  //   return pages;
+  // }
+
+  // Pagination methods
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.paginateUsers(); // Update paginated users for new page
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.paginateUsers(); // Update paginated users for new page
+    }
+  }
+
+  goToPage(page: number) {
+    if (page !== this.currentPage) {
+      this.currentPage = page;
+      this.paginateUsers(); // Update paginated users for new page
+    }
+  }
+
+  onItemsPerPageChange(event: any) {
+    this.itemsPerPage = parseInt(event.target.value, 10);
+    this.currentPage = 1; // Reset to first page
+    this.paginateUsers(); // <-- Update paginated users with new itemsPerPage
+  }
+  min(a: number, b: number): number {
+    return Math.min(a, b);
+  }
+
   openModal(user?: UserList) {
     console.log('✅ openModal() function calledm of user');
     console.log('User object received in openModal:', user);
@@ -543,13 +646,20 @@ export class UsersComponent implements OnInit {
         if (res && res.data.rows) {
           this.totalUser.set(res.data.count);
           this.userList.set(res.data.rows);
+
+          // ✅ Call this AFTER the data is available
+          this.initializeUsers();
         } else {
+          this.userList.set([]);
           this.toastr.warning('No users found', 'Information');
+          this.initializeUsers(); // still initialize empty state
         }
       },
       error: (err) => {
         console.error('Users fetch error:', err);
         this.toastr.error(err.message || 'Failed to fetch users', 'Error');
+        this.userList.set([]);
+        this.initializeUsers(); // optional fallback
       },
     });
   }

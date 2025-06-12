@@ -396,8 +396,19 @@ export interface TestDrive {
   assigned_to?: string;
   VIN?: string | null;
   PMI?: string | null;
-  name?: string; // present in selectedUser's test drives
+  name: string; // present in selectedUser's test drives
 }
+export interface TodayTestDrive {
+  name: string;
+  subject: string;
+  PMI?: string | null;
+  start_date?: string;
+  start_time?: string;
+  end_time?: string;
+  assigned_to?: string;
+  VIN?: string | null;
+}
+
 export interface Performance {
   user_id: string;
   enquiries: number;

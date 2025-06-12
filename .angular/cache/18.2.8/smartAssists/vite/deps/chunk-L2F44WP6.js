@@ -5350,12 +5350,6 @@ var _MatInternalFormField = class __MatInternalFormField {
 })();
 
 export {
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  coerceArray,
-  coerceCssPixelValue,
-  coerceElement,
-  coerceStringArray,
   Platform,
   getSupportedInputTypes,
   normalizePassiveListenerOptions,
@@ -5378,6 +5372,12 @@ export {
   RIGHT_ARROW,
   DOWN_ARROW,
   hasModifierKey,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  coerceArray,
+  coerceCssPixelValue,
+  coerceElement,
+  coerceStringArray,
   ObserversModule,
   CdkTrapFocus,
   FocusMonitor,
@@ -5431,4 +5431,4 @@ export {
   MatRippleLoader,
   _MatInternalFormField
 };
-//# sourceMappingURL=chunk-V4GK3J5D.js.map
+//# sourceMappingURL=chunk-L2F44WP6.js.map

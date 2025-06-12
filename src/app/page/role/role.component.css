@@ -24,3 +24,10 @@ table {
 body {
   overflow-x: hidden;
 }
+@media (max-width: 576px) {
+  /* Bootstrap's xs breakpoint */
+  .search-input {
+    margin-left: 0 !important; /* Remove large margin on small screens */
+    width: 100% !important; /* Make input full width on small screens */
+  }
+}

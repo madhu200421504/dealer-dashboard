@@ -89,10 +89,10 @@ import {
   ɵɵtextInterpolate2,
   ɵɵviewQuery
 } from "./chunk-VBKXHRES.js";
+import "./chunk-3MOREFHL.js";
 import {
   fromEvent
 } from "./chunk-DIY53FAD.js";
-import "./chunk-3MOREFHL.js";
 import {
   BehaviorSubject,
   Subject,

@@ -26,7 +26,21 @@ export class RoleComponent implements OnInit {
   roleList = signal<Role[]>([]);
   count = signal<number>(0);
   totalRoles = signal<number>(0);
-
+  // roles = []; // Assuming roles are fetched from an API or database
+  // filteredRoles = []; // Holds the filtered roles for search
+  // paginatedRoles = []; // Holds roles to display in the current page
+  // currentPage: number = 1;
+  // itemsPerPage: number = 5;
+  // totalPages: number = 1;
+  searchTerm: string = '';
+  roles: Role[] = []; // All roles
+  filteredRoles: Role[] = []; // Filtered list after search
+  paginatedRoles: Role[] = []; // Current page data
+  // searchTerm: string = ''; // Bound to input
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 1;
+  pages: number[] = [];
   // service
   private masterSrv = inject(MasterService);
   private readonly toastr = inject(ToastrService);
@@ -47,6 +61,8 @@ export class RoleComponent implements OnInit {
   ngOnInit(): void {
     console.log('ngOnInit triggered');
     this.loadRole();
+    this.filteredRoles = this.roleList(); // make sure userList() returns an array
+    this.paginateRoles();
   }
 
   private initializeForm(): void {
@@ -63,26 +79,24 @@ export class RoleComponent implements OnInit {
   }
 
   openModals() {
-    console.log('Opening modal...');
-
-    // Clear the form
+    console.log('Opening modal...'); // Is this printing in console?
     this.useForm.reset({
       role_name: '',
       description: '',
     });
 
-    // Show modal using jQuery (now that Bootstrap isn't auto-opening it)
     ($('.bd-example-modal-lg') as any).modal('show');
   }
 
   private loadRole(): void {
     this.masterSrv.getAllRole().subscribe({
       next: (res: roleResponse) => {
-        // Set the list directly from res.data (which is an array)
         this.roleList.set(res.data);
-
-        // Set count as length of the array
         this.count.set(res.data.length);
+
+        // ✅ Once data is set, update filtered list and pagination
+        this.filteredRoles = this.roleList(); // or res.data directly
+        this.paginateRoles();
       },
       error: (err) => {
         this.toastr.error('Failed to load role', 'Error');
@@ -117,6 +131,110 @@ export class RoleComponent implements OnInit {
       },
     });
   }
+  onSearchChange() {
+    this.filterRoles();
+    this.currentPage = 1;
+    this.paginateRoles();
+  }
+
+  filterRoles() {
+    if (!this.searchTerm) {
+      this.filteredRoles = this.roleList();
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredRoles = this.roleList().filter((role) => {
+        return (
+          role.role_name?.toLowerCase().includes(term) ||
+          role.description?.toLowerCase().includes(term)
+        );
+      });
+    }
+    this.currentPage = 1;
+    this.paginateRoles();
+  }
+  paginateRoles() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedRoles = this.filteredRoles.slice(startIndex, endIndex);
+    this.totalPages = Math.ceil(this.filteredRoles.length / this.itemsPerPage);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  onItemsPerPageChange(event: any) {
+    this.itemsPerPage = parseInt(event.target.value, 10);
+    this.currentPage = 1;
+    this.paginateRoles();
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.paginateRoles();
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.paginateRoles();
+    }
+  }
+
+  goToPage(page: number) {
+    if (page !== this.currentPage) {
+      this.currentPage = page;
+      this.paginateRoles();
+    }
+  }
+
+  min(a: number, b: number): number {
+    return Math.min(a, b);
+  }
+
+  // onItemsPerPageChange(event: Event): void {
+  //   const target = event.target as HTMLSelectElement;
+  //   this.itemsPerPage = parseInt(target.value, 10);
+  //   this.currentPage = 1;
+  //   this.updatePagination();
+  // }
+
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.filteredRoles.length / this.itemsPerPage);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.paginatedRoles = this.filteredRoles.slice(
+      (this.currentPage - 1) * this.itemsPerPage,
+      this.currentPage * this.itemsPerPage
+    );
+  }
+
+  // goToPage(page: number): void {
+  //   if (page >= 1 && page <= this.totalPages) {
+  //     this.currentPage = page;
+  //     this.updatePagination();
+  //   }
+  // }
+
+  // previousPage(): void {
+  //   if (this.currentPage > 1) {
+  //     this.currentPage--;
+  //     this.updatePagination();
+  //   }
+  // }
+
+  // nextPage(): void {
+  //   if (this.currentPage < this.totalPages) {
+  //     this.currentPage++;
+  //     this.updatePagination();
+  //   }
+  // }
+
+  // count(): number {
+  //   return this.roles.length;
+  // }
+
+  // min(a: number, b: number): number {
+  //   return Math.min(a, b);
+  // }
 
   // getAllRoles() {
   //   console.log('Calling getAllRoles() API...');

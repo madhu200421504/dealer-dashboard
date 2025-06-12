@@ -1,9 +1,9 @@
 import {
-  RouterModule
-} from "./chunk-3HCHRELN.js";
-import {
   SharedModule
 } from "./chunk-K5IGED3E.js";
+import {
+  RouterModule
+} from "./chunk-3HCHRELN.js";
 import "./chunk-G3Z62KXX.js";
 import "./chunk-YRFOAC5G.js";
 import {
@@ -23,8 +23,8 @@ import {
   ɵɵprojection,
   ɵɵprojectionDef
 } from "./chunk-VBKXHRES.js";
-import "./chunk-DIY53FAD.js";
 import "./chunk-3MOREFHL.js";
+import "./chunk-DIY53FAD.js";
 import "./chunk-XKVMYM44.js";
 import "./chunk-3OV72XIM.js";
 
