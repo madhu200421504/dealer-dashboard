@@ -90,7 +90,7 @@
                           </div> -->
 
                 <div class="avatar"
-                  style="width: 60px; height: 60px; background-color:lightgreen; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer;"
+                  style="width: 60px; height: 60px; background-color:    '#E1D5E7',; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer;"
                   (click)="showUserDetails(user.user_id, user.name)">
                   <span style="color: #4e73df; font-weight: bold;">{{ getUserInitials(user.name) }}</span>
                 </div>
@@ -287,7 +287,7 @@
               <option value="today">Today</option>
               <option value="oneWeek">Upcoming Week</option>
             </select>
-    
+
             <!-- <div style="display: flex; gap: 4px; align-items: center;">
               <button (click)="filterOption = 'today'; applyTableFilters()"
                 [ngClass]="{ 'active-filter-today': filterOption === 'today' }" class="filter-btn">
