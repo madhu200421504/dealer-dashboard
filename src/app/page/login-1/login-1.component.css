@@ -166,8 +166,6 @@ form {
   width: 90% !important;
 }
 .icon11 {
-  /* border: 2px solid black; */
-  /* text-align: end; */
   margin-left: 18em;
   margin-top: 0.7em;
 }
@@ -312,4 +310,37 @@ a:hover {
     margin-top: -50px; /* Maybe a smaller upward shift than landscape */
     /* If in portrait, the layout is likely stacked, so vertical margins are more relevant */
   }
+}
+.custom-container {
+  margin-left: 180px;
+}
+
+@media (max-width: 768px) {
+  .custom-container {
+    margin-left: 0 !important;
+  }
+}
+/* Hide the browser native password toggle icon */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-password-toggle-button,
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none !important;
+}
+
+/* For Chrome (WebKit-based) */
+input[type="password"]::-webkit-inner-spin-button,
+input[type="password"]::-webkit-search-decoration,
+input[type="password"]::-webkit-search-cancel-button,
+input[type="password"]::-webkit-search-results-button,
+input[type="password"]::-webkit-search-results-decoration {
+  display: none !important;
+}
+
+/* Firefox */
+input[type="password"] {
+  -moz-appearance: textfield;
 }

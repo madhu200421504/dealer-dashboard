@@ -27,6 +27,7 @@ import { HeaderComponent } from '../../layout/header/header.component';
 import {
   ApiResponse,
   SelectedUser,
+  SelectedUserData,
   TestDrive,
   TodayTestDrive,
 } from '../../model/interface/master';
@@ -214,6 +215,42 @@ export class DashboardComponent implements OnInit {
   todayUsers: any[] = []; // full list of users for Today’s Actions
   filteredTodayUsers: any[] = [];
   filterTodayUsers: any;
+  alphabet: string[] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  selectedLetter: string = '';
+  filteredUsers: any[] = [];
+  selectedInitial: string | null = null;
+  allUsers: any[] = [];
+  displayedUsers: any[] = [];
+  initialsList: string[] = [];
+  showUserModal = false;
+  // selectedUser: any = null;
+  // displayedUsers: any[] = [];
+  data: any; // <-- Add this line
+
+  groupedUsers: { [key: string]: any[] } = {}; // all grouped by initials
+  displayedUserGroups: { [key: string]: any[] } = {}; // for displaying after search
+  private _displayedUsers: any[] = [];
+  selectedUserDetails: any;
+  maxDriveCount: number = 0;
+  indexes: number[] = [];
+
+  uniqueInitials: string[] = []; // ✅ renamed to avoid clash
+  avatarColors: string[] = [
+    '#E1D5E7', // Light Lavender
+    '#CFF4FC', // Light Aqua Blue
+    '#F8D7DA', // Light Red
+    '#D4EDDA', // Light Green
+    '#DDEBF7', // Light Blue
+    '#FCE5CD', // Light Peach
+    '#EAD1DC', // Light Pink
+    '#FFF2CC', // Light Yellow
+    '#D9EAD3', // Mint Green
+    '#F4CCCC', // Pale Coral
+    '#F3F3F3', // Soft Grey
+    '#FFE6F0', // Light Rose
+  ];
+
+  // searchText: string = '';
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
@@ -223,6 +260,9 @@ export class DashboardComponent implements OnInit {
     this.fetchUsers();
     this.fetchDashboardData();
     this.loadTestDriveData();
+    this.searchText = '';
+    this.filteredUsers = []; // start empty
+    this.filteredTableTestDrives = this.data.tableTestDrives_today; // Make sure this line exists
 
     console.log('Loading dashboard metrics with default filter Today');
     this.loadDashboardMetrics('Today');
@@ -247,45 +287,138 @@ export class DashboardComponent implements OnInit {
   selectSection(section: 'home' | 'analysis'): void {
     this.selectedSection = section;
   }
+  // getUserInitials(name: string): string {
+  //   if (!name) return '';
 
+  //   const words = name.trim().split(' ');
+  //   if (words.length === 1) {
+  //     return words[0].substring(0, 2).toUpperCase(); // single word, get first 2 chars
+  //   }
+
+  //   return (words[0][0] + words[1][0]).toUpperCase(); // first letters of first and last name
+  // }
+  getUserInitials(name: string): string {
+    if (!name) return '';
+    return name.trim().charAt(0).toUpperCase();
+  }
+  // Get unique initials from all users
+  getUniqueInitials(): string[] {
+    const initials = this.allUsers.map((user) =>
+      this.getUserInitials(user.name)
+    );
+    return [...new Set(initials)];
+  }
+
+  generateInitialsList() {
+    const initialsSet = new Set<string>();
+    this.displayedUsers.forEach((user) => {
+      const initial = this.getUserInitials(user.name);
+      if (initial) {
+        initialsSet.add(initial.toUpperCase());
+      }
+    });
+    this.initialsList = Array.from(initialsSet).sort();
+  }
+  groupUsersByInitial() {
+    this.groupedUsers = {};
+    this.allUsers.forEach((user) => {
+      const initial = user.name?.charAt(0)?.toUpperCase() || '';
+      if (!this.groupedUsers[initial]) {
+        this.groupedUsers[initial] = [];
+      }
+      this.groupedUsers[initial].push(user);
+    });
+  }
+
+  // This function triggers on initial click
+  filterByInitial(initial: string): void {
+    if (this.selectedInitial === initial) {
+      // Re-clicked same letter → clear selection & hide user list
+      this.selectedInitial = null;
+      this.filteredUsers = [];
+      console.log('🚫 Filter cleared. User list hidden.');
+    } else {
+      // New initial selected → apply filter
+      this.selectedInitial = initial;
+      this.filteredUsers = this.displayedUsers.filter((user) =>
+        user.name?.toLowerCase().startsWith(initial.toLowerCase())
+      );
+      console.log(`🔍 Showing users with: ${initial}`);
+    }
+  }
+
+  clearInitialFilter(): void {
+    this.filteredUsers = [...this.displayedUsers]; // Reset to all users
+  }
+
+  // openUserModal(user: any): void {
+  //   this.selectedUser = user;
+  //   this.showUserModal = true;
+  // }
+  openUserModal(user: any): void {
+    console.log('Opening modal for:', user); // ✅ check if correct user
+    console.log('Today:', user.todayTestDrives);
+    console.log('Upcoming:', user.upcomingTestDrives);
+    console.log('Overdue:', user.overdueTestDrives);
+
+    this.selectedUser = user;
+    this.showUserModal = true;
+
+    this.todayTestDrives = user.todayTestDrives || [];
+    this.upcomingTestDrives = user.upcomingTestDrives || [];
+    this.overdueTestDrives = user.overdueTestDrives || [];
+  }
+
+  closeModal(): void {
+    this.showUserModal = false;
+  }
+  resetFilter() {
+    this.displayedUsers = [...this.allUsers];
+    this.selectedInitial = '';
+  }
   fetchUsers(): void {
     const token = sessionStorage.getItem('token');
     if (!token) {
       console.error('Token not found in sessionStorage');
       return;
     }
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
 
     this.http
-      .get<ApiResponse>(
+      .get<any>(
         'https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard',
         { headers }
       )
       .subscribe({
         next: (res) => {
           console.log('API response:', res);
-          this.users = res.data?.user || [];
-          // this.filteredUsers = [...this.users]; // ✅ initialize filtered list
-          this.fullUsers = res.data?.user || [];
-          this.users = [...this.fullUsers]; // initialize filtered users with full list
-          this.fullData = res.data;
+          this.allUsers = res.data?.user || [];
+
+          this.displayedUsers = [...this.allUsers]; // (optional if used elsewhere)
+          this.generateInitialsList(); // ✅ Generate initials after data is loaded
         },
         error: (err) => {
           console.error('Failed to fetch users:', err);
         },
       });
   }
-  get displayedUsers() {
-    if (this.showMore) {
-      return this.users;
-    }
-    return this.users.slice(0, 10); // Show only first 10 users initially
-  }
+
+  // get displayedUsers() {
+  //   if (this.showMore) {
+  //     return this.users;
+  //   }
+  //   return this.users.slice(0, 10); // Show only first 10 users initially
+  // }
 
   toggleShowMore() {
     this.showMore = !this.showMore;
+  }
+
+  getInitial(name: string): string {
+    return name?.trim().charAt(0).toUpperCase() || '?';
   }
 
   showMoreUsers(): void {
@@ -296,6 +429,10 @@ export class DashboardComponent implements OnInit {
       this.visibleUserCount = this.paginatedUsers.length;
     }
   }
+  // get displayedUsers(): any[] {
+  //   return this._displayedUsers;
+  // }
+
   showUserDetails(userId: string, name: string) {
     console.log('Clicked user:', userId);
     this.selectedUserId = userId;
@@ -334,6 +471,7 @@ export class DashboardComponent implements OnInit {
               ...this.upcomingTestDrives,
               ...this.overdueTestDrives,
             ];
+            this.showUserModal = true;
           } else {
             this.selectedUser = null;
             this.todayTestDrives = [];
@@ -1087,6 +1225,8 @@ export class DashboardComponent implements OnInit {
   // }
 
   applyTableFilters(): void {
+    console.log('🔥 applyTableFilters called');
+    console.log('searchText:', this.searchText);
     if (!this.fullData) {
       this.filteredTableTestDrives = [];
       return;
@@ -1128,16 +1268,25 @@ export class DashboardComponent implements OnInit {
 
     this.filteredTableTestDrives = tempTestDrives;
     this.currentPage = 1;
-    this.paginateTableData();
+    // this.paginateTableData();
 
-    // --- User search filtering ---
     if (this.searchText) {
       const searchLower = this.searchText.toLowerCase();
-      this.users = this.fullUsers.filter((user) =>
+      this.filteredUsers = this.allUsers.filter((user) =>
         user.name?.toLowerCase().includes(searchLower)
       );
+      console.log('Search:', searchLower);
+      console.log('Matched Users:', this.filteredUsers);
+
+      // ✅ Set selectedUser to the first matched user
+      // if (this.filteredUsers.length > 0) {
+      //   this.selectedUser = this.filteredUsers[0];
+      // } else {
+      //   this.selectedUser = null;
+      // }
     } else {
-      this.users = [...this.fullUsers];
+      this.filteredUsers = []; // 🔥 show no avatars when no search
+      this.selectedUser = null;
     }
   }
 
@@ -1146,6 +1295,16 @@ export class DashboardComponent implements OnInit {
   //     this.filteredTableTestDrives.length / this.itemsPerPage
   //   );
   // }
+  onFilterOptionChange(): void {
+    if (this.filterOption === 'today') {
+      this.filteredTableTestDrives = [...this.testDrivesToday];
+    } else if (this.filterOption === 'oneWeek') {
+      this.filteredTableTestDrives = [...this.testDrivesOneWeek];
+    }
+
+    // Reset pagination (optional)
+    this.currentPage = 1;
+  }
 
   paginateTableData(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -1179,16 +1338,18 @@ export class DashboardComponent implements OnInit {
           this.testDrivesToday = response.data.tableTestDrives_today || [];
           this.testDrivesOneWeek = response.data.tableTestDrives_oneweek || [];
 
-          // 👇 Store all test drives
           this.allTestDrives = [
             ...this.testDrivesToday,
             ...this.testDrivesOneWeek,
           ];
 
+          // 👇 Fix: Set default filtered data
+          this.filteredTableTestDrives = [...this.testDrivesToday];
+
           this.fullUsers = response.data.user || [];
           this.users = [...this.fullUsers];
 
-          this.applyTableFilters(); // Apply initial filters
+          // this.applyTableFilters(); // Apply initial filters if any
         },
         error: (error) => {
           console.error('API error:', error);

@@ -52,13 +52,112 @@
               </ng-template>
             </div>
 
-            <!-- Upcoming -->
-            <div class="person-info" *ngIf="selectedUser?.name">
-              <h3>Upcoming</h3>
-              <div *ngIf="upcomingTestDrives.length > 0; else noUpcoming">
-                <div *ngFor="let testDrive of upcomingTestDrives">
-                  <p><b>{{ testDrive.name }}</b> | {{ testDrive.subject }}</p>
-                  <p>PMI: {{ testDrive.PMI || 'N/A' }}</p>
+          <!-- ✅ Add this inside your component template (at the end of the file) -->
+          <!-- Modal Wrapper -->
+          <div *ngIf="showUserModal" style="
+       position: fixed;
+       inset: 0;
+       background: rgba(0, 0, 0, 0.5);
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       z-index: 1050;
+    ">
+
+            <!-- Modal Box -->
+            <div style="
+     background: white;
+     border-radius: 12px;
+     width: 90%;
+     max-width: 900px;
+     max-height: 90vh;
+     overflow-y: auto;
+     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    ">
+
+              <!-- Modal Header -->
+              <div
+                style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #dee2e6;">
+                <h5 style="margin: 0;">User Details - {{ selectedUser?.name }}</h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+              </div>
+
+              <!-- Modal Body -->
+              <div style="padding: 16px;">
+                <table class="table table-bordered table-striped text-center">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Today</th>
+                      <th>Upcoming</th>
+                      <th>Overdue</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>Name</th>
+                      <td>{{ todayTestDrives[0]?.name || '-' }}</td>
+                      <td>{{ upcomingTestDrives[0]?.name || '-' }}</td>
+                      <td>{{ overdueTestDrives[0]?.name || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th>Subject</th>
+                      <td>{{ todayTestDrives[0]?.subject || '-' }}</td>
+                      <td>{{ upcomingTestDrives[0]?.subject || '-' }}</td>
+                      <td>{{ overdueTestDrives[0]?.subject || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th>PMI</th>
+                      <td>{{ todayTestDrives[0]?.PMI || '-' }}</td>
+                      <td>{{ upcomingTestDrives[0]?.PMI || '-' }}</td>
+                      <td>{{ overdueTestDrives[0]?.PMI || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th>Location</th>
+                      <td>{{ todayTestDrives[0]?.location || '-' }}</td>
+                      <td>{{ upcomingTestDrives[0]?.location || '-' }}</td>
+                      <td>{{ overdueTestDrives[0]?.location || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th>Start time</th>
+                      <td>{{ todayTestDrives[0]?.start_time || '-' }}</td>
+                      <td>{{ upcomingTestDrives[0]?.start_time || '-' }}</td>
+                      <td>{{ overdueTestDrives[0]?.start_time || '-' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Modal Footer -->
+              <div style="padding: 16px; border-top: 1px solid #dee2e6; text-align: right;">
+                <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+              </div>
+
+            </div>
+          </div>
+
+
+
+
+          <!-- 
+          <div class="actions" style=" background-color: #fff;">
+            <div class="action-row">
+
+              <div class="person-info" *ngIf="selectedUser?.name">
+                <h3 style="color:black;">Today</h3>
+
+                <div *ngIf="todayTestDrives.length > 0">
+                  <div *ngFor="let td of todayTestDrives" style="margin-bottom: 1em;">
+                    <p>
+                      <b style="color: black; text-transform: capitalize;">{{ td.name }}</b> |
+                      <span style="color: black;">{{ td.subject }}</span>
+                    </p>
+                    <p><span style="color: black;">PMI:</span> {{ td.PMI || 'N/A' }}</p>
+                  </div>
+                </div>
+
+                <div *ngIf="todayTestDrives.length === 0">
+                  <p style="color: gray;">No test drives for today.</p>
                 </div>
               </div>
               <ng-template #noUpcoming>
@@ -102,10 +201,10 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>Model</th>
+              <th>Subject</th>
               <th>VIN</th>
-              <th>Registration no</th>
-              <th>Reserved by</th>
+              <th>PMI</th>
+              <th>Assigned to</th>
               <th>Date</th>
               <th>Start time</th>
               <th>End time</th>
@@ -145,30 +244,30 @@
         <!-- Metrics and Filters Row (Combined) -->
         <div class="metrics-row" style="width:1520px; display: flex; gap: 15px;">
 
-          <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-            <div class="metric-value" style="color:grey;">{{ dashboardMetrics.enquiries }}</div>
-            <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Enquiries</div>
-          </div>
-          <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-            <div class="metric-value" style="color:grey;">{{ dashboardMetrics.testDrives }}</div>
-            <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Test Drives</div>
-          </div>
-          <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-            <div class="metric-value" style="color:grey;">{{ dashboardMetrics.newOrders }}</div>
-            <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">New Orders</div>
-          </div>
-          <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-            <div class="metric-value" style="color:grey;">{{ dashboardMetrics.cancellations }}</div>
-            <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Cancellation</div>
-          </div>
-          <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-            <div class="metric-value" style="color:grey;">{{ dashboardMetrics.netOrders }}</div>
-            <div class="metric-label" style="color:black;font-size:20px;font-weight:500;;">Net Order</div>
-          </div>
-          <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-            <div class="metric-value" style="color:grey;">{{ dashboardMetrics.retail }}</div>
-            <div class="metric-label" style="color:black;font-size:20px;font-weight:500">Retail</div>
-          </div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.enquiries }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Enquiries</div>
+        </div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.testDrives }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Test Drives</div>
+        </div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.newOrders }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">New Orders</div>
+        </div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.cancellations }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Cancellation</div>
+        </div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.netOrders }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;;">Net Order</div>
+        </div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.retail }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500">Retail</div>
+        </div>
 
           <!-- Last box with filters inside -->
           <div class="metric-box"

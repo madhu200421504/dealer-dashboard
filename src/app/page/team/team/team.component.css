@@ -23,3 +23,14 @@
     padding: 10px; /* Adjust padding for mobile */
   }
 }
+.custom-search-input {
+  width: 250px;
+  margin-left: 500px;
+}
+
+/* Remove margin-left on tablets and phones */
+@media (max-width: 991px) {
+  .custom-search-input {
+    margin-left: 0;
+  }
+}

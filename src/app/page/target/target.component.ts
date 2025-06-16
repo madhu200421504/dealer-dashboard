@@ -56,10 +56,18 @@ export class TargetComponent implements OnInit {
   vehicleList = signal<Vehicle[]>([]);
 
   targetList = signal<Target[]>([]);
+  filteredTeam = signal<Target[]>([]);
+  paginatedTarget = signal<Target[]>([]);
 
+  searchTerm: string = '';
+  currentPage = 1;
+  itemsPerPage = 10;
+  totalPages = 0;
+  pages: number[] = [];
   totalVehicle = signal<number>(0);
   totalTarget = signal<number>(0);
   isEditMode: boolean = false; // Default is add mode
+  filteredTarget: any[] = [];
 
   // Dependency Injections
   private masterSrv = inject(MasterService);
@@ -129,22 +137,26 @@ export class TargetComponent implements OnInit {
       next: (res: TargetResponse) => {
         console.log('Target API response:', res); // ✅ Check the full API response
 
-        // Optional: Check if expected fields are present
+        // Optional: Log individual fields from the response
         console.log('Enquiries:', res?.data?.enquiries);
         console.log('Test Drives:', res?.data?.testDrives);
         console.log('Orders:', res?.data?.orders);
-        // Assuming count should be the number of targets, which you might want to calculate dynamically.
+
+        // Assuming res.data.count is the total count of targets (or whatever metric you want)
         this.count.set(res.data.count);
 
-        // Setting the targetList
-        // If you're aiming to display the single data row (Enquiries, Test drives, Orders), you can set it like this:
+        // Setting the targetList signal with a single object from the response
         this.targetList.set([
           {
             enquiries: res.data.enquiries,
-            testDrives: res.data.testDrives, // Correct bracket notation
+            testDrives: res.data.testDrives,
             orders: res.data.orders,
           },
         ]);
+
+        // If you want to keep filteredTeam and paginatedTarget in sync, update them as well:
+        this.filteredTeam.set(this.targetList());
+        this.setupPagination(); // Recalculate pagination based on new data
       },
       error: (err) => {
         this.toastr.error('Failed to load target', 'Error');
@@ -216,7 +228,61 @@ export class TargetComponent implements OnInit {
       console.log('🆕 New Target Mode: Reset targetobj', this.targetobj);
     }
   }
+  onSearchChange() {
+    const term = this.searchTerm.toLowerCase();
+    const filtered = this.targetList().filter(
+      (target) =>
+        target.enquiries.toString().includes(term) ||
+        target.testDrives.toString().includes(term) ||
+        target.orders.toString().includes(term)
+    );
+    this.filteredTeam.set(filtered);
+    this.currentPage = 1;
+    this.setupPagination();
+  }
 
+  onItemsPerPageChange(event: any) {
+    this.itemsPerPage = +event.target.value;
+    this.currentPage = 1;
+    this.setupPagination();
+  }
+
+  setupPagination() {
+    const filtered = this.filteredTeam();
+    this.totalPages = Math.ceil(filtered.length / this.itemsPerPage);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.paginateTeams();
+  }
+
+  paginateTeams() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedTarget.set(this.filteredTeam().slice(start, end));
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.paginateTeams();
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.paginateTeams();
+    }
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.paginateTeams();
+  }
+
+  getShowingTo() {
+    const to = this.currentPage * this.itemsPerPage;
+    return to > this.filteredTeam().length ? this.filteredTeam().length : to;
+  }
   // Disable VIN for edit mode
   // this.useForm.get('VIN')?.disable();
   // this.useForm.get('YOM')?.disable();

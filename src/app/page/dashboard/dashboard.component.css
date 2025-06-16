@@ -1404,3 +1404,84 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
 
 
 
+
+.filter-btn {
+  padding: 5px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: white;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  color: #333;
+}
+
+.filter-btn:hover {
+  background-color: #f2f2f2;
+}
+
+.active-filter-today {
+  background: linear-gradient(to right, #4e73df, #6a89f7);
+  color: white;
+  border-color: #4e73df;
+}
+
+.active-filter-upcoming {
+  background: linear-gradient(to right, #007aff, #79b0ff);
+  color: white;
+  border-color: #007aff;
+}
+.avatar-color-1 {
+  background-color: #ffd3b6;
+}
+.avatar-color-2 {
+  background-color: #caffbf;
+}
+.avatar-color-3 {
+  background-color: #9bf6ff;
+}
+/* .header-profile .dropdown-menu {
+  z-index: 1050 !important;
+  position: absolute !important;
+} */
+.header-profile .dropdown-menu {
+  position: absolute !important;
+  z-index: 9999 !important;
+}
+.header-right .header-profile .dropdown-menu {
+  padding: 15px 0;
+  min-width: 12.5rem;
+  z-index: 9999;
+  position: absolute;
+}
+
+/*  */
+.dashboard-container,
+.header,
+.nav-buttons {
+  overflow: visible !important;
+}
+.nav-buttons {
+  z-index: 1000; /* or anything higher than 999 */
+}
+/* Ensure dropdown appears above everything */
+.header-profile {
+  position: relative;
+  z-index: 9999;
+}
+
+.header-profile .dropdown-menu {
+  position: absolute !important;
+  z-index: 99999 !important;
+  top: 100%;
+  right: 0;
+  display: block;
+}
+
+/* Make sure nothing hides the dropdown */
+.dashboard-container,
+.header,
+.nav-buttons {
+  overflow: visible !important;
+  z-index: auto !important;
+}

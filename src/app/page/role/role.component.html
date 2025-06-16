@@ -1,5 +1,6 @@
 <div class="container-fluid">
   <div class="content-body">
+    <!-- Breadcrumb -->
     <div class="page-titles">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -11,114 +12,202 @@
       </ol>
     </div>
 
+    <!-- Add Button + Stats -->
     <div class="row mb-5 align-items-center">
-      <div class="col-xl-2 mb-4 mb-xl-0 mt-10">
-        <!-- <a style="cursor: pointer; color: white !important" type="button" data-toggle="modal"
-          data-target=".bd-example-modal-lg" class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
-          <i class="fa fa-plus mr-1"></i>Add Role
-        </a> -->
-        <a style="cursor: pointer; color: white !important" type="button" (click)="openModals()"
-          class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
-          <i class="fa fa-plus mr-1"></i>Add Role
+      <div class="col-xl-2 col-lg-3 col-md-4 mb-4 mb-md-0">
+        <a (click)="openModals()" type="button"
+          class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons" style="color:white;">
+          <i class="fa fa-plus mr-1" style="color:white"></i>Add Role
         </a>
-
       </div>
-      <div class="col-xl-2 mb-4 mb-xl-0">
+      <div class="col-xl-2 col-lg-3 col-md-4 mb-4 mb-md-0">
         <div class="media-body ml-1">
           <p class="mb-1 fs-14 text-center">Total Roles</p>
-          <h3 class="mb-0 text-black font-w600 fs-20 text-center">{{count()}}</h3>
+          <h3 class="mb-0 text-black font-w600 fs-20 text-center">{{ filteredRoles.length }}</h3>
         </div>
       </div>
     </div>
 
-    <!-- Role Table -->
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="table-responsive">
-          <table id="example5" class="table mb-4 dataTablesCard fs-14">
-            <thead>
-              <tr>
-                <th>Sr No</th>
-                <th>Role Name</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Show this row if roleList is empty -->
-              <tr *ngIf="roleList().length === 0">
-                <td colspan="3" class="text-center text-muted">No roles found</td>
-              </tr>
+    <!-- Roles Table Section -->
+    <div class="card-box p-4 mb-5"
+      style="background-color: #fff; box-shadow: 0 0 15px rgba(0, 0, 0, 0.08); border-radius: 10px;">
 
-              <!-- Show role rows if there are roles -->
-              <tr *ngFor="let role of roleList(); let index = index">
-                <td>{{ index + 1 }}</td>
-                <td>{{ role.role_name }}</td>
-                <td>{{ role.description }}</td>
-              </tr>
-            </tbody>
+      <div class="row mb-4 align-items-center">
+        <div class="col-12">
+          <!-- Items per page selector and Search -->
+          <div class="row mb-3">
+            <div class="col-md-6 d-flex align-items-center">
+              <label class="mr-2"></label>
+              <select class="form-control" style="width: 70px; display: inline-block; border-radius: 5px;"
+                (change)="onItemsPerPageChange($event)">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select>
+              <label class="ml-2">records per page</label>
+            </div>
 
+            <div class="col-md-6 d-flex justify-content-end align-items-center">
+              <input type="text" class="form-control search-input" style="width: 250px; margin-left: 500px;"
+                placeholder="Search roles..." [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+            </div>
+          </div>
+        </div>
+      </div>
 
-          </table>
+      <div class="table-responsive">
+        <table class="table display mb-4 dataTablesCard fs-14 w-100">
+          <thead>
+            <tr>
+              <th>Sr No</th>
+              <th>Role Name</th>
+              <th>Description</th>
+              <!-- <th>Action</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="paginatedRoles.length === 0">
+              <td colspan="4" class="text-center">No Roles Found</td>
+            </tr>
+            <tr *ngFor="let role of paginatedRoles; let i = index">
+              <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+              <td>{{ role.role_name }}</td>
+              <td>{{ role.description }}</td>
+              <td>
+                <div class="d-flex">
+                  <!-- <a href="javascript:void(0);" class="btn btn-primary shadow btn-xs sharp mr-1" (click)="onEdit(role)">
+                    <i class="fa fa-pencil"></i>
+                  </a> -->
+                  <!-- <a href="javascript:void(0);" class="btn btn-danger shadow btn-xs sharp"
+                    (click)="selectRoleForDeletion(role)">
+                    <i class="fa fa-trash"></i>
+                  </a> -->
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <div class="dataTables_info">
+            Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
+            {{ getShowingTo() }} of {{ filteredRoles.length }} entries
+          </div>
+
+        </div>
+        <div class="col-md-6">
+          <div class="dataTables_paginate paging_simple_numbers float-right">
+            <ul class="pagination">
+              <li class="paginate_button page-item previous" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="previousPage()">Previous</a>
+              </li>
+              <li class="paginate_button page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
+                <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+              </li>
+              <li class="paginate_button page-item next" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="nextPage()">Next</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+  <div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" style="text-align: center; width: 100%">
+            {{ roleObj.role_name || roleObj.description ? "Edit User" : "Add New User" }}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span class="x">&times;</span>
+          </button>
+        </div>
 
-<!-- Add Role Modal -->
-<div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" style="align-items: center; margin-inline: auto">
-          Add New Role
-        </h5>
-        <button type="button" class="close" data-dismiss="modal">
-          <span class="x">&times;</span>
-        </button>
-      </div>
+        <div class="modal-body">
+          <form [formGroup]="useForm">
+            <div class="row">
+              <!-- Name -->
+              <div class="col-md-6 form-group">
+                <label for="role_name" class="form-label">role Name</label>
+                <input id="role_name" class="form-control form-control-lg" type="text" formControlName="role_name"
+                  placeholder="Role Name" [ngClass]="{
+                  'is-invalid':
+                    useForm.get('role_name')?.touched &&
+                    useForm.get('role_name')?.invalid
+                }" required />
+                <div class="text-danger" *ngIf="
+                  useForm.get('role_name')?.invalid && useForm.get('role_name')?.touched
+                ">
+                  <span *ngIf="useForm.get('role_name')?.errors?.['required']">role Name is required.</span>
+                </div>
+              </div>
+              <div class="col-md-6 form-group">
+                <label for="description" class="form-label">description</label>
+                <input id="description" class="form-control form-control-lg" type="text" formControlName="description"
+                  placeholder=" Description" [ngClass]="{
+                                'is-invalid':
+                                  useForm.get('description')?.touched &&
+                                  useForm.get('description')?.invalid
+                              }" required />
+                <div class="text-danger" *ngIf="
+                                useForm.get('description')?.invalid && useForm.get('description')?.touched
+                              ">
+                  <span *ngIf="useForm.get('description')?.errors?.['required']">description is required.</span>
+                </div>
+              </div>
 
-      <div class="modal-body">
-        <form [formGroup]="useForm">
-          <div class="row">
-
-            <!-- Role Name with Dropdown -->
-            <div class="col-md-6 form-group">
-              <label for="role_name" class="form-label">Role Name*</label>
-              <select id="role_name" class="form-control form-control-lg" formControlName="role_name" [ngClass]="{
-                'is-invalid': useForm.get('role_name')?.touched && useForm.get('role_name')?.invalid
-              }">
-                <option value="" disabled selected>Select Role</option>
-                <!-- Static Fallback List (if required) -->
-                <option *ngFor="let dealer of staticDealerList" [value]="dealer.dealer_code">
-                  {{ dealer.dealer_code }}
+              <!-- LAST NAME -->
+              <!-- <div class="col-md-6 form-group">
+              <label for="team_lead_email" class="form-label">Team Lead</label>
+              <select id="team_lead_email" class="form-control form-control-lg" formControlName="team_lead_email"
+                (change)="onTeamChange()" [ngClass]="{
+                  'is-invalid':
+                    useForm.get('team_lead_email')?.touched &&
+                    useForm.get('team_lead_email')?.invalid
+                }">
+                <option value="" disabled selected>Select team email</option>
+  
+  
+                <option *ngFor="let user of userList()" [value]="user.email">
+                  {{ user.email }}
                 </option>
               </select>
-              <div class="text-danger" *ngIf="useForm.get('role_name')?.touched && useForm.get('role_name')?.invalid">
-                <span>Role Name is required.</span>
+              <div class="text-danger" *ngIf="
+                  useForm.get('team_lead_email')?.touched &&
+                  useForm.get('team_lead_email')?.invalid
+                ">
+                <span>Team is required.</span>
               </div>
+            </div> -->
+
+
+              <!-- ROLE -->
+
+
+              <div class="modal-footer">
+                <ng-container *ngIf="roleObj.role_id; else saveButton">
+                  <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
+                    [disabled]="!isRoleNameChanged()">
+                    Edit
+                  </button>
+                </ng-container>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal" (click)="closeModal()">
+                  Close
+                </button>
+                <ng-template #saveButton>
+                  <button type="button" class="btn btn-outline-primary" (click)="onSave()"
+                    [attr.data-dismiss]="useForm.valid ? 'modal' : null">
+                    save
+                  </button>
+                </ng-template>
+              </div>
+
             </div>
-
-            <!-- Role Description Input -->
-            <div class="col-md-6 form-group">
-              <label for="description" class="form-label">Role Description*</label>
-              <input style="cursor: text" class="form-control form-control-lg" type="text"
-                placeholder="Role Description" formControlName="description" />
-            </div>
-
-          </div>
-        </form>
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-primary" (click)="onSave()" (click)="closeModal()">
-          Save
-        </button>
-        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+            <!-- Add/Edit Role Modal (same as yours) -->
+            <!-- Keep your modal code here as-is -->

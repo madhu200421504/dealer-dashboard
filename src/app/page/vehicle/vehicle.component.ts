@@ -53,7 +53,13 @@ export class VehicleComponent implements OnInit {
   count = signal<number>(0);
   vehicleList = signal<Vehicle[]>([]);
   totalVehicle = signal<number>(0);
+  vehicles: Vehicle[] = []; // All vehicles from API or static data
+  paginatedVehicles: Vehicle[] = []; // Vehicles displayed on current page
 
+  // currentPage = 1;
+  // itemsPerPage = 5;
+  // totalPages = 0;
+  // pages: number[] = [];
   // Dependency Injections
   private masterSrv = inject(MasterService);
   private readonly toastr = inject(ToastrService);
@@ -65,6 +71,18 @@ export class VehicleComponent implements OnInit {
   isModalVisible = false;
   isEditMode = false;
   previousValue: string = '';
+  filteredVehicle: any[] = [];
+  // vehicles: Vehicle[] = []; // All vehicle records
+  // filteredVehicles: Vehicle[] = []; // Filtered by search
+  // paginatedVehicles: Vehicle[] = []; // Current page view
+
+  searchTerm: string = '';
+  filteredVehicles: Vehicle[] = []; // ✅ make sure this is declared
+
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
+  pages: number[] = [];
 
   // Form Group
   useForm: FormGroup = new FormGroup({});
@@ -75,6 +93,9 @@ export class VehicleComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadVehicles();
+    this.filteredVehicles = this.vehicleList(); // Get full vehicle list initially
+    this.paginateVehicles(); // Set up pagination
+    this.filterVehicles(); // Initial filter (for search)
   }
 
   // Initialize Reactive Form
@@ -104,8 +125,13 @@ export class VehicleComponent implements OnInit {
     this.masterSrv.getAllVehicle().subscribe({
       next: (res: VehicleResponse) => {
         this.count.set(res.data.count);
-        this.vehicleList.set(res.data.rows);
-        // this.applyFilters(); // <-- Filter + Paginate
+        this.vehicles = res.data.rows;
+
+        this.vehicleList.set(this.vehicles); // ✅ SET THE SIGNAL!
+
+        this.filteredVehicles = [...this.vehicles];
+        this.currentPage = 1;
+        this.paginateVehicles();
       },
       error: (err) => {
         this.toastr.error('Failed to load vehicles', 'Error');
@@ -418,6 +444,18 @@ export class VehicleComponent implements OnInit {
   //     }
   //   );
   // }
+  getShowingFrom(): number {
+    if (this.filteredVehicles.length === 0) return 0;
+    return (this.currentPage - 1) * this.itemsPerPage + 1;
+  }
+
+  getShowingTo(): number {
+    if (this.filteredVehicles.length === 0) return 0;
+    return Math.min(
+      this.currentPage * this.itemsPerPage,
+      this.filteredVehicles.length
+    );
+  }
   onUpdate() {
     if (!this.vehicleObj || !this.vehicleObj.vehicle_id) {
       this.toastr.warning('No vehicle selected for update!', 'Warning');
@@ -450,8 +488,99 @@ export class VehicleComponent implements OnInit {
       }
     );
   }
+  // vehicleList(): Vehicle[] {
+  //   return this.vehicles;
+  // }
 
-  // Delete Vehicle
+  getAllVehicles(): void {
+    // Replace with your API or service call
+    // Example: this.vehicleService.getVehicles().subscribe((data) => this.vehicles = data);
+  }
+  onSearchChange(): void {
+    this.currentPage = 1;
+    this.filterVehicles();
+  }
+
+  onItemsPerPageChange(event: any): void {
+    this.itemsPerPage = +event.target.value;
+    this.currentPage = 1;
+    this.paginateVehicles();
+  }
+
+  displayAllVehicles(): void {
+    this.filteredVehicles = this.vehicleList();
+    this.paginateVehicles();
+  }
+
+  filterVehicles(): void {
+    const list = this.vehicleList(); // ✅ signal unwrapped
+    console.log('🔍 Raw vehicle list:', list);
+    console.log('🔎 Current search term:', this.searchTerm);
+
+    if (!this.searchTerm || this.searchTerm.trim() === '') {
+      console.log('📄 Empty search term. Showing full list.');
+      this.filteredVehicles = list;
+    } else {
+      const term = this.searchTerm.trim().toLowerCase();
+      console.log('🔍 Normalized search term:', term);
+
+      this.filteredVehicles = list.filter((vehicle) => {
+        const match =
+          vehicle.vehicle_name?.toLowerCase().includes(term) ||
+          vehicle.VIN?.toLowerCase().includes(term) ||
+          vehicle.chasis_number?.toLowerCase().includes(term) ||
+          vehicle.type?.toLowerCase().includes(term);
+
+        // Log each match attempt
+        console.log(`🚗 Checking vehicle:`, vehicle, '=> Match:', match);
+        return match;
+      });
+
+      console.log('✅ Filtered vehicles:', this.filteredVehicles);
+    }
+
+    this.currentPage = 1;
+    this.paginateVehicles();
+  }
+
+  paginateVehicles(): void {
+    this.totalPages = Math.ceil(
+      this.filteredVehicles.length / this.itemsPerPage
+    );
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.updatePaginatedVehicles();
+  }
+
+  updatePaginatedVehicles(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedVehicles = this.filteredVehicles.slice(start, end);
+  }
+  goToPage(page: number): void {
+    this.currentPage = page;
+    this.updatePaginatedVehicles(); // Refresh the displayed items
+  }
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedVehicles();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedVehicles();
+    }
+  }
+
+  // updatePaginatedVehicles(): void {
+  //   const start = (this.currentPage - 1) * this.itemsPerPage;
+  //   const end = start + this.itemsPerPage;
+  //   this.paginatedVehicles = this.filteredVehicles.slice(start, end);
+  // }
+
+  // Delete Vehicledele
 
   // deleteVehicleId() {
   //   if (

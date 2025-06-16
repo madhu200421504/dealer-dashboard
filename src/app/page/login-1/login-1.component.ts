@@ -154,10 +154,7 @@ export class Login1Component {
       return false;
     }
     if (!this.isValidEmail(this.loginObj.dealer_email)) {
-      this.toastr.error(
-        'Please enter a valid email address',
-        'Validation Error'
-      );
+      this.toastr.error('Please enter a valid password', 'Validation Error');
       return false;
     }
     return true;
@@ -260,9 +257,9 @@ export class Login1Component {
           this.startCountdown();
         },
         error: (error) => {
-          // console.error('Email verification error:', error);
-          console.log(error.error.error);
-          const errorMessage = error.error.error;
+          console.log('Email verification error:', error);
+          const errorMessage =
+            error?.error?.message || 'Something went wrong. Please try again.';
           this.toastr.error(errorMessage, 'Error');
         },
       });

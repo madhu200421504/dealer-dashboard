@@ -1,7 +1,7 @@
 import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
   CommonModule
-} from "./chunk-EWZUNRTZ.js";
+} from "./chunk-KKRJ4LPL.js";
 import {
   Directive,
   ElementRef,
@@ -14,7 +14,7 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵdirectiveInject
-} from "./chunk-OLPLKVTR.js";
+} from "./chunk-6ZFWCITV.js";
 import {
   require_cjs
 } from "./chunk-5IW5ZEPE.js";
