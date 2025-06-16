@@ -7,15 +7,15 @@
     margin-left: 0px;
 }
 .menu-toggle .logo-abbr{
-    display: block;
+    /* display: block; */
 }
 .menu-toggle .brand-title{
-    display: none;
+    /* display: none; */
 }
 
 @media (max-width:1400px ){
     .nav-control{
-        top: 40% !important;
+        /* top: 40% !important; */
     } 
 }
 @media (max-width: 767px){

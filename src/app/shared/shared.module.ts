@@ -6,12 +6,13 @@ import { HeaderComponent } from '../layout/header/header.component';
 import { SidebarComponent } from '../layout/sidebar/sidebar.component'; 
 
 @NgModule({
+  
   imports: [
     CommonModule,
     FormsModule,
     RouterModule,
     HeaderComponent,  // Import standalone component
-    SidebarComponent  
+    // SidebarComponent,
      
   ],
   exports: [
@@ -19,7 +20,7 @@ import { SidebarComponent } from '../layout/sidebar/sidebar.component';
     FormsModule,
     RouterModule,
     HeaderComponent,  // Export standalone component
-    SidebarComponent 
+    // SidebarComponent
   ]
 })
 

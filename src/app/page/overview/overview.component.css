@@ -1,0 +1,83 @@
+/* Adjust layout spacing based on sidebar */
+#main-wrapper {
+  display: flex;
+}
+
+.content-body {
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+  width: 100%;
+}
+
+.sidebar-collapsed .content-body {
+  margin-left: 80px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-body {
+    margin-left: 0 !important;
+  }
+}
+
+
+/* Adjust layout spacing based on sidebar */
+#main-wrapper {
+  display: flex;
+}
+
+.content-body {
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+  width: 100%;
+}
+
+.sidebar-collapsed .content-body {
+  margin-left: 80px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-body {
+    margin-left: 0 !important;
+  }
+}
+
+
+.content-section {
+  padding: 20px;
+  margin-top: 70px;
+}
+
+.nav-button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.performance-panels {
+  display: flex;
+  gap: 2rem;
+  margin-top: 20px;
+}
+
+.performance-panel {
+  flex: 1;
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  height: 300px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.metric-box {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
