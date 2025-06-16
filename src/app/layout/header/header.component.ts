@@ -5,6 +5,8 @@ import {
   OnInit,
   PLATFORM_ID,
   ChangeDetectorRef,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import {
   ActivatedRoute,
@@ -26,6 +28,7 @@ import { ContextService } from '../../service/context.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit {
+  @Output() sidebarToggle = new EventEmitter<void>();
   guestDetails: any;
   // pageTitle: string = 'Dashboard';
   currentHeading: string = 'Dashboard';
@@ -36,7 +39,7 @@ export class HeaderComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private context: ContextService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.context.onSideBarClick$.subscribe(({ pageTitle }) => {
@@ -51,6 +54,11 @@ export class HeaderComponent implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => this.updateTitle());
+  }
+
+  onToggleClick() {
+    console.log('Hamburger clicked'); // 👈 test log
+    this.sidebarToggle.emit();
   }
 
   private updateTitle(): void {

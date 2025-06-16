@@ -1,9 +1,10 @@
-<div id="main-wrapper">
-    <app-header></app-header>
-    <app-sidebar></app-sidebar>
-    <div class="content-body">
-        <div class="container-fluid">
-            <router-outlet></router-outlet>
-        </div>
+<div id="main-wrapper" [class.sidebar-collapsed]="!isSidebarOpen">
+  <app-header (sidebarToggle)="toggleSidebar()"></app-header>
+  <app-sidebar></app-sidebar>
+
+  <div class="content-body">
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
     </div>
+  </div>
 </div>
