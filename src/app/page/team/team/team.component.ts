@@ -54,18 +54,26 @@ export class TeamComponent {
   // count: number;
   // teamObj: any = {}; // For editing
   // userObj: any = {}; // Used for modal title condition
-  searchTerm: string = '';
-  currentPage: number = 1;
-  itemsPerPage: number = 5;
-  paginatedTeams: any[] = []; // your current paginated users (already existing)
+  // searchTerm: string = '';
+  // currentPage: number = 1;
+  // itemsPerPage: number = 5;
+  // paginatedTeams: any[] = []; // your current paginated users (already existing)
   allUsers: any[] = []; // Complete list
   pages: number[] = [];
   filteredTeams: Teams[] = []; // Filtered list after search
 
+  searchTerm: string = '';
+  itemsPerPage: number = 10;
+  currentPage: number = 1;
+  filteredTeam: any[] = [];
+
+  paginatedTeams: any[] = [];
+  filteredTeamList: any[] = [];
   constructor(
     private aleartsrv: AleartSrvService,
     private cdr: ChangeDetectorRef
-  ) {
+  ) {    
+    
     this.initializeForm();
   }
 
@@ -76,6 +84,7 @@ export class TeamComponent {
     this.displayAllTeams();
     this.filteredTeams = this.teamList(); // make sure userList() returns an array
     this.paginateTeams();
+    this.filterTeams(); // initializes filtered list
   }
   initializeForm() {
     this.useForm = new FormGroup({
@@ -356,29 +365,29 @@ export class TeamComponent {
       },
     });
   }
-  paginateTeams() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedTeams = this.filteredTeams.slice(startIndex, endIndex);
-    this.totalPages = Math.ceil(this.filteredTeams.length / this.itemsPerPage);
-    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
+  // paginateTeams() {
+  //   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  //   const endIndex = startIndex + this.itemsPerPage;
+  //   this.paginatedTeams = this.filteredTeams.slice(startIndex, endIndex);
+  //   this.totalPages = Math.ceil(this.filteredTeams.length / this.itemsPerPage);
+  //   this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  // }
 
-  onSearchChange(): void {
-    const term = this.searchTerm?.toLowerCase() || '';
-    this.filteredTeams = this.teamList().filter(
-      (team) => team.team_name?.toLowerCase().includes(term)
-      // Add more fields if needed
-    );
-    this.currentPage = 1;
-    this.updatePagination();
-  }
+  // onSearchChange(): void {
+  //   const term = this.searchTerm?.toLowerCase() || '';
+  //   this.filteredTeams = this.teamList().filter(
+  //     (team) => team.team_name?.toLowerCase().includes(term)
+  //     // Add more fields if needed
+  //   );
+  //   this.currentPage = 1;
+  //   this.updatePagination();
+  // }
 
-  onItemsPerPageChange(event: any): void {
-    this.itemsPerPage = +event.target.value;
-    this.currentPage = 1;
-    this.updatePagination();
-  }
+  // onItemsPerPageChange(event: any): void {
+  //   this.itemsPerPage = +event.target.value;
+  //   this.currentPage = 1;
+  //   this.updatePagination();
+  // }
 
   updatePagination(): void {
     const filtered = this.filteredTeams; // ✅ correct
@@ -404,26 +413,56 @@ export class TeamComponent {
   //   return this.filteredUsers().length;
   // }
 
-  previousPage(): void {
+  onSearchChange() {
+    this.currentPage = 1;
+    this.filterTeams();
+  }
+  getShowingTo(): number {
+    return Math.min(
+      this.currentPage * this.itemsPerPage,
+      this.filteredTeam.length
+    );
+  }
+  onItemsPerPageChange(event: any) {
+    this.itemsPerPage = +event.target.value;
+    this.currentPage = 1;
+    this.paginateTeams();
+  }
+
+  filterTeams() {
+    this.filteredTeamList = this.teamList().filter((team) =>
+      team.team_name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+    this.paginateTeams();
+  }
+
+  paginateTeams() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedTeams = this.filteredTeamList.slice(startIndex, endIndex);
+    this.totalPages = Math.ceil(
+      this.filteredTeamList.length / this.itemsPerPage
+    );
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.updatePagination();
+      this.paginateTeams();
     }
   }
-  min(a: number, b: number): number {
-    return Math.min(a, b);
-  }
 
-  nextPage(): void {
+  nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.updatePagination();
+      this.paginateTeams();
     }
   }
 
-  goToPage(page: number): void {
+  goToPage(page: number) {
     this.currentPage = page;
-    this.updatePagination();
+    this.paginateTeams();
   }
 
   // openModal(): void {

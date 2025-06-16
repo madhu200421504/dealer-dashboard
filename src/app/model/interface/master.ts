@@ -214,6 +214,12 @@ export interface MultiuserResponse {
     rows: UserList[];
   };
 }
+
+export interface SelectedUserData {
+  today: TestDrive | null;
+  upcoming: TestDrive | null;
+  overdue: TestDrive | null;
+}
 export interface MultiaccountsResponse {
   account_id: string;
   data: {
@@ -397,7 +403,15 @@ export interface TestDrive {
   VIN?: string | null;
   PMI?: string | null;
   name: string; // present in selectedUser's test drives
+  location:string;
 }
+export interface SelectedUserData {
+  name: string;
+  today: TestDrive | null;
+  upcoming: TestDrive | null;
+  overdue: TestDrive | null;
+}
+
 export interface TodayTestDrive {
   name: string;
   subject: string;
@@ -407,6 +421,7 @@ export interface TodayTestDrive {
   end_time?: string;
   assigned_to?: string;
   VIN?: string | null;
+  location: string;
 }
 
 export interface Performance {

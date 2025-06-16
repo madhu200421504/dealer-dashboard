@@ -26,161 +26,206 @@
         </div>
       </div>
     </div>
+    <div class="card-box p-4 mb-5"
+      style="background-color: #fff; box-shadow: 0 0 15px rgba(0, 0, 0, 0.08); border-radius: 10px;">
+      <div class="row mb-4 align-items-center">
 
-    <!-- Api integration work start here -->
 
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="table-responsive">
-          <table id="example5" class="table display mb-4 table-responsive-xl dataTablesCard fs-14">
-            <thead>
-              <tr>
-                <th>Sr No</th>
-                <th>Vehicle Name</th>
-                <th>Yrs Of Mfg</th>
-                <th>Vehicle Types</th>
-                <th>VIN</th>
-                <th>chasis_number</th>
-                <th>Start_date</th>
-                <th>End_date</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              @if (vehicleList().length === 0) {
-              <tr>
-                <td colspan="6" class="text-center">
-                  <p>No Vehicle Found</p>
-                </td>
-              </tr>
-              } @else(){
-              <tr *ngFor="let vehicle of vehicleList(); let i = index">
-                <td>{{ i + 1 }}</td>
-                <td>{{ vehicle.vehicle_name }}</td>
-                <td>{{ vehicle.YOM }}</td>
-                <td>{{ vehicle.type }}</td>
-                <td>{{ vehicle.VIN }}</td>
-                <td>{{vehicle.chasis_number}}</td>
-                <td>{{vehicle.demo_start_date}}</td>
-                <td>{{vehicle.demo_end_date}}</td>
+        <div class="col-12">
+          <!-- Items per page selector -->
+          <div class="row mb-3">
+            <div class="col-md-6 d-flex align-items-center">
+              <label class="mr-2"></label>
+              <select class="form-control" style="width: 70px; display: inline-block; border-radius: 5px;"
+                (change)="onItemsPerPageChange($event)">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select>
+              <label class="ml-2">records per page</label>
+            </div>
 
-                <td class="d-flex">
-                  <a href="javascript:void(0);" type="button" data-toggle="modal" data-target=".bd-example-modal-lg"
-                    (click)="onEdit(vehicle)" class="btn btn-primary shadow btn-xs sharp mr-1"><i
-                      class="fa fa-pencil"></i></a>
-                  <a href="javascript:void(0);" type="button" class="btn btn-primary mb-2" data-toggle="modal"
-                    data-target=".bd-example-modal-sm" class="btn btn-danger shadow btn-xs sharp"
-                    (click)="selectVehicleForDeletion(vehicle)"><i class="fa fa-trash"></i></a>
 
-                  <div class="modal fade bd-example-modal-sm" id="deletemodal" tabindex="-1" role="dialog"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-sm">
-                      <div class="modal-content">
-                        <div class="modal-header text-center" style="margin-inline: auto">
-                          <h5 class="modal-title text-center">Delete Vehicle</h5>
-                        </div>
-                        <div class="modal-body">
-                          <div class="modal-body">Are you sure you want to delete this vehicle?</div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-outline-danger" data-dismiss="modal">
-                            Cancel
-                          </button>
-                          <button type="button" class="btn btn-outline-primary" (click)="deleteVehicleId()"
-                            data-dismiss="modal">
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+            <div class="col-md-6 d-flex justify-content-end align-items-center">
+              <input type="text" class="form-control search-input" style="width: 250px; margin-left: 500px;"
+                placeholder="Search vehicles..." [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+            </div>
+
+          </div>
+          <div class="table-responsive">
+            <table id="example5" class="table display mb-4 dataTablesCard fs-14 w-100">
+              <thead>
+                <tr>
+                  <th>Sr No</th>
+                  <th>Vehicle Name</th>
+                  <th>YOM</th>
+                  <th>Type</th>
+                  <th>VIN</th>
+                  <th>Chasis number</th>
+                  <th>demo_start_date</th>
+                  <th>demo_end_date</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="paginatedVehicles.length === 0">
+                  <td colspan="9" class="text-center">
+                    <p>No Vehicles Found</p>
+                  </td>
+                </tr>
+                <tr *ngFor="let vehicle of paginatedVehicles; let i = index">
+                  <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+                  <td>{{ vehicle.vehicle_name }}</td>
+                  <td>{{ vehicle.YOM }}</td>
+                  <td>{{ vehicle.type }}</td>
+                  <td>{{ vehicle.VIN }}</td>
+                  <td>{{ vehicle.chasis_number }}</td>
+                  <td>{{ vehicle.demo_start_date }}</td>
+                  <td>{{ vehicle.demo_end_date }}</td>
+                  <div class="d-flex">
+                    <a href="javascript:void(0);" data-target=".bd-example-modal-lg" data-toggle="modal"
+                      class="btn btn-primary shadow btn-xs sharp mr-1" (click)="onEdit(vehicle)"><i
+                        class="fa fa-pencil"></i></a>
+                    <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
+                      data-toggle="modal" data-target=".bd-example-modal-sm"
+                      (click)="selectVehicleForDeletion(vehicle)"><i class="fa fa-trash"></i></a>
                   </div>
 
+              </tbody>
+            </table>
+          </div>
 
-                </td>
-              </tr>
-              }
+          <!-- Pagination -->
+          <div class="row" style="margin-top:20px;">
+            <div class="col-md-6">
+              <div class="dataTables_info">
+                Showing {{ getShowingFrom() }} to {{ getShowingTo() }} of {{ filteredVehicles.length }} entries
+              </div>
+            </div>
 
-            </tbody>
-            <!-- Modal -->
-            <div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" style="align-items: center; margin-inline: auto">
-                      {{ vehicleObj.vehicle_id ? "Edit Vehicle" : "Add New Vehicle" }}
-                    </h5>
-                    <button type="button" class="close" (click)="closeModal()" data-dismiss="modal">
-                      <span class="x">&times;</span>
-                    </button>
-                  </div>
+            <div class="col-md-6">
+              <div class="dataTables_paginate paging_simple_numbers float-right">
+                <ul class="pagination">
+                  <li class="paginate_button page-item previous" [class.disabled]="currentPage === 1">
+                    <a class="page-link" (click)="previousPage()">Previous</a>
+                  </li>
 
-                  <div class="modal-body" [formGroup]="useForm">
+                  <li class="paginate_button page-item" *ngFor="let page of pages"
+                    [class.active]="page === currentPage">
+                    <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+                  </li>
 
-                    <div class="row">
-                      <div class="col-md-6 form-group">
-                        <label for="vehicle_name" class="form-label">Vehicle Name*</label>
-                        <input style="cursor: text" id="vehicle_name" class="form-control form-control-lg" type="text"
-                          placeholder="Vehicle Name" formControlName="vehicle_name" [ngClass]="{
+                  <li class="paginate_button page-item next" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link" (click)="nextPage()">Next</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Api integration work start here -->
+
+
+  <!-- Modal -->
+  <div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" style="align-items: center; margin-inline: auto">
+            {{ vehicleObj.vehicle_id ? "Edit Vehicle" : "Add New Vehicle" }}
+          </h5>
+          <button type="button" class="close" (click)="closeModal()" data-dismiss="modal">
+            <span class="x">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body" [formGroup]="useForm">
+
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label for="vehicle_name" class="form-label" style="display: block; width: 100%; text-align: left;">
+                Vehicle Name<span style="color: red;">*</span>
+              </label>
+
+
+              <input style="cursor: text" id="vehicle_name" class="form-control form-control-lg" type="text"
+                placeholder="Vehicle Name" formControlName="vehicle_name" [ngClass]="{
                 'is-invalid':
                   useForm.get('vehicle_name')?.touched &&
                   useForm.get('vehicle_name')?.invalid
               }" />
-                        <div class="text-danger" *ngIf="
+              <div class="text-danger" *ngIf="
                 useForm.get('vehicle_name')?.touched &&
                 useForm.get('vehicle_name')?.invalid
               ">
-                          <span>Vehicle name is required.</span>
-                        </div>
-                      </div>
+                <span>Vehicle name is required.</span>
+              </div>
+            </div>
 
-                      <div class="form-group col-md-6">
-                        <label for="YOM" class="form-label">YOM</label>
-                        <input id="YOM" type="date" class="form-control form-control-lg" formControlName="YOM"
-                          style="cursor: text" />
-                      </div>
-                    </div>
+            <div class="form-group col-md-6">
+              <!-- <label for="YOM" class="form-label"
+                          style="display: block; width: 100%; text-align: left;">YOM</label> -->
+              <label for="YOM" class="form-label" style="display: block; width: 100%; text-align: left;">
+                YOM<span style="color: red;">*</span>
+              </label>
+              <input id="YOM" type="date" class="form-control form-control-lg" formControlName="YOM"
+                style="cursor: text" />
+            </div>
+          </div>
 
 
 
 
-                    <div class="row">
-                      <div class="col-md-6 form-group">
-                        <label for="typeSelect" class="form-label">Type*</label>
-                        <select style="cursor: pointer" id="typeSelect" formControlName="type"
-                          class="form-control form-control-lg" [ngClass]="{
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <!-- <label for="typeSelect" class="form-label"
+                          style="display: block; width: 100%; text-align: left;">Type*</label> -->
+              <label for="typeSelect" class="form-label" style="display: block; width: 100%; text-align: left;">
+                Type<span style="color: red;">*</span>
+              </label>
+              <select style="cursor: pointer" id="typeSelect" formControlName="type"
+                class="form-control form-control-lg" [ngClass]="{
                 'is-invalid':
                   useForm.get('type')?.touched && useForm.get('type')?.invalid
               }">
-                          <option value="null" disabled>Select Type</option>
-                          <option value="petrol">Petrol</option>
-                          <option value="diesel">Diesel</option>
-                          <option value="EV">EV</option>
-                        </select>
-                        <!-- Error Message -->
-                        <div class="text-danger" *ngIf="
+                <option value="null" disabled>Select Type</option>
+                <option value="petrol">Petrol</option>
+                <option value="diesel">Diesel</option>
+                <option value="EV">EV</option>
+              </select>
+              <!-- Error Message -->
+              <div class="text-danger" *ngIf="
                 useForm.get('type')?.touched && useForm.get('type')?.invalid
               ">
-                          <span>Type is required.</span>
-                        </div>
-                      </div>
+                <span>Type is required.</span>
+              </div>
+            </div>
 
-                      <div class="col-md-6 form-group">
-                        <label for="VIN" class="form-label">VIN ID</label>
-                        <input id="VIN" class="form-control form-control-lg" type="text" placeholder="VIN"
-                          formControlName="VIN" [ngClass]="{
+            <div class="col-md-6 form-group">
+              <!-- <label for="VIN" class="form-label" style="display: block; width: 100%; text-align: left;">VIN
+                          ID</label> -->
+              <label for="VIN" class="form-label" style="display: block; width: 100%; text-align: left;">
+                Vehicle Name<span style="color: red;">*</span>
+              </label>
+              <input id="VIN" class="form-control form-control-lg" type="text" placeholder="VIN" formControlName="VIN"
+                [ngClass]="{
                 'is-invalid':
                   useForm.get('VIN')?.touched && useForm.get('VIN')?.invalid
               }" />
 
-                        <div class="text-danger" *ngIf="useForm.get('VIN')?.touched && useForm.get('VIN')?.invalid">
-                          <span>VIN is required.</span>
-                        </div>
+              <div class="text-danger" *ngIf="useForm.get('VIN')?.touched && useForm.get('VIN')?.invalid">
+                <span>VIN is required.</span>
+              </div>
 
-                      </div>
-                    </div>
+            </div>
+          </div>
 
-                    <!-- MY CODE -->
-                    <!-- <div class="col-md-6 form-group">
+          <!-- MY CODE -->
+          <!-- <div class="col-md-6 form-group">
                       <label for="chasis_number" class="form-label">Chasis Number</label>
                       <input id="chasis_number" class="form-control form-control-lg" type="text"
                         placeholder="Enter Chassis Number" formControlName="chasis_number"
@@ -188,14 +233,15 @@
 
 
                     </div> -->
-                    <div class="row">
-                      <div class="col-md-6 form-group">
-                        <label for="chasis_number" class="form-label">Chasis Number</label>
-                        <input id="chasis_number" class="form-control form-control-lg" type="text"
-                          placeholder="Enter Chassis Number" formControlName="chasis_number"
-                          [ngClass]="{'is-invalid': useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid}" />
+          <div class="row">
+            <div class="col-md-6 form-group">
+              <label for="chasis_number" class="form-label"
+                style="display: block; width: 100%; text-align: left;">Chasis Number</label>
+              <input id="chasis_number" class="form-control form-control-lg" type="text"
+                placeholder="Enter Chassis Number" formControlName="chasis_number"
+                [ngClass]="{'is-invalid': useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid}" />
 
-                        <!-- <select style="cursor: pointer" id="typeSelect" formControlName="type"
+              <!-- <select style="cursor: pointer" id="typeSelect" formControlName="type"
                           class="form-control form-control-lg" [ngClass]="{
                                     'is-invalid':
                                       useForm.get('type')?.touched && useForm.get('type')?.invalid
@@ -205,47 +251,48 @@
                           <option value="diesel">Diesel</option>
                           <option value="EV">EV</option>
                         </select> -->
-                        <!-- Error Message -->
-                        <div class="text-danger" *ngIf="
+              <!-- Error Message -->
+              <div class="text-danger" *ngIf="
                                     useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid
                                   ">
-                          <span>chasis number is required.</span>
-                        </div>
-                      </div>
+                <span>chasis number is required.</span>
+              </div>
+            </div>
 
-                      <div class="col-md-6 form-group">
-                        <label for="demo_start_date" class="form-label">Start date</label>
-                        <input id="demo_start_date" class="form-control form-control-lg" type="date"
-                          placeholder="start date" formControlName="demo_start_date" [ngClass]="{
+            <div class="col-md-6 form-group">
+              <label for="demo_start_date" class="form-label"
+                style="display: block; width: 100%; text-align: left;">Start date</label>
+              <input id="demo_start_date" class="form-control form-control-lg" type="date" placeholder="start date"
+                formControlName="demo_start_date" [ngClass]="{
                                     'is-invalid':
                                       useForm.get('demo_start_date')?.touched && useForm.get('demo_start_date')?.invalid
                                   }" />
 
-                        <div class="text-danger"
-                          *ngIf="useForm.get('demo_start_date')?.touched && useForm.get('demo_start_date')?.invalid">
-                          <span>start date is required.</span>
-                        </div>
+              <div class="text-danger"
+                *ngIf="useForm.get('demo_start_date')?.touched && useForm.get('demo_start_date')?.invalid">
+                <span>start date is required.</span>
+              </div>
 
-                      </div>
-                    </div>
+            </div>
+          </div>
 
-                    <div class="col-md-6 form-group">
-                      <label for="demo_end_date" class="form-label">End date</label>
-                      <input id="demo_end_date" class="form-control form-control-lg" type="date" placeholder="end date"
-                        formControlName="demo_end_date" [ngClass]="{
+          <div class="col-md-6 form-group">
+            <label for="demo_end_date" class="form-label" style="display: block; width: 100%; text-align: left;">End
+              date</label>
+            <input id="demo_end_date" class="form-control form-control-lg" type="date" placeholder="end date"
+              style="margin-left:-10px;" formControlName="demo_end_date" [ngClass]="{
                                                                         'is-invalid':
                                                                           useForm.get('end_date')?.touched && useForm.get('end_date')?.invalid
                                                                       }" />
 
-                      <div class="text-danger"
-                        *ngIf="useForm.get('end_date')?.touched && useForm.get('end_date')?.invalid">
-                        <span>end date is required.</span>
-                      </div>
+            <div class="text-danger" *ngIf="useForm.get('end_date')?.touched && useForm.get('end_date')?.invalid">
+              <span>end date is required.</span>
+            </div>
 
-                    </div>
+          </div>
 
-                  </div>
-                  <!-- <div class="col-md-6 form-group" style="margin-top:-30px;">
+        </div>
+        <!-- <div class="col-md-6 form-group" style="margin-top:-30px;">
                     <label for="end_date" class="form-label">End date</label>
                     <input id="end_date" class="form-control form-control-lg" type="date" placeholder="end date"
                       formControlName="end_date"
@@ -254,15 +301,15 @@
 
                   </div> -->
 
-                  <!-- MY CODE -->
+        <!-- MY CODE -->
 
-                  <!-- ADDED ONE MORE FIELD -->
-                  <!-- <div class="form-group col-md-6">
+        <!-- ADDED ONE MORE FIELD -->
+        <!-- <div class="form-group col-md-6">
                       <label for="chasis_number" class="form-label">Chasis number</label>
                       <input id="chasis_number" type="string" class="form-control form-control-lg"
                         formControlName="chasis_number" style="cursor: text" />
                     </div> -->
-                  <!-- <div class="col-md-6 form-group">
+        <!-- <div class="col-md-6 form-group">
                       <label for="chasis_number" class="form-label">Chasis number</label>
                       <input id="chasis_number" class="form-control form-control-lg" type="text"
                         placeholder="chasis_number" formControlName="chasis_number" [ngClass]="{
@@ -276,13 +323,13 @@
                       </div>
                     </div> -->
 
-                  <!-- Validation Message -->
+        <!-- Validation Message -->
 
 
 
-                  <!-- Modal footer buttons -->
-                  <!-- In the modal footer -->
-                  <!-- <div class="modal-footer">
+        <!-- Modal footer buttons -->
+        <!-- In the modal footer -->
+        <!-- <div class="modal-footer">
                       <ng-container *ngIf="vehicleObj.vehicle_id; else saveButton">
                         <button type="button" class="btn btn-outline-primary" data-dismiss="modal" (click)="onUpdate()"
                           [disabled]="!isVehicleNameChanged()">
@@ -304,24 +351,23 @@
                   </div>
                 </div>
               </div> -->
-                  <div class="modal-footer">
-                    <!-- Ensure Edit button appears only if vehicle_id is defined -->
-                    <ng-container
-                      *ngIf="vehicleObj.vehicle_id !== null && vehicleObj.vehicle_id !== undefined; else saveButton">
-                      <button type="button" class="btn btn-outline-primary" (click)="onUpdate()"
-                        [disabled]="!isVehicleNameChanged()">
-                        Edit
-                      </button>
-                    </ng-container>
+        <div class="modal-footer">
+          <!-- Ensure Edit button appears only if vehicle_id is defined -->
+          <ng-container *ngIf="vehicleObj.vehicle_id !== null && vehicleObj.vehicle_id !== undefined; else saveButton">
+            <button type="button" class="btn btn-outline-primary" (click)="onUpdate()"
+              [disabled]="!isVehicleNameChanged()">
+              Edit
+            </button>
+          </ng-container>
 
-                    <button type="button" class="btn btn-outline-danger" (click)="closeModal()">
-                      Close
-                    </button>
+          <button type="button" class="btn btn-outline-danger" (click)="closeModal()">
+            Close
+          </button>
 
-                    <ng-template #saveButton>
-                      <button type="button" class="btn btn-outline-primary" (click)="onSave()"
-                        [attr.data-dismiss]="useForm.valid ? 'modal' : null">
-                        Save
-                      </button>
-                    </ng-template>
-                  </div>
+          <ng-template #saveButton>
+            <button type="button" class="btn btn-outline-primary" (click)="onSave()"
+              [attr.data-dismiss]="useForm.valid ? 'modal' : null">
+              Save
+            </button>
+          </ng-template>
+        </div>

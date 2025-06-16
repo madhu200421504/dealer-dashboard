@@ -31,35 +31,169 @@
         <div class="card" style="background-color:#fff; padding: 15px; box-shadow: 0 0 8px #ccc;">
           <!-- Header with Title and Search -->
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="card-title" style="font-size: 18px; font-weight: bold;">Today's Actions</div>
-
+            <div class="card-title" style="font-size: 25px; font-weight:550 ;font-family:Montserrat;color:#000000">
+              Today's Actions
+            </div>
             <div>
               <input type="text" [(ngModel)]="searchText" (input)="applyTableFilters()" placeholder="Search by name..."
                 style="padding: 6px 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; width: 200px;" />
             </div>
+            <!-- Avatar Circles -->
+            <!-- Avatars Row -->
+
+
 
           </div>
+          <!-- 🔽 Avatar Circles Section -->
+          <!-- 🔽 Avatar Circle Row -->
 
-          <!-- User Icons Rows: both rows inside the same card -->
-          <!-- Grid wrapper added here -->
+
+
+          <!-- User Icons Grid (Only Big Initial Circles) -->
+          <!-- All Users Grid -->
+          <!-- Initial Circles Grid (One per unique letter) -->
           <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px;">
-            <div class="profile" *ngFor="let user of displayedUsers"
-              [ngClass]="{ 'selected-user': user.user_id === selectedUserId }" style="text-align: center;">
-
-              <!-- Avatar with dashboard-friendly background -->
-              <div class="avatar" (click)="showUserDetails(user.user_id, user.name)"
-                style="width: 70px; height: 70px; background-color:rgb(135,206,250); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 36px; cursor: pointer;">
-                <i class="fa-solid fa-user" style="color: #4e73df;"></i>
+            <div class="profile" *ngFor="let initial of initialsList; let i = index" style="text-align: center;">
+              <div class="avatar" (click)="filterByInitial(initial)" [ngStyle]="{
+                              'background-color': avatarColors[i % avatarColors.length],
+                              'width': '70px',
+                              'height': '70px',
+                              'border-radius': '50%',
+                              'display': 'flex',
+                              'align-items': 'center',
+                              'justify-content': 'center',
+                              'margin': '0 auto',
+                              'font-size': '36px',
+                              'cursor': 'pointer',
+                              'box-shadow': selectedInitial === initial ? '0 0 0 3px #4e73df' : 'none',
+                              'border': selectedInitial === initial ? '2px solid #4e73df' : '2px solid transparent'
+                            }">
+                <span style="color: #4e73df; font-weight: bold;">{{ initial }}</span>
               </div>
 
+
               <div class="name"
-                style="margin-top: 8px; font-size: 14px; max-width: 80px; margin-left: auto; margin-right: auto; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
-                {{ user.name }}
+                style="margin-top: 8px; font-size: 14px; max-width: 80px; margin-left: auto; margin-right: auto;">
+                {{ initial }}
               </div>
             </div>
           </div>
 
+          <!-- Filtered Users Section (Appears when initial clicked) -->
+          <div *ngIf="(selectedInitial || searchText) && filteredUsers.length > 0" style="margin-top: 30px;">
+            <!-- <h4 style="margin-bottom: 10px;">Users with '{{ selectedInitial }}'</h4> -->
+            <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+              <div *ngFor="let user of filteredUsers" class="profile" style="text-align: center;">
+                <!-- <div class="avatar"
+                            style="width: 60px; height: 60px; background-color:lightgreen; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px;">
+                            <span style="color: #4e73df; font-weight: bold;">{{ getUserInitials(user.name) }}</span>
+                          </div> -->
 
+                <div class="avatar"
+                  style="width: 60px; height: 60px; background-color:lightgreen; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer;"
+                  (click)="showUserDetails(user.user_id, user.name)">
+                  <span style="color: #4e73df; font-weight: bold;">{{ getUserInitials(user.name) }}</span>
+                </div>
+                <div class="name" style="margin-top: 6px; font-size: 13px; line-height: 1.2;">
+                  <div *ngIf="user.name">
+                    {{ user.name.split(' ')[0] }}<br />
+                    <span *ngIf="user.name.split(' ').length > 1">
+                      {{ user.name.split(' ').slice(1).join(' ') }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ✅ Add this inside your component template (at the end of the file) -->
+          <!-- Modal Wrapper -->
+          <div *ngIf="showUserModal" style="
+       position: fixed;
+       inset: 0;
+       background: rgba(0, 0, 0, 0.5);
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       z-index: 1050;
+    ">
+
+            <!-- Modal Box -->
+            <div style="
+     background: white;
+     border-radius: 12px;
+     width: 90%;
+     max-width: 900px;
+     max-height: 90vh;
+     overflow-y: auto;
+     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    ">
+
+              <!-- Modal Header -->
+              <div
+                style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #dee2e6;">
+                <h5 style="margin: 0;">User Details - {{ selectedUser?.name }}</h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+              </div>
+
+              <!-- Modal Body -->
+              <div style="padding: 16px;">
+                <table class="table table-bordered table-striped text-center">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Today</th>
+                      <th>Upcoming</th>
+                      <th>Overdue</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>Name</th>
+                      <td>{{ todayTestDrives[0]?.name || '-' }}</td>
+                      <td>{{ upcomingTestDrives[0]?.name || '-' }}</td>
+                      <td>{{ overdueTestDrives[0]?.name || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th>Subject</th>
+                      <td>{{ todayTestDrives[0]?.subject || '-' }}</td>
+                      <td>{{ upcomingTestDrives[0]?.subject || '-' }}</td>
+                      <td>{{ overdueTestDrives[0]?.subject || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th>PMI</th>
+                      <td>{{ todayTestDrives[0]?.PMI || '-' }}</td>
+                      <td>{{ upcomingTestDrives[0]?.PMI || '-' }}</td>
+                      <td>{{ overdueTestDrives[0]?.PMI || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th>Location</th>
+                      <td>{{ todayTestDrives[0]?.location || '-' }}</td>
+                      <td>{{ upcomingTestDrives[0]?.location || '-' }}</td>
+                      <td>{{ overdueTestDrives[0]?.location || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th>Start time</th>
+                      <td>{{ todayTestDrives[0]?.start_time || '-' }}</td>
+                      <td>{{ upcomingTestDrives[0]?.start_time || '-' }}</td>
+                      <td>{{ overdueTestDrives[0]?.start_time || '-' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Modal Footer -->
+              <div style="padding: 16px; border-top: 1px solid #dee2e6; text-align: right;">
+                <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+              </div>
+
+            </div>
+          </div>
+
+
+
+
+          <!-- 
           <div class="actions" style=" background-color: #fff;">
             <div class="action-row">
 
@@ -92,7 +226,6 @@
                       <span style="color: black;">{{ testDrive.subject }}</span>
                     </p>
                     <p><span style="color: black;">PMI:</span> {{ testDrive.PMI || 'N/A' }}</p>
-                    <!-- <p><span style="color: black;">Date:</span> {{ testDrive.start_date | date:'yyyy-MM-dd' }}</p> -->
                   </div>
                 </div>
                 <div *ngIf="upcomingTestDrives.length === 0">
@@ -110,7 +243,6 @@
                       <span style="color: black;">{{ td.subject }}</span>
                     </p>
                     <p><span style="color: black;">PMI:</span> {{ td.PMI || 'N/A' }}</p>
-                    <!-- <p><span style="color: black;">Date:</span> {{ td.start_date | date:'yyyy-MM-dd' }}</p> -->
                   </div>
                 </div>
                 <ng-template #noOverdue>
@@ -118,31 +250,9 @@
                 </ng-template>
               </div>
 
-              <!-- <div class="pagination-controls"
-                style="display: flex; justify-content: center; align-items: center; margin: 20px auto 0; text-align: center;">
-                <button (click)="prevPage()" [disabled]="currentPage === 1"
-                  style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
-                  Previous
-                </button>
-                <span style="padding: 8px 12px;">Page {{ currentPage }} of {{ totalPages }}</span>
-                <button (click)="nextPage()" [disabled]="currentPage === totalPages"
-                  style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
-                  Next
-                </button>
-              </div> -->
-              <!-- SHOW MORE BTN WILL COME AND SCROLL  -->
-              <!-- <div *ngIf="visibleUserCount < paginatedUsers.length"
-                style="display: flex; justify-content: flex-end; margin-top: 20px; padding-right: 20px;">
-                <button (click)="showMoreUsers()" style="padding: 10px 20px; font-size: 14px; background-color: #1e88e5; color: white;
-                                     border: none; border-radius: 4px; cursor: pointer; white-space: nowrap;">
-                  Show More
-                </button>
-              </div>
- -->
+           
               <div class="user-container" [class.expanded]="showMore">
-                <!-- <div class="user-item" *ngFor="let user of displayedUsers">
-                  {{ user.name }}
-                </div> -->
+              
               </div>
 
               <div style="display: flex; justify-content: flex-end; margin-top: 10px; padding: 5px;">
@@ -154,36 +264,54 @@
 
 
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div></div>
       <div class="card"
         style="margin-top: 30px; background-color: #fff; padding: 20px; box-shadow: 0 0 8px #ccc; margin-left:100px; width:1520px;">
         <div class="card-title" style="display:flex; justify-content: space-between; align-items: center;">
-          <span>Test Drive Schedule</span>
+          <span style="font-size:25px;color:#000000;font-family:Montserrat;font-weight:600">Test Drive Schedule</span>
           <div style="display: flex; align-items: center; gap: 10px;">
             <!-- <input type="text" [(ngModel)]="searchText" (input)="applyTableFilters()" placeholder="Search..."
               style="padding: 5px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"> -->
             <!-- <input type="text" [(ngModel)]="searchTextUserDetails" (input)="applyTableFilters()" placeholder="Search..."
               style="padding: 5px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"> -->
-
-            <select [(ngModel)]="filterOption" (change)="applyTableFilters()"
-              style="padding: 5px; font-size: 14px; border:none; border-radius:2px;">
+            <!-- <select [(ngModel)]="filterOption" (change)="applyTableFilters()"
+              style="padding: 6px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; background-color: #fff;">
               <option value="today">Today</option>
               <option value="oneWeek">Upcoming Week</option>
-              <!-- <option value="all">All</option> -->
+            </select> -->
+            <select [(ngModel)]="filterOption" (change)="onFilterOptionChange()"
+              style="padding: 6px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; background-color: #fff;">
+              <option value="today">Today</option>
+              <option value="oneWeek">Upcoming Week</option>
             </select>
+    
+            <!-- <div style="display: flex; gap: 4px; align-items: center;">
+              <button (click)="filterOption = 'today'; applyTableFilters()"
+                [ngClass]="{ 'active-filter-today': filterOption === 'today' }" class="filter-btn">
+                Today
+              </button>
+
+              <button (click)="filterOption = 'oneWeek'; applyTableFilters()"
+                [ngClass]="{ 'active-filter-upcoming': filterOption === 'oneWeek' }" class="filter-btn">
+                Upcoming Week
+              </button>
+            </div> -->
+
+
+
           </div>
         </div>
 
         <table class="table table-striped" style="width: 100%; margin-top: 10px;">
           <thead>
             <tr>
-              <th>Model</th>
+              <th>Subject</th>
               <th>VIN</th>
-              <th>Registration no</th>
-              <th>Reserved by</th>
+              <th>PMI</th>
+              <th>Assigned to</th>
               <th>Date</th>
               <th>Start time</th>
               <th>End time</th>
@@ -233,35 +361,36 @@
       <!-- Metrics and Filters Row (Combined) -->
       <div class="metrics-row" style="width:1520px; display: flex; gap: 15px;">
 
-        <div class="metric-box">
-          <div class="metric-value">{{ dashboardMetrics.enquiries }}</div>
-          <div class="metric-label" style="color:black;font-size:18px;;">Enquiries</div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.enquiries }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Enquiries</div>
         </div>
-        <div class="metric-box">
-          <div class="metric-value">{{ dashboardMetrics.testDrives }}</div>
-          <div class="metric-label" style="color:black;font-size:18px;;;">Test Drives</div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.testDrives }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Test Drives</div>
         </div>
-        <div class="metric-box">
-          <div class="metric-value">{{ dashboardMetrics.newOrders }}</div>
-          <div class="metric-label" style="color:black;font-size:18px;;;">New Orders</div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.newOrders }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">New Orders</div>
         </div>
-        <div class="metric-box">
-          <div class="metric-value">{{ dashboardMetrics.cancellations }}</div>
-          <div class="metric-label" style="color:black;font-size:18px;;;">Cancellation</div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.cancellations }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Cancellation</div>
         </div>
-        <div class="metric-box">
-          <div class="metric-value">{{ dashboardMetrics.netOrders }}</div>
-          <div class="metric-label" style="color:black;font-size:18px;;;">Net Order</div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.netOrders }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;;">Net Order</div>
         </div>
-        <div class="metric-box">
-          <div class="metric-value">{{ dashboardMetrics.retail }}</div>
-          <div class="metric-label" style="color:black;font-size:18px;;">Retail</div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:grey;">{{ dashboardMetrics.retail }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500">Retail</div>
         </div>
 
         <!-- Last box with filters inside -->
         <div class="metric-box"
-          style="display: flex; flex-direction: column; align-items: center; width: 500px; box-sizing: border-box; padding: 10px;">
+          style="display: flex; flex-direction: column; align-items: center; width: 500px; box-sizing: border-box; padding: 10px;border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
           <!-- Removed metric-value and label -->
+
 
           <!-- Filters inside last box -->
           <div class="filters-title" style="margin-bottom: 8px;color:black;font-size:18px;font-weight:400;">Filters
@@ -311,7 +440,7 @@
     <div class="performance-panels">
       <div class="performance-panel" style="width:700px;margin-left:-10px;">
         <!-- Row with KPI and two dropdowns inside performance-panel -->
-        <h2 class="panel-title">
+        <h2 class="panel-title" style="font-size:25px;color:#000000;font-family:Montserrat;font-weight:600">
           Compare Performance
         </h2>
 
@@ -403,7 +532,8 @@
       </div>
 
       <div class="performance-panel" style="width:800px;">
-        <h2 class="panel-title">Performance Analysis</h2>
+        <h2 class="panel-title" style="font-size:25px;color:#000000;font-family:Montserrat;font-weight:600">Performance
+          Analysis</h2>
         <div class="panel-content">
 
           <table border="1" cellpadding="8" cellspacing="0"

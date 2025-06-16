@@ -444,12 +444,13 @@ export class UsersComponent implements OnInit {
       this.paginateUsers(); // Update paginated users for new page
     }
   }
-
   onItemsPerPageChange(event: any) {
     this.itemsPerPage = parseInt(event.target.value, 10);
-    this.currentPage = 1; // Reset to first page
-    this.paginateUsers(); // <-- Update paginated users with new itemsPerPage
+    this.currentPage = 1;
+    console.log('Dropdown changed to:', this.itemsPerPage);
+    this.paginateUsers();
   }
+
   min(a: number, b: number): number {
     return Math.min(a, b);
   }
