@@ -24,12 +24,12 @@
   }
 } */
 body {
-  margin-top: 200px;
+  /* margin-top: 200px; */
 }
 
 /*  */
 .dashboard-container {
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 0 auto;
   font-family: Arial, sans-serif;
 }
@@ -184,8 +184,8 @@ body {
 }
 
 .performance-panels {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* display: grid; */
+  /* grid-template-columns: 1fr 1fr; */
   gap: 1.5rem;
 }
 
@@ -448,6 +448,19 @@ body {
   /* max-width can be large or removed */
 }
 
+:host ::ng-deep .header {
+  position: static !important;
+}
+
+:host ::ng-deep .header {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  transition: width 0.3s ease, margin-left 0.3s ease !important;
+  z-index: auto !important;
+}
+
+
 /* Analysis section specific styles */
 .metrics-grid {
   display: grid;
@@ -469,6 +482,12 @@ body {
   font-weight: bold;
   color: #333;
 }
+
+.header {
+  transition: width 0.3s ease !important;
+  transition: width 0.3s ease, margin-left 0.3s ease !important;
+}
+
 
 .metric-label {
   font-size: 14px;
@@ -536,9 +555,9 @@ body {
 }
 
 .performance-panels {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  /* display: grid; */
+  /* grid-template-columns: 1fr 1fr; */
+  /* gap: 20px; */
   margin-top: 20px;
 }
 
@@ -640,8 +659,11 @@ table th {
 
 .container {
   padding: 20px;
-  max-width: 850px;
-  margin: 0 auto;
+  /* max-width: 850px; */
+  margin: 0 ;
+  padding-left: 0;
+  padding-right: 0;
+  
 }
 
 .card {
@@ -1062,6 +1084,8 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   margin: 0 auto;
   box-sizing: border-box;
 }
+
+
 
 /* @media (min-width: 1200px) {
   .container-fluid {

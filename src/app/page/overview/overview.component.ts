@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module'
 import { DashboardComponent } from "../dashboard/dashboard.component";
 import { SidebarComponent } from '../../layout/sidebar/sidebar.component';
+import { SidebarService } from '../../service/sidebar.service';
 
 @Component({
   selector: 'app-overview',
@@ -13,10 +14,13 @@ import { SidebarComponent } from '../../layout/sidebar/sidebar.component';
 })
 export class OverviewComponent {
 
+  constructor(private sidebarService: SidebarService) {}
+
   isSidebarOpen = true;
 
    toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
+    this.sidebarService.toggleSidebar();
   }
 
 }
