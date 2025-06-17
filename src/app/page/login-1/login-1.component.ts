@@ -44,6 +44,12 @@ interface verifyData {
   imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './login-1.component.html',
   styleUrls: ['./login-1.component.css'],
+   styles: [`
+         :host {
+    display: flex;
+    justify-content: center;
+  }
+      `]
 })
 export class Login1Component {
   @ViewChildren('inputElement') inputElements:

@@ -8,7 +8,7 @@
 }
 
 .content-body {
-  margin-left: 14%; /* Match sidebar width */
+  /* margin-left: 14%;  */
   padding: 20px;
   flex-grow: 1;
 }
@@ -42,4 +42,9 @@
     width: 100%;
     margin-top: 10px;
   }
+}
+@media only screen and (max-width: 1600px) {
+    .content-body {
+        margin-left: 0;
+    }
 }

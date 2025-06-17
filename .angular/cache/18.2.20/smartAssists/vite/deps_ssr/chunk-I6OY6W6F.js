@@ -1,5 +1,11 @@
 import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
+  FormGroupDirective,
+  NgControl,
+  NgForm,
+  Validators
+} from "./chunk-J7DM2GBR.js";
+import {
   MAT_FORM_FIELD,
   MatFormField,
   MatFormFieldControl,
@@ -16,12 +22,6 @@ import {
   getSupportedInputTypes,
   normalizePassiveListenerOptions
 } from "./chunk-VZYVJS2F.js";
-import {
-  FormGroupDirective,
-  NgControl,
-  NgForm,
-  Validators
-} from "./chunk-J7DM2GBR.js";
 import {
   DOCUMENT
 } from "./chunk-FWX7UIPA.js";
@@ -1006,4 +1006,4 @@ export {
   MatInput,
   MatInputModule
 };
-//# sourceMappingURL=chunk-2IEFW66H.js.map
+//# sourceMappingURL=chunk-I6OY6W6F.js.map

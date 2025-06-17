@@ -296,10 +296,7 @@ a:hover {
         3. Adjusting align-items or justify-content of its flex/grid parent: If its parent is a flex/grid container.
       */
 
-    /* Option 1: Using margin-top (simplest for this scenario) */
-    margin-top: -350px; /* Adjust this value as needed. A negative value moves it up. */
-    /* If the parent is a flex container and you want to push it to the start: */
-    /* align-self: flex-start; */
+    
   }
 
   /* You might also need to adjust the illustration if it now looks too low */
@@ -322,7 +319,7 @@ a:hover {
 }
 
 .custom-container {
-  margin-left: 180px;
+  /* margin-left: 180px; */
 }
 
 @media (max-width: 768px) {
@@ -353,4 +350,9 @@ input[type="password"]::-webkit-search-results-decoration {
 /* Firefox */
 input[type="password"] {
   -moz-appearance: textfield;
+}
+
+.new-custom{
+  display: flex;
+  justify-content: center;
 }

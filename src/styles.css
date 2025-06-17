@@ -555,3 +555,8 @@ select.selectpicker {
   width: 100%;
   float: none;
 }
+
+.delete-box{
+  top: 31% !important;
+  left: 8% !important;
+}
