@@ -15,6 +15,12 @@ body {
 .fas {
   color: #3b86e9 !important;
 }
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
 .wave {
   position: fixed;
@@ -306,11 +312,15 @@ a:hover {
 /* For iPad Pro (portrait) and smaller tablets */
 @media (min-width: 768px) and (max-width: 1023px) {
   .login-content {
-    /* Apply similar or different adjustments for portrait mode */
-    margin-top: -50px; /* Maybe a smaller upward shift than landscape */
-    /* If in portrait, the layout is likely stacked, so vertical margins are more relevant */
+    position: absolute;
+    top: 50%;
+    left: 50%; /* ✅ Center horizontally */
+    transform: translate(-50%, -50%); /* ✅ Perfect centering */
+    margin-top: 0;
+    justify-content: center;
   }
 }
+
 .custom-container {
   margin-left: 180px;
 }

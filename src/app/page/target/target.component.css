@@ -23,3 +23,23 @@
     padding: 10px; /* Adjust padding for mobile */
   }
 }
+
+/* Base (Desktop) */
+.search-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.search-input {
+  width: 200px;
+  max-width: 100%;
+}
+
+/* Tablet and below */
+@media (max-width: 991.98px) {
+  .search-input {
+    width: 100%;
+    margin-top: 10px;
+  }
+}

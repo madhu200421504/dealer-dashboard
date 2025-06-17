@@ -43,6 +43,7 @@ export class RoleComponent implements OnInit {
   // pages: number[] = [];
   roleObj: Role = new Role();
   previousValue: string = '';
+  isEditMode: boolean = false;
 
   roleListAll = []; // Full list from backend
   // filteredRoles = [];
@@ -90,14 +91,36 @@ export class RoleComponent implements OnInit {
     ($('.bd-example-modal-lg') as any).modal('hide');
   }
 
-  openModals() {
-    console.log('Opening modal...'); // Is this printing in console?
-    this.useForm.reset({
-      role_name: '',
-      description: '',
-    });
+  openModals(role?: Role) {
+    console.log('✅ openModals() function called for Role');
+    console.log('Role object received in openModals:', role);
 
-    ($('.bd-example-modal-lg') as any).modal('show');
+    if (!role) {
+      this.roleObj = {} as Role;
+    }
+
+    this.useForm.reset();
+    this.isEditMode = !!role;
+
+    if (role) {
+      this.useForm.patchValue({
+        role_id: role.role_id || '',
+        role_name: role.role_name || '',
+        description: role.description || '',
+      });
+      console.log('Role information:', role);
+      this.roleObj = { ...role };
+    } else {
+      this.roleObj = {} as Role;
+    }
+
+    // ✅ Corrected: backdrop should be boolean false, not string 'false'
+    ($('.bd-example-modal-lg') as any)
+      .modal({
+        backdrop: false, // ✅ no quotes
+        keyboard: false,
+      })
+      .modal('show');
   }
 
   private loadRole(): void {

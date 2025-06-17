@@ -15,10 +15,16 @@
 
     <div class="row mb-5 align-items-center">
       <div class="col-xl-2 col-lg-3 col-md-4 mb-4 mb-md-0">
-        <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
+        <!-- <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
           data-target=".bd-example-modal-lg"
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons"><i class="fa fa-plus mr-1"></i>Add
-          Users</a>
+          Users</a> -->
+        <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
+          data-target=".bd-example-modal-lg" data-backdrop="false"
+          class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
+          <i class="fa fa-plus mr-1"></i>Add Users
+        </a>
+
       </div>
       <div class="col-xl-2 col-lg-3 col-md-4 mb-4 mb-md-0">
         <div class="media-body ml-1">
@@ -55,7 +61,7 @@
 
 
             <div class="col-md-6 d-flex justify-content-end align-items-center">
-              <input type="text" class="form-control search-input" style="width: 250px; margin-left: 500px;"
+              <input type="text" class="form-control search-input" style="width: 250px; margin-left: 390px;"
                 placeholder="Search users..." [(ngModel)]="searchTerm" (input)="onSearchChange()" />
             </div>
 
@@ -240,6 +246,7 @@
                 <div class="text-danger" *ngIf="
                   useForm.get('email')?.invalid && useForm.get('email')?.touched
                 ">
+
                   <span *ngIf="useForm.get('email')?.errors?.['required']">Email is required.</span>
                   <span *ngIf="useForm.get('email')?.errors?.['email']">Please enter a valid email address.</span>
                 </div>

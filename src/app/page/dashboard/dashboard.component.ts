@@ -226,7 +226,10 @@ export class DashboardComponent implements OnInit {
   // selectedUser: any = null;
   // displayedUsers: any[] = [];
   data: any; // <-- Add this line
-
+  selectedOverdueIndex: number = 0;
+  selectedTodayIndex: number = 0;
+  selectedUpcomingIndex: number = 0;
+  // selectedOverdueIndex: number = 0;
   groupedUsers: { [key: string]: any[] } = {}; // all grouped by initials
   displayedUserGroups: { [key: string]: any[] } = {}; // for displaying after search
   private _displayedUsers: any[] = [];
@@ -331,20 +334,29 @@ export class DashboardComponent implements OnInit {
   }
 
   // This function triggers on initial click
+  // filterByInitial(initial: string): void {
+  //   if (this.selectedInitial === initial) {
+  //     // Re-clicked same letter → clear selection & hide user list
+  //     this.selectedInitial = null;
+  //     this.filteredUsers = [];
+  //     console.log('🚫 Filter cleared. User list hidden.');
+  //   } else {
+  //     // New initial selected → apply filter
+  //     this.selectedInitial = initial;
+  //     this.filteredUsers = this.displayedUsers.filter((user) =>
+  //       user.name?.toLowerCase().startsWith(initial.toLowerCase())
+  //     );
+  //     console.log(`🔍 Showing users with: ${initial}`);
+  //   }
+  //   this.applyTableFilters();
+  // }
   filterByInitial(initial: string): void {
     if (this.selectedInitial === initial) {
-      // Re-clicked same letter → clear selection & hide user list
       this.selectedInitial = null;
-      this.filteredUsers = [];
-      console.log('🚫 Filter cleared. User list hidden.');
     } else {
-      // New initial selected → apply filter
       this.selectedInitial = initial;
-      this.filteredUsers = this.displayedUsers.filter((user) =>
-        user.name?.toLowerCase().startsWith(initial.toLowerCase())
-      );
-      console.log(`🔍 Showing users with: ${initial}`);
     }
+    this.applyTableFilters();
   }
 
   clearInitialFilter(): void {
@@ -356,17 +368,27 @@ export class DashboardComponent implements OnInit {
   //   this.showUserModal = true;
   // }
   openUserModal(user: any): void {
-    console.log('Opening modal for:', user); // ✅ check if correct user
-    console.log('Today:', user.todayTestDrives);
-    console.log('Upcoming:', user.upcomingTestDrives);
-    console.log('Overdue:', user.overdueTestDrives);
+    console.log('Clicked user:', user?.id);
 
-    this.selectedUser = user;
-    this.showUserModal = true;
+    // 👉 Make second API call first
+    this.http
+      .get(
+        `https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard?user_id=${user.id}`
+      )
+      .subscribe((response: any) => {
+        const data = response.selectedUser || {};
 
-    this.todayTestDrives = user.todayTestDrives || [];
-    this.upcomingTestDrives = user.upcomingTestDrives || [];
-    this.overdueTestDrives = user.overdueTestDrives || [];
+        this.todayTestDrives = data.todayTestDrives || [];
+        this.upcomingTestDrives = data.upcomingTestDrives || [];
+        this.overdueTestDrives = data.overdueTestDrives || [];
+
+        console.log('✅ Today:', this.todayTestDrives);
+        console.log('✅ Upcoming:', this.upcomingTestDrives);
+        console.log('✅ Overdue:', this.overdueTestDrives);
+
+        this.selectedUser = user;
+        this.showUserModal = true;
+      });
   }
 
   closeModal(): void {
@@ -1227,67 +1249,60 @@ export class DashboardComponent implements OnInit {
   applyTableFilters(): void {
     console.log('🔥 applyTableFilters called');
     console.log('searchText:', this.searchText);
-    if (!this.fullData) {
-      this.filteredTableTestDrives = [];
-      return;
-    }
 
-    const selectedUserName = this.selectedUser?.name?.toLowerCase(); // safe access
+    // 🔄 Handle test drive filters (today / oneWeek)
     let baseTestDrives: any[] = [];
-
-    // --- Load based on dropdown filter ---
     if (this.filterOption === 'today') {
-      baseTestDrives = this.fullData.tableTestDrives_today || [];
+      baseTestDrives = this.fullData?.tableTestDrives_today || [];
     } else if (this.filterOption === 'oneWeek') {
-      baseTestDrives = this.fullData.tableTestDrives_oneweek || [];
+      baseTestDrives = this.fullData?.tableTestDrives_oneweek || [];
     }
 
-    // ✅ Filter by user only if selected
-    if (selectedUserName) {
+    const selectedUserName = this.selectedUser?.name?.toLowerCase() || '';
+    if (selectedUserName && !this.searchText && !this.selectedInitial) {
       baseTestDrives = baseTestDrives.filter(
         (td) => td.assigned_to?.toLowerCase() === selectedUserName
       );
     }
 
-    this.testDrives = [...baseTestDrives]; // Update main reference
-    this.allTestDrives = [...baseTestDrives]; // Keep backup for filtering
+    this.testDrives = [...baseTestDrives];
+    this.allTestDrives = [...baseTestDrives];
 
-    // --- Text Search Filtering ---
+    // 🧠 Text search on test drives
     let tempTestDrives = [...this.allTestDrives];
     if (this.searchText) {
-      const lowerCaseSearchText = this.searchText.toLowerCase();
+      const lowerSearch = this.searchText.toLowerCase();
       tempTestDrives = tempTestDrives.filter(
         (td) =>
-          td.subject?.toLowerCase().includes(lowerCaseSearchText) ||
-          td.name?.toLowerCase().includes(lowerCaseSearchText) ||
-          td.VIN?.toLowerCase().includes(lowerCaseSearchText) ||
-          td.PMI?.toLowerCase().includes(lowerCaseSearchText) ||
-          td.assigned_to?.toLowerCase().includes(lowerCaseSearchText)
+          td.subject?.toLowerCase().includes(lowerSearch) ||
+          td.name?.toLowerCase().includes(lowerSearch) ||
+          td.VIN?.toLowerCase().includes(lowerSearch) ||
+          td.PMI?.toLowerCase().includes(lowerSearch) ||
+          td.assigned_to?.toLowerCase().includes(lowerSearch)
       );
     }
 
     this.filteredTableTestDrives = tempTestDrives;
     this.currentPage = 1;
-    // this.paginateTableData();
 
-    if (this.searchText) {
-      const searchLower = this.searchText.toLowerCase();
-      this.filteredUsers = this.allUsers.filter((user) =>
-        user.name?.toLowerCase().includes(searchLower)
-      );
-      console.log('Search:', searchLower);
-      console.log('Matched Users:', this.filteredUsers);
+    // ✅ Filter users based on initial and/or search text
+    const searchLower = this.searchText?.toLowerCase() || '';
+    const selectedInitial = this.selectedInitial?.toLowerCase() || '';
 
-      // ✅ Set selectedUser to the first matched user
-      // if (this.filteredUsers.length > 0) {
-      //   this.selectedUser = this.filteredUsers[0];
-      // } else {
-      //   this.selectedUser = null;
-      // }
+    if (searchLower || selectedInitial) {
+      this.filteredUsers = this.allUsers.filter((user) => {
+        const name = user.name?.toLowerCase() || '';
+        return (
+          (!selectedInitial || name.startsWith(selectedInitial)) &&
+          (!searchLower || name.includes(searchLower))
+        );
+      });
     } else {
-      this.filteredUsers = []; // 🔥 show no avatars when no search
+      this.filteredUsers = [];
       this.selectedUser = null;
     }
+
+    console.log('Filtered Users:', this.filteredUsers);
   }
 
   // calculateTotalPages(): void {

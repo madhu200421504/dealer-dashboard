@@ -12,10 +12,15 @@
     </div>
     <div class="row mb-5 align-items-center">
       <div class="col-xl-2 mb-4 mb-xl-0 mt-10">
-        <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
+        <!-- <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
           data-target=".bd-example-modal-lg"
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons"><i class="fa fa-plus mr-1"></i>Add
-          Vehicle</a>
+          Vehicle</a> -->
+        <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
+          data-target=".bd-example-modal-lg" data-backdrop="false"
+          class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
+          <i class="fa fa-plus mr-1"></i>Add Vehicle
+        </a>
       </div>
       <div class="col-xl-2 mb-4 mb-xl-0">
         <div class="media-body ml-1">
@@ -48,10 +53,11 @@
 
 
             <div class="col-md-6 d-flex justify-content-end align-items-center">
-              <input type="text" class="form-control search-input" style="width: 250px; margin-left: 500px;"
-                placeholder="Search vehicles..." [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+              <div class="search-wrapper">
+                <input type="text" class="form-control search-input" placeholder="Search Vehicles..."
+                  [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+              </div>
             </div>
-
           </div>
           <div class="table-responsive">
             <table id="example5" class="table display mb-4 dataTablesCard fs-14 w-100">
@@ -65,7 +71,7 @@
                   <th>Chasis number</th>
                   <th>demo_start_date</th>
                   <th>demo_end_date</th>
-
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -83,14 +89,20 @@
                   <td>{{ vehicle.chasis_number }}</td>
                   <td>{{ vehicle.demo_start_date }}</td>
                   <td>{{ vehicle.demo_end_date }}</td>
-                  <div class="d-flex">
-                    <a href="javascript:void(0);" data-target=".bd-example-modal-lg" data-toggle="modal"
-                      class="btn btn-primary shadow btn-xs sharp mr-1" (click)="onEdit(vehicle)"><i
-                        class="fa fa-pencil"></i></a>
-                    <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
-                      data-toggle="modal" data-target=".bd-example-modal-sm"
-                      (click)="selectVehicleForDeletion(vehicle)"><i class="fa fa-trash"></i></a>
-                  </div>
+                  <td>
+                    <div class="d-flex">
+                      <a href="javascript:void(0);" data-target=".bd-example-modal-lg" data-toggle="modal"
+                        class="btn btn-primary shadow btn-xs sharp mr-1" (click)="onEdit(vehicle)">
+                        <i class="fa fa-pencil"></i>
+                      </a>
+                      <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
+                        data-toggle="modal" data-target=".bd-example-modal-sm"
+                        (click)="selectVehicleForDeletion(vehicle)">
+                        <i class="fa fa-trash"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
 
               </tbody>
             </table>
@@ -351,23 +363,24 @@
                   </div>
                 </div>
               </div> -->
-        <div class="modal-footer">
-          <!-- Ensure Edit button appears only if vehicle_id is defined -->
-          <ng-container *ngIf="vehicleObj.vehicle_id !== null && vehicleObj.vehicle_id !== undefined; else saveButton">
-            <button type="button" class="btn btn-outline-primary" (click)="onUpdate()"
-              [disabled]="!isVehicleNameChanged()">
-              Edit
-            </button>
-          </ng-container>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- Ensure Edit button appears only if vehicle_id is defined -->
+      <ng-container *ngIf="vehicleObj.vehicle_id !== null && vehicleObj.vehicle_id !== undefined; else saveButton">
+        <button type="button" class="btn btn-outline-primary" (click)="onUpdate()" [disabled]="!isVehicleNameChanged()">
+          Edit
+        </button>
+      </ng-container>
 
-          <button type="button" class="btn btn-outline-danger" (click)="closeModal()">
-            Close
-          </button>
+      <button type="button" class="btn btn-outline-danger" (click)="closeModal()">
+        Close
+      </button>
 
-          <ng-template #saveButton>
-            <button type="button" class="btn btn-outline-primary" (click)="onSave()"
-              [attr.data-dismiss]="useForm.valid ? 'modal' : null">
-              Save
-            </button>
-          </ng-template>
-        </div>
+      <ng-template #saveButton>
+        <button type="button" class="btn btn-outline-primary" (click)="onSave()"
+          [attr.data-dismiss]="useForm.valid ? 'modal' : null">
+          Save
+        </button>
+      </ng-template>
+    </div>

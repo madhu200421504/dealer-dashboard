@@ -14,10 +14,15 @@
 
     <div class="row mb-5 align-items-center">
       <div class="col-xl-2 mb-4 mb-xl-0">
-        <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
+        <!-- <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
           data-target=".bd-example-modal-lg"
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons"><i class="fa fa-plus mr-1"></i>Add
-          Team</a>
+          Team</a> -->
+        <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
+          data-target=".bd-example-modal-lg" data-backdrop="false"
+          class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
+          <i class="fa fa-plus mr-1"></i>Add Team
+        </a>
       </div>
       <div class="col-xl-2 mb-4 mb-xl-0">
         <div class="media-body ml-1">
@@ -49,11 +54,11 @@
             </div>
 
             <div class="col-md-6 d-flex justify-content-end align-items-center">
-              <input type="text" class="form-control search-input custom-search-input" placeholder="Search teams..."
-                [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+              <div class="search-wrapper">
+                <input type="text" class="form-control search-input" placeholder="Search teams..."
+                  [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+              </div>
             </div>
-            
-
           </div>
 
           <!-- <div class="col-xl-10">

@@ -22,11 +22,15 @@
             </div> -->
             <!-- Add Target Button - Only show when targetList is empty -->
             <div class="col-xl-2 mb-4 mb-xl-0" *ngIf="targetList().length === 0">
-                <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button"
+                <!-- <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button"
                     data-toggle="modal" data-target=".bd-example-modal-lg"
                     class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
                     <i class="fa fa-plus mr-1"></i>Add Target
-                </a>
+                </a> -->
+                <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button"
+                    data-toggle="modal" data-target=".bd-example-modal-lg" data-backdrop="false"
+                    class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
+                    <i class="fa fa-plus mr-1"></i>Add Target </a>
             </div>
 
 
@@ -52,9 +56,10 @@
 
 
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
-                            <input type="text" class="form-control search-input"
-                                style="width: 250px; margin-left: 500px;" placeholder="Search target..."
-                                [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+                            <div class="search-wrapper">
+                                <input type="text" class="form-control search-input" placeholder="Search Targets..."
+                                    [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -96,42 +101,43 @@
                             <div class="dataTables_info">
                                 Showing
                                 {{ (currentPage - 1) * itemsPerPage + 1 }} to
-                                {{ (currentPage * itemsPerPage) < targetList().length ? currentPage * itemsPerPage : targetList().length }} of {{
-                                    targetList().length }} entries </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="dataTables_paginate paging_simple_numbers float-right">
-                                <ul class="pagination">
-                                    <li class="paginate_button page-item previous" [class.disabled]="currentPage === 1">
-                                        <a class="page-link" (click)="previousPage()">Previous</a>
-                                    </li>
+                                {{ (currentPage * itemsPerPage) < targetList().length ? currentPage * itemsPerPage :
+                                    targetList().length }} of {{ targetList().length }} entries </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dataTables_paginate paging_simple_numbers float-right">
+                                    <ul class="pagination">
+                                        <li class="paginate_button page-item previous"
+                                            [class.disabled]="currentPage === 1">
+                                            <a class="page-link" (click)="previousPage()">Previous</a>
+                                        </li>
 
-                                    <li class="paginate_button page-item" *ngFor="let page of pages"
-                                        [class.active]="page === currentPage">
-                                        <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
-                                    </li>
+                                        <li class="paginate_button page-item" *ngFor="let page of pages"
+                                            [class.active]="page === currentPage">
+                                            <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+                                        </li>
 
-                                    <li class="paginate_button page-item next"
-                                        [class.disabled]="currentPage === totalPages">
-                                        <a class="page-link" (click)="nextPage()">Next</a>
-                                    </li>
-                                </ul>
+                                        <li class="paginate_button page-item next"
+                                            [class.disabled]="currentPage === totalPages">
+                                            <a class="page-link" (click)="nextPage()">Next</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- <div class="col-xl-2 mb-4 mb-xl-0"> -->
-        <!-- <div class="media-body ml-1">
+            <!-- <div class="col-xl-2 mb-4 mb-xl-0"> -->
+            <!-- <div class="media-body ml-1">
                     <p class="mb-1 fs-14 text-center">Total Team</p>
                     <h3 class="mb-0 text-black font-w600 fs-20 text-center">
                         {{ count() }}
                     </h3>
                 </div> -->
-        <!-- </div> -->
-        <!-- <div class="col-xl-10">
+            <!-- </div> -->
+            <!-- <div class="col-xl-10">
       <div class="card m-0">
         <div class="card-body py-3 py-md-2">
           <div class="row align-items-center">
@@ -165,103 +171,103 @@
         </div>
       </div>
     </div> -->
-    </div>
+        </div>
 
 
-    <!-- API integration work starts here -->
+        <!-- API integration work starts here -->
 
 
 
-    <!-- Modal -->
-    <!-- <div class="modal fade" style="margin-block: 2em"> -->
-    <div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" style="text-align: center; width: 100%">
-                        {{ targetobj.enquiries || targetobj.testDrives ? "Edit User" : "Add New Target" }}
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span class="x">&times;</span>
-                    </button>
-                </div>
+        <!-- Modal -->
+        <!-- <div class="modal fade" style="margin-block: 2em"> -->
+        <div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="text-align: center; width: 100%">
+                            {{ targetobj.enquiries || targetobj.testDrives ? "Edit User" : "Add New Target" }}
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span class="x">&times;</span>
+                        </button>
+                    </div>
 
-                <div class="modal-body">
-                    <form [formGroup]="useForm">
-                        <div class="row">
-                            <!-- Name -->
-                            <div class="col-md-6 form-group">
-                                <label for="enquiries" class="form-label">enquiries</label>
-                                <input id="enquiries" class="form-control form-control-lg" type="number"
-                                    formControlName="enquiries" placeholder="enquiries" [ngClass]="{
+                    <div class="modal-body">
+                        <form [formGroup]="useForm">
+                            <div class="row">
+                                <!-- Name -->
+                                <div class="col-md-6 form-group">
+                                    <label for="enquiries" class="form-label">enquiries</label>
+                                    <input id="enquiries" class="form-control form-control-lg" type="number"
+                                        formControlName="enquiries" placeholder="enquiries" [ngClass]="{
                   'is-invalid':
                     useForm.get('enquiries')?.touched &&
                     useForm.get('enquiries')?.invalid
                 }" required />
-                                <div class="text-danger" *ngIf="
+                                    <div class="text-danger" *ngIf="
                   useForm.get('enquiries')?.invalid && useForm.get('enquiries')?.touched
                 ">
-                                    <span *ngIf="useForm.get('enquiries')?.errors?.['required']">Enquiries is
-                                        required.</span>
+                                        <span *ngIf="useForm.get('enquiries')?.errors?.['required']">Enquiries is
+                                            required.</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- LAST NAME -->
-                            <div class="col-md-6 form-group">
-                                <label for="testDrives" class="form-label">test drives</label>
-                                <input id="testDrives" class="form-control form-control-lg" type="number"
-                                    formControlName="testDrives" placeholder="testDrives" [ngClass]="{
+                                <!-- LAST NAME -->
+                                <div class="col-md-6 form-group">
+                                    <label for="testDrives" class="form-label">test drives</label>
+                                    <input id="testDrives" class="form-control form-control-lg" type="number"
+                                        formControlName="testDrives" placeholder="testDrives" [ngClass]="{
                                           'is-invalid':
                                             useForm.get('testDrives')?.touched &&
                                             useForm.get('testDrives')?.invalid
                                         }" required />
-                                <div class="text-danger" *ngIf="
+                                    <div class="text-danger" *ngIf="
                                           useForm.get('testDrives')?.invalid && useForm.get('testDrives')?.touched
                                         ">
-                                    <span *ngIf="useForm.get('testDrives')?.errors?.['required']">Test drives is
-                                        required.</span>
+                                        <span *ngIf="useForm.get('testDrives')?.errors?.['required']">Test drives is
+                                            required.</span>
+                                    </div>
                                 </div>
-                            </div>
 
 
 
-                            <div class="col-md-6 form-group">
-                                <label for="orders" class="form-label">orders</label>
-                                <input id="orders" class="form-control form-control-lg" type="number"
-                                    formControlName="orders" placeholder="orders" [ngClass]="{
+                                <div class="col-md-6 form-group">
+                                    <label for="orders" class="form-label">orders</label>
+                                    <input id="orders" class="form-control form-control-lg" type="number"
+                                        formControlName="orders" placeholder="orders" [ngClass]="{
                                                                   'is-invalid':
                                                                     useForm.get('orders')?.touched &&
                                                                     useForm.get('orders')?.invalid
                                                                 }" required />
-                                <div class="text-danger" *ngIf="
+                                    <div class="text-danger" *ngIf="
                                                                   useForm.get('orders')?.invalid && useForm.get('orders')?.touched
                                                                 ">
-                                    <span *ngIf="useForm.get('orders')?.errors?.['required']">Order is
-                                        required.</span>
+                                        <span *ngIf="useForm.get('orders')?.errors?.['required']">Order is
+                                            required.</span>
+                                    </div>
                                 </div>
-                            </div>
 
 
-                            <!-- ROLE -->
+                                <!-- ROLE -->
 
 
-                            <div class="modal-footer">
-                                <ng-container *ngIf="isEditMode">
-                                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
-                                        (click)="onUpdate()">
-                                        Edit
+                                <div class="modal-footer">
+                                    <ng-container *ngIf="isEditMode">
+                                        <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
+                                            (click)="onUpdate()">
+                                            Edit
+                                        </button>
+                                    </ng-container>
+                                    <ng-container *ngIf="!isEditMode">
+                                        <button type="button" id="bd-example-modal-lg" class="btn btn-outline-primary"
+                                            (click)="onSave()">
+                                            Save
+                                        </button>
+                                    </ng-container>
+                                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal"
+                                        (click)="closeModal()">
+                                        Close
                                     </button>
-                                </ng-container>
-                                <ng-container *ngIf="!isEditMode">
-                                    <button type="button" id="bd-example-modal-lg" class="btn btn-outline-primary"
-                                        (click)="onSave()">
-                                        Save
-                                    </button>
-                                </ng-container>
-                                <button type="button" class="btn btn-outline-danger" data-dismiss="modal"
-                                    (click)="closeModal()">
-                                    Close
-                                </button>
-                            </div>
+                                </div>
 
-                        </div>
+                            </div>

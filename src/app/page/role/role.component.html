@@ -15,10 +15,19 @@
     <!-- Add Button + Stats -->
     <div class="row mb-5 align-items-center">
       <div class="col-xl-2 col-lg-3 col-md-4 mb-4 mb-md-0">
-        <a (click)="openModals()" type="button"
+        <!-- <a (click)="openModals()" type="button"
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons" style="color:white;">
           <i class="fa fa-plus mr-1" style="color:white"></i>Add Role
+        </a> -->
+        <a style="cursor: pointer; color: white !important" (click)="openModals()" type="button"
+          class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
+          <i class="fa fa-plus mr-1"></i>Add Role
         </a>
+
+
+
+
+
       </div>
       <div class="col-xl-2 col-lg-3 col-md-4 mb-4 mb-md-0">
         <div class="media-body ml-1">
@@ -49,9 +58,12 @@
             </div>
 
             <div class="col-md-6 d-flex justify-content-end align-items-center">
-              <input type="text" class="form-control search-input" style="width: 250px; margin-left: 500px;"
-                placeholder="Search roles..." [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+              <div class="search-wrapper">
+                <input type="text" class="form-control search-input" placeholder="Search roles..."
+                  [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+              </div>
             </div>
+
           </div>
         </div>
       </div>

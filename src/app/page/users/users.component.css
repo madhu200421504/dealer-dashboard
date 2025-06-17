@@ -82,3 +82,33 @@ body {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
   border-radius: 10px;
 }
+/* Add this to your styles.css or component styles */
+.modal-backdrop {
+  z-index: 1040 !important;
+}
+
+.modal {
+  z-index: 1050 !important;
+}
+/* Base (Desktop) */
+.search-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.search-input {
+  width: 200px;
+  max-width: 100%;
+}
+
+/* Tablet and below */
+@media (max-width: 991.98px) {
+  .search-input {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+.modal-backdrop {
+  display: none !important;
+}
