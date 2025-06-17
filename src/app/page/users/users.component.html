@@ -61,8 +61,8 @@
 
 
             <div class="col-md-6 d-flex justify-content-end align-items-center">
-              <input type="text" class="form-control search-input" style="width: 250px; margin-left: 390px;"
-                placeholder="Search users..." [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+              <input type="text" class="form-control search-input" style="width: 250px; ;" placeholder="Search users..."
+                [(ngModel)]="searchTerm" (input)="onSearchChange()" />
             </div>
 
           </div>
@@ -95,11 +95,11 @@
 
                     <div class="d-flex">
                       <a href="javascript:void(0);" data-target=".bd-example-modal-lg" data-toggle="modal"
-                        class="btn btn-primary shadow btn-xs sharp mr-1" (click)="onEdit(user)"><i
+                        class="btn btn-primary shadow btn-xs sharp mr-1" data-backdrop="false" (click)="onEdit(user)"><i
                           class="fa fa-pencil"></i></a>
                       <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
-                        data-toggle="modal" data-target=".bd-example-modal-sm" (click)="selectUserForDeletion(user)"><i
-                          class="fa fa-trash"></i></a>
+                        data-toggle="modal" data-target=".bd-example-modal-sm" data-backdrop="false"
+                        (click)="selectUserForDeletion(user)"><i class="fa fa-trash"></i></a>
                     </div>
                   </td>
                 </tr>
@@ -165,7 +165,7 @@
   </div>
 
   <!-- Add/Edit User Modal -->
-  <div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div id="myModal" class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">

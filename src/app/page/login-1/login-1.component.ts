@@ -67,7 +67,10 @@ export class Login1Component {
   showPassword = false;
   showConfirmPassword = false;
   countdown = 0;
+  inputFocused: boolean = false;
+  confirmInputFocused: boolean = false;
   private countdownInterval: any;
+  isFocused: boolean = false;
 
   private readonly API_BASE_URL = 'https://uat.smartassistapp.in/api/';
   private readonly SESSION_TIMEOUT = 60 * 60 * 1000;
@@ -135,17 +138,24 @@ export class Login1Component {
     this.loginObj.dealer_email = email;
   }
 
+  focusInput(el: HTMLElement) {
+    el.focus();
+  }
+
   // Password visibility toggles
-  togglePassword(field: 'password' | 'confirmPassword') {
+  togglePassword(field: 'password' | 'confirmPassword'): void {
+    console.log('Toggling visibility for field:', field);
     if (field === 'password') {
       this.showPassword = !this.showPassword;
-    } else {
+      console.log('New Password visibility:', this.showPassword); // Check visibility state
+    } else if (field === 'confirmPassword') {
       this.showConfirmPassword = !this.showConfirmPassword;
+      console.log('Confirm Password visibility:', this.showConfirmPassword); // Check visibility state
     }
   }
 
   // Form validation methods
-  private validateLoginInput(): boolean {
+  private validateLoginInput(backendErrorMessage?: string): boolean {
     if (!this.loginObj.dealer_email || !this.loginObj.password) {
       this.toastr.error(
         'Please enter both email and password',
@@ -153,22 +163,41 @@ export class Login1Component {
       );
       return false;
     }
+
     if (!this.isValidEmail(this.loginObj.dealer_email)) {
-      this.toastr.error('Please enter a valid password', 'Validation Error');
+      this.toastr.error(
+        'Please enter a valid email address',
+        'Validation Error'
+      );
       return false;
     }
+
+    // Optionally show backend error (if passed)
+    if (backendErrorMessage) {
+      this.toastr.error(backendErrorMessage, 'Error');
+      return false;
+    }
+
     return true;
   }
 
-  private validateNewPassword(): boolean {
+  private validateNewPassword(backendErrorMessage?: string): boolean {
     if (!this.loginObj.newPwd || !this.loginObj.confirmPassword) {
       this.toastr.error('Please enter both passwords', 'Validation Error');
       return false;
     }
+
     if (this.loginObj.newPwd !== this.loginObj.confirmPassword) {
       this.toastr.error('Passwords do not match', 'Validation Error');
       return false;
     }
+
+    // Optionally show backend error (if passed)
+    if (backendErrorMessage) {
+      this.toastr.error(backendErrorMessage, 'Error');
+      return false;
+    }
+
     return true;
   }
 
@@ -355,26 +384,21 @@ export class Login1Component {
       )
       .subscribe({
         next: (response) => {
-          this.toastr.success('Password reset successfully', 'Success');
-          window.location.reload();
-          this.backToLogin();
+          const message = response?.message || 'Password reset successfully';
+          this.toastr.success(message, 'Success');
+          this.backToLogin(); // Optional: window.location.reload();
         },
         error: (error) => {
           console.error('Password reset error:', error);
-          if (error.status === 400) {
-            this.toastr.error(
-              'Invalid request. Please check your inputs.',
-              'Error'
-            );
-          } else if (error.status === 404) {
-            this.toastr.error('User not found', 'Error');
-          } else {
-            const errorMessage = error.error.error;
-            this.toastr.error(errorMessage, 'Error');
-          }
+
+          // ✅ Correctly extract backend error message
+          const errorMessage =
+            error?.error?.message || // your backend sends `message`
+            'Something went wrong. Please try again.';
+
+          this.toastr.error(errorMessage, 'Error');
         },
         complete: () => {
-          // Clear sensitive data
           this.loginObj.newPwd = '';
           this.loginObj.confirmPassword = '';
         },

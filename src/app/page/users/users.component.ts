@@ -1015,6 +1015,10 @@ export class UsersComponent implements OnInit {
     });
 
     console.log('userObj.user_id after setting:', this.userObj?.user_id);
+    setTimeout(() => {
+      // Manually trigger modal if needed
+      ($('#myModal') as any).modal({ backdrop: false });
+    }, 100); // Slight delay ensures modal and form are ready
   }
 
   // Check if the name field has been changed

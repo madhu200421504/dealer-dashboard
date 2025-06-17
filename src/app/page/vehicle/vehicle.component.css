@@ -8,7 +8,6 @@
 }
 
 .content-body {
-  margin-left: 14%; /* Match sidebar width */
   padding: 20px;
   flex-grow: 1;
 }
@@ -22,7 +21,6 @@
     padding: 10px; /* Adjust padding for mobile */
   }
 }
-
 
 /* Base (Desktop) */
 .search-wrapper {

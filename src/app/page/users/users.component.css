@@ -55,7 +55,7 @@ body {
 }
 
 .content-body {
-  margin-left: 14%;
+  /* margin-left: 14%; */
   padding: 20px;
   flex-grow: 1;
 }

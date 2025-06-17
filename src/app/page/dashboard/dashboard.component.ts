@@ -85,6 +85,7 @@ export class DashboardComponent implements OnInit {
 
   maxValue = 100;
   kpiData: any = {};
+  noResultsFound: boolean = false;
 
   selectedSection: 'home' | 'analysis' = 'home';
   users: User[] = [];
@@ -227,6 +228,8 @@ export class DashboardComponent implements OnInit {
   displayedUsers: any[] = [];
   initialsList: string[] = [];
   showUserModal = false;
+  tickedUserInPs1: any = null;
+
   // selectedUser: any = null;
   // displayedUsers: any[] = [];
   data: any; // <-- Add this line
@@ -261,11 +264,11 @@ export class DashboardComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef ,// 👈 Add this
+    private cdr: ChangeDetectorRef, // 👈 Add this
     private sidebarService: SidebarService
   ) {}
   ngOnInit(): void {
-     this.sidebarService.isOpen$.subscribe(open => {
+    this.sidebarService.isOpen$.subscribe((open) => {
       this.isSidebarOpen = open;
     });
     this.fetchUsers();
@@ -295,8 +298,13 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  // ngOnDestroy() {
+  //   this.sidebarSub.unsubscribe();
+  // }
   ngOnDestroy() {
-    this.sidebarSub.unsubscribe();
+    if (this.sidebarSub) {
+      this.sidebarSub.unsubscribe();
+    }
   }
 
   selectSection(section: 'home' | 'analysis'): void {
@@ -543,17 +551,80 @@ export class DashboardComponent implements OnInit {
 
   // Function to handle user (PS1) selection
   // Inside your component
-  selectUser(userId: string) {
-    this.selectedPs1 = userId; // Store the selected user ID (PS1)
-    console.log('Selected user:', userId);
+  selectUser(userId: string): void {
+    this.selectedPs1 = userId; // Store the selected user ID in PS1
+
+    // If the user selected in PS1 is also in PS2, update PS2 to reflect the same user
+    if (this.selectedPs2.includes(userId)) {
+      this.selectedPs2 = [userId]; // Keep the user selected in PS2
+    }
+
+    console.log('Selected user in PS1:', userId);
 
     // Close the dropdown after selecting a user
-    this.dropdownOpen = false;
+    this.dropdownOpen1 = false;
+  }
 
-    // If a filter is selected, trigger the API call
-    if (this.activeFilter) {
-      this.fetchFilteredData(userId, this.activeFilter);
+  isUserDisabledInPs2(userId: string): boolean {
+    return this.selectedPs1 === userId; // Now comparing both as strings
+  }
+
+  onSelectPs2(user: any): void {
+    console.log('PS2 user selected:', user);
+
+    // If PS1 is already selected, don't allow selection of the same user in PS2
+    if (this.selectedPs1 === user.user_id) {
+      console.log('User is already selected in PS1, cannot select in PS2');
+      return; // Prevent selection if the same user is in PS1
     }
+
+    // Set the selected user for PS2
+    this.selectedPs2 = [user.user_id]; // Only one user can be selected in PS2 at a time
+    this.selectedPs2Names = [user.name]; // Store user name for display in PS2 dropdown
+
+    // Track which user should be ticked in PS1 based on PS2 selection
+    this.tickedUserInPs1 = user; // Mark this user as the ticked one in PS1 dropdown
+
+    console.log('Updated selected user in PS2:', this.selectedPs2);
+
+    // Fetching data for PS2 as per the selected user
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${user.user_id}&type=${this.selectedFilter}`;
+    console.log('Fetching PS2 data from URL:', url); // Log URL for debugging
+
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in sessionStorage');
+      return;
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    // Make API call to fetch PS2 data
+    this.http.get<any>(url, { headers }).subscribe({
+      next: (data) => {
+        console.log('API response for PS2:', data);
+
+        const performance = data?.data?.performance?.[0];
+        if (performance) {
+          this.enquiriesCountPs2 = performance.enquiries ?? 0;
+          this.testDrivesCountPs2 = performance.testDrives ?? 0;
+          this.ps2Total = this.enquiriesCountPs2; // for bar % if needed
+
+          console.log('PS2 Enquiries:', this.enquiriesCountPs2);
+          console.log('PS2 Test Drives:', this.testDrivesCountPs2);
+        } else {
+          console.warn('No performance data found for PS2');
+          this.enquiriesCountPs2 = 0;
+          this.testDrivesCountPs2 = 0;
+          this.ps2Total = 0;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch PS2 data', err);
+      },
+    });
   }
 
   // Function to make the API call based on user and filter
@@ -622,49 +693,6 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching data:', error);
-      },
-    });
-  }
-  onSelectPs2(user: any): void {
-    console.log('PS2 user selected:', user); // Log selected user
-
-    this.selectedPs2 = [user.id]; // Only one user at a time
-    this.selectedPs2Names = [user.name];
-
-    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${user.id}&type=${this.selectedFilter}`;
-    console.log('Fetching PS2 data from URL:', url); // Log URL for debugging
-
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-      console.error('No token found in sessionStorage');
-      return;
-    }
-
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-
-    this.http.get<any>(url, { headers }).subscribe({
-      next: (data) => {
-        console.log('API response for PS2:', data); // Log full API response
-
-        const performance = data?.data?.performance?.[0];
-        if (performance) {
-          this.enquiriesCountPs2 = performance.enquiries ?? 0;
-          this.testDrivesCountPs2 = performance.testDrives ?? 0;
-          this.ps2Total = this.enquiriesCountPs2; // for bar % if needed
-
-          console.log('PS2 Enquiries:', this.enquiriesCountPs2);
-          console.log('PS2 Test Drives:', this.testDrivesCountPs2);
-        } else {
-          console.warn('No performance data found for PS2');
-          this.enquiriesCountPs2 = 0;
-          this.testDrivesCountPs2 = 0;
-          this.ps2Total = 0;
-        }
-      },
-      error: (err) => {
-        console.error('Failed to fetch PS2 data', err);
       },
     });
   }
@@ -1257,7 +1285,6 @@ export class DashboardComponent implements OnInit {
   //     );
   //   }
   // }
-
   applyTableFilters(): void {
     console.log('🔥 applyTableFilters called');
     console.log('searchText:', this.searchText);
@@ -1301,6 +1328,7 @@ export class DashboardComponent implements OnInit {
     const searchLower = this.searchText?.toLowerCase() || '';
     const selectedInitial = this.selectedInitial?.toLowerCase() || '';
 
+    // If we have a search text or initial, filter users accordingly
     if (searchLower || selectedInitial) {
       this.filteredUsers = this.allUsers.filter((user) => {
         const name = user.name?.toLowerCase() || '';
@@ -1309,9 +1337,13 @@ export class DashboardComponent implements OnInit {
           (!searchLower || name.includes(searchLower))
         );
       });
+
+      // Check if no users are found
+      this.noResultsFound = this.filteredUsers.length === 0;
     } else {
-      this.filteredUsers = [];
-      this.selectedUser = null;
+      // If no search or initial filter is applied, show all users
+      this.filteredUsers = [...this.allUsers];
+      this.noResultsFound = false;
     }
 
     console.log('Filtered Users:', this.filteredUsers);
