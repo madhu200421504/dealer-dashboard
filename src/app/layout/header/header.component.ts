@@ -18,6 +18,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Token } from '@angular/compiler';
 import { filter, map } from 'rxjs';
 import { ContextService } from '../../service/context.service';
+import { SidebarService } from '../../service/sidebar.service';
 
 @Component({
   selector: 'app-header',
@@ -38,7 +39,8 @@ export class HeaderComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     private activatedRoute: ActivatedRoute,
     private context: ContextService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private sidebarService: SidebarService
   ) { }
 
   ngOnInit() {
@@ -76,4 +78,6 @@ export class HeaderComponent implements OnInit {
     sessionStorage.removeItem('token');
     this.guestDetails = null;
   }
+
+  
 }

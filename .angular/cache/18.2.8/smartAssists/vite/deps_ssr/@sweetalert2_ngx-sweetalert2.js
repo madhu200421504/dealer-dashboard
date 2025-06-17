@@ -2,7 +2,7 @@ import { createRequire } from 'module';const require = createRequire(import.meta
 import {
   CommonModule,
   NgTemplateOutlet
-} from "./chunk-KKRJ4LPL.js";
+} from "./chunk-EWZUNRTZ.js";
 import {
   ApplicationRef,
   ChangeDetectionStrategy,
@@ -34,7 +34,7 @@ import {
   ɵɵlistener,
   ɵɵproperty,
   ɵɵtemplate
-} from "./chunk-6ZFWCITV.js";
+} from "./chunk-OLPLKVTR.js";
 import {
   require_cjs
 } from "./chunk-5IW5ZEPE.js";
@@ -1272,7 +1272,7 @@ var SwalPortalDirective = class _SwalPortalDirective {
   });
 })();
 function provideDefaultSwal() {
-  return import("./sweetalert2.esm.all-EM5G4OBO.js");
+  return import("./sweetalert2.esm.all-UJYHTE5G.js");
 }
 var SweetAlert2Module = class _SweetAlert2Module {
   static forRoot(options = {}) {

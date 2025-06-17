@@ -32,6 +32,8 @@ import {
   TodayTestDrive,
 } from '../../model/interface/master';
 import { ActivatedRoute } from '@angular/router';
+import { SidebarService } from '../../service/sidebar.service';
+import { Subscription } from 'rxjs';
 
 // Register all chart components
 Chart.register(...registerables);
@@ -61,6 +63,8 @@ interface User {
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
+  isSidebarOpen = true;
+  sidebarSub!: Subscription;
   kpis = [
     { name: 'Enquiries', key: 'enquiries' },
     { name: 'Test Drives', key: 'test_drives' },
@@ -254,9 +258,13 @@ export class DashboardComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef // 👈 Add this
+    private cdr: ChangeDetectorRef ,// 👈 Add this
+    private sidebarService: SidebarService
   ) {}
   ngOnInit(): void {
+     this.sidebarService.isOpen$.subscribe(open => {
+      this.isSidebarOpen = open;
+    });
     this.fetchUsers();
     this.fetchDashboardData();
     this.loadTestDriveData();
@@ -282,6 +290,10 @@ export class DashboardComponent implements OnInit {
     } else {
       console.error('User not found in sessionStorage');
     }
+  }
+
+  ngOnDestroy() {
+    this.sidebarSub.unsubscribe();
   }
 
   selectSection(section: 'home' | 'analysis'): void {
