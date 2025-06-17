@@ -112,3 +112,13 @@ body {
 .modal-backdrop {
   display: none !important;
 }
+
+@media only screen and (max-width: 1600px) {
+    .content-body {
+        margin-left: 0;
+    }
+}
+.searchbar{
+  display: flex;
+  float: right;
+}
