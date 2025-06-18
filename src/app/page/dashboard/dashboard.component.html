@@ -121,9 +121,9 @@
           <div style="
      background: white;
      border-radius: 12px;
-     width: 90%;
-     max-width: 900px;
-     max-height: 90vh;
+     /* width: 90%; */
+     /* max-width: 900px; */
+     /* max-height: 90vh; */
      overflow-y: auto;
      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
     ">
@@ -382,7 +382,7 @@
               style="padding: 6px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; background-color: #fff;">
               <option value="today">Today</option>
               <option value="oneWeek">Upcoming Week</option>
-            </select> -->
+            </select> -->   
           <select [(ngModel)]="filterOption" (change)="onFilterOptionChange()"
             style="padding: 6px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; background-color: #fff;">
             <option value="today">Today</option>
@@ -410,7 +410,7 @@
       <table class="table table-striped" style="width: 100%; margin-top: 10px;">
         <thead>
           <tr>
-            <th style="font-weight: 40; color: #222;">Subject</th>
+            <th style="font-weight: 600; color: #222;">Subject</th>
             <th style="font-weight: 600; color: #222;">VIN</th>
             <th style="font-weight: 600; color: #222;">PMI</th>
             <th style="font-weight: 600; color: #222;">Assigned to</th>

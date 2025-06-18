@@ -26,3 +26,8 @@
     display: block !important;
 }
 }
+
+
+.menu-toggle .header{
+  padding: 0 !important;
+}
