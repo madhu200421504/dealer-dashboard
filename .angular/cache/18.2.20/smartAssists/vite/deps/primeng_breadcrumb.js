@@ -1,23 +1,23 @@
 import {
-  BaseIcon,
-  ChevronRightIcon
-} from "./chunk-JM4VZORY.js";
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-JH7RAIWY.js";
 import {
   Tooltip,
   TooltipModule
 } from "./chunk-5QDNSMVE.js";
+import {
+  BaseIcon,
+  ChevronRightIcon
+} from "./chunk-JM4VZORY.js";
 import "./chunk-BUGEQH7Q.js";
 import {
   PrimeTemplate,
   SharedModule,
   UniqueComponentId
 } from "./chunk-LSQG3WLJ.js";
-import {
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-JH7RAIWY.js";
 import "./chunk-YXWAPH6D.js";
 import "./chunk-OCCYK2DZ.js";
 import {
@@ -73,8 +73,8 @@ import {
   ɵɵtext,
   ɵɵtextInterpolate
 } from "./chunk-GCS7LTCL.js";
-import "./chunk-ISM5WLAM.js";
 import "./chunk-IC62NIWK.js";
+import "./chunk-ISM5WLAM.js";
 import "./chunk-ZZ67MR3E.js";
 import "./chunk-3OV72XIM.js";
 
