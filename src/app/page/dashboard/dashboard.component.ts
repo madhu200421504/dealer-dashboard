@@ -229,6 +229,7 @@ export class DashboardComponent implements OnInit {
   initialsList: string[] = [];
   showUserModal = false;
   tickedUserInPs1: any = null;
+  showingLimit = 10;
 
   // selectedUser: any = null;
   // displayedUsers: any[] = [];
@@ -243,6 +244,7 @@ export class DashboardComponent implements OnInit {
   selectedUserDetails: any;
   maxDriveCount: number = 0;
   indexes: number[] = [];
+  defaultLimit = 10;
 
   uniqueInitials: string[] = []; // ✅ renamed to avoid clash
   avatarColors: string[] = [
@@ -417,6 +419,17 @@ export class DashboardComponent implements OnInit {
   resetFilter() {
     this.displayedUsers = [...this.allUsers];
     this.selectedInitial = '';
+  }
+  toggleShowItems() {
+    // If currently showing all, reset to default (i.e., show less)
+    if (this.showingLimit >= this.filteredUsers.length) {
+      this.showingLimit = this.defaultLimit;
+    } else {
+      this.showingLimit += 10;
+      if (this.showingLimit > this.filteredUsers.length) {
+        this.showingLimit = this.filteredUsers.length;
+      }
+    }
   }
   fetchUsers(): void {
     const token = sessionStorage.getItem('token');
@@ -627,6 +640,9 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  showMoreItems() {
+    this.showingLimit += 10;
+  }
   // Function to make the API call based on user and filter
   fetchFilteredData(userId: string, filterType: string) {
     const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}&type=${filterType}`;

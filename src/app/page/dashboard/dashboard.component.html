@@ -27,6 +27,16 @@
                 style="padding: 6px 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; width: 200px;" />
             </div>
           </div>
+          <!--           
+          <div style="margin-top: 15px; display: flex; justify-content: flex-end;">
+            <button (click)="toggleShowItems()"
+              style="padding: 6px 12px; font-size: 14px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100px; white-space: nowrap;">
+              {{ showingLimit >= filteredUsers.length ? 'Show Less' : 'Show More' }}
+            </button>
+          </div> -->
+
+
+
 
           <!-- User Icons Grid (Only Big Initial Circles) -->
           <!-- Show Initials Circles Always -->
@@ -77,6 +87,13 @@
               </div>
             </div>
           </div>
+          <div style="margin-top: 15px; display: flex; justify-content: flex-end;">
+            <button (click)="toggleShowItems()"
+              style="padding: 6px 12px; font-size: 14px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100px; white-space: nowrap;">
+              {{ showingLimit >= filteredUsers.length ? 'Show Less' : 'Show More' }}
+            </button>
+          </div>
+
 
           <!-- Show 'No users found' message -->
           <div *ngIf="noResultsFound && filteredUsers.length === 0" style="margin-top: 30px; text-align: center;">
@@ -362,7 +379,7 @@
       <table class="table table-striped" style="width: 100%; margin-top: 10px;">
         <thead>
           <tr>
-            <th style="font-weight: 600; color: #222;">Subject</th>
+            <th style="font-weight: 40; color: #222;">Subject</th>
             <th style="font-weight: 600; color: #222;">VIN</th>
             <th style="font-weight: 600; color: #222;">PMI</th>
             <th style="font-weight: 600; color: #222;">Assigned to</th>
@@ -527,7 +544,9 @@
                     style="padding: 6px 10px; cursor: pointer;"
                     [style.backgroundColor]="selectedPs1 === user.user_id ? '#ddd' : 'white'"
                     [style.pointer-events]="user.user_id === tickedUserInPs1?.user_id ? 'none' : 'auto'" for PS2
-                    selected user [style.color]="user.user_id === tickedUserInPs1?.user_id ? '#bbb' : 'black'">
+                    selected user [style.color]="user.user_id === tickedUserInPs1?.user_id ? '#bbb' : 'black'"
+                    [style.fontWeight]="user.user_id === tickedUserInPs1?.user_id ? 'bold' : 'normal'">
+
 
                     <!-- Tick if the user was selected in PS2 -->
                     <span *ngIf="tickedUserInPs1 && tickedUserInPs1.user_id === user.user_id"
@@ -554,10 +573,13 @@
 
                 <div *ngIf="dropdownOpen2" class="custom-scroll"
                   style="position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; background: white; z-index: 1000;">
+
                   <div *ngFor="let user of users" (click)="onSelectPs2(user); dropdownOpen2 = false"
                     style="padding: 6px 10px; cursor: pointer;"
                     [style.backgroundColor]="selectedPs2.includes(user.user_id) ? '#ddd' : 'white'"
-                    [style.pointer-events]="isUserDisabledInPs2(user.user_id) ? 'none' : 'auto'">
+                    [style.pointer-events]="isUserDisabledInPs2(user.user_id) ? 'none' : 'auto'"
+                    [style.color]="isUserDisabledInPs2(user.user_id) ? '#bbb' : 'black'"
+                    [style.fontWeight]="selectedPs2.includes(user.user_id) ? 'bold' : 'normal'">
 
                     <!-- Green Tick Mark -->
                     <span *ngIf="isUserDisabledInPs2(user.user_id)"
@@ -569,7 +591,6 @@
                 </div>
               </div>
             </th>
-
 
           </tr>
         </thead>
