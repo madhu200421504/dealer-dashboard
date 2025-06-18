@@ -8,7 +8,10 @@
 }
 
 .content-body {
+<<<<<<< HEAD
+=======
   /* margin-left: 14%;  */
+>>>>>>> cfe47b745b2bb83fd71f39bb0d96488efe3859f8
   padding: 20px;
   flex-grow: 1;
 }

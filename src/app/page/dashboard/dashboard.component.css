@@ -419,6 +419,10 @@ body {
   background-color: #007bff;
   color: white;
 }
+table th,
+table td {
+  vertical-align: middle;
+}
 
 .content-section {
   /* padding: 20px; */
@@ -460,7 +464,6 @@ body {
   z-index: auto !important;
 }
 
-
 /* Analysis section specific styles */
 .metrics-grid {
   display: grid;
@@ -487,7 +490,6 @@ body {
   transition: width 0.3s ease !important;
   transition: width 0.3s ease, margin-left 0.3s ease !important;
 }
-
 
 .metric-label {
   font-size: 14px;
@@ -660,10 +662,9 @@ table th {
 .container {
   padding: 20px;
   /* max-width: 850px; */
-  margin: 0 ;
+  margin: 0;
   padding-left: 0;
   padding-right: 0;
-  
 }
 
 .card {
@@ -1086,8 +1087,6 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   box-sizing: border-box;
 }
 
-
-
 /* @media (min-width: 1200px) {
   .container-fluid {
     max-width: 1200px;
@@ -1377,7 +1376,6 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   }
 }
 
-
 .dashboard-container {
   /* margin-left: 250px; */
   /* padding: 20px; */
@@ -1389,7 +1387,7 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   align-items: center;
   background: white;
   padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-buttons {
@@ -1428,9 +1426,6 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
     width: 100%;
   }
 }
-
-
-
 
 .filter-btn {
   padding: 5px 12px;

@@ -72,12 +72,20 @@ export class HeaderComponent implements OnInit {
     return route.firstChild ? this.getDeepestChild(route.firstChild) : route;
   }
 
-  logout() {
-    // if (isPlatformBrowser(this.platformId)) {
-    // }
+  // logout() {
+  //   // if (isPlatformBrowser(this.platformId)) {
+  //   // }
+  //   sessionStorage.removeItem('token');
+  //   this.guestDetails = null;
+  // }
+
+  logout(): void {
+    console.log('Logging out...'); // Debug log
+
     sessionStorage.removeItem('token');
     this.guestDetails = null;
+
+    this.router.navigate(['/']); // Navigate to home or login after logout
   }
 
-  
 }

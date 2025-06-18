@@ -137,7 +137,8 @@
         <img class="mx-auto inline-flex items-center justify-center" src="../../../assets/admin-img/jlr logo.svg"
           alt="Avatar Image" />
       </div>
-      <h2 class="title">Verify OTP</h2>
+      <h2 class="title" style="color:#3b86e9;font-size:20px;text-transform: capitalize;margin-top:15px;">
+        Verify OTP</h2>
       <div *ngIf="countdown > 0" class="text-center mb-4">
         Time remaining: {{ countdown }}s
       </div>
@@ -180,38 +181,45 @@
 
     <!-- New Password Form -->
     <form *ngIf="currentStep === 'newPassword'">
-      <h2 class="title">Set New Password</h2>
+      <img class="mx-auto inline-flex items-center justify-center" src="../../../assets/admin-img/jlr logo.svg"
+        alt="Avatar Image" />
 
+      <!-- <h2 class="title">Verify Email</h2> -->
+      <h2 class="title" style="color:#3b86e9;font-size:20px;text-transform: capitalize;">
+        Set New Password</h2>
+      <!-- <h2 class=" title">Set New Password</h2> -->
+
+      <!-- New Password -->
+      <!-- New Password -->
       <div class="input-div pass">
         <div class="i mr-3">
           <i class="fas fa-lock"></i>
         </div>
-        <div class="div relative">
+        <div class="div relative" [class.focus]="loginObj.newPwd?.length">
           <h5>New Password</h5>
-          <input [(ngModel)]="loginObj.newPwd" #inputElement [type]="showPassword ? 'text' : 'password'"
-            class="focus:outline-none focus:border-none border-transparent focus:ring-0 w-full py-2 px-4 bg-transparent text-gray-800"
-            name="password" required />
-          <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
-            class="icon11 absolute right-8 top-1/2 transform -translate-y-1/2 cursor-pointer"
-            (click)="togglePassword('password')"></i>
+          <input [(ngModel)]="loginObj.newPwd" [type]="showPassword ? 'text' : 'password'" name="newPassword"
+            required />
+          <i [class]="'icon11 absolute right-8 top-1/2 transform -translate-y-1/2 cursor-pointer ' + (showPassword ? 'fas fa-eye-slash eye' : 'fas fa-eye eye')"
+            (click)="togglePassword('password')">
+          </i>
         </div>
       </div>
 
+      <!-- Confirm Password -->
       <div class="input-div pass">
         <div class="i">
           <i class="fas fa-lock"></i>
         </div>
-        <div class="div relative">
-          <h5>Confirm Password</h5>
-          <input [(ngModel)]="loginObj.confirmPassword" #inputElement [type]="showConfirmPassword ? 'text' : 'password'"
-            class="focus:outline-none focus:border-none border-transparent focus:ring-0 w-full py-2 px-4 bg-transparent text-gray-800"
-            name="confirm-password" required />
-          <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
-            class="icon11 absolute right-8 top-1/2 transform -translate-y-1/2 cursor-pointer"
-            (click)="togglePassword('confirmPassword')"></i>
-
+        <div class="div relative" [class.focus]="loginObj.confirmPassword?.length">
+          <h5>Confirm New Password</h5>
+          <input [(ngModel)]="loginObj.confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'"
+            name="confirmPassword" required />
+          <i [class]="'icon11 absolute right-8 top-1/2 transform -translate-y-1/2 cursor-pointer ' + (showConfirmPassword ? 'fas fa-eye-slash eye' : 'fas fa-eye eye')"
+            (click)="togglePassword('confirmPassword')">
+          </i>
         </div>
       </div>
+
 
       <div class="flex justify-between w-full">
         <a style="cursor: pointer" class="back-to-login" (click)="backToLogin()">Back to Login</a>
@@ -219,5 +227,4 @@
       <input type="submit" class="btn" value="Reset Password" (click)="onSetNewPassword()" />
     </form>
   </div>
-</div>
-<!-- <script src="https://cdn.tailwindcss.com"></script> -->
+  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
