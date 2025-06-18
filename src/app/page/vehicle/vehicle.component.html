@@ -381,7 +381,6 @@
                   </div>
                 </div>
               </div> -->
-<<<<<<< HEAD
         <div class="modal-footer">
           <!-- Ensure Edit button appears only if vehicle_id is defined -->
           <ng-container *ngIf="vehicleObj.vehicle_id !== null && vehicleObj.vehicle_id !== undefined; else saveButton">
@@ -390,16 +389,6 @@
               Edit
             </button>
           </ng-container>
-=======
-      
-    <div class="modal-footer">
-      <!-- Ensure Edit button appears only if vehicle_id is defined -->
-      <ng-container *ngIf="vehicleObj.vehicle_id !== null && vehicleObj.vehicle_id !== undefined; else saveButton">
-        <button type="button" class="btn btn-outline-primary" (click)="onUpdate()" [disabled]="!isVehicleNameChanged()">
-          Edit
-        </button>
-      </ng-container>
->>>>>>> cfe47b745b2bb83fd71f39bb0d96488efe3859f8
 
           <button type="button" class="btn btn-outline-danger" (click)="closeModal()">
             Close

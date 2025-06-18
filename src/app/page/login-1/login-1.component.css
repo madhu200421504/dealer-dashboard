@@ -300,8 +300,6 @@ a:hover {
         2. transform: translateY(): More precise for visual adjustments, can be combined with other transforms.
         3. Adjusting align-items or justify-content of its flex/grid parent: If its parent is a flex/grid container.
       */
-
-    
   }
 
   /* You might also need to adjust the illustration if it now looks too low */
@@ -356,13 +354,12 @@ input[type="password"]::-webkit-search-results-decoration {
 input[type="password"] {
   -moz-appearance: textfield;
 }
-<<<<<<< HEAD
 .div h5 {
   position: absolute;
   top: 12px;
   left: 10px;
   font-size: 16px;
-  color: #9ca3af; /* gray-400 */
+  color: #9ca3af; 
   pointer-events: none;
   transition: all 0.2s ease;
 }
@@ -384,10 +381,5 @@ input[type="password"] {
   height: 24px;
   display: inline-flex;
   align-items: center;
-=======
-
-.new-custom{
-  display: flex;
->>>>>>> cfe47b745b2bb83fd71f39bb0d96488efe3859f8
   justify-content: center;
 }
