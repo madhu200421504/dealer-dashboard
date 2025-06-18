@@ -42,7 +42,7 @@ export class TeamComponent {
   previousValue: string = '';
   totalPages: number = 0;
   // paginatedTeams: any[] = []; // your current paginated users (already existing)
-
+  isModalOpen = false;
   // Dependency injection
   masterSrv = inject(MasterService);
   private readonly toastr = inject(ToastrService);
@@ -72,8 +72,7 @@ export class TeamComponent {
   constructor(
     private aleartsrv: AleartSrvService,
     private cdr: ChangeDetectorRef
-  ) {    
-    
+  ) {
     this.initializeForm();
   }
 
@@ -161,6 +160,8 @@ export class TeamComponent {
   //   }
   openModal(team?: Teams) {
     console.log('✅ openModal() function called');
+
+    this.isModalOpen = true; // ✅ Required to show modal via *ngIf
 
     // Reset form and set edit mode
     this.useForm.reset();
@@ -624,9 +625,8 @@ export class TeamComponent {
       this.toastr.error('Invalid form data. Please check inputs.', 'Error');
     }
   }
-
   closeModal() {
-    ($('.bd-example-modal-lg') as any).modal('hide');
+    this.isModalOpen = false;
   }
 
   // Utility method to mark all form controls as touched

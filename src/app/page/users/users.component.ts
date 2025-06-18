@@ -62,6 +62,8 @@ export class UsersComponent implements OnInit {
   dealerList = signal<dealers[]>([]);
   totalDealer = signal<number>(0);
   // teamData: Team[] = [];
+  isModalOpen = false;
+
   teamList = signal<Teams[]>([]);
   totalteam = signal<number>(0);
   dealerObj: dealers = new dealers();
@@ -454,10 +456,12 @@ export class UsersComponent implements OnInit {
   min(a: number, b: number): number {
     return Math.min(a, b);
   }
-
   openModal(user?: UserList) {
     console.log('✅ openModal() function calledm of user');
     console.log('User object received in openModal:', user);
+
+    // Show the modal
+    this.isModalOpen = true;
 
     // Reset the form to clear previous data, but only reset the userObj in create mode
     if (!user) {
@@ -505,7 +509,6 @@ export class UsersComponent implements OnInit {
       // Create a new user object
       this.userObj = {} as UserList; // This will create an empty UserList object
     }
-   
   }
 
   // Handle dealer code change
@@ -806,9 +809,6 @@ export class UsersComponent implements OnInit {
     if (this.useForm.valid) {
       const formValues = this.useForm.value;
 
-
-
-      
       // Create the formatted name with proper space
       const formattedName = `${formValues.fname || ''} ${
         formValues.lname || ''
@@ -1065,6 +1065,7 @@ export class UsersComponent implements OnInit {
   // Close modal
   closeModal() {
     ($('.bd-example-modal-lg') as any).modal('hide');
+    this.isModalOpen = false; // optional, if you use isModalOpen conditionally in HTML
   }
 
   // Utility method to mark all form controls as touched

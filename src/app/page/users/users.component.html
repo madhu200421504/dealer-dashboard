@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="content-body">
     <!-- Breadcrumb -->
-    <div class="page-titles" >
+    <div class="page-titles">
       <ol class="breadcrumb">
         <li class="breadcrumb-item" style="margin-top:20px;">
           <a href="javascript:void(0)" style="cursor: auto">Users</a>
@@ -23,8 +23,12 @@
           <i class="fa fa-plus mr-1"></i>Add Users
         </a> -->
 
-        <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
+        <!-- <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
           data-target=".bd-example-modal-lg" data-backdrop="false"
+          class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
+          <i class="fa fa-plus mr-1"></i>Add Users
+        </a> -->
+        <a style="cursor: pointer; color: white !important" (click)="openModal()"
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
           <i class="fa fa-plus mr-1"></i>Add Users
         </a>
@@ -169,9 +173,9 @@
   </div>
 
   <!-- Add/Edit User Modal -->
-  <div id="userModal" class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true"
+  <div *ngIf="isModalOpen" class="modal d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5); z-index: 1050;">
     style="top: 18%; left: 8%;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" style="top:18%;">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title text-center w-100">

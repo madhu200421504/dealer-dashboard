@@ -3,8 +3,6 @@
   display: flex;
 }
 
-
-
 .sidebar-collapsed .content-body {
   margin-left: 7rem;
 }
@@ -17,14 +15,17 @@
 }
 
 @media (min-width: 2560px) {
+  .sidebar-collapsed .content-body {
+    margin-left: 336px !important;
+  }
+}
+
+@media (min-width: 1920px) {
   .content-body[_ngcontent-ng-c2215317147] {
     margin-left: 336px;
   }
 }
 
-
-
- 
 /* Adjust layout spacing based on sidebar */
 #main-wrapper {
   display: flex;
@@ -36,8 +37,6 @@
   width: 100%;
 }
 
-
-
 @media only screen and (min-width: 820px) and (max-width: 1024px) {
   .content-body {
     margin-left: 5rem;
@@ -48,11 +47,7 @@
   margin-left: 80px;
 } */
 
-
-
 /* Responsive */
-
-
 
 .content-section {
   padding: 20px;

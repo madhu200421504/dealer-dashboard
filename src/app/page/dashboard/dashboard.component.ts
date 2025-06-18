@@ -11,11 +11,15 @@ import {
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http';
-import { Chart, ChartType, registerables } from 'chart.js';
-import { FormsModule } from '@angular/forms';
 import {
+  Chart,
+  ChartType,
   LineController,
   LineElement,
+  registerables,
+} from 'chart.js';
+import { FormsModule } from '@angular/forms';
+import {
   PointElement,
   LinearScale,
   Title,
@@ -100,6 +104,7 @@ export class DashboardComponent implements OnInit {
   reservations: any[] = []; // your original data array
   filteredReservations: any[] = []; // the filtered array to bind to the table
   filterOption: 'today' | 'oneWeek' = 'today';
+  selectedType: string = ''; // Add this line to define selectedType
 
   testDrives: any[] = []; // <-- Declare testDrives here
   dashboardData: any = {
@@ -568,85 +573,64 @@ export class DashboardComponent implements OnInit {
 
   // Function to handle user (PS1) selection
   // Inside your component
-  selectUser(userId: string): void {
-    this.selectedPs1 = userId; // Store the selected user ID in PS1
-
-    // If the user selected in PS1 is also in PS2, update PS2 to reflect the same user
+  selectUser(userId: string) {
     if (this.selectedPs2.includes(userId)) {
-      this.selectedPs2 = [userId]; // Keep the user selected in PS2
-    }
-
-    console.log('Selected user in PS1:', userId);
-
-    // Close the dropdown after selecting a user
-    this.dropdownOpen1 = false;
-  }
-
-  isUserDisabledInPs2(userId: string): boolean {
-    return this.selectedPs1 === userId; // Now comparing both as strings
-  }
-
-  onSelectPs2(user: any): void {
-    console.log('PS2 user selected:', user);
-
-    // If PS1 is already selected, don't allow selection of the same user in PS2
-    if (this.selectedPs1 === user.user_id) {
-      console.log('User is already selected in PS1, cannot select in PS2');
-      return; // Prevent selection if the same user is in PS1
-    }
-
-    // Set the selected user for PS2
-    this.selectedPs2 = [user.user_id]; // Only one user can be selected in PS2 at a time
-    this.selectedPs2Names = [user.name]; // Store user name for display in PS2 dropdown
-
-    // Track which user should be ticked in PS1 based on PS2 selection
-    this.tickedUserInPs1 = user; // Mark this user as the ticked one in PS1 dropdown
-
-    console.log('Updated selected user in PS2:', this.selectedPs2);
-
-    // Fetching data for PS2 as per the selected user
-    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${user.user_id}&type=${this.selectedFilter}`;
-    console.log('Fetching PS2 data from URL:', url); // Log URL for debugging
-
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-      console.error('No token found in sessionStorage');
+      console.warn('❌ User already selected in PS2, not assigning to PS1');
       return;
     }
 
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
+    this.selectedPs1 = userId;
+    this.dropdownOpen1 = false;
 
-    // Make API call to fetch PS2 data
+    if (this.activeFilter) {
+      this.fetchPs1Data(userId, this.activeFilter); // ✅ PS1-specific method
+    }
+  }
+  fetchPs1Data(userId: string, filterType: string) {
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}&type=${filterType}`;
+    const token = sessionStorage.getItem('token');
+    if (!token) return;
+
+    const headers = { Authorization: `Bearer ${token}` };
+
     this.http.get<any>(url, { headers }).subscribe({
       next: (data) => {
-        console.log('API response for PS2:', data);
+        const performance = data?.data?.performance?.[0];
+        if (performance) {
+          this.enquiriesCount = performance.enquiries ?? 0;
+          this.testDrivesCount = performance.testDrives ?? 0;
+          this.newOrdersCount = performance.newOrders ?? 0;
+          this.cancellationsCount = performance.cancellations ?? 0;
+          this.netOrdersCount = performance.netOrders ?? 0;
+          this.retailCount = performance.retail ?? 0;
+        }
+      },
+      error: (err) => console.error('PS1 API error:', err),
+    });
+  }
+  fetchPs2Data(userId: string, filterType: string) {
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}&type=${filterType}`;
+    const token = sessionStorage.getItem('token');
+    if (!token) return;
 
+    const headers = { Authorization: `Bearer ${token}` };
+
+    this.http.get<any>(url, { headers }).subscribe({
+      next: (data) => {
         const performance = data?.data?.performance?.[0];
         if (performance) {
           this.enquiriesCountPs2 = performance.enquiries ?? 0;
           this.testDrivesCountPs2 = performance.testDrives ?? 0;
-          this.ps2Total = this.enquiriesCountPs2; // for bar % if needed
-
-          console.log('PS2 Enquiries:', this.enquiriesCountPs2);
-          console.log('PS2 Test Drives:', this.testDrivesCountPs2);
-        } else {
-          console.warn('No performance data found for PS2');
-          this.enquiriesCountPs2 = 0;
-          this.testDrivesCountPs2 = 0;
-          this.ps2Total = 0;
+          this.newOrdersCountPs2 = performance.newOrders ?? 0;
+          this.cancellationsCountPs2 = performance.cancellations ?? 0;
+          this.netOrdersCountPs2 = performance.netOrders ?? 0;
+          this.retailCountPs2 = performance.retail ?? 0;
         }
       },
-      error: (err) => {
-        console.error('Failed to fetch PS2 data', err);
-      },
+      error: (err) => console.error('PS2 API error:', err),
     });
   }
 
-  showMoreItems() {
-    this.showingLimit += 10;
-  }
   // Function to make the API call based on user and filter
   fetchFilteredData(userId: string, filterType: string) {
     const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}&type=${filterType}`;
@@ -716,6 +700,170 @@ export class DashboardComponent implements OnInit {
       },
     });
   }
+
+  isUserDisabledInPs2(userId: string): boolean {
+    return this.selectedPs1 === userId; // Now comparing both as strings
+  }
+
+  onSelectPs2(user: any): void {
+    console.log('PS2 user selected:', user);
+
+    // If PS1 is already selected, don't allow selection of the same user in PS2
+    if (this.selectedPs1 === user.user_id) {
+      console.log('User is already selected in PS1, cannot select in PS2');
+      return; // Prevent selection if the same user is in PS1
+    }
+
+    // Set the selected user for PS2
+    this.selectedPs2 = [user.user_id]; // Only one user can be selected in PS2 at a time
+    this.selectedPs2Names = [user.name]; // Store user name for display in PS2 dropdown
+
+    // Track which user should be ticked in PS1 based on PS2 selection
+    this.tickedUserInPs1 = user; // Mark this user as the ticked one in PS1 dropdown
+
+    console.log('Updated selected user in PS2:', this.selectedPs2);
+
+    // Fetching data for PS2 as per the selected user
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${user.user_id}&type=${this.selectedFilter}`;
+    console.log('Fetching PS2 data from URL:', url); // Log URL for debugging
+
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in sessionStorage');
+      return;
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    // Make API call to fetch PS2 data
+    this.http.get<any>(url, { headers }).subscribe({
+      next: (data) => {
+        console.log('API response for PS2:', data);
+
+        const performance = data?.data?.performance?.[0];
+        if (performance) {
+          this.enquiriesCountPs2 = performance.enquiries ?? 0;
+          this.testDrivesCountPs2 = performance.testDrives ?? 0;
+          this.ps2Total = this.enquiriesCountPs2; // for bar % if needed
+
+          console.log('PS2 Enquiries:', this.enquiriesCountPs2);
+          console.log('PS2 Test Drives:', this.testDrivesCountPs2);
+        } else {
+          console.warn('No performance data found for PS2');
+          this.enquiriesCountPs2 = 0;
+          this.testDrivesCountPs2 = 0;
+          this.ps2Total = 0;
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch PS2 data', err);
+      },
+    });
+  }
+
+  showMoreItems() {
+    this.showingLimit += 10;
+  }
+  isPs1User(userId: string): boolean {
+    return this.selectedPs1 === userId;
+  }
+  handlePs2Click(user: any): void {
+    if (!this.isPs1User(user.user_id)) {
+      this.selectedPs2 = [user.user_id]; // or handle multiple
+      this.selectedPs2Names = [user.name];
+      this.dropdownOpen2 = false;
+
+      if (this.activeFilter) {
+        this.fetchPs2Data(user.user_id, this.activeFilter); // ✅ correct method
+      }
+    }
+  }
+
+  isUserSelectedInPs2(userId: string): boolean {
+    return this.selectedPs2.includes(userId);
+  }
+
+  // Click handler for PS1 dropdown
+  handlePs1Click(user: any): void {
+    if (!this.isUserSelectedInPs2(user.user_id)) {
+      this.selectUser(user.user_id); // ✅ Only call if not already selected in PS2
+      this.dropdownOpen1 = false;
+    } else {
+      console.log('User is already in PS2, not selecting for PS1');
+    }
+  }
+
+  // Function to make the API call based on user and filter
+  // fetchFilteredData(userId: string, filterType: string) {
+  //   const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}&type=${filterType}`;
+  //   const token = sessionStorage.getItem('token');
+
+  //   if (!token) {
+  //     console.error('No token found in sessionStorage');
+  //     return;
+  //   }
+
+  //   const headers = {
+  //     Authorization: `Bearer ${token}`,
+  //   };
+
+  //   console.log('Calling API with URL:', url);
+
+  //   // Making the API call
+  //   this.http.get<any>(url, { headers }).subscribe({
+  //     next: (data) => {
+  //       // Log the API response for debugging
+  //       console.log('API response:', data);
+
+  //       if (data && data.data) {
+  //         const dashboardData = data.data;
+
+  //         // ✅ Correctly map KPI values from performance[0]
+  //         const performance = dashboardData.performance?.[0];
+  //         if (performance) {
+  //           this.enquiriesCount = performance.enquiries ?? 0;
+  //           this.testDrivesCount = performance.testDrives ?? 0;
+  //           this.newOrdersCount = performance.newOrders ?? 0;
+  //           this.cancellationsCount = performance.cancellations ?? 0;
+  //           this.netOrdersCount = performance.netOrders ?? 0;
+  //           this.retailCount = performance.retail ?? 0;
+
+  //           this.isUserSelected = true; // Important!
+  //           this.cdr.detectChanges(); // Force refresh if needed
+  //         } else {
+  //           console.warn('No performance data found');
+  //           this.enquiriesCount = 0;
+  //           this.testDrivesCount = 0;
+  //           this.newOrdersCount = 0;
+  //           this.cancellationsCount = 0;
+  //           this.netOrdersCount = 0;
+  //           this.retailCount = 0;
+  //         }
+
+  //         // Logging the values for debugging
+  //         console.log('Enquiries:', this.enquiriesCount);
+  //         console.log('Test Drives:', this.testDrivesCount);
+  //         console.log('New Orders:', this.newOrdersCount);
+  //         console.log('Cancellations:', this.cancellationsCount);
+  //         console.log('Net Orders:', this.netOrdersCount);
+  //         console.log('Retail:', this.retailCount);
+
+  //         // Optionally log best performance
+  //         const bestPerformance = dashboardData.allIndiaBestPerformace;
+  //         if (bestPerformance) {
+  //           console.log('Best performance data:', bestPerformance);
+  //         }
+  //       } else {
+  //         console.error('No valid dashboard data found');
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('Error fetching data:', error);
+  //     },
+  //   });
+  // }
 
   fetchCounts(userId: string, filterType: string = '') {
     let url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}`;

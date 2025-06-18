@@ -26,6 +26,8 @@ export class RoleComponent implements OnInit {
   roleList = signal<Role[]>([]);
   count = signal<number>(0);
   totalRoles = signal<number>(0);
+  isModalOpen = false;
+
   // roles = []; // Assuming roles are fetched from an API or database
   // filteredRoles = []; // Holds the filtered roles for search
   // paginatedRoles = []; // Holds roles to display in the current page
@@ -86,18 +88,14 @@ export class RoleComponent implements OnInit {
     });
   }
 
+  // Close modal
   closeModal() {
-    console.log('Closing modal...');
-    ($('.bd-example-modal-lg') as any).modal('hide');
+    this.isModalOpen = false; // optional, if you use isModalOpen conditionally in HTML
   }
-
-  openModals(role?: Role) {
-    console.log('✅ openModals() function called for Role');
-    console.log('Role object received in openModals:', role);
-
-    if (!role) {
-      this.roleObj = {} as Role;
-    }
+  openModal(role?: Role) {
+    console.log('✅ openModal() function called for Role');
+    console.log('Role object received in openModal:', role);
+    this.isModalOpen = true;
 
     this.useForm.reset();
     this.isEditMode = !!role;
@@ -108,19 +106,10 @@ export class RoleComponent implements OnInit {
         role_name: role.role_name || '',
         description: role.description || '',
       });
-      console.log('Role information:', role);
       this.roleObj = { ...role };
     } else {
       this.roleObj = {} as Role;
     }
-
-    // ✅ Corrected: backdrop should be boolean false, not string 'false'
-    ($('.bd-example-modal-lg') as any)
-      .modal({
-        backdrop: false, // ✅ no quotes
-        keyboard: false,
-      })
-      .modal('show');
   }
 
   private loadRole(): void {

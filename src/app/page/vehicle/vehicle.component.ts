@@ -71,6 +71,8 @@ export class VehicleComponent implements OnInit {
   isModalVisible = false;
   isEditMode = false;
   previousValue: string = '';
+  isModalOpen = false;
+
   filteredVehicle: any[] = [];
   // vehicles: Vehicle[] = []; // All vehicle records
   // filteredVehicles: Vehicle[] = []; // Filtered by search
@@ -168,6 +170,7 @@ export class VehicleComponent implements OnInit {
   // }
   openModal(vehicle?: Vehicle) {
     console.log('✅ openModal() function called');
+    this.isModalOpen = true;
 
     // Reset form and set edit mode
     this.useForm.reset();
@@ -837,6 +840,7 @@ export class VehicleComponent implements OnInit {
   // Close modal
   closeModal() {
     ($('.bd-example-modal-lg') as any).modal('hide');
+    this.isModalOpen = false; // optional, if you use isModalOpen conditionally in HTML
   }
   // onEdit(vehicle: Vehicle) {
   //   console.log('Edit button clicked. Team ID:', vehicle?.vehicle_id); // Debug log

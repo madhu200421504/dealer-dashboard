@@ -160,8 +160,8 @@
     </div>
   </div>
   <!-- Modal -->
-  <div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true"  style="top: 12.1%; left: 8%;">
-    <div class="modal-dialog modal-lg">
+  <div *ngIf="isModalOpen" class="modal d-block" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-lg" style="top:18%;">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" style="align-items: center; margin-inline: auto">
