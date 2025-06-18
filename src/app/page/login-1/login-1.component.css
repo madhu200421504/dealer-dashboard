@@ -362,3 +362,33 @@ input[type="password"] {
   display: flex;
   justify-content: center;
 }
+
+.div h5 {
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  font-size: 16px;
+  color: #9ca3af; 
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.div h5.floating {
+  top: -10px;
+  left: 5px;
+  font-size: 12px;
+  color: #3b86e9;
+  background: white;
+  padding: 0 5px;
+  z-index: 10;
+}
+.icon11 {
+  z-index: 10;
+  position: relative;
+  pointer-events: auto;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

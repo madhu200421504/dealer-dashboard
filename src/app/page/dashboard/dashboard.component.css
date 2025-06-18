@@ -441,6 +441,10 @@ table td {
   }
 } */
 
+.nav-button:hover{
+  background-color: grey;
+}
+
 .main-content {
   /* margin-left: 250px; */
   background-color: #f9f9f9;
