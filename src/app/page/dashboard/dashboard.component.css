@@ -17,7 +17,7 @@
   .sidebar {
     display: none; 
   }
-
+re
   .content-body {
     margin-left: 0; 
     padding: 10px; 
@@ -41,7 +41,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 100px;
+  margin-top: 50px !important;
   /* width: 1500px; */
 }
 
@@ -445,11 +445,13 @@ table td {
   background-color: grey;
 }
 
+
+
 .main-content {
   /* margin-left: 250px; */
   background-color: #f9f9f9;
   /* min-height: 100vh; */
-  padding: 20px;
+  /* padding: 20px; */
   /* width: 1500px;  */
   /* or */
   /* min-width: 1600px; */
@@ -463,7 +465,6 @@ table td {
 :host ::ng-deep .header {
   width: 100% !important;
   max-width: 100% !important;
-  margin: 0 auto !important;
   transition: width 0.3s ease, margin-left 0.3s ease !important;
   z-index: auto !important;
 }
@@ -810,6 +811,8 @@ table th {
     gap: 8px;
   }
 
+  
+
   .nav-button {
     width: 90%;
     font-size: 14px;
@@ -905,6 +908,8 @@ table th {
   /* margin-right: 20px; */
   padding-top: 10px;
 }
+
+
 
 .time-filters {
   display: flex;
@@ -1369,14 +1374,14 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
 .sidebar.closed ~ .dashboard-container,
 .sidebar.closed ~ .header,
 .sidebar.closed ~ .dashboard-content {
-  margin-left: 80px;
+  margin-left: 7rem;
 }
 
 @media (max-width: 768px) {
   .dashboard-container,
   .header,
   .dashboard-content {
-    margin-left: 0;
+    /* margin-left: 20px; */
   }
 }
 
@@ -1418,7 +1423,7 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
 
 @media (max-width: 768px) {
   .dashboard-container {
-    margin-left: 0;
+    margin-left: 20px;
   }
 
   .nav-buttons {

@@ -258,6 +258,8 @@ body {
   background-color: #fbfbfb;
 }
 
+
+
 [tabindex="-1"]:focus {
   outline: 0 !important;
 }
@@ -17205,7 +17207,7 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
 
 @media only screen and (max-width: 1600px) {
   .content-body {
-    margin-left: 7rem;
+    /* margin-left: 7rem; */
   }
 }
 
@@ -18142,7 +18144,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .header {
-  padding-left: 7.5rem;
+  /* padding-left: 7.5rem; */
   width: 100%;
 }
 

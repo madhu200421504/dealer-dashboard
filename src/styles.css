@@ -2,6 +2,11 @@
 /* You can add global styles to this file, and also import other style files */
 /* @import "node_modules/datatables.net-dt/css/jquery.dataTables.min.css"; */
 
+:host {
+  /* font-family: 'Poppins', sans-serif !important; */
+  font-family: 'Inter', 'Roboto', sans-serif !important;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -101,7 +106,7 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  /* font-family: Roboto, "Helvetica Neue", sans-serif; */
 }
 /* * {
   outline: 1px solid red !important;
@@ -560,3 +565,4 @@ select.selectpicker {
   top: 31% !important;
   left: 8% !important;
 }
+

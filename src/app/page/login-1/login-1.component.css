@@ -301,8 +301,6 @@ a:hover {
         2. transform: translateY(): More precise for visual adjustments, can be combined with other transforms.
         3. Adjusting align-items or justify-content of its flex/grid parent: If its parent is a flex/grid container.
       */
-
-    
   }
 
   /* You might also need to adjust the illustration if it now looks too low */
