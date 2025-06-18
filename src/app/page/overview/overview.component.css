@@ -3,20 +3,16 @@
   display: flex;
 }
 
-.content-body {
-  margin-left: 250px;
-  transition: margin-left 0.3s ease;
-  width: 100%;
-}
+
 
 .sidebar-collapsed .content-body {
   margin-left: 80px;
 }
 
-/* Responsive */
+/* Responsive mini tablet*/
 @media (max-width: 768px) {
   .content-body {
-    margin-left: 0 !important;
+    margin-left: 42px !important;
   }
 }
 
@@ -32,16 +28,18 @@
   width: 100%;
 }
 
+@media only screen and (min-width: 820px) and (max-width: 1024px) {
+  .content-body {
+    margin-left: 5rem;
+  }
+}
+
 .sidebar-collapsed .content-body {
   margin-left: 80px;
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-  .content-body {
-    margin-left: 0 !important;
-  }
-}
+
 
 
 .content-section {

@@ -79,8 +79,8 @@ body {
 }
 
 .dashboard-content {
-  padding: 1rem;
-  margin-top: 120px;
+  /* padding: 1rem; */
+  /* margin-top: 120px; */
 }
 
 .metrics-container {
@@ -152,7 +152,7 @@ body {
   text-align: center;
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  /* margin-bottom: 0.5rem; */
 }
 
 .time-filters {
@@ -282,10 +282,10 @@ body {
 } */
 
 .performance-panels {
-  width: 69vw;
+  /* width: 69vw; */
   /* full viewport width */
-  max-width: none !important;
-  margin: 0 auto 1.5rem;
+  /* max-width: none !important; */
+  /* margin: 0 auto 1.5rem; */
   display: flex;
   gap: 3.5rem;
   box-sizing: border-box;
@@ -296,10 +296,10 @@ body {
   flex: 1;
   /* Each panel takes equal width */
   background-color: #e6e6e6;
-  padding: 1.5rem;
-  border-radius: 8px;
-  height: 600px;
-  padding-bottom: 300px; /* <-- Add this */
+  /* padding: 1.5rem; */
+  /* border-radius: 8px; */
+  /* height: 600px; */
+  /* padding-bottom: 300px;  */
 
   /* width: 6000px !important; */
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); */
@@ -421,7 +421,7 @@ body {
 }
 
 .content-section {
-  padding: 20px;
+  /* padding: 20px; */
   margin-top: 70px;
   /* Space for fixed header */
 }
@@ -509,7 +509,7 @@ body {
 
 .filters-title {
   font-weight: bold;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 .time-filters {
@@ -621,7 +621,7 @@ table th {
 }
 
 .content-section {
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 /* HOME CSS */
@@ -897,13 +897,14 @@ table th {
 
 .filters-title {
   font-weight: bold;
-  margin-right: 20px;
+  /* margin-right: 20px; */
+  padding-top: 10px;
 }
 
 .time-filters {
   display: flex;
   gap: 10px;
-  margin-right: 20px;
+  /* margin-right: 20px; */
 }
 
 .filter-button {
@@ -1136,7 +1137,7 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
 }
 
 /* Tablet: stack in two columns */
-@media only screen and (min-width: 601px) and (max-width: 1024px) {
+/* @media only screen and (min-width: 601px) and (max-width: 1024px) {
   .metrics-row {
     width: 100% !important;
     flex-wrap: wrap;
@@ -1144,16 +1145,18 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   }
 
   .metric-box {
-    width: calc(50% - 15px) !important; /* two columns with gap */
+    width: calc(50% - 15px) !important; 
     box-sizing: border-box;
   }
 
-  /* Last filter box can be full width on tablet for clarity */
   .metric-box:last-child {
     width: 100% !important;
   }
-}
+} */
 /* THE ABOVE CODE IS FIXED */
+
+
+
 
 @media (max-width: 600px) {
   .performance-panels {
@@ -1377,7 +1380,7 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
 
 .dashboard-container {
   /* margin-left: 250px; */
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 .header {
@@ -1417,7 +1420,7 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   }
 
   .nav-buttons {
-    flex-direction: column;
+    /* flex-direction: column; */
     align-items: stretch;
   }
 
