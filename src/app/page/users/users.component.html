@@ -19,6 +19,10 @@
           data-target=".bd-example-modal-lg"
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons"><i class="fa fa-plus mr-1"></i>Add
           Users</a> -->
+        <!-- <a (click)="openModal()" class="btn btn-primary" style="cursor: pointer; color: white !important;">
+          <i class="fa fa-plus mr-1"></i>Add Users
+        </a> -->
+
         <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
           data-target=".bd-example-modal-lg" data-backdrop="false"
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
@@ -60,9 +64,9 @@
             </div>
 
 
-            <div class="col-md-6 d-flex justify-content-end align-items-center searchbar" >
-              <input type="text" class="form-control search-input" style="width: 250px; "
-                placeholder="Search users..." [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+            <div class="col-md-6 d-flex justify-content-end align-items-center">
+              <input type="text" class="form-control search-input" style="width: 250px; ;" placeholder="Search users..."
+                [(ngModel)]="searchTerm" (input)="onSearchChange()" />
             </div>
 
           </div>
@@ -98,9 +102,9 @@
                         class="btn btn-primary shadow btn-xs sharp mr-1" data-backdrop="false" (click)="onEdit(user)"><i
                           class="fa fa-pencil"></i></a>
                       <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
-                        data-toggle="modal" data-target=".bd-example-modal-sm"  data-backdrop="false" (click)="selectUserForDeletion(user)"><i
-                          class="fa fa-trash" ></i></a>
-                    </div>   
+                        data-toggle="modal" data-target=".bd-example-modal-sm" data-backdrop="false"
+                        (click)="selectUserForDeletion(user)"><i class="fa fa-trash"></i></a>
+                    </div>
                   </td>
                 </tr>
 
@@ -165,7 +169,8 @@
   </div>
 
   <!-- Add/Edit User Modal -->
-  <div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true" style="top: 18%; left: 8%;">
+  <div id="userModal" class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true"
+    style="top: 18%; left: 8%;">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -221,7 +226,7 @@
                     useForm.get('role_name')?.touched &&
                     useForm.get('role_name')?.invalid
                 }">
-                  <option value="" disabled selected>Select Role</option>
+                  <option [ngValue]="null" disabled hidden>Select Role</option>
                   <option *ngFor="let role of roleList()" [value]="role.role_id">
                     {{ role.role_name }}
                   </option>
@@ -261,7 +266,7 @@
                     useForm.get('team_name')?.touched &&
                     useForm.get('team_name')?.invalid
                 }">
-                  <option value="" disabled selected>Select team name</option>
+                  <option value="null" disabled hidden>Select team name</option>
                   <option *ngFor="let team of teamList()" [value]="team.team_id">
                     {{ team.team_name }}
                   </option>

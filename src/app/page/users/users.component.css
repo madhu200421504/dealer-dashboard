@@ -83,13 +83,13 @@ body {
   border-radius: 10px;
 }
 /* Add this to your styles.css or component styles */
-.modal-backdrop {
+/* .modal-backdrop {
   z-index: 1040 !important;
 }
 
 .modal {
   z-index: 1050 !important;
-}
+} */
 /* Base (Desktop) */
 .search-wrapper {
   display: flex;
@@ -109,16 +109,16 @@ body {
     margin-top: 10px;
   }
 }
-.modal-backdrop {
+/* .modal-backdrop {
   display: none !important;
-}
+} */
 
 @media only screen and (max-width: 1600px) {
-    .content-body {
-        margin-left: 0;
-    }
+  .content-body {
+    margin-left: 0;
+  }
 }
-.searchbar{
+.searchbar {
   display: flex;
   float: right;
 }

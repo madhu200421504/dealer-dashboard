@@ -100,6 +100,7 @@ export class DashboardComponent implements OnInit {
   reservations: any[] = []; // your original data array
   filteredReservations: any[] = []; // the filtered array to bind to the table
   filterOption: 'today' | 'oneWeek' = 'today';
+
   testDrives: any[] = []; // <-- Declare testDrives here
   dashboardData: any = {
     tableTestDrives_today: [],
@@ -276,6 +277,9 @@ export class DashboardComponent implements OnInit {
     this.fetchUsers();
     this.fetchDashboardData();
     this.loadTestDriveData();
+    this.onFilterOptionChange(); // Apply default filter on load
+    this.initializeFilters();
+
     this.searchText = '';
     this.filteredUsers = []; // start empty
     this.filteredTableTestDrives = this.data.tableTestDrives_today; // Make sure this line exists
@@ -997,30 +1001,33 @@ export class DashboardComponent implements OnInit {
     // Load upcoming if needed
     this.upcomingTestDrives = this.selectedUser.upcomingTestDrives || [];
   }
-
   loadFilteredTestDrives(filter: 'today' | 'oneWeek') {
     if (!this.fullData || !this.selectedUser) {
       this.testDrives = [];
+      this.filteredTableTestDrives = [];
       return;
     }
 
     const selectedUserName = this.selectedUser.name.toLowerCase();
 
-    if (filter === 'today') {
-      this.testDrives = (this.fullData.tableTestDrives_today || []).filter(
-        (td) => td.assigned_to?.toLowerCase() === selectedUserName
-      );
-    } else if (filter === 'oneWeek') {
-      this.testDrives = (this.fullData.tableTestDrives_oneweek || []).filter(
-        (td) => td.assigned_to?.toLowerCase() === selectedUserName
-      );
-    } else if (filter === 'all') {
-      this.testDrives = [
-        ...(this.fullData.tableTestDrives_today || []),
-        ...(this.fullData.tableTestDrives_oneweek || []),
-      ].filter((td) => td.assigned_to?.toLowerCase() === selectedUserName);
+    switch (filter) {
+      case 'today':
+        this.testDrives = [...(this.fullData.tableTestDrives_today || [])];
+        break;
+
+      case 'oneWeek':
+        this.testDrives = [...(this.fullData.tableTestDrives_oneweek || [])];
+        break;
+
+      default:
+        this.testDrives = [];
     }
+
+    // Sync data with the table
+    this.filteredTableTestDrives = [...this.testDrives];
+    this.currentPage = 1;
   }
+
   // applyTableFilters() {
   //   this.loadFilteredTestDrives(this.filterOption);
   //   this.currentPage = 1;
@@ -1044,8 +1051,6 @@ export class DashboardComponent implements OnInit {
       apiUrl = 'https://your-api.com/users?filter=today';
     } else if (this.filterOption === 'oneWeek') {
       apiUrl = 'https://your-api.com/users?filter=oneWeek';
-    } else {
-      apiUrl = 'https://your-api.com/users?filter=all';
     }
 
     this.http.get(apiUrl).subscribe(
@@ -1370,6 +1375,23 @@ export class DashboardComponent implements OnInit {
   //     this.filteredTableTestDrives.length / this.itemsPerPage
   //   );
   // }
+  // onFilterOptionChange(): void {
+  //   if (this.filterOption === 'today') {
+  //     this.filteredTableTestDrives = [...this.testDrivesToday];
+  //   } else if (this.filterOption === 'oneWeek') {
+  //     this.filteredTableTestDrives = [...this.testDrivesOneWeek];
+  //   }
+
+  //   // Reset pagination (optional)
+  //   this.currentPage = 1;
+  // }
+
+  initializeFilters(): void {
+    // Set default filter option and apply it
+    this.filterOption = 'today';
+    this.onFilterOptionChange();
+  }
+
   onFilterOptionChange(): void {
     if (this.filterOption === 'today') {
       this.filteredTableTestDrives = [...this.testDrivesToday];
@@ -1377,9 +1399,14 @@ export class DashboardComponent implements OnInit {
       this.filteredTableTestDrives = [...this.testDrivesOneWeek];
     }
 
-    // Reset pagination (optional)
+    // Reset pagination
     this.currentPage = 1;
   }
+
+  // getPaginatedTableData(): any[] {
+  //   // Your existing pagination logic here
+  //   return this.filteredTableTestDrives; // Make sure this returns filtered data
+  // }
 
   paginateTableData(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -1418,13 +1445,13 @@ export class DashboardComponent implements OnInit {
             ...this.testDrivesOneWeek,
           ];
 
-          // 👇 Fix: Set default filtered data
-          this.filteredTableTestDrives = [...this.testDrivesToday];
-
           this.fullUsers = response.data.user || [];
           this.users = [...this.fullUsers];
 
-          // this.applyTableFilters(); // Apply initial filters if any
+          // ✅ Set default filter to Today
+          this.filterOption = 'today';
+          this.filteredTableTestDrives = [...this.testDrivesToday];
+          this.currentPage = 1; // reset pagination if applicable
         },
         error: (error) => {
           console.error('API error:', error);

@@ -2733,6 +2733,9 @@ textarea.form-control.is-invalid {
   padding-right: calc(1.5em + 0.75rem);
   background-position: top calc(0.375em + 0.1875rem) right calc(0.375em + 0.1875rem);
 }
+.form-control.is-invalid {
+  border-color: #ff2625 !important;
+}
 
 .was-validated .custom-select:invalid,
 .custom-select.is-invalid {
@@ -56938,7 +56941,6 @@ input[type="checkbox"]:checked:after {
 
 .form-control.is-invalid {
   border-color: #ff2625 !important;
-  border-right: 0px !important;
 }
 
 .form-control.is-invalid:focus {

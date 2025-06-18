@@ -505,6 +505,7 @@ export class UsersComponent implements OnInit {
       // Create a new user object
       this.userObj = {} as UserList; // This will create an empty UserList object
     }
+   
   }
 
   // Handle dealer code change
@@ -805,6 +806,9 @@ export class UsersComponent implements OnInit {
     if (this.useForm.valid) {
       const formValues = this.useForm.value;
 
+
+
+      
       // Create the formatted name with proper space
       const formattedName = `${formValues.fname || ''} ${
         formValues.lname || ''

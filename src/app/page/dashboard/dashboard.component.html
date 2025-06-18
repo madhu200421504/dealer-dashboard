@@ -38,6 +38,7 @@
 
 
 
+
           <!-- User Icons Grid (Only Big Initial Circles) -->
           <!-- Show Initials Circles Always -->
           <div *ngIf="filteredUsers.length > 0 || noResultsFound === false"
@@ -167,37 +168,61 @@
                         <th>Field</th>
 
                         <!-- Today Column -->
-                        <th>
+                        <!-- <th>
                           <div class="d-flex align-items-center justify-content-center gap-2">
                             <label style="margin: 0; font-weight: 500;">Today</label>
                             <ng-container *ngIf="todayTestDrives.length > 1">
                               <select id="todaySelect" class="form-select form-select-sm"
                                 style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedTodayIndex">
                                 <option *ngFor="let t of todayTestDrives; let i = index" [value]="i">
-                                  Today {{ i + 1 }}
+                                  {{ i + 1 }}
+                                </option>
+                              </select>
+                            </ng-container>
+                          </div>
+                        </th> -->
+                        <th>
+                          <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <label style="margin: 0; font-weight: 500;">Today</label>
+                            <ng-container *ngIf="todayTestDrives.length > 1">
+                              <select id="todaySelect" class="form-select form-select-sm"
+                                style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedTodayIndex">
+                                <option *ngFor="let t of todayTestDrives; let i = index" [value]="i">
+                                  {{ i + 1 }}
                                 </option>
                               </select>
                             </ng-container>
                           </div>
                         </th>
 
-
                         <!-- Upcoming Column -->
                         <!-- Upcoming Column -->
-                        <th>
+                        <!-- <th>
                           <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
                             <label style="margin: 0; font-weight: 500;">Upcoming</label>
                             <ng-container *ngIf="upcomingTestDrives.length > 1">
                               <select id="upcomingSelect" class="form-select form-select-sm"
                                 style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedUpcomingIndex">
                                 <option *ngFor="let u of upcomingTestDrives; let i = index" [value]="i">
-                                  Upcoming {{ i + 1 }}
+                                  {{ i + 1 }}
+                                </option>
+                              </select>
+                            </ng-container>
+                          </div>
+                        </th> -->
+                        <th>
+                          <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <label style="margin: 0; font-weight: 500;">Upcoming</label>
+                            <ng-container *ngIf="upcomingTestDrives.length > 1">
+                              <select id="upcomingSelect" class="form-select form-select-sm"
+                                style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedUpcomingIndex">
+                                <option *ngFor="let u of upcomingTestDrives ; let i = index" [value]="i">
+                                  {{ i + 1 }}
                                 </option>
                               </select>
                             </ng-container>
                           </div>
                         </th>
-
                         <!-- Overdue Column -->
                         <th>
                           <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
@@ -363,6 +388,7 @@
             <option value="today">Today</option>
             <option value="oneWeek">Upcoming Week</option>
           </select>
+
 
           <!-- <div style="display: flex; gap: 4px; align-items: center;">
               <button (click)="filterOption = 'today'; applyTableFilters()"
