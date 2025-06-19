@@ -13,8 +13,12 @@
       </li>
 
       <li>
-        <a style="cursor: pointer;" class="has-arrow ai-icon" aria-expanded="false">
+        <!-- <a style="cursor: pointer;" class="has-arrow ai-icon" aria-expanded="false"> -->
+        <a style="cursor: pointer;" class="has-arrow ai-icon" (click)="toggleMastersMenu()"
+          [attr.aria-expanded]="isMastersOpen">
           <i class="flaticon-381-television"></i>
+
+
           <span class="nav-text">Masters</span>
         </a>
         <ul aria-expanded="false">

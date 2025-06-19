@@ -13,6 +13,7 @@ import { ContextService } from '../../service/context.service';
 })
 export class SidebarComponent {
   selectedValue: string = '';
+  isMastersOpen = false;
 
   constructor(private router: Router, private context: ContextService) {}
 
@@ -24,6 +25,9 @@ export class SidebarComponent {
     this.context.onSideBarClick$.next({ role, pageTitle });
   }
 
+  toggleMastersMenu() {
+    this.isMastersOpen = !this.isMastersOpen;
+  }
   view(page: any) {
     this.router.navigate(['../Admin/' + page]);
   }
