@@ -167,9 +167,13 @@
           <h5 class="modal-title" style="align-items: center; margin-inline: auto">
             {{ vehicleObj.vehicle_id ? "Edit Vehicle" : "Add New Vehicle" }}
           </h5>
-          <button type="button" class="close" (click)="closeModal()" data-dismiss="modal">
+          <!-- <button type="button" class="close" (click)="closeModal()" data-dismiss="modal">
+            <span class="x">&times;</span>
+          </button> -->
+          <button type="button" class="close" (click)="closeModal()">
             <span class="x">&times;</span>
           </button>
+
         </div>
 
         <div class="modal-body" [formGroup]="useForm">
