@@ -154,9 +154,10 @@
             <div class="row">
               <!-- Name -->
               <div class="col-md-6 form-group">
-                <label for="role_name" class="form-label">role Name</label>
-                <input id="role_name" class="form-control form-control-lg" type="text" formControlName="role_name"
-                  placeholder="Role Name" [ngClass]="{
+                <label for="role_name" class="form-label">
+                  Role Name <span class="text-danger">*</span> </label> <input id="role_name"
+                  class="form-control form-control-lg" type="text" formControlName="role_name" placeholder="Role Name"
+                  [ngClass]="{
                   'is-invalid':
                     useForm.get('role_name')?.touched &&
                     useForm.get('role_name')?.invalid
@@ -168,8 +169,9 @@
                 </div>
               </div>
               <div class="col-md-6 form-group">
-                <label for="description" class="form-label">description</label>
-                <input id="description" class="form-control form-control-lg" type="text" formControlName="description"
+                <label for="role_name" class="form-label">
+                  Description <span class="text-danger">*</span> </label> <input id="description"
+                  class="form-control form-control-lg" type="text" formControlName="description"
                   placeholder=" Description" [ngClass]="{
                                 'is-invalid':
                                   useForm.get('description')?.touched &&
@@ -181,9 +183,11 @@
                   <span *ngIf="useForm.get('description')?.errors?.['required']">description is required.</span>
                 </div>
               </div>
+            </div>
 
-              <!-- LAST NAME -->
-              <!-- <div class="col-md-6 form-group">
+
+            <!-- LAST NAME -->
+            <!-- <div class="col-md-6 form-group">
               <label for="team_lead_email" class="form-label">Team Lead</label>
               <select id="team_lead_email" class="form-control form-control-lg" formControlName="team_lead_email"
                 (change)="onTeamChange()" [ngClass]="{
@@ -207,27 +211,29 @@
             </div> -->
 
 
-              <!-- ROLE -->
+            <!-- ROLE -->
 
 
-              <div class="modal-footer">
-                <ng-container *ngIf="roleObj.role_id; else saveButton">
-                  <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
-                    [disabled]="!isRoleNameChanged()">
-                    Edit
-                  </button>
-                </ng-container>
-                <button type="button" class="btn btn-outline-danger" data-dismiss="modal" (click)="closeModal()">
-                  Close
+            <div class="modal-footer">
+              <ng-container *ngIf="roleObj.role_id; else saveButton">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
+                  [disabled]="!isRoleNameChanged()">
+                  Edit
                 </button>
-                <ng-template #saveButton>
-                  <button type="button" class="btn btn-outline-primary" (click)="onSave()"
-                    [attr.data-dismiss]="useForm.valid ? 'modal' : null">
-                    save
-                  </button>
-                </ng-template>
-              </div>
+              </ng-container>
+              <button type="button" class="btn btn-outline-danger" data-dismiss="modal" (click)="closeModal()">
+                Close
+              </button>
+              <ng-template #saveButton>
+                <!-- <button type="button" class="btn btn-outline-primary" (click)="onSave()"
+                  [attr.data-dismiss]="useForm.valid ? 'modal' : null">
+                  save
+                </button> -->
+                <button type="button" class="btn btn-outline-primary" (click)="onSave()">
+                  Save
+                </button>
 
+                <!-- <button type="button" class="btn btn-outline-primary" (click)="onSaveAndClose()">
+                    save </button> -->
+              </ng-template>
             </div>
-            <!-- Add/Edit Role Modal (same as yours) -->
-            <!-- Keep your modal code here as-is -->

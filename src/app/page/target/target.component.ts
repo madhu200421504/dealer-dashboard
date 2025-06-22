@@ -58,6 +58,7 @@ export class TargetComponent implements OnInit {
   targetList = signal<Target[]>([]);
   filteredTeam = signal<Target[]>([]);
   paginatedTarget = signal<Target[]>([]);
+  isModalOpen = false;
 
   searchTerm: string = '';
   currentPage = 1;
@@ -882,9 +883,9 @@ export class TargetComponent implements OnInit {
   // }
 
   // Close modal
-  closeModal() {
-    ($('.bd-example-modal-lg') as any).modal('hide');
-  }
+  // closeModal() {
+  //   ($('.bd-example-modal-lg') as any).modal('hide');
+  // }
 
   // onEdit(vehicle: Vehicle) {
   //   console.log('Edit button clicked. Team ID:', vehicle?.vehicle_id); // Debug log
@@ -922,6 +923,7 @@ export class TargetComponent implements OnInit {
 
   onEdit(target: Target) {
     this.isEditMode = true; // Set the edit mode flag
+    this.isModalOpen = true; // ✅ Add this line to open the modal
     // console.log('user.userObj before setting:', ?.vehicle_id);
 
     // Copy user data to userObj
@@ -977,5 +979,13 @@ export class TargetComponent implements OnInit {
 
   isVehicleName(): boolean {
     return this.useForm.value.vehicle_name !== this.previousValue;
+  }
+  // closeDeleteModal() {
+  //   this.isDeleteModalOpen = false;
+  // }
+  // Close modal
+  closeModal() {
+    ($('.bd-example-modal-lg') as any).modal('hide');
+    this.isModalOpen = false; // optional, if you use isModalOpen conditionally in HTML
   }
 }

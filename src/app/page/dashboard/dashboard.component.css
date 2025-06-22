@@ -95,6 +95,21 @@ body {
 
   /* This is important */
 }
+.dashboard-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* spacing between boxes */
+  width: 100%;
+  max-width: 100%; /* or 1200px if you want to limit container width */
+}
+
+.card {
+  width: 100%;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  background: white;
+}
 
 .metrics-grid {
   display: flex;
@@ -441,11 +456,9 @@ table td {
   }
 } */
 
-.nav-button:hover{
+.nav-button:hover {
   background-color: grey;
 }
-
-
 
 .main-content {
   /* margin-left: 250px; */
@@ -909,8 +922,6 @@ table th {
   padding-top: 10px;
 }
 
-
-
 .time-filters {
   display: flex;
   gap: 10px;
@@ -1162,9 +1173,6 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   }
 } */
 /* THE ABOVE CODE IS FIXED */
-
-
-
 
 @media (max-width: 600px) {
   .performance-panels {

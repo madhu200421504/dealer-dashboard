@@ -42,7 +42,7 @@
                 <div class="col-12">
                     <!-- Items per page selector -->
                     <div class="row mb-3">
-                        <div class="col-md-6 d-flex align-items-center">
+                        <!-- <div class="col-md-6 d-flex align-items-center">
                             <label class="mr-2"></label>
                             <select class="form-control" style="width: 70px; display: inline-block; border-radius: 5px;"
                                 (change)="onItemsPerPageChange($event)">
@@ -52,15 +52,15 @@
                                 <option value="50">50</option>
                             </select>
                             <label class="ml-2">records per page</label>
-                        </div>
+                        </div> -->
 
 
-                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                        <!-- <div class="col-md-6 d-flex justify-content-end align-items-center">
                             <div class="search-wrapper">
                                 <input type="text" class="form-control search-input" placeholder="Search Targets..."
                                     [(ngModel)]="searchTerm" (input)="onSearchChange()" />
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="table-responsive">
                         <table class="table display mb-4 dataTablesCard fs-14 w-100">
@@ -83,11 +83,14 @@
                                     <td>{{ target.testDrives }}</td>
                                     <td>{{ target.orders }}</td>
                                     <td class="d-flex">
-                                        <a href="javascript:void(0);" class="btn btn-primary shadow btn-xs sharp mr-1"
+                                        <!-- <a href="javascript:void(0);" class="btn btn-primary shadow btn-xs sharp mr-1"
                                             data-target=".bd-example-modal-lg" data-toggle="modal" data-backdrop="false"
                                             (click)="onEdit(target)">
                                             <i class="fa fa-pencil"></i>
-                                        </a>
+                                        </a> -->
+                                        <a href="javascript:void(0);" class="btn btn-primary shadow btn-xs sharp mr-1"
+                                            (click)="onEdit(target)">
+                                            <i class="fa fa-pencil"></i> </a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -98,13 +101,13 @@
                     <!-- Pagination -->
                     <div class="row mt-3">
                         <div class="col-md-6">
-                            <div class="dataTables_info">
+                            <!-- <div class="dataTables_info">
                                 Showing
                                 {{ (currentPage - 1) * itemsPerPage + 1 }} to
                                 {{ (currentPage * itemsPerPage) < targetList().length ? currentPage * itemsPerPage :
                                     targetList().length }} of {{ targetList().length }} entries </div>
-                            </div>
-                            <div class="col-md-6">
+                            </div> -->
+                            <!-- <div class="col-md-6">
                                 <div class="dataTables_paginate paging_simple_numbers float-right">
                                     <ul class="pagination">
                                         <li class="paginate_button page-item previous"
@@ -123,7 +126,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -180,8 +183,10 @@
 
         <!-- Modal -->
         <!-- <div class="modal fade" style="margin-block: 2em"> -->
-        <div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+        <!-- <div class="modal fade bd-example-modal-lg custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style="top:18%;"> -->
+        <div *ngIf="isModalOpen" class="modal d-block" style="background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog modal-lg" style="top:18%;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" style="text-align: center; width: 100%">

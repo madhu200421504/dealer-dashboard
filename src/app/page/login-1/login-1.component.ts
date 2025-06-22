@@ -44,12 +44,14 @@ interface verifyData {
   imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './login-1.component.html',
   styleUrls: ['./login-1.component.css'],
-   styles: [`
-         :host {
-    display: flex;
-    justify-content: center;
-  }
-      `]
+  styles: [
+    `
+      :host {
+        display: flex;
+        justify-content: center;
+      }
+    `,
+  ],
 })
 export class Login1Component {
   @ViewChildren('inputElement') inputElements:
@@ -299,7 +301,6 @@ export class Login1Component {
         },
       });
   }
-
   onVerifyOtp() {
     if (this.loginObj.otp === null || isNaN(Number(this.loginObj.otp))) {
       this.toastr.error('Please enter a valid OTP', 'Validation Error');
@@ -323,7 +324,8 @@ export class Login1Component {
         },
         error: (error) => {
           console.error('OTP verification error:', error);
-          const errorMessage = error.error.error;
+
+          const errorMessage = error?.error?.message || 'Something went wrong';
           this.toastr.error(errorMessage, 'Error');
         },
       });
@@ -391,9 +393,17 @@ export class Login1Component {
       .subscribe({
         next: (response) => {
           const message = response?.message || 'Password reset successfully';
-          this.toastr.success(message, 'Success');
-          this.backToLogin(); // Optional: window.location.reload();
+          this.toastr.success(message, 'Success', {
+            timeOut: 8000,
+            closeButton: true,
+          });
+
+          // Delay redirect to allow user to see the message
+          setTimeout(() => {
+            this.backToLogin(); // or window.location.reload()
+          }, 2000); // Wait 2 seconds
         },
+
         error: (error) => {
           console.error('Password reset error:', error);
 

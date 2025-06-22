@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit {
     private context: ContextService,
     private cdr: ChangeDetectorRef,
     private sidebarService: SidebarService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.context.onSideBarClick$.subscribe(({ pageTitle }) => {
@@ -87,5 +87,4 @@ export class HeaderComponent implements OnInit {
 
     this.router.navigate(['/']); // Navigate to home or login after logout
   }
-
 }

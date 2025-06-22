@@ -15,11 +15,11 @@
       <div class="container">
 
 
-
-        <div class="card" style="background-color:#fff; padding: 15px; box-shadow: 0 0 8px #ccc;">
+        <!-- width: 142%; -->
+        <div class="card" style="background-color:#fff; padding: 15px; box-shadow: 0 0 8px #ccc;width:142%">
           <!-- Header with Title and Search -->
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="card-title" style="font-size: 25px; font-weight:550; font-family:Montserrat;color:#000000">
+            <div class="card-title" style="font-size:25px;color:#313131;font-family:Montserrat;font-weight:600">
               Today's Actions
             </div>
             <div>
@@ -42,31 +42,32 @@
           <!-- User Icons Grid (Only Big Initial Circles) -->
           <!-- Show Initials Circles Always -->
           <div *ngIf="filteredUsers.length > 0 || noResultsFound === false"
-            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px;">
-            <div class="profile" *ngFor="let initial of initialsList; let i = index" style="text-align: center;">
+            style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 20px;">
+            <div class="profile" *ngFor="let initial of initialsList.slice(0, showingLimit); let i = index"
+              style="text-align: center;">
               <div class="avatar" (click)="filterByInitial(initial)" [ngStyle]="{
-                                              'background-color': avatarColors[i % avatarColors.length],
-                                              'width': '70px',
-                                              'height': '70px',
-                                              'border-radius': '50%',
-                                              'display': 'flex',
-                                              'align-items': 'center',
-                                              'justify-content': 'center',
-                                              'margin': '0 auto',
-                                              'font-size': '36px',
-                                              'cursor': 'pointer',
-                                              'box-shadow': selectedInitial === initial ? '0 0 0 3px #4e73df' : 'none',
-                                              'border': selectedInitial === initial ? '2px solid #4e73df' : '2px solid transparent'
-                                            }">
+                             'background-color': avatarColors[i % avatarColors.length],
+                             'width': '70px',
+                             'height': '70px',
+                             'border-radius': '50%',
+                             'display': 'flex',
+                             'align-items': 'center',
+                             'justify-content': 'center',
+                             'margin': '0 auto',
+                             'font-size': '36px',
+                             'cursor': 'pointer',
+                             'box-shadow': selectedInitial === initial ? '0 0 0 3px #4e73df' : 'none',
+                             'border': selectedInitial === initial ? '2px solid #4e73df' : '2px solid transparent'
+                           }">
                 <span style="color: #4e73df; font-weight: bold;">{{ initial }}</span>
               </div>
-
-              <div class="name"
-                style="margin-top: 8px; font-size: 14px; max-width: 80px; margin-left: auto; margin-right: auto;">
+              <div class="name" style="margin-top: 8px; font-size: 14px; max-width: 80px; margin-left: auto; margin-right: auto;">
                 {{ initial }}
               </div>
             </div>
           </div>
+       
+       
 
           <!-- Filtered Users Section (Appears when initial clicked) -->
           <div *ngIf="(selectedInitial || searchText) && filteredUsers.length > 0" style="margin-top: 30px;">
@@ -88,12 +89,36 @@
               </div>
             </div>
           </div>
-          <div style="margin-top: 15px; display: flex; justify-content: flex-end;">
+          <!-- <div style="margin-top: 15px; display: flex; justify-content: flex-end;">
             <button (click)="toggleShowItems()"
               style="padding: 6px 12px; font-size: 14px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100px; white-space: nowrap;">
               {{ showingLimit >= filteredUsers.length ? 'Show Less' : 'Show More' }}
             </button>
+          </div> -->
+
+
+
+          <!-- THIS IS PROEPR -->
+          <!-- <div style="margin-top: 15px; display: flex; justify-content: flex-end;">
+            <button (click)="toggleShowItems()" [disabled]="filteredUsers.length <= defaultLimit"
+              style="padding: 6px 12px; font-size: 14px; background-color: #007bff; color: white; border: none; border-radius: 4px; width: 100px; white-space: nowrap;">
+              {{ showingLimit > defaultLimit ? 'Show Less' : 'Show More' }}
+            </button>
+
+          </div> -->
+          <div style="margin-top: 15px; display: flex; justify-content: flex-end;">
+            <button (click)="toggleShowItems()" [disabled]="initialsList.length <= defaultLimit" [ngStyle]="{
+                          'background-color': initialsList.length <= defaultLimit ? '#ccc' : '#007bff',
+                          'color': initialsList.length <= defaultLimit ? '#666' : 'white',
+                          'cursor': initialsList.length <= defaultLimit ? 'not-allowed' : 'pointer'
+                        }"
+              style="padding: 6px 12px; font-size: 14px; border: none; border-radius: 4px; width: 100px; white-space: nowrap;">
+              {{ showingLimit >= initialsList.length ? 'Show Less' : 'Show More' }}
+            </button>
           </div>
+          
+
+
 
 
           <!-- Show 'No users found' message -->
@@ -165,7 +190,7 @@
                   <table class="table table-bordered table-striped text-center">
                     <thead>
                       <tr>
-                        <th>Field</th>
+                        <th style="font-weight: 700;">Field</th>
 
                         <!-- Today Column -->
                         <!-- <th>
@@ -183,7 +208,7 @@
                         </th> -->
                         <th>
                           <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                            <label style="margin: 0; font-weight: 500;">Today</label>
+                            <label style="margin: 0; font-weight: 600;">Today</label>
                             <ng-container *ngIf="todayTestDrives.length > 1">
                               <select id="todaySelect" class="form-select form-select-sm"
                                 style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedTodayIndex">
@@ -212,7 +237,7 @@
                         </th> -->
                         <th>
                           <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                            <label style="margin: 0; font-weight: 500;">Upcoming</label>
+                            <label style="margin: 0;font-weight: 700;">Upcoming</label>
                             <ng-container *ngIf="upcomingTestDrives.length > 1">
                               <select id="upcomingSelect" class="form-select form-select-sm"
                                 style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedUpcomingIndex">
@@ -226,7 +251,7 @@
                         <!-- Overdue Column -->
                         <th>
                           <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                            <label style="margin: 0; font-weight: 500;">Overdue</label>
+                            <label style="margin: 0; font-weight: 700;">Overdue</label>
                             <ng-container *ngIf="overdueTestDrives.length > 1">
                               <select id="overdueSelect" class="form-select form-select-sm"
                                 style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedOverdueIndex">
@@ -243,31 +268,31 @@
 
                     <tbody>
                       <tr>
-                        <th class="text-start">Name</th>
+                        <th class="text-start" style="color:#000000;font-weight:400">Name</th>
                         <td>{{ todayTestDrives[selectedTodayIndex]?.name || '-' }}</td>
                         <td>{{ upcomingTestDrives[selectedUpcomingIndex]?.name || '-' }}</td>
                         <td>{{ overdueTestDrives[selectedOverdueIndex]?.name || '-' }}</td>
                       </tr>
                       <tr>
-                        <th class="text-start">Subject</th>
+                        <th class="text-start" style="color:#000000;font-weight:400">Subject</th>
                         <td>{{ todayTestDrives[selectedTodayIndex]?.subject || '-' }}</td>
                         <td>{{ upcomingTestDrives[selectedUpcomingIndex]?.subject || '-' }}</td>
                         <td>{{ overdueTestDrives[selectedOverdueIndex]?.subject || '-' }}</td>
                       </tr>
                       <tr>
-                        <th class="text-start">PMI</th>
+                        <th class="text-start" style="color:#000000;font-weight:400">PMI</th>
                         <td>{{ todayTestDrives[selectedTodayIndex]?.PMI || '-' }}</td>
                         <td>{{ upcomingTestDrives[selectedUpcomingIndex]?.PMI || '-' }}</td>
                         <td>{{ overdueTestDrives[selectedOverdueIndex]?.PMI || '-' }}</td>
                       </tr>
                       <tr>
-                        <th>Location</th>
+                        <th style="color:#000000;font-weight:400">Location</th>
                         <td>{{ todayTestDrives[selectedTodayIndex]?.location || '-' }}</td>
                         <td>{{ upcomingTestDrives[selectedUpcomingIndex]?.location || '-' }}</td>
                         <td>{{ overdueTestDrives[selectedOverdueIndex]?.location || '-' }}</td>
                       </tr>
                       <tr>
-                        <th>Start time</th>
+                        <th style="color:#000000;font-weight:400">Start time</th>
                         <td>{{ todayTestDrives[selectedTodayIndex]?.start_time || '-' }}</td>
                         <td>{{ upcomingTestDrives[selectedUpcomingIndex]?.start_time || '-' }}</td>
                         <td>{{ overdueTestDrives[selectedOverdueIndex]?.start_time || '-' }}</td>
@@ -372,7 +397,7 @@
     <div></div>
     <div class="card" style=" background-color: #fff; padding: 20px; box-shadow: 0 0 8px #ccc; ">
       <div class="card-title" style="display:flex; justify-content: space-between; align-items: center;">
-        <span style="font-size:25px;color:#000000;font-family:Montserrat;font-weight:600">Test Drive Schedule</span>
+        <span style="font-size:25px;color:#313131;font-family:Montserrat;font-weight:600">Test Drive Schedule</span>
         <div style="display: flex; align-items: center; gap: 10px;">
           <!-- <input type="text" [(ngModel)]="searchText" (input)="applyTableFilters()" placeholder="Search..."
               style="padding: 5px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"> -->
@@ -465,27 +490,33 @@
     <div class="metrics-row" style=" display: flex; gap: 15px; " style="margin-top: -45px;">
 
       <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:grey;">{{ dashboardMetrics.enquiries }}</div>
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.enquiries }}
+        </div>
         <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Enquiries</div>
       </div>
       <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:grey;">{{ dashboardMetrics.testDrives }}</div>
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.testDrives }}
+        </div>
         <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Test Drives</div>
       </div>
       <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:grey;">{{ dashboardMetrics.newOrders }}</div>
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.newOrders }}
+        </div>
         <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">New Orders</div>
       </div>
       <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:grey;">{{ dashboardMetrics.cancellations }}</div>
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.cancellations
+          }}</div>
         <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Cancellation</div>
       </div>
       <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:grey;">{{ dashboardMetrics.netOrders }}</div>
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.netOrders }}
+        </div>
         <div class="metric-label" style="color:black;font-size:20px;font-weight:500;;">Net Order</div>
       </div>
       <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:grey;">{{ dashboardMetrics.retail }}</div>
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.retail }}
+        </div>
         <div class="metric-label" style="color:black;font-size:20px;font-weight:500">Retail</div>
       </div>
 
@@ -543,7 +574,7 @@
   <div class="performance-panels">
     <div class="performance-panel">
       <!-- Row with KPI and two dropdowns inside performance-panel -->
-      <h2 class="panel-title" style="font-size:25px;color:#000000;font-family:Montserrat;font-weight:600">
+      <h2 class="panel-title" style="font-size:25px;color:#313131;font-family:Montserrat;font-weight:600">
         Compare Performance
       </h2>
 
@@ -552,36 +583,37 @@
         <thead>
           <tr>
             <!-- KPI Header -->
-            <th style="width: 30%; padding: 10px; color: black;">KPI</th>
+            <th style="width: 30%; padding: 10px; color:#313131;font-weight:500;">KPI</th>
 
 
             <!-- PS1 Dropdown -->
             <!-- PS1 Dropdown -->
-          <!-- PS1 Dropdown -->
-          <th style="padding: 10px;">
-            <div style="position: relative;">
-              <div (click)="dropdownOpen1 = !dropdownOpen1"
-                style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc; background-color: #f5f5f5; cursor: pointer; user-select: none; border-radius: 20px;">
-                {{ getUserName(selectedPs1) || 'PS1' }}
-                <span style="margin-left: 8px;">&#x25BC;</span>
-              </div>
-          
-              <div *ngIf="dropdownOpen1" class="custom-scroll"
-                style="position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; background: white; z-index: 1000;">
-          
-                <div *ngFor="let user of users" (click)="handlePs1Click(user)"
-                  style="padding: 6px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;"
-                  [style.backgroundColor]="selectedPs1 === user.user_id ? '#ddd' : isUserSelectedInPs2(user.user_id) ? '#f0f0f0' : 'white'"
-                  [style.color]="isUserSelectedInPs2(user.user_id) ? '#999' : '#000'"
-                  [style.pointerEvents]="isUserSelectedInPs2(user.user_id) ? 'none' : 'auto'">
-          
-                  {{ user.name }}
-                  <span *ngIf="isUserSelectedInPs2(user.user_id)" style="font-size: 14px; color: green;">&#10003;</span>
+            <!-- PS1 Dropdown -->
+            <th style="padding: 10px;">
+              <div style="position: relative;">
+                <div (click)="dropdownOpen1 = !dropdownOpen1"
+                  style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc; background-color: #f5f5f5; cursor: pointer; user-select: none; border-radius: 20px;">
+                  {{ getUserName(selectedPs1) || 'PS1' }}
+                  <span style="margin-left: 8px;">&#x25BC;</span>
                 </div>
-          
+
+                <div *ngIf="dropdownOpen1" class="custom-scroll"
+                  style="position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; background: white; z-index: 1000;">
+
+                  <div *ngFor="let user of users" (click)="handlePs1Click(user)"
+                    style="padding: 6px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;"
+                    [style.backgroundColor]="selectedPs1 === user.user_id ? '#ddd' : isUserSelectedInPs2(user.user_id) ? '#f0f0f0' : 'white'"
+                    [style.color]="isUserSelectedInPs2(user.user_id) ? '#999' : '#000'"
+                    [style.pointerEvents]="isUserSelectedInPs2(user.user_id) ? 'none' : 'auto'">
+
+                    {{ user.name }}
+                    <span *ngIf="isUserSelectedInPs2(user.user_id)"
+                      style="font-size: 14px; color: green;">&#10003;</span>
+                  </div>
+
+                </div>
               </div>
-            </div>
-          </th>
+            </th>
 
             <!-- PS2 Dropdown -->
             <th style="padding: 10px;">
@@ -612,33 +644,33 @@
         <tbody>
           <tr>
             <td style="text-align: left; padding: 12px; color: black;">Enquiries</td>
-            <td style="font-weight: bold; color: black;">{{ enquiriesCount }}</td>
-            <td style="font-weight: bold; color: black;">{{ enquiriesCountPs2 }}</td>
+            <td style="color: black;font-size:18px;">{{ enquiriesCount }}</td>
+            <td style="color: black;font-size:18px;">{{ enquiriesCountPs2 }}</td>
           </tr>
           <tr>
             <td style="text-align: left; padding: 12px; color: black;">Test Drives</td>
-            <td style="font-weight: bold; color: black;">{{ testDrivesCount }}</td>
-            <td style="font-weight: bold; color: black;">{{ testDrivesCountPs2 }}</td>
+            <td style=" color: black;font-size:18px;">{{ testDrivesCount }}</td>
+            <td style="color: black;font-size:18px;">{{ testDrivesCountPs2 }}</td>
           </tr>
           <tr>
             <td style="text-align: left; padding: 12px; color: black;">New Orders</td>
-            <td style="font-weight: bold; color: black;">{{ newOrdersCount }}</td>
-            <td style="font-weight: bold; color: black;">{{ newOrdersCountPs2 }}</td>
+            <td style="color: black;font-size:18px;">{{ newOrdersCount }}</td>
+            <td style="color: black;font-size:18px;">{{ newOrdersCountPs2 }}</td>
           </tr>
           <tr>
             <td style="text-align: left; padding: 12px; color: black;">Cancellations</td>
-            <td style="font-weight: bold; color: black;">{{ cancellationsCount }}</td>
-            <td style="font-weight: bold; color: black;">{{ cancellationsCountPs2 }}</td>
+            <td style="color: black;font-size:18px;">{{ cancellationsCount }}</td>
+            <td style=" color: black;font-size:18px;">{{ cancellationsCountPs2 }}</td>
           </tr>
           <tr>
             <td style="text-align: left; padding: 12px; color: black;">Net Orders</td>
-            <td style="font-weight: bold; color: black;">{{ netOrdersCount }}</td>
-            <td style="font-weight: bold; color: black;">{{ netOrdersCountPs2 }}</td>
+            <td style=" color: black;font-size:18px;">{{ netOrdersCount }}</td>
+            <td style="color: black;font-size:18px;">{{ netOrdersCountPs2 }}</td>
           </tr>
           <tr>
             <td style="text-align: left; padding: 12px; color: black;">Retail</td>
-            <td style="font-weight: bold; color: black;">{{ retailCount }}</td>
-            <td style="font-weight: bold; color: black;">{{ retailCountPs2}}</td>
+            <td style="color: black;font-size:18px;">{{ retailCount }}</td>
+            <td style=" color: black;font-size:18px;">{{ retailCountPs2}}</td>
           </tr>
         </tbody>
       </table>
@@ -648,7 +680,7 @@
     </div>
 
     <div class="performance-panel">
-      <h2 class="panel-title" style="font-size:25px;color:#000000;font-family:Montserrat;font-weight:600">Performance
+      <h2 class="panel-title" style="font-size:25px;color:#313131;;font-family:Montserrat;font-weight:600">Performance
         Analysis</h2>
       <div class="panel-content">
 
@@ -657,65 +689,65 @@
           <thead>
             <tr>
               <th rowspan="2" style="width: 20%;"></th>
-              <th colspan="2" style="padding:10px;color:black;">Performance</th>
-              <th colspan="2" style="padding:10px;color:black;">Rank</th>
+              <th colspan="2" style="padding:10px;color:#313131;font-weight:500;">Performance</th>
+              <th colspan="2" style="padding:10px;color:#313131;font-weight:500;">Rank</th>
             </tr>
             <tr>
-              <th style="padding:10px;color:black;">Dealership</th>
-              <th style="padding:10px;color:black;">All India</th>
-              <th style="padding:10px;color:black;">All India</th>
+              <th style="padding:10px;color:#313131;font-weight:500;">Dealership</th>
+              <th style="padding:10px;color:#313131;font-weight:500;">All India</th>
+              <th style="padding:10px;color:#313131;font-weight:500;">All India</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td style="text-align: left; padding:12px; color:black;">Enquiries</td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.enquiries }}</td>
-              <td style="color: black;font-weight: bold;">{{
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.enquiries }}</td>
+              <td style="color: black;font-size:18px;">{{
                 dashboardMetrics.allIndiaBestPerformace.enquiriesCount
                 }}
               </td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.allIndiaRank.enquiriesRank }}</td>
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.enquiriesRank }}</td>
             </tr>
             <tr>
               <td style="text-align: left; padding:12px; color:black;">Test Drive</td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.testDrives }}</td>
-              <td style="color: black;font-weight: bold;">{{
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.testDrives }}</td>
+              <td style="color: black;font-size:18px;">{{
                 dashboardMetrics.allIndiaBestPerformace.testDrivesCount
                 }}</td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.allIndiaRank.testDrivesRank }}</td>
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.testDrivesRank }}</td>
             </tr>
             <tr>
               <td style="text-align: left; padding:12px; color:black;">New Orders</td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.newOrders }}</td>
-              <td style="color: black;font-weight: bold;">{{
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.newOrders }}</td>
+              <td style="color: black;font-size:18px;">{{
                 dashboardMetrics.allIndiaBestPerformace.newOrdersCount
                 }}
               </td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.allIndiaRank.newOrdersRank }}</td>
+              <td style="color: black;">{{ dashboardMetrics.allIndiaRank.newOrdersRank }}</td>
             </tr>
             <tr>
               <td style="text-align: left; padding:12px; color:black;">Cancellations</td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.cancellations }}</td>
-              <td style="color: black;font-weight: bold;">{{
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.cancellations }}</td>
+              <td style="color: black;font-size:18px;">{{
                 dashboardMetrics.allIndiaBestPerformace.cancellationsCount }}</td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.allIndiaRank.cancellationsRank }}
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.cancellationsRank }}
               </td>
             </tr>
             <tr>
               <td style="text-align: left; padding:12px; color:black;">Net Orders</td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.netOrders }}</td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.netOrders }}</td>
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
                 }}
               </td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
+              <td style="color: black;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
             </tr>
             <tr>
               <td style="text-align: left; padding:12px; color:black;">Retail</td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.retail }}</td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.retail }}</td>
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
                 }}
               </td>
-              <td style="color: black;font-weight: bold;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
+              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
             </tr>
           </tbody>
         </table>

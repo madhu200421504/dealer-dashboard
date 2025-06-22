@@ -1,9 +1,9 @@
 <!-- <img class="wave" src="assets/admin-img/Untitled-1.png" alt="Wave Image" /> -->
 <div class="container custom-container new-custom">
- 
+
   <div class="login-content">
     <!-- Login Form -->
-    <form *ngIf="currentStep === 'login'">
+    <form *ngIf="currentStep === 'login'" #loginForm="ngForm">
       <!-- <img class="mx-auto inline-flex items-center justify-center" src="../../../assets/admin-img/avatar (1).png"
         alt="Avatar Image" /> -->
       <img class="mx-auto inline-flex items-center justify-center" src="../../../assets/admin-img/jlr logo.svg"
@@ -88,7 +88,9 @@
       </div>
 
       <a href="javascript:void(0)" class="forgot-password" (click)="showVerifyEmail()">Forgot Password?</a>
-      <input type="submit" class="btn" value="Login" (click)="onLogin()" />
+      <!-- <input type="submit" class="btn" value="Login" (click)="onLogin()" /> -->
+      <input type="submit" class="btn" value="Login" [disabled]="!loginForm.form.valid" (click)="onLogin()" />
+
 
 
       <p style="margin-top: -15px;">

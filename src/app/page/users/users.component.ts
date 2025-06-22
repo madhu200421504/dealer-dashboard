@@ -92,6 +92,7 @@ export class UsersComponent implements OnInit {
   dataTable: any;
   totalPages: number = 0;
   pages: number[] = [];
+  isDeleteModalOpen = false;
 
   columns: any[] = [];
   constructor(
@@ -698,8 +699,6 @@ export class UsersComponent implements OnInit {
   onSave() {
     if (this.useForm.invalid) {
       this.markFormGroupTouched(this.useForm);
-      console.log('Form Values:', this.useForm.value); // Log form values to check role_name
-
       this.toastr.warning(
         'Please fill all required fields correctly',
         'Validation'
@@ -708,7 +707,6 @@ export class UsersComponent implements OnInit {
     }
 
     const formData = this.useForm.value;
-    console.log('Form Data being sent to API:', formData);
     const selectedRole = this.roleList().find(
       (role) => role.role_id === formData.role_id
     );
@@ -718,10 +716,12 @@ export class UsersComponent implements OnInit {
       next: () => {
         this.toastr.success('User created successfully!', 'Success');
         this.displayAllUser();
-        this.closeModal();
+        this.useForm.reset();
+        this.userObj = new UserList();
+
+        this.closeModal(); // ✅ Should hide modal if isModalOpen = false
       },
       error: (err) => {
-        console.error('User creation error:', err);
         this.toastr.error(
           err.message || 'Failed to create user',
           'Creation Error'
@@ -729,7 +729,12 @@ export class UsersComponent implements OnInit {
       },
     });
   }
-
+  onSaveAndClose() {
+    if (this.useForm.valid) {
+      this.onSave();
+      this.closeModal(); // Close modal after successful save
+    }
+  }
   // onSave() {
   //   if (this.useForm.invalid) {
   //     this.markFormGroupTouched(this.useForm);
@@ -988,6 +993,7 @@ export class UsersComponent implements OnInit {
   // Method to handle the Edit button click
   onEdit(user: UserList) {
     this.isEditMode = true; // Set the edit mode flag
+    this.isModalOpen = true; // ✅ Add this line to open the modal
     console.log('user.userObj before setting:', user?.user_id);
 
     // Copy user data to userObj
@@ -1034,16 +1040,22 @@ export class UsersComponent implements OnInit {
 
   selectedUserForDeletion: UserList | null = null;
 
+  // selectUserForDeletion(user: UserList) {
+  //   this.selectedUserForDeletion = user;
+  // }
   selectUserForDeletion(user: UserList) {
     this.selectedUserForDeletion = user;
+    this.isDeleteModalOpen = true;
+  }
+  setUserToDelete(user: any) {
+    this.selectedUserForDeletion = user;
+  }
+  openDeleteModal(user: any) {
+    this.selectedUserForDeletion = user;
+    this.isDeleteModalOpen = true;
   }
 
   deleteUserId() {
-    console.log(
-      'this is the select user',
-      this.selectUserForDeletion,
-      this.selectedUserForDeletion
-    );
     console.log('Deleting User ID:', this.selectedUserForDeletion?.user_id);
 
     if (this.selectedUserForDeletion && this.selectedUserForDeletion.user_id) {
@@ -1051,9 +1063,11 @@ export class UsersComponent implements OnInit {
         (res: MultiuserResponse) => {
           this.toastr.success('User deleted successfully', 'Success');
           this.displayAllUser();
+
+          // ✅ Close modal
+          this.isDeleteModalOpen = false;
         },
         (error) => {
-          // alert(error.message || 'Failed to delete users'); comment for server side error not come
           this.toastr.error('Server Error', 'Error');
         }
       );
@@ -1062,6 +1076,9 @@ export class UsersComponent implements OnInit {
     }
   }
 
+  closeDeleteModal() {
+    this.isDeleteModalOpen = false;
+  }
   // Close modal
   closeModal() {
     ($('.bd-example-modal-lg') as any).modal('hide');

@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { Role } from '../../model/class/role';
 import { roleResponse } from '../../model/interface/master';
 import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-role',
@@ -28,28 +29,14 @@ export class RoleComponent implements OnInit {
   totalRoles = signal<number>(0);
   isModalOpen = false;
 
-  // roles = []; // Assuming roles are fetched from an API or database
-  // filteredRoles = []; // Holds the filtered roles for search
-  // paginatedRoles = []; // Holds roles to display in the current page
-  // currentPage: number = 1;
-  // itemsPerPage: number = 5;
-  // totalPages: number = 1;
-  // searchTerm: string = '';
-  // roles: Role[] = []; // All roles
-  // filteredRoles: Role[] = []; // Filtered list after search
-  // paginatedRoles: Role[] = []; // Current page data
-  // searchTerm: string = ''; // Bound to input
-  // currentPage: number = 1;
-  // itemsPerPage: number = 5;
-  // totalPages: number = 1;
-  // pages: number[] = [];
   roleObj: Role = new Role();
   previousValue: string = '';
   isEditMode: boolean = false;
 
-  roleListAll = []; // Full list from backend
-  // filteredRoles = [];
-  // paginatedRoles = [];
+  // Add loading state to prevent multiple submissions
+  isSubmitting = false;
+
+  roleListAll = [];
   searchTerm = '';
   itemsPerPage = 10;
   currentPage = 1;
@@ -58,11 +45,12 @@ export class RoleComponent implements OnInit {
 
   filteredRoles: any[] = [];
   paginatedRoles: any[] = [];
+
   // service
   private masterSrv = inject(MasterService);
   private readonly toastr = inject(ToastrService);
 
-  constructor() {
+  constructor(private cdr: ChangeDetectorRef) {
     console.log('Constructor called');
     this.initializeForm();
   }
@@ -88,28 +76,39 @@ export class RoleComponent implements OnInit {
     });
   }
 
-  // Close modal
-  closeModal() {
-    this.isModalOpen = false; // optional, if you use isModalOpen conditionally in HTML
-  }
   openModal(role?: Role) {
-    console.log('✅ openModal() function called for Role');
-    console.log('Role object received in openModal:', role);
-    this.isModalOpen = true;
-
     this.useForm.reset();
+    this.isModalOpen = true;
+    this.isSubmitting = false; // Reset submitting state
+    document.body.classList.add('modal-open');
+
     this.isEditMode = !!role;
 
     if (role) {
       this.useForm.patchValue({
-        role_id: role.role_id || '',
         role_name: role.role_name || '',
         description: role.description || '',
       });
       this.roleObj = { ...role };
     } else {
-      this.roleObj = {} as Role;
+      this.roleObj = new Role(); // Use new instance instead of empty object
     }
+  }
+
+  onSaveAndClose() {
+    if (this.useForm.valid) {
+      this.onSave();
+      // Don't call closeModal here - let onSave handle it
+    }
+  }
+
+  markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach((control) => {
+      control.markAsTouched();
+      if ((control as any).controls) {
+        this.markFormGroupTouched(control as FormGroup);
+      }
+    });
   }
 
   private loadRole(): void {
@@ -128,9 +127,12 @@ export class RoleComponent implements OnInit {
       },
     });
   }
-
   onSave() {
+    if (this.isSubmitting) return;
+
+    this.markFormGroupTouched(this.useForm);
     console.log('Save button clicked');
+
     if (this.useForm.invalid) {
       console.warn('Form is invalid:', this.useForm.value);
       this.useForm.markAllAsTouched();
@@ -138,27 +140,38 @@ export class RoleComponent implements OnInit {
     }
 
     console.log('Form is valid. Submitting:', this.useForm.value);
+    this.isSubmitting = true;
 
     this.masterSrv.createRole(this.useForm.value).subscribe({
-      next: () => {
-        console.log('Role created successfully');
-        this.loadRole();
+      next: (response) => {
+        console.log('Role created successfully', response);
         this.toastr.success('Role created successfully!', 'Success');
-        this.useForm.reset();
+        this.loadRole();
+        console.log('closing from next');
         this.closeModal();
       },
       error: (err) => {
         console.error('Create role error:', err);
+        this.isSubmitting = false;
+
         const backendError =
           err.error?.error || err.error?.message || 'Failed to create role.';
         this.toastr.error(backendError, 'Error');
+
+        this.closeModal(); // ✅ Add here
+        console.log('closing from error');
+      },
+      complete: () => {
+        this.isSubmitting = false;
       },
     });
   }
+
   onSearchChange(): void {
     this.currentPage = 1;
     this.applyFilterAndPagination();
   }
+
   onItemsPerPageChange(event: any): void {
     this.itemsPerPage = parseInt(event.target.value, 10);
     this.currentPage = 1;
@@ -166,7 +179,7 @@ export class RoleComponent implements OnInit {
   }
 
   applyFilterAndPagination(): void {
-    const allRoles = this.roleList(); // your BehaviorSubject accessor
+    const allRoles = this.roleList();
 
     this.filteredRoles = allRoles.filter(
       (role) =>
@@ -179,6 +192,12 @@ export class RoleComponent implements OnInit {
 
     this.paginateRoles();
   }
+  closeModal() {
+    this.isModalOpen = false;
+    document.body.classList.remove('modal-open');
+    console.log('Modal closed'); // <== Add this
+  }
+
   paginateRoles(): void {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
@@ -203,6 +222,7 @@ export class RoleComponent implements OnInit {
       this.paginateRoles();
     }
   }
+
   getShowingTo(): number {
     return Math.min(
       this.currentPage * this.itemsPerPage,
@@ -214,13 +234,6 @@ export class RoleComponent implements OnInit {
     return Math.min(a, b);
   }
 
-  // onItemsPerPageChange(event: Event): void {
-  //   const target = event.target as HTMLSelectElement;
-  //   this.itemsPerPage = parseInt(target.value, 10);
-  //   this.currentPage = 1;
-  //   this.updatePagination();
-  // }
-
   updatePagination(): void {
     this.totalPages = Math.ceil(this.filteredRoles.length / this.itemsPerPage);
     this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
@@ -229,55 +242,8 @@ export class RoleComponent implements OnInit {
       this.currentPage * this.itemsPerPage
     );
   }
+
   isRoleNameChanged(): boolean {
-    return this.useForm.value.name !== this.previousValue;
+    return this.useForm.value.role_name !== this.previousValue; // Fixed: was checking 'name' instead of 'role_name'
   }
-  // goToPage(page: number): void {
-  //   if (page >= 1 && page <= this.totalPages) {
-  //     this.currentPage = page;
-  //     this.updatePagination();
-  //   }
-  // }
-
-  // previousPage(): void {
-  //   if (this.currentPage > 1) {
-  //     this.currentPage--;
-  //     this.updatePagination();
-  //   }
-  // }
-
-  // nextPage(): void {
-  //   if (this.currentPage < this.totalPages) {
-  //     this.currentPage++;
-  //     this.updatePagination();
-  //   }
-  // }
-
-  // count(): number {
-  //   return this.roles.length;
-  // }
-
-  // min(a: number, b: number): number {
-  //   return Math.min(a, b);
-  // }
-
-  // getAllRoles() {
-  //   console.log('Calling getAllRoles() API...');
-  //   this.masterSrv.getAllRoles().subscribe({
-  //     next: (res: any) => {
-  //       console.log('getAllRoles response:', res);
-  //       if (res && res.data && res.data.rows) {
-  //         this.totalRoles.set(res.data.count);
-  //         this.roleList.set(res.data.rows);
-  //       } else {
-  //         console.warn('No roles found in response');
-  //         this.toastr.warning('No roles found', 'Information');
-  //       }
-  //     },
-  //     error: (err) => {
-  //       console.error('getAllRoles error:', err);
-  //       this.toastr.error(err.message || 'Failed to fetch roles', 'Error');
-  //     },
-  //   });
-  // }
 }

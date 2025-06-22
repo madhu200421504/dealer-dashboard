@@ -85,6 +85,7 @@ export class VehicleComponent implements OnInit {
   itemsPerPage: number = 5;
   totalPages: number = 0;
   pages: number[] = [];
+  isDeleteModalOpen = false;
 
   // Form Group
   useForm: FormGroup = new FormGroup({});
@@ -416,22 +417,45 @@ export class VehicleComponent implements OnInit {
   //     },
   //   });
   // }
+  // getAllVehicle() {
+  //   this.masterSrv.getAllVehicle().subscribe({
+  //     next: (res: VehicleResponse) => {
+  //       if (res && res.data.rows) {
+  //         this.totalVehicle.set(res.data.count);
+  //         this.vehicleList.set(res.data.rows);
+  //       } else {
+  //         this.toastr.warning('No Vehicle found', 'Information');
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Vehicle fetch error:', err);
+  //       this.toastr.error(err.message || 'Failed to fetch users', 'Error');
+  //     },
+  //   });
+  // }
   getAllVehicle() {
     this.masterSrv.getAllVehicle().subscribe({
       next: (res: VehicleResponse) => {
         if (res && res.data.rows) {
           this.totalVehicle.set(res.data.count);
           this.vehicleList.set(res.data.rows);
+
+          // ✅ Update paginatedVehicles after setting vehicleList
+          this.paginatedVehicles = this.vehicleList().slice(
+            (this.currentPage - 1) * this.itemsPerPage,
+            this.currentPage * this.itemsPerPage
+          );
         } else {
           this.toastr.warning('No Vehicle found', 'Information');
         }
       },
       error: (err) => {
         console.error('Vehicle fetch error:', err);
-        this.toastr.error(err.message || 'Failed to fetch users', 'Error');
+        this.toastr.error(err.message || 'Failed to fetch vehicles', 'Error');
       },
     });
   }
+
   // Update Existing Vehicle
   // onUpdate() {
 
@@ -446,6 +470,10 @@ export class VehicleComponent implements OnInit {
   //       this.toastr.error('Error updating vehicle', 'Error');
   //     }
   //   );
+  // }
+
+  // closeDeleteModal() {
+  //   this.isDeleteModalOpen = false;
   // }
   getShowingFrom(): number {
     if (this.filteredVehicles.length === 0) return 0;
@@ -610,8 +638,16 @@ export class VehicleComponent implements OnInit {
 
   selectVehicleForDeletion(vehicle: Vehicle) {
     this.selectedVehicleForDeletion = vehicle;
+    this.isDeleteModalOpen = true;
   }
 
+  openDeleteModal(vehicle: any) {
+    this.selectedVehicleForDeletion = vehicle;
+    this.isDeleteModalOpen = true;
+  }
+  closeDeleteModal() {
+    this.isDeleteModalOpen = false;
+  }
   // deleteVehicleId() {
   //   console.log(
   //     'this is the selected vehicle',
@@ -804,34 +840,56 @@ export class VehicleComponent implements OnInit {
   //     $('.modal-backdrop').remove();
   //   }, 150);
   // }
+  // deleteVehicleId() {
+  //   console.log(
+  //     'Deleting Vehicle ID:',
+  //     this.selectedVehicleForDeletion?.vehicle_id
+  //   );
 
+  //   if (this.selectedVehicleForDeletion?.vehicle_id) {
+  //     this.masterSrv
+  //       .deleteVehicle(this.selectedVehicleForDeletion.vehicle_id)
+  //       .subscribe(
+  //         (res: VehicleResponse) => {
+  //           this.toastr.success('Vehicle deleted successfully', 'Success');
+  //           this.getAllVehicle();
+
+  //           // ✅ Close modal BEFORE fetching fresh data
+  //           this.isDeleteModalOpen = false;
+
+  //           // Now refresh the vehicle list
+  //         },
+  //         (error) => {
+  //           this.toastr.error('Server Error', 'Error');
+  //         }
+  //       );
+  //   } else {
+  //     alert('No Vehicle selected for deletion');
+  //   }
+  // }
   deleteVehicleId() {
-    console.log(
-      'this is the select user',
-      this.selectVehicleForDeletion,
-      this.selectedVehicleForDeletion
-    );
-    console.log(
-      'Deleting User ID:',
-      this.selectedVehicleForDeletion?.vehicle_id
-    );
+    const vehicle = this.selectedVehicleForDeletion;
 
-    if (
-      this.selectedVehicleForDeletion &&
-      this.selectedVehicleForDeletion.vehicle_id
-    ) {
-      this.masterSrv
-        .deleteVehicle(this.selectedVehicleForDeletion.vehicle_id)
-        .subscribe(
-          (res: VehicleResponse) => {
-            this.toastr.success('Vehicle deleted successfully', 'Success');
-            this.getAllVehicle();
-          },
-          (error) => {
-            // alert(error.message || 'Failed to delete users'); comment for server side error not come
-            this.toastr.error('Server Error', 'Error');
-          }
-        );
+    if (vehicle && vehicle.vehicle_id) {
+      const vehicleId = vehicle.vehicle_id;
+
+      this.masterSrv.deleteVehicle(vehicleId).subscribe(
+        (res: VehicleResponse) => {
+          this.toastr.success('Vehicle deleted successfully', 'Success');
+
+          // ✅ Close the modal
+          this.isDeleteModalOpen = false;
+
+          // ✅ Update the signal (remove the deleted vehicle)
+          const updatedList = this.vehicleList().filter(
+            (v) => v.vehicle_id !== vehicleId
+          );
+          this.vehicleList.set(updatedList); // Update the signal
+        },
+        (error) => {
+          this.toastr.error('Server Error', 'Error');
+        }
+      );
     } else {
       alert('No Vehicle selected for deletion');
     }
@@ -842,6 +900,7 @@ export class VehicleComponent implements OnInit {
     ($('.bd-example-modal-lg') as any).modal('hide');
     this.isModalOpen = false; // optional, if you use isModalOpen conditionally in HTML
   }
+
   // onEdit(vehicle: Vehicle) {
   //   console.log('Edit button clicked. Team ID:', vehicle?.vehicle_id); // Debug log
   //   this.isEditMode = true; // Ensure edit mode is set
@@ -885,6 +944,8 @@ export class VehicleComponent implements OnInit {
 
   onEdit(vehicle: Vehicle) {
     this.isEditMode = true; // Set the edit mode flag
+    this.isModalOpen = true; // ✅ Add this line to open the modal
+
     console.log('user.userObj before setting:', vehicle?.vehicle_id);
 
     // Copy user data to userObj

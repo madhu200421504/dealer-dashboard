@@ -52,7 +52,10 @@ body {
 }
 
 @media only screen and (max-width: 1600px) {
-    .content-body {
-        margin-left: 0;
-    }
+  .content-body {
+    margin-left: 0;
+  }
+}
+.modal.d-block[hidden] {
+  display: none !important;
 }

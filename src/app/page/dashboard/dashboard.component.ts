@@ -86,6 +86,14 @@ export class DashboardComponent implements OnInit {
     net_orders: 15,
     retail: 25,
   };
+  comparePerformance: {
+    enquiries: number;
+    testDrives: number;
+    newOrders: number;
+    cancellations: number;
+    netOrders: number;
+    retail: number;
+  } | null = null;
 
   maxValue = 100;
   kpiData: any = {};
@@ -105,6 +113,7 @@ export class DashboardComponent implements OnInit {
   filteredReservations: any[] = []; // the filtered array to bind to the table
   filterOption: 'today' | 'oneWeek' = 'today';
   selectedType: string = ''; // Add this line to define selectedType
+  selectedPs2UserId: string = '';
 
   testDrives: any[] = []; // <-- Declare testDrives here
   dashboardData: any = {
@@ -172,6 +181,9 @@ export class DashboardComponent implements OnInit {
   };
   dropdownOpen1 = false;
   dropdownOpen2 = false;
+  performanceData: { [userId: string]: any } = {};
+  ps1Performance: { [userId: string]: any } = {};
+
   // selectedPs2: string[] = [];
   selectedPs1: string = '';
   selectedPs1Name: string = '';
@@ -235,13 +247,18 @@ export class DashboardComponent implements OnInit {
   initialsList: string[] = [];
   showUserModal = false;
   tickedUserInPs1: any = null;
-  showingLimit = 10;
+  // showingLimit = 10;
+  defaultLimit = 10;
+  showingLimit = this.defaultLimit;
+  // filteredUsers: any[] = [];
 
   // selectedUser: any = null;
   // displayedUsers: any[] = [];
   data: any; // <-- Add this line
   selectedOverdueIndex: number = 0;
   selectedTodayIndex: number = 0;
+  ps2Performance: { [userId: string]: any } = {};
+
   selectedUpcomingIndex: number = 0;
   // selectedOverdueIndex: number = 0;
   groupedUsers: { [key: string]: any[] } = {}; // all grouped by initials
@@ -250,7 +267,7 @@ export class DashboardComponent implements OnInit {
   selectedUserDetails: any;
   maxDriveCount: number = 0;
   indexes: number[] = [];
-  defaultLimit = 10;
+  // defaultLimit = 10;
 
   uniqueInitials: string[] = []; // ✅ renamed to avoid clash
   avatarColors: string[] = [
@@ -316,6 +333,9 @@ export class DashboardComponent implements OnInit {
     if (this.sidebarSub) {
       this.sidebarSub.unsubscribe();
     }
+  }
+  get firstRowUsers() {
+    return this.filteredUsers.slice(0, 10); // assuming 1st row is first 10 users
   }
 
   selectSection(section: 'home' | 'analysis'): void {
@@ -429,17 +449,33 @@ export class DashboardComponent implements OnInit {
     this.displayedUsers = [...this.allUsers];
     this.selectedInitial = '';
   }
+  // toggleShowItems() {
+  //   if (this.showingLimit >= this.filteredUsers.length) {
+  //     this.showingLimit = this.defaultLimit;
+  //   } else {
+  //     this.showingLimit += 10;
+  //     if (this.showingLimit > this.filteredUsers.length) {
+  //       this.showingLimit = this.filteredUsers.length;
+  //     }
+  //   }
+  // }
+
   toggleShowItems() {
-    // If currently showing all, reset to default (i.e., show less)
-    if (this.showingLimit >= this.filteredUsers.length) {
+    console.log('Clicked show more/less');
+    console.log(
+      'Before:',
+      this.showingLimit,
+      'Total:',
+      this.initialsList.length
+    );
+    if (this.showingLimit >= this.initialsList.length) {
       this.showingLimit = this.defaultLimit;
     } else {
-      this.showingLimit += 10;
-      if (this.showingLimit > this.filteredUsers.length) {
-        this.showingLimit = this.filteredUsers.length;
-      }
+      this.showingLimit += this.defaultLimit;
     }
+    console.log('After:', this.showingLimit);
   }
+
   fetchUsers(): void {
     const token = sessionStorage.getItem('token');
     if (!token) {
@@ -769,14 +805,28 @@ export class DashboardComponent implements OnInit {
   isPs1User(userId: string): boolean {
     return this.selectedPs1 === userId;
   }
+  // handlePs2Click(user: any): void {
+  //   if (!this.isPs1User(user.user_id)) {
+  //     this.selectedPs2 = [user.user_id]; // or handle multiple
+  //     this.selectedPs2Names = [user.name];
+  //     this.dropdownOpen2 = false;
+
+  //     if (this.activeFilter) {
+  //       this.fetchPs2Data(user.user_id, this.activeFilter); // ✅ correct method
+  //     }
+  //   }
+  // }
   handlePs2Click(user: any): void {
     if (!this.isPs1User(user.user_id)) {
-      this.selectedPs2 = [user.user_id]; // or handle multiple
+      this.selectedPs2 = [user.user_id];
       this.selectedPs2Names = [user.name];
       this.dropdownOpen2 = false;
 
+      // ✅ Set selected PS2 user ID so filter updates also work
+      this.selectedPs2UserId = user.user_id;
+
       if (this.activeFilter) {
-        this.fetchPs2Data(user.user_id, this.activeFilter); // ✅ correct method
+        this.loadCompareMetrics(user.user_id, this.activeFilter, true);
       }
     }
   }
@@ -786,12 +836,21 @@ export class DashboardComponent implements OnInit {
   }
 
   // Click handler for PS1 dropdown
+  // handlePs1Click(user: any): void {
+  //   if (!this.isUserSelectedInPs2(user.user_id)) {
+  //     this.selectUser(user.user_id); // ✅ Only call if not already selected in PS2
+  //     this.dropdownOpen1 = false;
+  //   } else {
+  //     console.log('User is already in PS2, not selecting for PS1');
+  //   }
+  // }
   handlePs1Click(user: any): void {
-    if (!this.isUserSelectedInPs2(user.user_id)) {
-      this.selectUser(user.user_id); // ✅ Only call if not already selected in PS2
-      this.dropdownOpen1 = false;
-    } else {
-      console.log('User is already in PS2, not selecting for PS1');
+    this.selectedPs1 = user.user_id; // ✅ this was missing
+    this.selectedUserId = user.user_id; // ✅ needed for filter-based updates
+    this.dropdownOpen1 = false;
+
+    if (this.activeFilter) {
+      this.loadCompareMetrics(user.user_id, this.activeFilter);
     }
   }
 
@@ -865,6 +924,43 @@ export class DashboardComponent implements OnInit {
   //   });
   // }
 
+  // fetchCounts(userId: string, filterType: string = '') {
+  //   let url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}`;
+
+  //   if (filterType) {
+  //     url += `&type=${filterType}`;
+  //   }
+
+  //   const token = sessionStorage.getItem('token');
+  //   if (!token) {
+  //     console.error('No token found in sessionStorage');
+  //     return;
+  //   }
+
+  //   const headers = {
+  //     Authorization: `Bearer ${token}`,
+  //   };
+
+  //   console.log('Calling API with URL:', url);
+
+  //   this.http.get<any>(url, { headers }).subscribe({
+  //     next: (response) => {
+  //       console.log('API response:', response);
+
+  //       const data = response.data;
+
+  //       // ✅ Corrected assignments
+  //       this.ps1Count = data.enquiries;
+  //       this.ps2Count = data.testDrives;
+
+  //       this.ps2Available = this.ps2Count > 0;
+  //       this.maxCount = Math.max(this.ps1Count, this.ps2Count, 100);
+  //     },
+  //     error: (error) => {
+  //       console.error('API error:', error);
+  //     },
+  //   });
+  // }
   fetchCounts(userId: string, filterType: string = '') {
     let url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}`;
 
@@ -890,12 +986,21 @@ export class DashboardComponent implements OnInit {
 
         const data = response.data;
 
-        // ✅ Corrected assignments
+        // ✅ Your existing assignments
         this.ps1Count = data.enquiries;
         this.ps2Count = data.testDrives;
 
         this.ps2Available = this.ps2Count > 0;
         this.maxCount = Math.max(this.ps1Count, this.ps2Count, 100);
+
+        // ✅ ✨ ADD THIS: Update Compare Performance table data
+        if (this.selectedPs1 === userId) {
+          this.ps1Performance[userId] = data;
+        }
+
+        if (this.selectedPs2.includes(userId)) {
+          this.ps2Performance[userId] = data;
+        }
       },
       error: (error) => {
         console.error('API error:', error);
@@ -911,11 +1016,21 @@ export class DashboardComponent implements OnInit {
 
   // Method to handle filter selection
   onFilterChange(filter: string) {
-    this.selectedFilter = filter; // Store the selected filter
-    if (this.selectedUserId) {
-      this.fetchCounts(this.selectedUserId, filter); // If a user is selected, make the API call
+    this.selectedFilter = filter;
+
+    // ✅ Update PS1 if selected
+    if (this.selectedPs1) {
+      this.fetchCounts(this.selectedPs1, filter);
+    }
+
+    // ✅ Update PS2 users if selected
+    if (this.selectedPs2 && this.selectedPs2.length > 0) {
+      this.selectedPs2.forEach((userId) => {
+        this.fetchCounts(userId, filter);
+      });
     }
   }
+
   onUserChange(userId: string, filterType: string) {
     this.isUserSelected = true;
     this.fetchFilteredData(userId, filterType);
@@ -1188,7 +1303,19 @@ export class DashboardComponent implements OnInit {
 
   onFilterClick(filter: 'Today' | 'MTD' | 'QTD' | 'YTD') {
     this.activeFilter = filter;
+
+    // Your existing call
     this.loadDashboardMetrics(filter);
+
+    // ✅ Add this to update PS1 performance data automatically
+    if (this.selectedUserId) {
+      this.loadCompareMetrics(this.selectedUserId, filter);
+    }
+
+    // ✅ Already added: update PS2 performance
+    if (this.selectedPs2UserId) {
+      this.loadCompareMetrics(this.selectedPs2UserId, filter, true);
+    }
   }
 
   loadUsers() {
@@ -1569,6 +1696,48 @@ export class DashboardComponent implements OnInit {
     const endIndex = startIndex + this.itemsPerPage;
     return this.filteredTableTestDrives.slice(startIndex, endIndex);
   }
+  loadCompareMetrics(userId: string, filter: string, isPs2: boolean = false) {
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}&type=${filter}`;
+    const token = sessionStorage.getItem('token');
+
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+
+    this.http
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .subscribe(
+        (res: any) => {
+          const performance = res?.data?.performance?.[0];
+          if (performance) {
+            if (isPs2) {
+              this.enquiriesCountPs2 = performance.enquiries;
+              this.testDrivesCountPs2 = performance.testDrives;
+              this.newOrdersCountPs2 = performance.newOrders;
+              this.cancellationsCountPs2 = performance.cancellations;
+              this.netOrdersCountPs2 = performance.netOrders;
+              this.retailCountPs2 = performance.retail;
+            } else {
+              this.enquiriesCount = performance.enquiries;
+              this.testDrivesCount = performance.testDrives;
+              this.newOrdersCount = performance.newOrders;
+              this.cancellationsCount = performance.cancellations;
+              this.netOrdersCount = performance.netOrders;
+              this.retailCount = performance.retail;
+            }
+          }
+        },
+        (error) => {
+          console.error('Compare API error:', error);
+        }
+      );
+  }
+
   loadTestDriveData() {
     const token = sessionStorage.getItem('token'); // or use localStorage if needed
 

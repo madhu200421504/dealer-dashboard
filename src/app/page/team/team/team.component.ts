@@ -66,6 +66,7 @@ export class TeamComponent {
   itemsPerPage: number = 10;
   currentPage: number = 1;
   filteredTeam: any[] = [];
+  isDeleteModalOpen = false;
 
   paginatedTeams: any[] = [];
   filteredTeamList: any[] = [];
@@ -206,6 +207,7 @@ export class TeamComponent {
   onEdit(team: Teams) {
     console.log('Edit button clicked. Team ID:', team?.team_id); // Debug log
     this.isEditMode = true; // Ensure edit mode is set
+    this.isModalOpen = true; // ✅ Add this line to open the modal
 
     // Set team object to the selected team to preserve data
     this.teamObj = { ...team };
@@ -252,6 +254,11 @@ export class TeamComponent {
 
   selectteamForDeletion(user: Teams) {
     this.selectedteamForDeletion = user;
+    this.isDeleteModalOpen = true;
+  }
+
+  closeDeleteModal() {
+    this.isDeleteModalOpen = false;
   }
   //  deleteUserId() {
   //     console.log(
@@ -315,6 +322,10 @@ export class TeamComponent {
         console.warn('Team not found:', teamNameControl.value);
       }
     }
+  }
+  openDeleteModal(team: any) {
+    this.selectedteamForDeletion = team;
+    this.isDeleteModalOpen = true;
   }
   //  displayAllTeams() {
   //     console.log('getAllTeams() function called'); // Debugging Log
@@ -427,7 +438,8 @@ export class TeamComponent {
   onItemsPerPageChange(event: any) {
     this.itemsPerPage = +event.target.value;
     this.currentPage = 1;
-    this.paginateTeams();
+
+    this.filterTeams(); // ✅ this ensures filteredTeamList is updated first
   }
 
   filterTeams() {
@@ -483,14 +495,19 @@ export class TeamComponent {
       this.selectteamForDeletion,
       this.selectedteamForDeletion
     );
+
     if (this.selectedteamForDeletion && this.selectedteamForDeletion.team_id) {
       this.masterSrv.deleteTeam(this.selectedteamForDeletion.team_id).subscribe(
         (res: TeamsResponse) => {
           this.toastr.success('Team deleted successfully', 'Success');
+
+          // ✅ Close the modal before refreshing the data
+          this.isDeleteModalOpen = false;
+
+          // ✅ Refresh team list
           this.displayAllTeams();
         },
         (error) => {
-          // alert(error.message || 'Failed to delete users'); comment for server side error not come
           this.toastr.error('Server Error', 'Error');
         }
       );

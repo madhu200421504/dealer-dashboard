@@ -2,76 +2,81 @@
   <div class="deznav-scroll">
     <ul class="metismenu" id="menu">
       <li>
-        <a routerLink="/Admin/dashboard" class="ai-icon" aria-expanded="false">
+        <!-- <a routerLink="/Admin/dashboard" class="ai-icon" aria-expanded="false">
           <i class="fa fa-tachometer-alt"></i>
           <span class="nav-text">Dashboard</span>
+        </a> -->
+        <a routerLink="/Admin/dashboard" class="ai-icon" (click)="onRoleChange('dashboard', 'Dashboard')">
+          <i class="fa fa-tachometer-alt"></i>
+          <span class="nav-text" style="font-size:18px;">Dashboard</span>
         </a>
+
+
 
         <ul aria-expanded="false">
 
         </ul>
       </li>
 
+      <!-- Masters Menu -->
       <li>
-        <!-- <a style="cursor: pointer;" class="has-arrow ai-icon" aria-expanded="false"> -->
         <a style="cursor: pointer;" class="has-arrow ai-icon" (click)="toggleMastersMenu()"
-          [attr.aria-expanded]="isMastersOpen">
+          [attr.aria-expanded]="isMastersOpen" [ngClass]="{ 'active': isMastersOpen }">
           <i class="flaticon-381-television"></i>
-
-
-          <span class="nav-text">Masters</span>
+          <span class="nav-text" style="font-size:18px;">Masters</span>
         </a>
-        <ul aria-expanded="false">
+
+        <!-- Submenu: only toggled by the above arrow click -->
+        <ul [ngClass]="{
+          'mm-collapse': !isMastersOpen,
+          'mm-show': isMastersOpen
+        }" aria-expanded="false">
           <li>
-            <a routerLink="/Admin/user-all" class="ai-icon" aria-expanded="false"
-              (click)="onRoleChange('user-all', 'User Management')">
+            <a routerLink="/Admin/user-all" (click)="onRoleChange('user-all', 'User Management')">
               User Management
             </a>
           </li>
           <li>
-            <a routerLink="/Admin/role" class="ai-icon" aria-expanded="false"
-              (click)="onRoleChange('role', 'Role Management')">
+            <a routerLink="/Admin/role" (click)="onRoleChange('role', 'Role Management')">
               Role Management
             </a>
           </li>
           <li>
-            <a routerLink="/Admin/team" class="ai-icon" aria-expanded="false"
-              (click)="onRoleChange('team-all', 'Team Management')">
+            <a routerLink="/Admin/team" (click)="onRoleChange('team-all', 'Team Management')">
               Team Management
             </a>
           </li>
           <li>
-            <a routerLink="/Admin/vehicle" class="ai-icon" aria-expanded="false"
-              (click)="onRoleChange('vehicle', 'Vehicle Management')">
+            <a routerLink="/Admin/vehicle" (click)="onRoleChange('vehicle', 'Vehicle Management')">
               Vehicle Management
             </a>
           </li>
           <li>
-            <a routerLink="/Admin/target" class="ai-icon" aria-expanded="false">
-              <!-- <i class="fa fa-tachometer-alt"></i> A better dashboard icon -->
-              <span class="nav-text">Set Targets</span>
+            <a routerLink="/Admin/target" (click)="onTargetChange('target', 'Target Management')">
+              Set Targets
             </a>
           </li>
+        </ul>
+      </li>
 
 
-          <ul aria-expanded="false">
-            <!-- <li><a href="email-read.html">Read</a></li> -->
-          </ul>
+      <ul aria-expanded="false">
+        <!-- <li><a href="email-read.html">Read</a></li> -->
+      </ul>
 
 
-          <ul aria-expanded="false">
-            <!-- <li><a href="ecom-product-grid.html">Product Grid</a></li>
+      <ul aria-expanded="false">
+        <!-- <li><a href="ecom-product-grid.html">Product Grid</a></li>
             <li><a href="ecom-product-list.html">Product List</a></li>
             <li><a href="ecom-product-detail.html">Product Details</a></li>
             <li><a href="ecom-product-order.html">Order</a></li>
             <li><a href="ecom-checkout.html">Checkout</a></li>
             <li><a href="ecom-invoice.html">Invoice</a></li>
             <li><a href="ecom-customers.html">Customers</a></li> -->
-          </ul>
+      </ul>
 
-        </ul>
-      </li>
-      <!-- <li>
+    </ul>
+    <!-- <li>
         <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
           <i class="flaticon-381-controls-3"></i>
           <span class="nav-text">Transaction</span>
@@ -87,7 +92,7 @@
           
         </ul>
       </li> -->
-      <!-- <li>
+    <!-- <li>
         <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
           <i class="flaticon-381-internet"></i>
           <span class="nav-text">Utils</span>
@@ -99,14 +104,14 @@
               Accounts
             </a>
           </li> -->
-      <!-- <li>
+    <!-- <li>
             <a routerLink="/Admin/dealer" class="ai-icon" aria-expanded="false"
               (click)="onRoleChange('dealer', 'Dealers Management')">
               Dealers
             </a>
           </li> -->
 
-      <!-- <li><a href="ui-badge.html">Badge</a></li>
+    <!-- <li><a href="ui-badge.html">Badge</a></li>
           <li><a href="ui-button.html">Button</a></li>
           <li><a href="ui-modal.html">Modal</a></li>
           <li><a href="ui-button-group.html">Button Group</a></li>
@@ -123,7 +128,7 @@
           <li><a href="ui-grid.html">Grid</a></li> -->
 
 
-      <!-- <li>
+    <!-- <li>
         <a routerLink="/Admin/target" class="ai-icon" aria-expanded="false">
           <i class="fa fa-tachometer-alt"></i> 
           <span class="nav-text">Targets</span>
@@ -131,9 +136,7 @@
 
 
 
-      <ul aria-expanded="false">
-
-      </ul>
+    <ul aria-expanded="false">
 
     </ul>
 
