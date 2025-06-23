@@ -60,3 +60,25 @@
         margin-left: 0;
     }
 }
+
+@media (width: 1024px) {
+  .content-body {
+    width: 92%;
+    /* margin: 0 auto; */
+  }
+}
+
+@media (width: 1366px) {
+  .content-body {
+    width: 79%;
+    /* margin: 0 auto; */
+  }
+}
+
+@media (width: 1440px) {
+  .content-body {
+    width: 81%;
+    /* margin: 0 auto; */
+  }
+}
+
