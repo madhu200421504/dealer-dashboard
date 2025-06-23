@@ -6,7 +6,7 @@
           <i class="fa fa-tachometer-alt"></i>
           <span class="nav-text">Dashboard</span>
         </a> -->
-        <a routerLink="/Admin/dashboard" class="ai-icon" (click)="onRoleChange('dashboard', 'Dashboard')">
+        <a routerLink="/Admin/dashboard" class="ai-icon icon-responsive" (click)="onRoleChange('dashboard', 'Dashboard')">
           <i class="fa fa-tachometer-alt" title="Dashboard"></i>
           <span class="nav-text" style="font-size:18px;">Dashboard</span>
         </a>
@@ -20,7 +20,7 @@
 
       <!-- Masters Menu -->
       <li>
-        <a style="cursor: pointer;" class="has-arrow ai-icon" (click)="toggleMastersMenu()"
+        <a style="cursor: pointer;" class="has-arrow ai-icon icon-responsive" (click)="toggleMastersMenu()"
           [attr.aria-expanded]="isMastersOpen" [ngClass]="{ 'active': isMastersOpen }">
           <i class="flaticon-381-television"></i>
           <span class="nav-text" style="font-size:18px;">Masters</span>
