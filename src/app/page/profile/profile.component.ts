@@ -1,18 +1,19 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Import CommonModule
-import { ProfileResponse } from '../../model/interface/master';
+import { CommonModule } from '@angular/common';
+import { ProfileResponse, Profile } from '../../model/interface/master';
 import { MasterService } from '../../service/master.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule], // Add CommonModule here
+  imports: [CommonModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
   masterSrv = inject(MasterService);
-  profileList = signal<ProfileResponse[]>([]);
+
+  profile = signal<Profile | null>(null); // ✅ Expecting a single object, not array
 
   ngOnInit(): void {
     this.getProfileData();
@@ -22,7 +23,7 @@ export class ProfileComponent implements OnInit {
     this.masterSrv.getProfileData().subscribe({
       next: (res: ProfileResponse) => {
         console.log('Fetched Profile Data:', res);
-        this.profileList.set([res]); // Wrap single object in array if needed
+        this.profile.set(res.data); // ✅ `res.data` is a single Profile object
       },
       error: (err) => {
         console.error('Error fetching profile data:', err);

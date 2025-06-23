@@ -394,14 +394,13 @@ export class Login1Component {
         next: (response) => {
           const message = response?.message || 'Password reset successfully';
           this.toastr.success(message, 'Success', {
-            timeOut: 8000,
+            timeOut: 3000, // Shorter toast (optional)
             closeButton: true,
           });
 
-          // Delay redirect to allow user to see the message
           setTimeout(() => {
-            this.backToLogin(); // or window.location.reload()
-          }, 2000); // Wait 2 seconds
+            this.backToLogin(); // Redirect AFTER toast disappears
+          }, 3200); // Match or slightly more than toast timeout
         },
 
         error: (error) => {
@@ -435,25 +434,70 @@ export class Login1Component {
 
   //   this.setupAutoLogout();
   // }
+  // WPKRING CODE DOWN WALA
+  // private handleSuccessfulLogin(token: string): void {
+  //   sessionStorage.setItem('token', token);
 
+  //   this.router
+  //     .navigate(['/Admin/dashboard'])
+  //     .then(() => {
+  //       window.location.reload();
+  //       this.toastr.success('Login Successful', 'Success');
+  //     })
+  //     .catch((error) => {
+  //       console.error('Navigation error:', error);
+  //       this.toastr.error('Failed to navigate to dashboard', 'Error');
+  //     });
+
+  //   this.setupAutoLogout();
+  // }
   private handleSuccessfulLogin(token: string): void {
-    // Store token in localStorage instead of sessionStorage
+    // ✅ Store token
     sessionStorage.setItem('token', token);
 
-    // Navigate to dashboard using router without page reload
-    this.router
-      .navigate(['/Admin/dashboard'])
-      .then(() => {
-        window.location.reload();
-        this.toastr.success('Login Successful', 'Success');
-      })
-      .catch((error) => {
-        console.error('Navigation error:', error);
-        this.toastr.error('Failed to navigate to dashboard', 'Error');
-      });
+    // ✅ Show toast immediately
+    this.toastr.success('Login Successful', 'Success');
 
+    // ✅ Delay navigation by 3 seconds (3000 ms)
+    setTimeout(() => {
+      this.router
+        .navigate(['/Admin/dashboard'])
+        .then(() => {
+          window.location.reload(); // Reload after successful navigation
+        })
+        .catch((error) => {
+          console.error('Navigation error:', error);
+          this.toastr.error('Failed to navigate to dashboard', 'Error');
+        });
+    }, 3000);
+
+    // ✅ Setup auto logout
     this.setupAutoLogout();
   }
+
+  // private handleSuccessfulLogin(token: string): void {
+  //   sessionStorage.setItem('token', token);
+
+  //   // ✅ Show toast
+  //   this.toastr.success('Login Successful', 'Success');
+
+  //   // ✅ Delay navigation by 3 seconds
+  //   setTimeout(() => {
+  //     console.log('Navigating to dashboard...');
+  //     this.router
+  //       .navigate(['/Admin/dashboard'])
+  //       .then(() => {
+  //         console.log('✅ Dashboard navigation complete');
+  //         // DO NOT reload here!
+  //       })
+  //       .catch((error) => {
+  //         console.error('Navigation error:', error);
+  //         this.toastr.error('Failed to navigate to dashboard', 'Error');
+  //       });
+  //   }, 3000);
+
+  //   this.setupAutoLogout();
+  // }
 
   // private setupAutoLogout(): void {
   //   setTimeout(() => {

@@ -30,7 +30,13 @@ import { Location } from '@angular/common';
 import { data, param } from 'jquery';
 import { ContextService } from '../../service/context.service';
 import { response } from 'express';
+import { Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+
 declare var $: any;
+
+
+// declare var $: any;
 @Component({
   selector: 'app-single-dealer',
   standalone: true,

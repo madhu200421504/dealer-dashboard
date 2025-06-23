@@ -21,7 +21,7 @@
                     Target</a>
             </div> -->
             <!-- Add Target Button - Only show when targetList is empty -->
-            <div class="col-xl-2 mb-4 mb-xl-0" *ngIf="targetList().length === 0">
+            <div class="col-xl-2 mb-4 mb-xl-0" *ngIf="true">
                 <!-- <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button"
                     data-toggle="modal" data-target=".bd-example-modal-lg"
                     class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
@@ -189,8 +189,8 @@
             <div class="modal-dialog modal-lg" style="top:18%;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" style="text-align: center; width: 100%">
-                            {{ targetobj.enquiries || targetobj.testDrives ? "Edit User" : "Add New Target" }}
+                        <h5 class="modal-title" style="text-align: center; width: 100%;font-size:18px;">
+                            {{ targetobj.enquiries || targetobj.testDrives ? "Add New Target" : "Add New Target" }}
                         </h5>
                         <button type="button" class="close" data-dismiss="modal">
                             <span class="x">&times;</span>

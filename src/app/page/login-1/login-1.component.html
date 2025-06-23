@@ -197,7 +197,7 @@
         <div class="i mr-3">
           <i class="fas fa-lock"></i>
         </div>
-        <div class="div relative" [class.focus]="loginObj.newPwd?.length">
+        <div class="div relative" [class.focus]="loginObj.newPwd.length">
           <h5>New Password</h5>
           <input [(ngModel)]="loginObj.newPwd" [type]="showPassword ? 'text' : 'password'" name="newPassword"
             required />
@@ -212,7 +212,7 @@
         <div class="i">
           <i class="fas fa-lock"></i>
         </div>
-        <div class="div relative" [class.focus]="loginObj.confirmPassword?.length">
+        <div class="div relative" [class.focus]="loginObj.confirmPassword.length">
           <h5>Confirm New Password</h5>
           <input [(ngModel)]="loginObj.confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'"
             name="confirmPassword" required />

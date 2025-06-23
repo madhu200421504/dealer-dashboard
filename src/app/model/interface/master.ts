@@ -6,6 +6,7 @@ import { Events } from '../class/event';
 import { Leads } from '../class/leads';
 import { UserList } from '../class/multiuser';
 import { Opportunities } from '../class/opportunities';
+import { Profile } from '../class/profile';
 import { Role } from '../class/role';
 import { Target } from '../class/target';
 import { Tasks } from '../class/tasks';
@@ -374,13 +375,10 @@ export interface roleResponse {
 }
 
 export interface ProfileResponse {
-  corporate_id: string;
-  name: string;
-  email: string;
-  role: string;
-  password: string;
+  status: number;
+  message: string;
+  data: Profile;
 }
-
 export interface ForgotPasswordRequest {
   email: string;
 }
@@ -403,7 +401,7 @@ export interface TestDrive {
   VIN?: string | null;
   PMI?: string | null;
   name: string; // present in selectedUser's test drives
-  location:string;
+  location: string;
 }
 export interface SelectedUserData {
   name: string;
@@ -464,3 +462,4 @@ export interface DashboardMetrics {
   netOrders: number;
   retail: number;
 }
+export { Profile };

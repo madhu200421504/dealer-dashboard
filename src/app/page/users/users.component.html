@@ -66,21 +66,28 @@
           <div class="row mb-3">
             <div class="col-md-6 d-flex align-items-center">
               <label class="mr-2"></label>
-              <select class="form-control" style="width: 70px; display: inline-block; border-radius: 5px;"
+              <select class="form-control" style="width: 80px; display: inline-block; border-radius: 5px;height:45px;"
                 (change)="onItemsPerPageChange($event)">
-                <option value="5">5</option>
-                <option value="10">10</option>
+                <option value="5">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
+                <option value="100">100</option>
               </select>
               <label class="ml-2">records per page</label>
             </div>
 
 
+            <!-- <div class="col-md-6 d-flex justify-content-end align-items-center">
+              <input type="text" class="form-control search-input" style="width: 250px;" placeholder="Search users..."
+                [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+            </div> -->
             <div class="col-md-6 d-flex justify-content-end align-items-center">
-              <input type="text" class="form-control search-input" style="width: 250px;margin-left:420px ;"
-                placeholder="Search users..." [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+              <div class="search-wrapper">
+                <input type="text" class="form-control search-input" placeholder="Search users..."
+                  [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+              </div>
             </div>
+
 
           </div>
 
@@ -105,7 +112,9 @@
                 </tr>
                 <tr *ngFor="let user of paginatedUsers; let i = index">
                   <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
-                  <td>{{ user.name }}</td>
+                  <!-- <td>{{ user.name }}</td> -->
+                  <td>{{ user.fname }} {{ user.lname }}</td>
+
                   <td>{{ user.email }}</td>
                   <td>{{ user.user_role }}</td>
                   <td>
@@ -225,7 +234,7 @@
     <div class="modal-dialog modal-lg" style="top:18%;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-center w-100">
+          <h5 class="modal-title text-center w-100" style="font-size:18px;">
             {{ userObj.user_id ? "Edit User" : "Add New User" }}
           </h5>
           <!-- <button type="button" class="close" data-dismiss="modal">

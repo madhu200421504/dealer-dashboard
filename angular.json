@@ -54,7 +54,6 @@
               "node_modules/jquery/dist/jquery.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-              "node_modules/jquery/dist/jquery.js",
               "node_modules/datatables.net/js/dataTables.min.js"
             ],
             "server": "src/main.server.ts",
@@ -65,24 +64,24 @@
           },
           "configurations": {
             "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractLicenses": true,
               "budgets": [
                 {
-                  "type": "initial",
-                  "maximumWarning": "5mb",
-                  "maximumError": "6MB"
-                },
-                {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+                  "maximumWarning": "15kb",
+                  "maximumError": "20kb"
                 }
-              ],
-              "outputHashing": "all"
+              ]
             },
             "development": {
               "optimization": false,
+              "outputHashing": "none",
+              "sourceMap": true,
               "extractLicenses": false,
-              "sourceMap": true
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"

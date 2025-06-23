@@ -41,12 +41,12 @@
           <div class="row mb-3">
             <div class="col-md-6 d-flex align-items-center">
               <label class="mr-2"></label>
-              <select class="form-control" style="width: 70px; display: inline-block; border-radius: 5px;"
+              <select class="form-control" style="width: 80px; display: inline-block; border-radius: 5px;height:45px;"
                 (change)="onItemsPerPageChange($event)">
-                <option value="5">5</option>
-                <option value="10">10</option>
+                <option value="5">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
+                <option value="100">100</option>
               </select>
               <label class="ml-2">records per page</label>
             </div>
@@ -69,8 +69,8 @@
                   <th>Type</th>
                   <th>VIN</th>
                   <th>Chasis number</th>
-                  <th>demo_start_date</th>
-                  <th>demo_end_date</th>
+                  <th>Demo start date</th>
+                  <th>Demo end date</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -194,7 +194,7 @@
     <div class="modal-dialog modal-lg" style="top:18%;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" style="align-items: center; margin-inline: auto">
+          <h5 class="modal-title" style="align-items: center; margin-inline: auto;font-size:18px;">
             {{ vehicleObj.vehicle_id ? "Edit Vehicle" : "Add New Vehicle" }}
           </h5>
           <!-- <button type="button" class="close" (click)="closeModal()" data-dismiss="modal">
@@ -426,6 +426,10 @@
                   </div>
                 </div>
               </div> -->
+              </div>
+            </div>
+          </div>
+      
                 <div class="modal-footer">
                   <!-- Ensure Edit button appears only if vehicle_id is defined -->
                   <ng-container

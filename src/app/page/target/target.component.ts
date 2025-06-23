@@ -210,6 +210,7 @@ export class TargetComponent implements OnInit {
     // Reset form and set edit mode flag
     this.useForm.reset(); // Reset the form
     this.isEditMode = !!target; // If target is passed, it's edit mode, otherwise create mode
+    this.isModalOpen = true;
 
     console.log('hello');
     console.log('target.enquiries:', target?.enquiries);

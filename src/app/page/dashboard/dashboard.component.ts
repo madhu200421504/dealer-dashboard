@@ -220,6 +220,8 @@ export class DashboardComponent implements OnInit {
   selectedPs: string = '';
   selectedRole: string = '';
   showRoleForm: boolean = false;
+  selectedColor: string = '';
+
   // selectedUserId = '';
   isGridView: boolean = true; // Toggle between grid and table view
   userSearchTerm: string = '';
@@ -401,13 +403,32 @@ export class DashboardComponent implements OnInit {
   //   }
   //   this.applyTableFilters();
   // }
-  filterByInitial(initial: string): void {
+  // filterByInitial(initial: string): void {
+  //   if (this.selectedInitial === initial) {
+  //     this.selectedInitial = null;
+  //   } else {
+  //     this.selectedInitial = initial;
+  //   }
+  //   this.applyTableFilters();
+  // }
+
+  filterByInitial(initial: string) {
     if (this.selectedInitial === initial) {
-      this.selectedInitial = null;
+      // If clicking the same initial again, toggle off
+      this.selectedInitial = '';
+      this.filteredUsers = [];
+      this.selectedColor = '';
     } else {
+      // Normal filtering
       this.selectedInitial = initial;
+
+      const index = this.initialsList.indexOf(initial);
+      this.selectedColor = this.avatarColors[index % this.avatarColors.length];
+
+      this.filteredUsers = this.allUsers.filter(
+        (user) => user.name && user.name.charAt(0).toUpperCase() === initial
+      );
     }
-    this.applyTableFilters();
   }
 
   clearInitialFilter(): void {
@@ -1643,6 +1664,15 @@ export class DashboardComponent implements OnInit {
     }
 
     console.log('Filtered Users:', this.filteredUsers);
+  }
+  capitalizeAndFormatName(name: string): string {
+    if (!name) return '';
+    return name
+      .trim()
+      .replace(/\s+/g, ' ')
+      .split(' ')
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+      .join(' ');
   }
 
   // calculateTotalPages(): void {

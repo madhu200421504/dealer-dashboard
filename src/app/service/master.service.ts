@@ -487,7 +487,7 @@ export class MasterService {
 
   getProfileData(): Observable<ProfileResponse> {
     const headers = this.getAuthHeaders();
-    return this.http.get<ProfileResponse>(this.apiUrl + 'show-profile', {
+    return this.http.get<ProfileResponse>(this.apiUrl + 'dealer/show-profile', {
       headers,
     });
   }

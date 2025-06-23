@@ -815,17 +815,16 @@ export class UsersComponent implements OnInit {
       const formValues = this.useForm.value;
 
       // Create the formatted name with proper space
-      const formattedName = `${formValues.fname || ''} ${
+      const formattedName = `${(formValues.fname || '').trim()} ${(
         formValues.lname || ''
-      }`
-        .trim()
-        .replace(/\s+/g, ' ');
+      ).trim()}`.replace(/\s+/g, ' ');
 
       // Set the name property correctly
       formValues.name = formattedName;
 
       // Update the userObj with all properties including the formatted name
       this.userObj = { ...this.userObj, ...formValues };
+      console.log('📤 Payload sent to backend:', this.userObj);
 
       console.log('🔍 Form Status:', this.useForm.status);
       console.log('🚀 Updated Payload before API call:', this.userObj);

@@ -48,16 +48,15 @@
           <div class="row mb-3">
             <div class="col-md-6 d-flex align-items-center">
               <label class="mr-2"></label>
-              <select class="form-control" style="width: 70px; display: inline-block; border-radius: 5px;"
+              <select class="form-control" style="width: 80px; display: inline-block; border-radius: 5px;height:45px;"
                 (change)="onItemsPerPageChange($event)">
-                <option value="5">5</option>
-                <option value="10">10</option>
+                <option value="5">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
+                <option value="100">100</option>
               </select>
               <label class="ml-2">records per page</label>
             </div>
-
             <div class="col-md-6 d-flex justify-content-end align-items-center">
               <div class="search-wrapper">
                 <input type="text" class="form-control search-input" placeholder="Search teams..."
@@ -217,7 +216,7 @@
     <div class="modal-dialog modal-lg" style="top:18%;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" style="text-align: center; width: 100%">
+          <h5 class="modal-title" style="text-align: center; width: 100%;font-size:18px;">
             {{ userObj.team_name || userObj.team_lead_email ? "Edit User" : "Add New Team" }}
           </h5>
           <!-- <button type="button" class="close" data-dismiss="modal">
@@ -250,10 +249,9 @@
             </div>
           </form>
         </div>
-      </div>
-    </div>
-    < <!-- LAST NAME -->
-      <!-- <div class="col-md-6 form-group">
+
+        <!-- LAST NAME -->
+        <!-- <div class="col-md-6 form-group">
               <label for="team_lead_email" class="form-label">Team Lead</label>
               <select id="team_lead_email" class="form-control form-control-lg" formControlName="team_lead_email"
                 (change)="onTeamChange()" [ngClass]="{
@@ -277,25 +275,25 @@
             </div> -->
 
 
-      <!-- ROLE -->
+        <!-- ROLE -->
 
 
-      <div class="modal-footer">
-        <ng-container *ngIf="teamObj.team_id; else saveButton">
-          <button type="button" class="btn btn-outline-primary" data-dismiss="modal" (click)="onUpdate()"
-            [disabled]="!isTeamNameChanged()">
-            Edit
+        <div class="modal-footer">
+          <ng-container *ngIf="teamObj.team_id; else saveButton">
+            <button type="button" class="btn btn-outline-primary" data-dismiss="modal" (click)="onUpdate()"
+              [disabled]="!isTeamNameChanged()">
+              Edit
+            </button>
+          </ng-container>
+          <button type="button" class="btn btn-outline-danger" data-dismiss="modal" (click)="closeModal()">
+            Close
           </button>
-        </ng-container>
-        <button type="button" class="btn btn-outline-danger" data-dismiss="modal" (click)="closeModal()">
-          Close
-        </button>
-        <ng-template #saveButton>
-          <button type="button" class="btn btn-outline-primary" (click)="onSave()"
-            [attr.data-dismiss]="useForm.valid ? 'modal' : null">
-            save
-          </button>
-        </ng-template>
+          <ng-template #saveButton>
+            <button type="button" class="btn btn-outline-primary" (click)="onSave()"
+              [attr.data-dismiss]="useForm.valid ? 'modal' : null">
+              save
+            </button>
+          </ng-template>
+        </div>
+
       </div>
-
-  </div>
