@@ -696,6 +696,39 @@ export class UsersComponent implements OnInit {
   //     },
   //   });
   // }
+  // onSave() {
+  //   if (this.useForm.invalid) {
+  //     this.markFormGroupTouched(this.useForm);
+  //     this.toastr.warning(
+  //       'Please fill all required fields correctly',
+  //       'Validation'
+  //     );
+  //     return;
+  //   }
+
+  //   const formData = this.useForm.value;
+  //   const selectedRole = this.roleList().find(
+  //     (role) => role.role_id === formData.role_id
+  //   );
+  //   formData.user_role = selectedRole?.role_name || '';
+
+  //   this.masterSrv.createNewUser(formData).subscribe({
+  //     next: () => {
+  //       this.toastr.success('User created successfully!', 'Success');
+  //       this.displayAllUser();
+  //       this.useForm.reset();
+  //       this.userObj = new UserList();
+
+  //       this.closeModal(); // ✅ Should hide modal if isModalOpen = false
+  //     },
+  //     error: (err) => {
+  //       this.toastr.error(
+  //         err.message || 'Failed to create user',
+  //         'Creation Error'
+  //       );
+  //     },
+  //   });
+  // }
   onSave() {
     if (this.useForm.invalid) {
       this.markFormGroupTouched(this.useForm);
@@ -718,17 +751,15 @@ export class UsersComponent implements OnInit {
         this.displayAllUser();
         this.useForm.reset();
         this.userObj = new UserList();
-
-        this.closeModal(); // ✅ Should hide modal if isModalOpen = false
+        this.closeModal();
       },
       error: (err) => {
-        this.toastr.error(
-          err.message || 'Failed to create user',
-          'Creation Error'
-        );
+        const backendMessage = err.error?.message || 'Failed to create user';
+        this.toastr.error(backendMessage, 'Creation Error');
       },
     });
   }
+
   onSaveAndClose() {
     if (this.useForm.valid) {
       this.onSave();

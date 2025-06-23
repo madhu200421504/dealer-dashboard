@@ -322,7 +322,7 @@
 
 
 
-            <div class="row" style="margin-left:5px !important;">
+            <div class="row" style="margin-left:2px !important;">
               <div class="col-md-6 form-group">
                 <label for="demo_start_date" class="form-label"
                   style="display: block; width: 100%; text-align: left;">Start date</label>
@@ -353,7 +353,7 @@
                 </div>
 
               </div>
-              <div class="col-md-6 form-group">
+              <div class="col-md-6 form-group" style="margin-left:5px ;">
                 <label for="vin" class="form-label" style="display: block; width: 100%; text-align: left;">
 
                   VIN</label>
@@ -429,36 +429,36 @@
               </div>
             </div>
           </div>
-      
-                <div class="modal-footer">
-                  <!-- Ensure Edit button appears only if vehicle_id is defined -->
-                  <ng-container
-                    *ngIf="vehicleObj.vehicle_id !== null && vehicleObj.vehicle_id !== undefined; else saveButton">
-                    <button type="button" class="btn btn-outline-primary" (click)="onUpdate()"
-                      [disabled]="!isVehicleNameChanged()">
-                      Edit
-                    </button>
-                  </ng-container>
 
-                  <button type="button" class="btn btn-outline-danger" (click)="closeModal()">
-                    Close
-                  </button>
+          <div class="modal-footer">
+            <!-- Ensure Edit button appears only if vehicle_id is defined -->
+            <ng-container
+              *ngIf="vehicleObj.vehicle_id !== null && vehicleObj.vehicle_id !== undefined; else saveButton">
+              <button type="button" class="btn btn-outline-primary" (click)="onUpdate()"
+                [disabled]="!isVehicleNameChanged()">
+                Edit
+              </button>
+            </ng-container>
 
-                  <!-- <ng-template #saveButton>
+            <button type="button" class="btn btn-outline-danger" (click)="closeModal()">
+              Close
+            </button>
+
+            <!-- <ng-template #saveButton>
             <button type="button" class="btn btn-outline-primary" (click)="onSave()"
               [attr.data-dismiss]="useForm.valid ? 'modal' : null">
               Save
             </button>
           </ng-template> -->
-                  <ng-template #saveButton>
-                    <button type="button" class="btn btn-outline-primary" (click)="onSave()">
-                      Save
-                    </button>
-                  </ng-template>
+            <ng-template #saveButton>
+              <button type="button" class="btn btn-outline-primary" (click)="onSave()">
+                Save
+              </button>
+            </ng-template>
 
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>

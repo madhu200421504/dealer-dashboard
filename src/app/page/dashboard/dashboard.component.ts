@@ -126,6 +126,7 @@ export class DashboardComponent implements OnInit {
   enquiriesCount = 0;
   testDrivesCount = 0;
   newOrdersCount = 0;
+  totalPages: number = 1;
 
   enquiriesCountPs2 = 0;
   testDrivesCountPs2 = 0;
@@ -245,6 +246,7 @@ export class DashboardComponent implements OnInit {
   filteredUsers: any[] = [];
   selectedInitial: string | null = null;
   allUsers: any[] = [];
+
   displayedUsers: any[] = [];
   initialsList: string[] = [];
   showUserModal = false;
@@ -1268,7 +1270,6 @@ export class DashboardComponent implements OnInit {
 
   loadTestDrives(data: ApiResponse['data']) {
     if (!this.selectedUser) return;
-
     const selectedUserName = this.selectedUser.name.toLowerCase();
 
     // Filter today's test drives for the user
@@ -1697,6 +1698,15 @@ export class DashboardComponent implements OnInit {
     this.onFilterOptionChange();
   }
 
+  // onFilterOptionChange(): void {
+  //   if (this.filterOption === 'today') {
+  //     this.filteredTableTestDrives = [...this.testDrivesToday];
+  //   } else if (this.filterOption === 'oneWeek') {
+  //     this.filteredTableTestDrives = [...this.testDrivesOneWeek];
+  //   }
+
+  //   this.currentPage = 1;
+  // }
   onFilterOptionChange(): void {
     if (this.filterOption === 'today') {
       this.filteredTableTestDrives = [...this.testDrivesToday];
@@ -1704,8 +1714,12 @@ export class DashboardComponent implements OnInit {
       this.filteredTableTestDrives = [...this.testDrivesOneWeek];
     }
 
-    // Reset pagination
     this.currentPage = 1;
+
+    // ✅ THIS IS MISSING IN YOUR CODE
+    this.totalPages = Math.ceil(
+      this.filteredTableTestDrives.length / this.itemsPerPage
+    );
   }
 
   // getPaginatedTableData(): any[] {
@@ -1860,9 +1874,9 @@ export class DashboardComponent implements OnInit {
     return (currentValue / maxValue) * 100;
   }
   // TODAY ATIONS
-  get totalPages(): number {
-    return Math.ceil(this.users.length / this.usersPerPage);
-  }
+  // get totalPages(): number {
+  //   return Math.ceil(this.users.length / this.usersPerPage);
+  // }
 
   get paginatedUsers() {
     const startIndex = (this.currentPage - 1) * this.usersPerPage;

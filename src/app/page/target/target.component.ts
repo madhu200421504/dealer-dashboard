@@ -94,6 +94,7 @@ export class TargetComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTarget();
+
     // this.getAllTarget();
   }
 
@@ -147,13 +148,20 @@ export class TargetComponent implements OnInit {
         this.count.set(res.data.count);
 
         // Setting the targetList signal with a single object from the response
-        this.targetList.set([
-          {
-            enquiries: res.data.enquiries,
-            testDrives: res.data.testDrives,
-            orders: res.data.orders,
-          },
-        ]);
+        // this.targetList.set([
+        //   {
+        //     enquiries: res.data.enquiries,
+        //     testDrives: res.data.testDrives,
+        //     orders: res.data.orders,
+        //   },
+        // ]);
+        const { enquiries, testDrives, orders } = res.data || {};
+
+        if (!enquiries && !testDrives && !orders) {
+          this.targetList.set([]); // Empty — show "Add Target" button
+        } else {
+          this.targetList.set([{ enquiries, testDrives, orders }]);
+        }
 
         // If you want to keep filteredTeam and paginatedTarget in sync, update them as well:
         this.filteredTeam.set(this.targetList());
@@ -230,6 +238,15 @@ export class TargetComponent implements OnInit {
       console.log('🆕 New Target Mode: Reset targetobj', this.targetobj);
     }
   }
+  isTargetDataEmpty(): boolean {
+    return (
+      !this.targetobj ||
+      (!this.targetobj.enquiries &&
+        !this.targetobj.testDrives &&
+        !this.targetobj.orders)
+    );
+  }
+
   onSearchChange() {
     const term = this.searchTerm.toLowerCase();
     const filtered = this.targetList().filter(

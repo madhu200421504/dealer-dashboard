@@ -867,6 +867,33 @@ export class VehicleComponent implements OnInit {
   //     alert('No Vehicle selected for deletion');
   //   }
   // }
+  // deleteVehicleId() {
+  //   const vehicle = this.selectedVehicleForDeletion;
+
+  //   if (vehicle && vehicle.vehicle_id) {
+  //     const vehicleId = vehicle.vehicle_id;
+
+  //     this.masterSrv.deleteVehicle(vehicleId).subscribe(
+  //       (res: VehicleResponse) => {
+  //         this.toastr.success('Vehicle deleted successfully', 'Success');
+
+  //         // ✅ Close the modal
+  //         this.isDeleteModalOpen = false;
+
+  //         // ✅ Update the signal (remove the deleted vehicle)
+  //         const updatedList = this.vehicleList().filter(
+  //           (v) => v.vehicle_id !== vehicleId
+  //         );
+  //         this.vehicleList.set(updatedList); // Update the signal
+  //       },
+  //       (error) => {
+  //         this.toastr.error('Server Error', 'Error');
+  //       }
+  //     );
+  //   } else {
+  //     alert('No Vehicle selected for deletion');
+  //   }
+  // }
   deleteVehicleId() {
     const vehicle = this.selectedVehicleForDeletion;
 
@@ -880,11 +907,17 @@ export class VehicleComponent implements OnInit {
           // ✅ Close the modal
           this.isDeleteModalOpen = false;
 
-          // ✅ Update the signal (remove the deleted vehicle)
+          // ✅ Update the signal
           const updatedList = this.vehicleList().filter(
             (v) => v.vehicle_id !== vehicleId
           );
-          this.vehicleList.set(updatedList); // Update the signal
+          this.vehicleList.set(updatedList);
+
+          // ✅ Update filteredVehicles to reflect the updated list
+          this.filteredVehicles = [...updatedList];
+
+          // ✅ Recalculate pagination
+          this.paginateVehicles();
         },
         (error) => {
           this.toastr.error('Server Error', 'Error');

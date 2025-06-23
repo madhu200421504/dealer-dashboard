@@ -27,10 +27,24 @@
                     class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
                     <i class="fa fa-plus mr-1"></i>Add Target
                 </a> -->
-                <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button"
+                <!-- <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button"
                     data-toggle="modal" data-target=".bd-example-modal-lg" data-backdrop="false"
                     class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
-                    <i class="fa fa-plus mr-1"></i>Add Target </a>
+                    <i class="fa fa-plus mr-1"></i>Add Target </a> -->
+                <a *ngIf="paginatedTarget().length === 0"
+                    class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons"
+                    style="cursor: pointer; color: white !important" (click)="openModal()" type="button"
+                    data-toggle="modal" data-target=".bd-example-modal-lg" data-backdrop="false">
+                    <i class="fa fa-plus mr-1"></i>Add Target
+                </a>
+                <!-- <div style="color: red">Paginated length: {{ paginatedTarget().length }}</div> -->
+
+
+
+
+
+
+
             </div>
 
 
@@ -74,9 +88,14 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <!-- <tr *ngIf="paginatedTarget().length === 0">
+                                    <td colspan="5" class="text-center">No target Found</td>
+                                </tr> -->
                                 <tr *ngIf="paginatedTarget().length === 0">
                                     <td colspan="5" class="text-center">No target Found</td>
                                 </tr>
+                                  
+
                                 <tr *ngFor="let target of paginatedTarget(); let i = index">
                                     <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
                                     <td>{{ target.enquiries }}</td>
