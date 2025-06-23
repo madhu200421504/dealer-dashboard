@@ -774,25 +774,25 @@ pre code {
 
 /* @media (min-width: 576px) {
   .container {
-    max-width: 540px;
+    /* max-width: 540px; */
   }
 }
 
 @media (min-width: 768px) {
   .container {
-    max-width: 720px;
+    /* max-width: 720px; */
   }
 } */
 
 /* @media (min-width: 992px) {
   .container {
-    max-width: 960px;
+    /* max-width: 960px; */
   }
 }
 
 @media (min-width: 1200px) {
   .container {
-    max-width: 1140px;
+    /* max-width: 1140px; */
   }
 } */
 
@@ -907,7 +907,7 @@ pre code {
 .col-xxl,
 .col-xxl-auto {
   position: relative;
-  width: 100%;
+  /* width: 100%; */
   padding-right: 15px;
   padding-left: 15px;
 }
@@ -8882,6 +8882,7 @@ button.bg-dark:focus {
 .mb-5,
 .my-5 {
   margin-bottom: 3rem !important;
+  margin-top: 3rem
 }
 
 .ml-5,
@@ -59605,10 +59606,11 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
 .page-titles {
   background: #fff;
   padding: 20px 40px;
+  padding-left: 7px;
   /* margin-left: 12px; */
-  margin-left: -20px;
-  margin-right: -40px;
-  margin-top: -40px;
+  /* margin-left: -20px; */
+  /* margin-right: -40px; */
+  /* margin-top: -40px; */
   border-bottom: 1px solid #f4f4f4;
 }
 
