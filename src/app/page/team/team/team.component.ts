@@ -246,8 +246,14 @@ export class TeamComponent {
     );
   }
 
+  // isTeamNameChanged(): boolean {
+  //   return this.useForm.value.name !== this.previousValue;
+  // }
+
   isTeamNameChanged(): boolean {
-    return this.useForm.value.name !== this.previousValue;
+    return (
+      this.useForm.dirty && this.useForm.value.team_name !== this.previousValue
+    );
   }
 
   selectedteamForDeletion: Teams | null = null;
@@ -539,6 +545,9 @@ export class TeamComponent {
         this.totalteam.set(0); // optional: reset count to 0 on error
       },
     });
+  }
+  min(a: number, b: number): number {
+    return Math.min(a, b);
   }
 
   // onUpdate() {

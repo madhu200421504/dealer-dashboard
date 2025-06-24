@@ -114,6 +114,7 @@ export class DashboardComponent implements OnInit {
   filterOption: 'today' | 'oneWeek' = 'today';
   selectedType: string = ''; // Add this line to define selectedType
   selectedPs2UserId: string = '';
+  pageSize: number = 10; // or whatever number of items per page you're showing
 
   testDrives: any[] = []; // <-- Declare testDrives here
   dashboardData: any = {

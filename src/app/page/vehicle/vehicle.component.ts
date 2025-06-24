@@ -109,11 +109,7 @@ export class VehicleComponent implements OnInit {
         Validators.minLength(2),
         Validators.maxLength(50),
       ]),
-      VIN: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(20),
-      ]),
+      VIN: new FormControl('', [Validators.required]),
       type: new FormControl('', [Validators.required]),
       YOM: new FormControl('', [Validators.required]),
       // chasis_number: new FormControl('', [Validators.required]), // Ensure this is correct
@@ -379,10 +375,10 @@ export class VehicleComponent implements OnInit {
       },
       error: (err) => {
         console.error('Vehicle creation error:', err);
-        this.toastr.error(
-          err.message || 'Failed to create user',
-          'Creation Error'
-        );
+
+        const backendMessage = err.error?.message || 'Failed to create vehicle';
+
+        this.toastr.error(backendMessage, 'Creation Error');
       },
     });
   }
@@ -1006,8 +1002,11 @@ export class VehicleComponent implements OnInit {
       this.vehicleObj?.vehicle_id
     );
   }
+  // isVehicleNameChanged(): boolean {
+  //   return this.useForm.value.name !== this.previousValue;
+  // }
   isVehicleNameChanged(): boolean {
-    return this.useForm.value.name !== this.previousValue;
+    return this.useForm.dirty && this.useForm.value.name !== this.previousValue;
   }
 
   // Utility Methods

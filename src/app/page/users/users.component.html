@@ -13,11 +13,11 @@
     </div> -->
     <div class="page-titles">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item" >
+        <li class="breadcrumb-item">
           <a href="javascript:void(0)" style="cursor: auto">Users</a>
         </li>
-        <li class="breadcrumb-item active" >
-          <a href="javascript:void(0)" style="cursor: auto; font-weight: 700 !important; color: black">User-All</a>
+        <li class="breadcrumb-item active">
+          <a href="javascript:void(0)" style="cursor: auto; font-weight: 700 !important; color: black">User Master</a>
         </li>
       </ol>
     </div>
@@ -250,6 +250,7 @@
           <form [formGroup]="useForm">
             <div class="row">
               <!-- Name -->
+
               <div class="col-md-6 form-group">
                 <label for="fname" class="form-label">
                   First Name <span class="text-danger">*</span>
@@ -263,7 +264,7 @@
                 <div class="text-danger" *ngIf="
                   useForm.get('fname')?.invalid && useForm.get('fname')?.touched
                 ">
-                  <span *ngIf="useForm.get('fname')?.errors?.['required']">Name is required.</span>
+                  <span *ngIf="useForm.get('fname')?.errors?.['required']">first name is required.</span>
                 </div>
               </div>
 
@@ -282,34 +283,42 @@
                 <div class="text-danger" *ngIf="
                   useForm.get('lname')?.invalid && useForm.get('lname')?.touched
                 ">
-                  <span *ngIf="useForm.get('lname')?.errors?.['required']">Name is required.</span>
+                  <span *ngIf="useForm.get('lname')?.errors?.['required']">last name is required.</span>
                 </div>
               </div>
 
               <!-- ROLE -->
-              <div class="col-md-6 form-group">
-                <!-- <label for="role_name" class="form-label">Role Name*</label> -->
-                <label for="fname" class="form-label">
-                  Role Name <span class="text-danger">*</span>
-                </label>
-                <select id="role_name" class="form-control form-control-lg" formControlName="role_id"
-                  placeholder="role name" [ngClass]="{
-                  'is-invalid':
-                    useForm.get('role_name')?.touched &&
-                    useForm.get('role_name')?.invalid
-                }">
-                  <option [ngValue]="null" disabled hidden>Select Role</option>
-                  <option *ngFor="let role of roleList()" [value]="role.role_id">
-                    {{ role.role_name }}
-                  </option>
-                </select>
-                <div class="text-danger" *ngIf="
-                  useForm.get('role_name')?.touched &&
-                  useForm.get('role_name')?.invalid
-                ">
-                  <span>Role Name is required.</span>
-                </div>
-              </div>
+           <div class="col-md-6 form-group">
+  <label for="role_id" class="form-label">
+    Role Name <span class="text-danger">*</span>
+  </label>
+
+  <select
+    id="role_id"
+    class="form-control form-control-lg"
+    formControlName="role_id"
+    [ngClass]="{
+      'is-invalid':
+        useForm.get('role_id')?.touched &&
+        useForm.get('role_id')?.invalid
+    }"
+  >
+    <option [ngValue]="null" disabled hidden>Select Role</option>
+    <option *ngFor="let role of roleList()" [value]="role.role_id">
+      {{ role.role_name }}
+    </option>
+  </select>
+
+  <div class="text-danger" *ngIf="
+    useForm.get('role_id')?.touched &&
+    useForm.get('role_id')?.invalid
+  ">
+    <span *ngIf="useForm.get('role_id')?.errors?.['required']">
+      Role name is required.
+    </span>
+  </div>
+</div>
+
 
               <!-- Email -->
               <div class="col-md-6 form-group">
@@ -334,28 +343,28 @@
 
               <!-- TEAM -->
               <div class="col-md-6 form-group">
-                <!-- <label for="team_name" class="form-label">Team name</label> -->
-                <label for="fname" class="form-label">
+                <label for="team_name" class="form-label">
                   Team name <span class="text-danger">*</span>
                 </label>
-                <select id="team_name" class="form-control form-control-lg" formControlName="team_id"
-                  (change)="onTeamChange()" placeholder="team name" [ngClass]="{
-                  'is-invalid':
-                    useForm.get('team_name')?.touched &&
-                    useForm.get('team_name')?.invalid
-                }">
-                  <option value="null" disabled hidden>Select team name</option>
+                <select id="team_name" class="form-control form-control-lg" formControlName="team_id" (change)="onTeamChange()"
+                  placeholder="team name" [ngClass]="{
+                                  'is-invalid':
+                                    useForm.get('team_id')?.touched &&
+                                    useForm.get('team_id')?.invalid
+                                }">
+                  <option [ngValue]="null" disabled hidden>Select team name</option>
                   <option *ngFor="let team of teamList()" [value]="team.team_id">
                     {{ team.team_name }}
                   </option>
                 </select>
                 <div class="text-danger" *ngIf="
-                  useForm.get('team_name')?.touched &&   
-                  useForm.get('team_name')?.invalid
-                ">
-                  <span>Team is required.</span>
+                                useForm.get('team_id')?.touched &&   
+                                useForm.get('team_id')?.invalid
+                              ">
+                  <span>Team name is required.</span>
                 </div>
               </div>
+              
 
               <!-- Phone -->
               <div class="col-md-6 form-group">

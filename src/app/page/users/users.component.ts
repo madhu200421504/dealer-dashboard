@@ -729,9 +729,39 @@ export class UsersComponent implements OnInit {
   //     },
   //   });
   // }
+  // onSave() {
+  //   if (this.useForm.invalid) {
+  //     this.markFormGroupTouched(this.useForm);
+  //     this.toastr.warning(
+  //       'Please fill all required fields correctly',
+  //       'Validation'
+  //     );
+  //     return;
+  //   }
+
+  //   const formData = this.useForm.value;
+  //   const selectedRole = this.roleList().find(
+  //     (role) => role.role_id === formData.role_id
+  //   );
+  //   formData.user_role = selectedRole?.role_name || '';
+
+  //   this.masterSrv.createNewUser(formData).subscribe({
+  //     next: () => {
+  //       this.toastr.success('User created successfully!', 'Success');
+  //       this.displayAllUser();
+  //       this.useForm.reset();
+  //       this.userObj = new UserList();
+  //       this.closeModal();
+  //     },
+  //     error: (err) => {
+  //       const backendMessage = err.error?.message || 'Failed to create user';
+  //       this.toastr.error(backendMessage, 'Creation Error');
+  //     },
+  //   });
+  // }
   onSave() {
     if (this.useForm.invalid) {
-      this.markFormGroupTouched(this.useForm);
+      this.useForm.markAllAsTouched(); // ✅ This ensures validation errors are shown
       this.toastr.warning(
         'Please fill all required fields correctly',
         'Validation'
@@ -740,6 +770,7 @@ export class UsersComponent implements OnInit {
     }
 
     const formData = this.useForm.value;
+
     const selectedRole = this.roleList().find(
       (role) => role.role_id === formData.role_id
     );
@@ -1064,8 +1095,20 @@ export class UsersComponent implements OnInit {
   // Check if the name field has been changed
 
   // Check if the name field has been changed
+  // isUserNameChanged(): boolean {
+  //   return this.useForm.value.name !== this.previousValue; // Compare the current name to the previous value
+  // }
   isUserNameChanged(): boolean {
-    return this.useForm.value.name !== this.previousValue; // Compare the current name to the previous value
+    return (
+      this.useForm.dirty &&
+      (this.useForm.value.name !== this.previousValue ||
+        this.useForm.value.email !== this.userObj.email ||
+        this.useForm.value.phone !== this.userObj.phone ||
+        this.useForm.value.role_id !== this.userObj.role_id ||
+        this.useForm.value.team_id !== this.userObj.team_id ||
+        this.useForm.value.fname !== this.userObj.fname ||
+        this.useForm.value.lname !== this.userObj.lname)
+    );
   }
 
   selectedUserForDeletion: UserList | null = null;

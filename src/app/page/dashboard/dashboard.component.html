@@ -433,9 +433,14 @@
             <option value="today">Today</option>
             <option value="oneWeek">Upcoming Week</option>
           </select>
-          <div style="font-weight: 500; font-size: 14px;">
-            Showing {{ getPaginatedTableData().length }} of {{ filteredTableTestDrives.length }} records  </div>
-
+          <!-- <div style="font-weight: 500; font-size: 14px;">
+            Showing {{ getPaginatedTableData().length }} of {{ filteredTableTestDrives.length }} records  </div> -->
+          <!-- <div style="font-weight: 500; font-size: 14px;">
+              Showing {{ (currentPage - 1) * pageSize + 1 }} to
+              {{ (currentPage - 1) * pageSize + getPaginatedTableData().length }}
+              of {{ filteredTableTestDrives.length }} records
+            </div>
+             -->
 
           <!-- <div style="display: flex; gap: 4px; align-items: center;">
               <button (click)="filterOption = 'today'; applyTableFilters()"
@@ -483,96 +488,108 @@
           </tr>
         </tbody>
       </table>
+      <div class="pagination-controls"
+        style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
+        <div style="display: flex; justify-content: center; align-items: center;">
+          <button (click)="prevPage()" [disabled]="currentPage === 1"
+            style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
+            Previous
+          </button>
 
-      <div class="pagination-controls" style="display: flex; justify-content: center; margin-top: 20px;">
-        <button (click)="prevPage()" [disabled]="currentPage === 1"
-          style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
-          Previous
-        </button>
-        <span style="padding: 8px 12px;">Page {{ currentPage }} of {{ totalPages }}</span>
-        <button (click)="nextPage()" [disabled]="currentPage === totalPages"
-          style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
-          Next
-        </button>
+          <span style="padding: 8px 12px;">Page {{ currentPage }} of {{ totalPages }}</span>
+
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+            style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
+            Next
+          </button>
+        </div>
+
+        <!-- Record range info placed under the controls -->
+        <div style="font-weight: 500; font-size: 14px; margin-top: 8px;color:black">
+          Showing {{ (currentPage - 1) * pageSize + 1 }}
+          to {{ (currentPage - 1) * pageSize + getPaginatedTableData().length }}
+          of {{ filteredTableTestDrives.length }} records
+        </div>
       </div>
+
+
+
+
     </div>
-
-
-
-
   </div>
-</div>
 
 
 
-<div *ngIf="selectedSection === 'analysis'" class="dashboard-content content-section active">
-  <!-- CONTENT FOR ANALYSIS -->
-  <div class="dashboard-container" style="margin-top:60px;">
-    <!-- Metrics and Filters Row (Combined) -->
-    <div class="metrics-row" style=" display: flex; gap: 15px; " style="margin-top: -45px;">
+  <div *ngIf="selectedSection === 'analysis'" class="dashboard-content content-section active">
+    <!-- CONTENT FOR ANALYSIS -->
+    <div class="dashboard-container" style="margin-top:60px;">
+      <!-- Metrics and Filters Row (Combined) -->
+      <div class="metrics-row" style=" display: flex; gap: 15px; " style="margin-top: -45px;">
 
-      <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.enquiries }}
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.enquiries }}
+          </div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Enquiries</div>
         </div>
-        <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Enquiries</div>
-      </div>
-      <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.testDrives }}
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.testDrives
+            }}
+          </div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Test Drives</div>
         </div>
-        <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Test Drives</div>
-      </div>
-      <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.newOrders }}
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.newOrders }}
+          </div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">New Orders</div>
         </div>
-        <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">New Orders</div>
-      </div>
-      <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.cancellations
-          }}</div>
-        <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Cancellation</div>
-      </div>
-      <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.netOrders }}
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{
+            dashboardMetrics.cancellations
+            }}</div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Cancellation</div>
         </div>
-        <div class="metric-label" style="color:black;font-size:20px;font-weight:500;;">Net Order</div>
-      </div>
-      <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.retail }}
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.netOrders }}
+          </div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;;">Net Order</div>
         </div>
-        <div class="metric-label" style="color:black;font-size:20px;font-weight:500">Retail</div>
-      </div>
+        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.retail }}
+          </div>
+          <div class="metric-label" style="color:black;font-size:20px;font-weight:500">Retail</div>
+        </div>
 
-      <!-- Last box with filters inside -->
-      <div class="metric-box"
-        style="display: flex; flex-direction: column; align-items: center; width: 500px; box-sizing: border-box; padding: 10px;border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-        <!-- Removed metric-value and label -->
+        <!-- Last box with filters inside -->
+        <div class="metric-box"
+          style="display: flex; flex-direction: column; align-items: center; width: 500px; box-sizing: border-box; padding: 10px;border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+          <!-- Removed metric-value and label -->
 
 
-        <!-- Filters inside last box -->
-        <div class="filters-title" style="margin-bottom: 8px;color:black;font-size:18px;font-weight:400;">Filters
-        </div>
-        <div class="time-filters" style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;">
-          <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
-            [class.active]="activeFilter === 'Today'" (click)="onFilterClick('Today')">
-            Today
-          </button>
-          <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
-            [class.active]="activeFilter === 'MTD'" (click)="onFilterClick('MTD')">
-            MTD
-          </button>
-          <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
-            [class.active]="activeFilter === 'QTD'" (click)="onFilterClick('QTD')">
-            QTD
-          </button>
-          <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
-            [class.active]="activeFilter === 'YTD'" (click)="onFilterClick('YTD')">
-            YTD
-          </button>
+          <!-- Filters inside last box -->
+          <div class="filters-title" style="margin-bottom: 8px;color:black;font-size:18px;font-weight:400;">Filters
+          </div>
+          <div class="time-filters" style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;">
+            <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+              [class.active]="activeFilter === 'Today'" (click)="onFilterClick('Today')">
+              Today
+            </button>
+            <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+              [class.active]="activeFilter === 'MTD'" (click)="onFilterClick('MTD')">
+              MTD
+            </button>
+            <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+              [class.active]="activeFilter === 'QTD'" (click)="onFilterClick('QTD')">
+              QTD
+            </button>
+            <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+              [class.active]="activeFilter === 'YTD'" (click)="onFilterClick('YTD')">
+              YTD
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- FILTERS SECTION (TOP SMALL BOX) -->
-    <!-- <div class="filter-section" style="margin-left: auto;">
+      <!-- FILTERS SECTION (TOP SMALL BOX) -->
+      <!-- <div class="filter-section" style="margin-left: auto;">
           <div class="filters-title">Filters</div>
           <div class="time-filters">
             <button class="filter-button" [class.active]="activeFilter === 'Today'" (click)="onFilterClick('Today')">
@@ -591,190 +608,190 @@
           </div>
         </div>
       </div> -->
-  </div>
-
-  <div class="performance-panels">
-    <div class="performance-panel">
-      <!-- Row with KPI and two dropdowns inside performance-panel -->
-      <h2 class="panel-title" style="font-size:25px;color:#313131;font-family:Montserrat;font-weight:600">
-        Compare Performance
-      </h2>
-
-      <table border="1" cellpadding="8" cellspacing="0"
-        style="width: 100%; border-collapse: collapse; text-align: center;height:500px;">
-        <thead>
-          <tr>
-            <!-- KPI Header -->
-            <th style="width: 30%; padding: 10px; color:#313131;font-weight:500;font-size:18px">KPI</th>
-
-
-            <!-- PS1 Dropdown -->
-            <!-- PS1 Dropdown -->
-            <!-- PS1 Dropdown -->
-            <th style="padding: 10px;">
-              <div style="position: relative;">
-                <div (click)="dropdownOpen1 = !dropdownOpen1"
-                  style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc; background-color: transparent; cursor: pointer; user-select: none; border-radius: 20px; color: #333; font-weight: normal;">
-                  {{ getUserName(selectedPs1) || 'PS1' }}
-                  <span style="margin-left: 8px;">&#x25BC;</span>
-                </div>
-
-                <div *ngIf="dropdownOpen1" class="custom-scroll"
-                  style="position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; background: white; z-index: 1000;">
-
-                  <div *ngFor="let user of users" (click)="handlePs1Click(user)"
-                    style="padding: 6px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: normal; color: #333;"
-                    [style.backgroundColor]="selectedPs1 === user.user_id ? '#ddd' : isUserSelectedInPs2(user.user_id) ? '#f0f0f0' : 'white'"
-                    [style.color]="isUserSelectedInPs2(user.user_id) ? '#999' : '#333'"
-                    [style.pointerEvents]="isUserSelectedInPs2(user.user_id) ? 'none' : 'auto'">
-
-                    {{ user.name }}
-                    <span *ngIf="isUserSelectedInPs2(user.user_id)"
-                      style="font-size: 20px; color: green;font-weight: bold;">&#10003;</span>
-                  </div>
-
-                </div>
-              </div>
-            </th>
-
-            <!-- PS2 Dropdown -->
-            <th style="padding: 10px;">
-              <div style="position: relative;">
-                <div (click)="dropdownOpen2 = !dropdownOpen2"
-                  style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc; background-color: transparent; cursor: pointer; user-select: none; border-radius: 20px; color: #333; font-weight: normal;">
-                  {{ selectedPs2Names.length > 0 ? selectedPs2Names[0] : 'PS2' }}
-                  <span style="margin-left: 8px;">&#x25BC;</span>
-                </div>
-
-                <div *ngIf="dropdownOpen2" class="custom-scroll"
-                  style="position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; background: white; z-index: 1000;">
-
-                  <div *ngFor="let user of users" (click)="handlePs2Click(user)"
-                    style="padding: 6px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: normal; color: #333;"
-                    [style.backgroundColor]="selectedPs2.includes(user.user_id) ? '#ddd' : isPs1User(user.user_id) ? '#f0f0f0' : 'white'"
-                    [style.color]="isPs1User(user.user_id) ? '#999' : '#333'"
-                    [style.pointerEvents]="isPs1User(user.user_id) ? 'none' : 'auto'">
-                    {{ user.name }}
-                    <span *ngIf="isPs1User(user.user_id)"
-                      style="font-size: 20px; color: green;font-weight: bold;">&#10003;</span>
-                  </div>
-
-                </div>
-              </div>
-            </th>
-          </tr>
-        <tbody>
-          <tr>
-            <td style="text-align: left; padding: 12px; color: black;">Enquiries</td>
-            <td style="color: black;font-size:18px;">{{ enquiriesCount }}</td>
-            <td style="color: black;font-size:18px;">{{ enquiriesCountPs2 }}</td>
-          </tr>
-          <tr>
-            <td style="text-align: left; padding: 12px; color: black;">Test Drives</td>
-            <td style=" color: black;font-size:18px;">{{ testDrivesCount }}</td>
-            <td style="color: black;font-size:18px;">{{ testDrivesCountPs2 }}</td>
-          </tr>
-          <tr>
-            <td style="text-align: left; padding: 12px; color: black;">New Orders</td>
-            <td style="color: black;font-size:18px;">{{ newOrdersCount }}</td>
-            <td style="color: black;font-size:18px;">{{ newOrdersCountPs2 }}</td>
-          </tr>
-          <tr>
-            <td style="text-align: left; padding: 12px; color: black;">Cancellations</td>
-            <td style="color: black;font-size:18px;">{{ cancellationsCount }}</td>
-            <td style=" color: black;font-size:18px;">{{ cancellationsCountPs2 }}</td>
-          </tr>
-          <tr>
-            <td style="text-align: left; padding: 12px; color: black;">Net Orders</td>
-            <td style=" color: black;font-size:18px;">{{ netOrdersCount }}</td>
-            <td style="color: black;font-size:18px;">{{ netOrdersCountPs2 }}</td>
-          </tr>
-          <tr>
-            <td style="text-align: left; padding: 12px; color: black;">Retail</td>
-            <td style="color: black;font-size:18px;">{{ retailCount }}</td>
-            <td style=" color: black;font-size:18px;">{{ retailCountPs2}}</td>
-          </tr>
-        </tbody>
-      </table>
-
-
-
     </div>
 
-    <div class="performance-panel">
-      <h2 class="panel-title" style="font-size:25px;color:#313131;;font-family:Montserrat;font-weight:600">Performance
-        Analysis</h2>
-      <div class="panel-content">
+    <div class="performance-panels">
+      <div class="performance-panel">
+        <!-- Row with KPI and two dropdowns inside performance-panel -->
+        <h2 class="panel-title" style="font-size:25px;color:#313131;font-family:Montserrat;font-weight:600">
+          Compare Performance
+        </h2>
 
         <table border="1" cellpadding="8" cellspacing="0"
-          style="width:100%; border-collapse: collapse; text-align: center; margin-top: 190px;padding:100px;height:500px">
+          style="width: 100%; border-collapse: collapse; text-align: center;height:500px;">
           <thead>
             <tr>
-              <th rowspan="2" style="width: 20%;"></th>
-              <th colspan="2" style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Performance</th>
-              <th colspan="2" style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Rank</th>
+              <!-- KPI Header -->
+              <th style="width: 30%; padding: 10px; color:#313131;font-weight:500;font-size:18px">KPI</th>
+
+
+              <!-- PS1 Dropdown -->
+              <!-- PS1 Dropdown -->
+              <!-- PS1 Dropdown -->
+              <th style="padding: 10px;">
+                <div style="position: relative;">
+                  <div (click)="dropdownOpen1 = !dropdownOpen1"
+                    style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc; background-color: transparent; cursor: pointer; user-select: none; border-radius: 20px; color: #333; font-weight: normal;">
+                    {{ getUserName(selectedPs1) || 'PS1' }}
+                    <span style="margin-left: 8px;">&#x25BC;</span>
+                  </div>
+
+                  <div *ngIf="dropdownOpen1" class="custom-scroll"
+                    style="position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; background: white; z-index: 1000;">
+
+                    <div *ngFor="let user of users" (click)="handlePs1Click(user)"
+                      style="padding: 6px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: normal; color: #333;"
+                      [style.backgroundColor]="selectedPs1 === user.user_id ? '#ddd' : isUserSelectedInPs2(user.user_id) ? '#f0f0f0' : 'white'"
+                      [style.color]="isUserSelectedInPs2(user.user_id) ? '#999' : '#333'"
+                      [style.pointerEvents]="isUserSelectedInPs2(user.user_id) ? 'none' : 'auto'">
+
+                      {{ user.name }}
+                      <span *ngIf="isUserSelectedInPs2(user.user_id)"
+                        style="font-size: 20px; color: green;font-weight: bold;">&#10003;</span>
+                    </div>
+
+                  </div>
+                </div>
+              </th>
+
+              <!-- PS2 Dropdown -->
+              <th style="padding: 10px;">
+                <div style="position: relative;">
+                  <div (click)="dropdownOpen2 = !dropdownOpen2"
+                    style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc; background-color: transparent; cursor: pointer; user-select: none; border-radius: 20px; color: #333; font-weight: normal;">
+                    {{ selectedPs2Names.length > 0 ? selectedPs2Names[0] : 'PS2' }}
+                    <span style="margin-left: 8px;">&#x25BC;</span>
+                  </div>
+
+                  <div *ngIf="dropdownOpen2" class="custom-scroll"
+                    style="position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; background: white; z-index: 1000;">
+
+                    <div *ngFor="let user of users" (click)="handlePs2Click(user)"
+                      style="padding: 6px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: normal; color: #333;"
+                      [style.backgroundColor]="selectedPs2.includes(user.user_id) ? '#ddd' : isPs1User(user.user_id) ? '#f0f0f0' : 'white'"
+                      [style.color]="isPs1User(user.user_id) ? '#999' : '#333'"
+                      [style.pointerEvents]="isPs1User(user.user_id) ? 'none' : 'auto'">
+                      {{ user.name }}
+                      <span *ngIf="isPs1User(user.user_id)"
+                        style="font-size: 20px; color: green;font-weight: bold;">&#10003;</span>
+                    </div>
+
+                  </div>
+                </div>
+              </th>
             </tr>
-            <tr>
-              <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Dealership</th>
-              <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">All India</th>
-              <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">All India</th>
-            </tr>
-          </thead>
           <tbody>
             <tr>
-              <td style="text-align: left; padding:12px; color:black;">Enquiries</td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.enquiries }}</td>
-              <td style="color: black;font-size:18px;">{{
-                dashboardMetrics.allIndiaBestPerformace.enquiriesCount
-                }}
-              </td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.enquiriesRank }}</td>
+              <td style="text-align: left; padding: 12px; color: black;">Enquiries</td>
+              <td style="color: black;font-size:18px;">{{ enquiriesCount }}</td>
+              <td style="color: black;font-size:18px;">{{ enquiriesCountPs2 }}</td>
             </tr>
             <tr>
-              <td style="text-align: left; padding:12px; color:black;">Test Drive</td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.testDrives }}</td>
-              <td style="color: black;font-size:18px;">{{
-                dashboardMetrics.allIndiaBestPerformace.testDrivesCount
-                }}</td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.testDrivesRank }}</td>
+              <td style="text-align: left; padding: 12px; color: black;">Test Drives</td>
+              <td style=" color: black;font-size:18px;">{{ testDrivesCount }}</td>
+              <td style="color: black;font-size:18px;">{{ testDrivesCountPs2 }}</td>
             </tr>
             <tr>
-              <td style="text-align: left; padding:12px; color:black;">New Orders</td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.newOrders }}</td>
-              <td style="color: black;font-size:18px;">{{
-                dashboardMetrics.allIndiaBestPerformace.newOrdersCount
-                }}
-              </td>
-              <td style="color: black;">{{ dashboardMetrics.allIndiaRank.newOrdersRank }}</td>
+              <td style="text-align: left; padding: 12px; color: black;">New Orders</td>
+              <td style="color: black;font-size:18px;">{{ newOrdersCount }}</td>
+              <td style="color: black;font-size:18px;">{{ newOrdersCountPs2 }}</td>
             </tr>
             <tr>
-              <td style="text-align: left; padding:12px; color:black;">Cancellations</td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.cancellations }}</td>
-              <td style="color: black;font-size:18px;">{{
-                dashboardMetrics.allIndiaBestPerformace.cancellationsCount }}</td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.cancellationsRank }}
-              </td>
+              <td style="text-align: left; padding: 12px; color: black;">Cancellations</td>
+              <td style="color: black;font-size:18px;">{{ cancellationsCount }}</td>
+              <td style=" color: black;font-size:18px;">{{ cancellationsCountPs2 }}</td>
             </tr>
             <tr>
-              <td style="text-align: left; padding:12px; color:black;">Net Orders</td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.netOrders }}</td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
-                }}
-              </td>
-              <td style="color: black;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
+              <td style="text-align: left; padding: 12px; color: black;">Net Orders</td>
+              <td style=" color: black;font-size:18px;">{{ netOrdersCount }}</td>
+              <td style="color: black;font-size:18px;">{{ netOrdersCountPs2 }}</td>
             </tr>
             <tr>
-              <td style="text-align: left; padding:12px; color:black;">Retail</td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.retail }}</td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
-                }}
-              </td>
-              <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
+              <td style="text-align: left; padding: 12px; color: black;">Retail</td>
+              <td style="color: black;font-size:18px;">{{ retailCount }}</td>
+              <td style=" color: black;font-size:18px;">{{ retailCountPs2}}</td>
             </tr>
           </tbody>
         </table>
+
+
+
+      </div>
+
+      <div class="performance-panel">
+        <h2 class="panel-title" style="font-size:25px;color:#313131;;font-family:Montserrat;font-weight:600">Performance
+          Analysis</h2>
+        <div class="panel-content">
+
+          <table border="1" cellpadding="8" cellspacing="0"
+            style="width:100%; border-collapse: collapse; text-align: center; margin-top: 190px;padding:100px;height:500px">
+            <thead>
+              <tr>
+                <th rowspan="2" style="width: 20%;"></th>
+                <th colspan="2" style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Performance</th>
+                <th colspan="2" style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Rank</th>
+              </tr>
+              <tr>
+                <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Dealership</th>
+                <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">All India</th>
+                <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">All India</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">Enquiries</td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.enquiries }}</td>
+                <td style="color: black;font-size:18px;">{{
+                  dashboardMetrics.allIndiaBestPerformace.enquiriesCount
+                  }}
+                </td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.enquiriesRank }}</td>
+              </tr>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">Test Drive</td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.testDrives }}</td>
+                <td style="color: black;font-size:18px;">{{
+                  dashboardMetrics.allIndiaBestPerformace.testDrivesCount
+                  }}</td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.testDrivesRank }}</td>
+              </tr>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">New Orders</td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.newOrders }}</td>
+                <td style="color: black;font-size:18px;">{{
+                  dashboardMetrics.allIndiaBestPerformace.newOrdersCount
+                  }}
+                </td>
+                <td style="color: black;">{{ dashboardMetrics.allIndiaRank.newOrdersRank }}</td>
+              </tr>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">Cancellations</td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.cancellations }}</td>
+                <td style="color: black;font-size:18px;">{{
+                  dashboardMetrics.allIndiaBestPerformace.cancellationsCount }}</td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.cancellationsRank }}
+                </td>
+              </tr>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">Net Orders</td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.netOrders }}</td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
+                  }}
+                </td>
+                <td style="color: black;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
+              </tr>
+              <tr>
+                <td style="text-align: left; padding:12px; color:black;">Retail</td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.retail }}</td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
+                  }}
+                </td>
+                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
 
-</div>
+  </div>

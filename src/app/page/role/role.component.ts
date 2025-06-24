@@ -72,7 +72,7 @@ export class RoleComponent implements OnInit {
     console.log('Initializing form...');
     this.useForm = new FormGroup({
       role_name: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
+      description: new FormControl(''),
     });
   }
 

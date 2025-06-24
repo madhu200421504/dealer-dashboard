@@ -56,9 +56,9 @@
 }
 
 @media only screen and (max-width: 1600px) {
-    .content-body {
-        margin-left: 0;
-    }
+  .content-body {
+    margin-left: 0;
+  }
 }
 
 @media (width: 1024px) {
@@ -81,11 +81,17 @@
     /* margin: 0 auto; */
   }
 }
+.pagination-custom {
+  margin-left: 680px;
+  margin-top: 10px;
+}
 
 @media (width: 1920px) {
   .content-body {
     width: 91.5%;
-    /* margin: 0 auto; */
+  }
+  .pagination-custom {
+    margin-left: 530px;
+    margin-top: 20px;
   }
 }
-
