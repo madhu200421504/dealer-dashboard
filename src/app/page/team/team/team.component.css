@@ -70,14 +70,14 @@
 
 @media (max-width: 1366px) {
   .content-section {
-    width: 81.5%;
+    /* width: 81.5%; */
     /* margin: 0 auto; */
   }
 }
 
 @media (width: 1440px) {
   .content-section {
-    width: 81%;
+    /* width: 81%; */
     /* margin: 0 auto; */
   }
 }
@@ -88,7 +88,7 @@
 
 @media (width: 1920px) {
   .content-section {
-    width: 91.5%;
+    /* width: 91.5%; */
   }
   /* .pagination-custom {
     margin-left: 530px;
