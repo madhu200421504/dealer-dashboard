@@ -435,45 +435,43 @@ export class Login1Component {
   //   this.setupAutoLogout();
   // }
   // WPKRING CODE DOWN WALA
+  private handleSuccessfulLogin(token: string): void {
+    sessionStorage.setItem('token', token);
+
+    this.router
+      .navigate(['/Admin/dashboard'])
+      .then(() => {
+        window.location.reload();
+        this.toastr.success('Login Successful', 'Success');
+      })
+      .catch((error) => {
+        console.error('Navigation error:', error);
+        this.toastr.error('Failed to navigate to dashboard', 'Error');
+      });
+
+    this.setupAutoLogout();
+  }
   // private handleSuccessfulLogin(token: string): void {
   //   sessionStorage.setItem('token', token);
 
-  //   this.router
-  //     .navigate(['/Admin/dashboard'])
-  //     .then(() => {
-  //       window.location.reload();
-  //       this.toastr.success('Login Successful', 'Success');
-  //     })
-  //     .catch((error) => {
-  //       console.error('Navigation error:', error);
-  //       this.toastr.error('Failed to navigate to dashboard', 'Error');
-  //     });
+  //   this.toastr.success('Login Successful', 'Success');
+
+  //   setTimeout(() => {
+  //     this.router
+  //       .navigate(['/Admin/dashboard'])
+  //       .then(() => {
+  //         setTimeout(() => {
+  //           window.location.reload(); 
+  //         }, 600); 
+  //       })
+  //       .catch((error) => {
+  //         console.error('Navigation error:', error);
+  //         this.toastr.error('Failed to navigate to dashboard', 'Error');
+  //       });
+  //   }, 1200); 
 
   //   this.setupAutoLogout();
   // }
-  private handleSuccessfulLogin(token: string): void {
-    // ✅ Store token
-    sessionStorage.setItem('token', token);
-
-    // ✅ Show toast immediately
-    this.toastr.success('Login Successful', 'Success');
-
-    // ✅ Delay navigation by 3 seconds (3000 ms)
-    setTimeout(() => {
-      this.router
-        .navigate(['/Admin/dashboard'])
-        .then(() => {
-          window.location.reload(); // Reload after successful navigation
-        })
-        .catch((error) => {
-          console.error('Navigation error:', error);
-          this.toastr.error('Failed to navigate to dashboard', 'Error');
-        });
-    }, 3000);
-
-    // ✅ Setup auto logout
-    this.setupAutoLogout();
-  }
 
   // private handleSuccessfulLogin(token: string): void {
   //   sessionStorage.setItem('token', token);

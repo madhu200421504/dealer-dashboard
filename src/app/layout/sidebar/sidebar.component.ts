@@ -21,6 +21,7 @@ export class SidebarComponent {
   onRoleChange(role: string, pageTitle: string) {
     this.context.onSideBarClick$.next({ role, pageTitle });
   }
+  
   onTargetChange(role: string, pageTitle: string) {
     this.context.onSideBarClick$.next({ role, pageTitle });
   }
