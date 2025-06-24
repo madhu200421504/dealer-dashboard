@@ -158,7 +158,7 @@
         </div>
 
         <!-- Pagination -->
-        <div class="row mt-3 align-items-center">
+        <div class="row mt-3 align-items-center" style="width:100%">
           <!-- Left: Entry count -->
           <div class=" col-md-6">
             <div class="dataTables_info">
@@ -169,7 +169,7 @@
             </div>
 
             <!-- Right: Pagination controls -->
-            <div class="col-md-6 d-flex justify-content-end ">
+            <div class="col-md-6 d-flex justify-content-end " style="display:flex;">
               <div class="dataTables_paginate paging_simple_numbers pagination-custom">
                 <ul class="pagination">
                   <li class="paginate_button page-item previous" [class.disabled]="currentPage === 1">
@@ -236,7 +236,7 @@
                 <label for="team_name" class="form-label">
                   Team Name <span class="text-danger">*</span>
                 </label>
-                                <input id="team_name" class="form-control form-control-lg" type="text" formControlName="team_name"
+                <input id="team_name" class="form-control form-control-lg" type="text" formControlName="team_name"
                   placeholder="Team Name" [ngClass]="{
                   'is-invalid':
                     useForm.get('team_name')?.touched &&
