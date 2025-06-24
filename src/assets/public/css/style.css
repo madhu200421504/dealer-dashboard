@@ -18545,7 +18545,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 
 @media only screen and (min-width: 768px) and (max-width: 1199px) {
   [data-sidebar-style="mini"][data-layout="vertical"] .deznav .metismenu>li:nth-last-child(-n + 1)>ul {
-    bottom: 0;
+    bottom: -122px;
     top: auto !important;
   }
 }
@@ -18611,7 +18611,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
     overflow: visible;
     border: 0;
     margin-left: 0;
-    left: 7.5rem;
+    /* left: 7.5rem; */
     width: 13rem;
     border-radius: 12px;
     border: 0;
