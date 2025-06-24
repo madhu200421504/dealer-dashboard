@@ -18320,18 +18320,18 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [direction="rtl"][data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .content-body {
-  margin-right: 7.5rem;
+  /* margin-right: 7.5rem; */
   margin-left: auto;
   border: 0;
 }
 
 @media only screen and (max-width: 1400px) {
   [data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .content-body {
-    margin-left: 7rem;
+    margin-left: 4rem;
   }
 
   [direction="rtl"][data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .content-body {
-    margin-right: 5rem;
+    /* margin-right: 5rem; */
     margin-left: auto;
     border: 0;
   }
@@ -19835,7 +19835,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   }
 
   [direction="rtl"][data-sidebar-style="modern"][data-layout="vertical"] .menu-toggle .content-body {
-    margin-right: 0;
+    /* margin-right: 0; */
   }
 
   [data-sidebar-style="modern"][data-layout="horizontal"] .nav-header {
