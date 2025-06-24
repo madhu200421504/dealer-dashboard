@@ -1,18 +1,18 @@
 import {
-  BaseIcon,
-  ChevronRightIcon
-} from "./chunk-JM4VZORY.js";
-import {
-  Tooltip,
-  TooltipModule
-} from "./chunk-5QDNSMVE.js";
-import "./chunk-BUGEQH7Q.js";
-import {
   Router,
   RouterLink,
   RouterLinkActive,
   RouterModule
 } from "./chunk-JH7RAIWY.js";
+import {
+  Tooltip,
+  TooltipModule
+} from "./chunk-5QDNSMVE.js";
+import {
+  BaseIcon,
+  ChevronRightIcon
+} from "./chunk-JM4VZORY.js";
+import "./chunk-BUGEQH7Q.js";
 import {
   PrimeTemplate,
   SharedModule,
