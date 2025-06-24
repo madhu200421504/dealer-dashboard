@@ -63,19 +63,19 @@
 
 @media (max-width: 1024px) {
   .content-body {
-    width: 92%;
+    width: 96%;
     /* margin: 0 auto; */
   }
 }
 
-@media (max-width: 1366px) {
+@media (width: 1366px) {
   .content-body {
     width: 79.5%;
     /* margin: 0 auto; */
   }
 }
 
-@media (max-width: 1440px) {
+@media (width: 1440px) {
   .content-body {
     width: 81%;
     /* margin: 0 auto; */
