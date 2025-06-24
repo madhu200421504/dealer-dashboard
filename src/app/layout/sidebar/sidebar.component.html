@@ -1,6 +1,6 @@
-<div class="deznav">
-  <div class="">
-    <ul class="metismenu" id="menu">
+<div class="deznav" >
+  <div class="" >
+    <ul class="metismenu" id="menu" [ngClass]="{ 'collapsed': !isSidebarOpen }">
       <li>
         
         <a routerLink="/Admin/dashboard" class="ai-icon icon-responsive" (click)="onRoleChange('dashboard', 'Dashboard')">
@@ -8,7 +8,7 @@
           <span class="nav-text" style="font-size:18px;">Dashboard</span>
         </a>
       </li>
-
+      
       <!-- Masters Menu -->
       <li>
         <a style="cursor: pointer;" class="has-arrow ai-icon icon-responsive" (click)="toggleMastersMenu()"

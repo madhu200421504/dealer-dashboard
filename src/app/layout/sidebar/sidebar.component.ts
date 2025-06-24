@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ContextService } from '../../service/context.service';
 import { CommonModule } from '@angular/common';
+import { SidebarService } from '../../service/sidebar.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,8 +16,17 @@ import { CommonModule } from '@angular/common';
 export class SidebarComponent {
   selectedValue: string = '';
   isMastersOpen = false;
+   isSidebarOpen: boolean = true;
 
-  constructor(private router: Router, private context: ContextService) {}
+  constructor(private router: Router, private context: ContextService, private sidebarService: SidebarService, private cdr: ChangeDetectorRef) {}
+
+  ngOnInit() {
+    this.sidebarService.isOpen$.subscribe((open: boolean) => {
+      this.isSidebarOpen = open;
+      this.cdr.detectChanges();
+      console.log('Sidebar state changed:', this.isSidebarOpen);
+    });
+  }
 
   onRoleChange(role: string, pageTitle: string) {
     this.context.onSideBarClick$.next({ role, pageTitle });

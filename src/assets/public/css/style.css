@@ -18316,7 +18316,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .content-body {
-  margin-left: 3.5rem;
+  margin-left: 7rem;
 }
 
 [direction="rtl"][data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .content-body {
@@ -18327,7 +18327,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 
 @media only screen and (max-width: 1400px) {
   [data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .content-body {
-    margin-left: 2rem;
+    margin-left: 7rem;
   }
 
   [direction="rtl"][data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .content-body {

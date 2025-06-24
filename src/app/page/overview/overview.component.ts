@@ -16,10 +16,16 @@ export class OverviewComponent {
 
   constructor(private sidebarService: SidebarService) {}
 
+   ngOnInit(): void {
+    this.sidebarService.isOpen$.subscribe((open) => {
+      this.isSidebarOpen = open;
+    });
+  }
+
   isSidebarOpen = true;
 
    toggleSidebar() {
-    this.isSidebarOpen = !this.isSidebarOpen;
+    // this.isSidebarOpen = !this.isSidebarOpen;
     this.sidebarService.toggleSidebar();
   }
 

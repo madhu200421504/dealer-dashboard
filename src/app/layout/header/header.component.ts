@@ -60,7 +60,8 @@ export class HeaderComponent implements OnInit {
 
   onToggleClick() {
     console.log('Hamburger clicked'); // 👈 test log
-    this.sidebarToggle.emit();
+    // this.sidebarToggle.emit();
+    this.sidebarService.toggleSidebar();
   }
 
   private updateTitle(): void {
