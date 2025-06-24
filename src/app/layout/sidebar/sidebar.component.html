@@ -1,6 +1,6 @@
-<div class="deznav">
-  <div class="deznav-scroll">
-    <ul class="metismenu" id="menu">
+<div class="deznav" >
+  <div class="" >
+    <ul class="metismenu" id="menu" [ngClass]="{ 'collapsed': !isSidebarOpen }">
       <li>
 
         <a routerLink="/Admin/dashboard" class="ai-icon icon-responsive"
@@ -9,19 +9,18 @@
           <span class="nav-text" style="font-size:18px;">Dashboard</span>
         </a>
       </li>
-
+      
       <!-- Masters Menu -->
       <li>
         <a style="cursor: pointer;" class="has-arrow ai-icon icon-responsive" (click)="toggleMastersMenu()"
-          [attr.aria-expanded]="isMastersOpen" [ngClass]="{ 'active': isMastersOpen }">
+          [attr.aria-expanded]="isMastersOpen" >
           <i class="flaticon-381-television"></i>
           <span class="nav-text" style="font-size:18px;margin-left:-10px;">Masters</span>
         </a>
 
         <!-- Submenu: only toggled by the above arrow click -->
         <ul [ngClass]="{
-          'mm-collapse': !isMastersOpen,
-          'mm-show': isMastersOpen
+          
         }">
           <li>
             <a routerLink="/Admin/user-all" (click)="onRoleChange('user-all', 'User Management')">

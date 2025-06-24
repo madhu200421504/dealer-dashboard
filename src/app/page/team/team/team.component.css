@@ -61,14 +61,14 @@
   }
 }
 
-@media (width: 1024px) {
+@media (max-width: 1024px) {
   .content-body {
-    width: 92%;
+    width: 96% !important;
     /* margin: 0 auto; */
   }
 }
 
-@media (width: 1366px) {
+@media (max-width: 1366px) {
   .content-body {
     width: 79.5%;
     /* margin: 0 auto; */

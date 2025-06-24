@@ -18228,7 +18228,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   display: block;
   height: auto;
   overflow: visible;
-  margin-left: .5em;
+  /* margin-left: .5em; */
 }
 
 [data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .deznav .metismenu>li {
@@ -18316,7 +18316,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .content-body {
-  margin-left: 3.5rem;
+  margin-left: 7rem;
 }
 
 [direction="rtl"][data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .content-body {
@@ -18327,7 +18327,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 
 @media only screen and (max-width: 1400px) {
   [data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .content-body {
-    margin-left: 2rem;
+    margin-left: 7rem;
   }
 
   [direction="rtl"][data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .content-body {
@@ -18545,7 +18545,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 
 @media only screen and (min-width: 768px) and (max-width: 1199px) {
   [data-sidebar-style="mini"][data-layout="vertical"] .deznav .metismenu>li:nth-last-child(-n + 1)>ul {
-    bottom: 0;
+    bottom:0;
     top: auto !important;
   }
 }
@@ -18611,7 +18611,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
     overflow: visible;
     border: 0;
     margin-left: 0;
-    left: 7.5rem;
+    /* left: 7.5rem; */
     width: 13rem;
     border-radius: 12px;
     border: 0;
