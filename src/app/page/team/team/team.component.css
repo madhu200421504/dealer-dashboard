@@ -81,11 +81,17 @@
     /* margin: 0 auto; */
   }
 }
+.pagination-custom {
+  margin-left: 680px;
+  margin-top: 10px;
+}
 
 @media (width: 1920px) {
   .content-section {
     width: 91.5%;
-    /* margin: 0 auto; */
+  }
+  .pagination-custom {
+    margin-left: 530px;
+    margin-top: 20px;
   }
 }
-

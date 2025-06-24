@@ -2,9 +2,10 @@
   <div class="" >
     <ul class="metismenu" id="menu" [ngClass]="{ 'collapsed': !isSidebarOpen }">
       <li>
-        
-        <a routerLink="/Admin/dashboard" class="ai-icon icon-responsive" (click)="onRoleChange('dashboard', 'Dashboard')">
-          <i class="fa fa-tachometer-alt" title="Dashboard"></i>
+
+        <a routerLink="/Admin/dashboard" class="ai-icon icon-responsive"
+          (click)="onRoleChange('dashboard', 'Dashboard')">
+          <i class="fa fa-tachometer-alt"></i>
           <span class="nav-text" style="font-size:18px;">Dashboard</span>
         </a>
       </li>
@@ -14,7 +15,7 @@
         <a style="cursor: pointer;" class="has-arrow ai-icon icon-responsive" (click)="toggleMastersMenu()"
           [attr.aria-expanded]="isMastersOpen" >
           <i class="flaticon-381-television"></i>
-          <span class="nav-text" style="font-size:18px;">Masters</span>
+          <span class="nav-text" style="font-size:18px;margin-left:-10px;">Masters</span>
         </a>
 
         <!-- Submenu: only toggled by the above arrow click -->
@@ -49,7 +50,7 @@
         </ul>
       </li>
     </ul>
-    
+
     <div class="copyright" style="margin-top:280px;">
       <!-- <p>Tixia Ticketing Admin Dashboard© 2020 All Rights Reserved</p> -->
       <!-- <p class="op5">Made with <i class="fa fa-heart"></i> by DexignZone</p> -->

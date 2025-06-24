@@ -6,7 +6,8 @@
           <a href="javascript:void(0)" style="cursor: auto">Transaction</a>
         </li>
         <li class="breadcrumb-item active">
-          <a href="javascript:void(0)" style="cursor: auto; font-weight: 700 !important; color: black">Vehicle</a>
+          <a href="javascript:void(0)" style="cursor: auto; font-weight: 700 !important; color: black">Vehicle
+            Master</a>
         </li>
       </ol>
     </div>
@@ -230,14 +231,19 @@
             </div>
 
             <div class="form-group col-md-6">
-              <!-- <label for="YOM" class="form-label"
-                          style="display: block; width: 100%; text-align: left;">YOM</label> -->
               <label for="YOM" class="form-label" style="display: block; width: 100%; text-align: left;">
-                YOM<span style="color: red;">*</span>
+                YOM <span class="text-danger">*</span>
               </label>
               <input id="YOM" type="date" class="form-control form-control-lg" formControlName="YOM"
+                [ngClass]="{ 'is-invalid': useForm.get('YOM')?.touched && useForm.get('YOM')?.invalid }"
                 style="cursor: text" />
+
+              <!-- Validation message -->
+              <div class="text-danger" *ngIf="useForm.get('YOM')?.touched && useForm.get('YOM')?.invalid">
+                <span *ngIf="useForm.get('YOM')?.errors?.['required']">YOM is required.</span>
+              </div>
             </div>
+
           </div>
 
 
@@ -295,37 +301,31 @@
 
                     </div> -->
 
-            <div class="col-md-6 form-group">
-              <label for="chasis_number" class="form-label"
-                style="display: block; width: 100%; text-align: left;">Chasis Number</label>
-              <input id="chasis_number" class="form-control form-control-lg" type="text"
-                placeholder="Enter Chassis Number" formControlName="chasis_number"
-                [ngClass]="{'is-invalid': useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid}" />
-
-              <!-- <select style="cursor: pointer" id="typeSelect" formControlName="type"
-                          class="form-control form-control-lg" [ngClass]="{
-                                    'is-invalid':
-                                      useForm.get('type')?.touched && useForm.get('type')?.invalid
-                                  }">
-                          <option value="null" disabled>Select Type</option>
-                          <option value="petrol">Petrol</option>
-                          <option value="diesel">Diesel</option>
-                          <option value="EV">EV</option>
-                        </select> -->
-              <!-- Error Message -->
-              <div class="text-danger" *ngIf="
-                                    useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid
-                                  ">
-                <span>chasis number is required.</span>
-              </div>
-            </div>
-
+                    <div class="col-md-6 form-group">
+                      <label for="chasis_number" class="form-label" style="display: block; width: 100%; text-align: left;">
+                        Chasis Number <span class="text-danger">*</span>
+                      </label>
+                    
+                      <input id="chasis_number" class="form-control form-control-lg" type="text" placeholder="Enter Chassis Number"
+                        formControlName="chasis_number" [ngClass]="{
+                                              'is-invalid':
+                                                useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid
+                                            }" />
+                    
+                      <!-- Error Message -->
+                      <div class="text-danger" *ngIf="useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid">
+                        <span *ngIf="useForm.get('chasis_number')?.errors?.['required']">Chasis number is required.</span>
+                      </div>
+                    </div>
+                    
 
 
             <div class="row" style="margin-left:2px !important;">
               <div class="col-md-6 form-group">
-                <label for="demo_start_date" class="form-label"
-                  style="display: block; width: 100%; text-align: left;">Start date</label>
+                <label for="demo_start_date" class="form-label" style="display: block; width: 100%; text-align: left;">
+                  Start date <span class="text-danger">*</span>
+                </label>
+
                 <input id="demo_start_date" class="form-control form-control-lg" type="date" placeholder="start date"
                   formControlName="demo_start_date" [ngClass]="{
                                     'is-invalid':
@@ -340,32 +340,46 @@
               </div>
 
               <div class="col-md-6 form-group">
-                <label for="demo_end_date" class="form-label" style="display: block; width: 100%; text-align: left;">End
-                  date</label>
+                <label for="demo_end_date" class="form-label" style="display: block; width: 100%; text-align: left;">
+                  End date <span class="text-danger">*</span>
+                </label>
+
                 <input id="demo_end_date" class="form-control form-control-lg" type="date" placeholder="end date"
                   style="margin-left:-10px;" formControlName="demo_end_date" [ngClass]="{
                                                                         'is-invalid':
                                                                           useForm.get('end_date')?.touched && useForm.get('end_date')?.invalid
                                                                       }" />
 
-                <div class="text-danger" *ngIf="useForm.get('end_date')?.touched && useForm.get('end_date')?.invalid">
-                  <span>end date is required.</span>
+                <div class="text-danger"
+                  *ngIf="useForm.get('demo_end_date')?.touched && useForm.get('demo_end_date')?.invalid">
+                  <span>End date is required.</span>
                 </div>
 
               </div>
-              <div class="col-md-6 form-group" style="margin-left:5px ;">
+              <div class="col-md-6 form-group" style="margin-left:5px;">
                 <label for="vin" class="form-label" style="display: block; width: 100%; text-align: left;">
-
-                  VIN</label>
-                <input id="vin" class="form-control form-control-lg" type="text" placeholder="vin"
-                  style="margin-left:-10px;" formControlName="VIN" [ngClass]="{
-                                                                                      'is-invalid':
-                                                                                        useForm.get('vin')?.touched && useForm.get('vin')?.invalid
-                                                                                    }" />
-
-                <div class="text-danger" *ngIf="useForm.get('vin')?.touched && useForm.get('vin')?.invalid">
-                  <span>vin is required.</span>
+                  VIN <span class="text-danger">*</span>
+                </label>
+              
+                <input
+                  id="vin"
+                  class="form-control form-control-lg"
+                  type="text"
+                  placeholder="VIN"
+                  style="margin-left:-10px;"
+                  formControlName="VIN"
+                  [ngClass]="{
+                    'is-invalid':
+                      useForm.get('VIN')?.touched && useForm.get('VIN')?.invalid
+                  }"
+                />
+              
+                <!-- Error Message -->
+                <div class="text-danger" *ngIf="useForm.get('VIN')?.touched && useForm.get('VIN')?.invalid">
+                  <span *ngIf="useForm.get('VIN')?.errors?.['required']">VIN is required.</span>
                 </div>
+            
+              
 
                 <!-- <div class="col-md-6 form-group" style="margin-top:-30px;">
                     <label for="end_date" class="form-label">End date</label>

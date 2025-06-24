@@ -7,7 +7,7 @@
           <a href="javascript:void(0)" style="cursor: auto">Utils</a>
         </li>
         <li class="breadcrumb-item active">
-          <a href="javascript:void(0)" style="cursor: auto; font-weight: 700 !important; color: black">Team-All</a>
+          <a href="javascript:void(0)" style="cursor: auto; font-weight: 700 !important; color: black">Team Master</a>
         </li>
       </ol>
     </div>
@@ -169,8 +169,8 @@
             </div>
 
             <!-- Right: Pagination controls -->
-            <div class="col-md-6 d-flex justify-content-end" style="margin-left:1300px;margin-top:-20px;">
-              <div class="dataTables_paginate paging_simple_numbers">
+            <div class="col-md-6 d-flex justify-content-end ">
+              <div class="dataTables_paginate paging_simple_numbers pagination-custom">
                 <ul class="pagination">
                   <li class="paginate_button page-item previous" [class.disabled]="currentPage === 1">
                     <a class="page-link" (click)="previousPage()">Previous</a>
@@ -233,8 +233,10 @@
             <div class="row">
               <!-- Name -->
               <div class="col-md-6 form-group">
-                <label for="team_name" class="form-label">Team Name</label>
-                <input id="team_name" class="form-control form-control-lg" type="text" formControlName="team_name"
+                <label for="team_name" class="form-label">
+                  Team Name <span class="text-danger">*</span>
+                </label>
+                                <input id="team_name" class="form-control form-control-lg" type="text" formControlName="team_name"
                   placeholder="Team Name" [ngClass]="{
                   'is-invalid':
                     useForm.get('team_name')?.touched &&

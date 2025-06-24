@@ -94,7 +94,7 @@
                                 <tr *ngIf="paginatedTarget().length === 0">
                                     <td colspan="5" class="text-center">No target Found</td>
                                 </tr>
-                                  
+
 
                                 <tr *ngFor="let target of paginatedTarget(); let i = index">
                                     <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
@@ -211,9 +211,11 @@
                         <h5 class="modal-title" style="text-align: center; width: 100%;font-size:18px;">
                             {{ targetobj.enquiries || targetobj.testDrives ? "Add New Target" : "Add New Target" }}
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal">
+                        <!-- <button type="button" class="close" data-dismiss="modal">
                             <span class="x">&times;</span>
-                        </button>
+                        </button> -->
+                        <button type="button" class="close" (click)="closeModal()">
+                            <span class="x">&times;</span> </button>
                     </div>
 
                     <div class="modal-body">
@@ -277,10 +279,15 @@
 
                                 <div class="modal-footer">
                                     <ng-container *ngIf="isEditMode">
-                                        <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
+                                        <!-- <button type="button" class="btn btn-outline-primary" data-dismiss="modal"
+                                            (click)="onUpdate()">
+                                            Edit
+                                        </button> -->
+                                        <button type="button" class="btn btn-outline-primary" [disabled]="!useForm.dirty || useForm.invalid"
                                             (click)="onUpdate()">
                                             Edit
                                         </button>
+
                                     </ng-container>
                                     <ng-container *ngIf="!isEditMode">
                                         <button type="button" id="bd-example-modal-lg" class="btn btn-outline-primary"

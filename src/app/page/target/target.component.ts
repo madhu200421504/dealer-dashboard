@@ -246,7 +246,11 @@ export class TargetComponent implements OnInit {
         !this.targetobj.orders)
     );
   }
-
+  isTeamNameChanged(): boolean {
+    return (
+      this.useForm.dirty && this.useForm.value.team_name !== this.previousValue
+    );
+  }
   onSearchChange() {
     const term = this.searchTerm.toLowerCase();
     const filtered = this.targetList().filter(
