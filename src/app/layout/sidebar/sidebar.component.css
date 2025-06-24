@@ -14,34 +14,3 @@
 .menu{
   margin-top: 10px;
 }
-
-/* Ensure parent <li> holds its submenu absolutely */
-.menu-item-hover {
-  position: relative;
-}
-
-.menu-item-hover .submenu {
-  display: none;
-  position: absolute;
-  left: 100%;
-  top: 0;
-  background: #fff;
-  min-width: 200px;
-  z-index: 9999;
-  box-shadow: 0 0 10px rgba(0,0,0,0.15);
-}
-
-.menu-item-hover:hover .submenu {
-  display: block;
-}
-
-/* Optional: style submenu links */
-.menu-item-hover .submenu a {
-  display: block;
-  padding: 10px;
-  color: #000;
-  text-decoration: none;
-}
-.menu-item-hover .submenu a:hover {
-  background: #eee;
-}

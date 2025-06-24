@@ -2,32 +2,55 @@
   <div class="deznav-scroll">
     <ul class="metismenu" id="menu">
       <li>
-        <a routerLink="/Admin/dashboard" class="ai-icon icon-responsive"
-          (click)="onRoleChange('dashboard', 'Dashboard')">
+        
+        <a routerLink="/Admin/dashboard" class="ai-icon icon-responsive" (click)="onRoleChange('dashboard', 'Dashboard')">
           <i class="fa fa-tachometer-alt" title="Dashboard"></i>
           <span class="nav-text" style="font-size:18px;">Dashboard</span>
         </a>
       </li>
 
       <!-- Masters Menu -->
-      <!-- Masters Menu -->
-      <li class="menu-item-hover">
-        <a class="ai-icon icon-responsive">
+      <li>
+        <a style="cursor: pointer;" class="has-arrow ai-icon icon-responsive" (click)="toggleMastersMenu()"
+          [attr.aria-expanded]="isMastersOpen" [ngClass]="{ 'active': isMastersOpen }">
           <i class="flaticon-381-television"></i>
           <span class="nav-text" style="font-size:18px;">Masters</span>
         </a>
 
-        <ul class="submenu">
-          <li><a routerLink="/Admin/user-all">User Management</a></li>
-          <li><a routerLink="/Admin/role">Role Management</a></li>
-          <li><a routerLink="/Admin/team">Team Management</a></li>
-          <li><a routerLink="/Admin/vehicle">Vehicle Management</a></li>
-          <li><a routerLink="/Admin/target">Set Targets</a></li>
+        <!-- Submenu: only toggled by the above arrow click -->
+        <ul [ngClass]="{
+          'mm-collapse': !isMastersOpen,
+          'mm-show': isMastersOpen
+        }">
+          <li>
+            <a routerLink="/Admin/user-all" (click)="onRoleChange('user-all', 'User Management')">
+              User Management
+            </a>
+          </li>
+          <li>
+            <a routerLink="/Admin/role" (click)="onRoleChange('role', 'Role Management')">
+              Role Management
+            </a>
+          </li>
+          <li>
+            <a routerLink="/Admin/team" (click)="onRoleChange('team-all', 'Team Management')">
+              Team Management
+            </a>
+          </li>
+          <li>
+            <a routerLink="/Admin/vehicle" (click)="onRoleChange('vehicle', 'Vehicle Management')">
+              Vehicle Management
+            </a>
+          </li>
+          <li>
+            <a routerLink="/Admin/target" (click)="onTargetChange('target', 'Target Management')">
+              Set Targets
+            </a>
+          </li>
         </ul>
       </li>
-
     </ul>
-
+    
     <div class="copyright" style="margin-top:280px;">
       <!-- <p>Tixia Ticketing Admin Dashboard© 2020 All Rights Reserved</p> -->
       <!-- <p class="op5">Made with <i class="fa fa-heart"></i> by DexignZone</p> -->

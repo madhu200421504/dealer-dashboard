@@ -18228,7 +18228,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   display: block;
   height: auto;
   overflow: visible;
-  margin-left: .5em;
+  /* margin-left: .5em; */
 }
 
 [data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .deznav .metismenu>li {
@@ -18545,7 +18545,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 
 @media only screen and (min-width: 768px) and (max-width: 1199px) {
   [data-sidebar-style="mini"][data-layout="vertical"] .deznav .metismenu>li:nth-last-child(-n + 1)>ul {
-    bottom: -122px;
+    bottom:0;
     top: auto !important;
   }
 }
