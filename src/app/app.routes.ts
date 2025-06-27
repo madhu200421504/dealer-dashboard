@@ -134,6 +134,7 @@ export const routes: Routes = [
         component: DashboardComponent,
         data: { title: 'Dashboard' },
         canActivate: [AuthGuard],
+        runGuardsAndResolvers: 'always', // ✅ ADD THIS LINE
       },
       {
         path: 'dealer',

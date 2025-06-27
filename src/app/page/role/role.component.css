@@ -11,6 +11,7 @@
   padding: 20px;
   flex-grow: 1;
 }
+
 .table-responsive {
   width: 100%;
   overflow-x: auto;
@@ -58,4 +59,10 @@ body {
 }
 .modal.d-block[hidden] {
   display: none !important;
+}
+/* Remove ❌ icon from Bootstrap invalid select dropdowns */
+select.form-control.is-invalid,
+select.form-control.form-control-lg.is-invalid {
+  background-image: none !important;
+  padding-right: 0.75rem !important; /* optional: adjust spacing if needed */
 }

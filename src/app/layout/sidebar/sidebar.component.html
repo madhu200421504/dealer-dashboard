@@ -1,48 +1,49 @@
-<div class="deznav" >
-  <div class="" >
+<div class="deznav">
+  <div>
     <ul class="metismenu" id="menu" [ngClass]="{ 'collapsed': !isSidebarOpen }">
-      <li>
 
-        <a routerLink="/Admin/dashboard" class="ai-icon icon-responsive"
-          (click)="onRoleChange('dashboard', 'Dashboard')">
+      <!-- Dashboard -->
+      <li>
+        <a routerLink="/Admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+          class="ai-icon icon-responsive" (click)="onRoleChange('dashboard', 'Dashboard')">
           <i class="fa fa-tachometer-alt"></i>
           <span class="nav-text" style="font-size:18px;">Dashboard</span>
         </a>
       </li>
-      
+
+
       <!-- Masters Menu -->
-      <li>
+      <li routerLinkActive="menu-open" [routerLinkActiveOptions]="{ exact: false }">
         <a style="cursor: pointer;" class="has-arrow ai-icon icon-responsive" (click)="toggleMastersMenu()"
-          [attr.aria-expanded]="isMastersOpen" >
+          [attr.aria-expanded]="isMastersOpen">
           <i class="flaticon-381-television"></i>
-          <span class="nav-text" style="font-size:18px;margin-left:-10px;">Masters</span>
+          <span class="nav-text" style="font-size:18px;margin-left:-10px;">
+            Masters
+          </span>
         </a>
 
-        <!-- Submenu: only toggled by the above arrow click -->
-        <ul [ngClass]="{
-          
-        }">
-          <li>
+        <ul>
+          <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             <a routerLink="/Admin/user-all" (click)="onRoleChange('user-all', 'User Management')">
               User Management
             </a>
           </li>
-          <li>
+          <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             <a routerLink="/Admin/role" (click)="onRoleChange('role', 'Role Management')">
               Role Management
             </a>
           </li>
-          <li>
+          <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             <a routerLink="/Admin/team" (click)="onRoleChange('team-all', 'Team Management')">
               Team Management
             </a>
           </li>
-          <li>
+          <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             <a routerLink="/Admin/vehicle" (click)="onRoleChange('vehicle', 'Vehicle Management')">
               Vehicle Management
             </a>
           </li>
-          <li>
+          <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             <a routerLink="/Admin/target" (click)="onTargetChange('target', 'Target Management')">
               Set Targets
             </a>

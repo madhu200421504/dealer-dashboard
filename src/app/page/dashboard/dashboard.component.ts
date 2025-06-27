@@ -38,6 +38,8 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { SidebarService } from '../../service/sidebar.service';
 import { Subscription } from 'rxjs';
+// import { ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 // Register all chart components
 Chart.register(...registerables);
@@ -295,9 +297,12 @@ export class DashboardComponent implements OnInit {
     private http: HttpClient,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef, // 👈 Add this
-    private sidebarService: SidebarService
+    private sidebarService: SidebarService,
+    private toastr: ToastrService
   ) {}
   ngOnInit(): void {
+    console.log('✅ DashboardComponent initialized');
+
     this.sidebarService.isOpen$.subscribe((open) => {
       this.isSidebarOpen = open;
     });

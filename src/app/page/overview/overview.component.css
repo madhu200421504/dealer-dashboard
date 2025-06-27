@@ -13,6 +13,11 @@
     margin-left: 42px !important;
   }
 }
+/* @media (min-width: 1280px) and (max-width: 1400px) {
+  .content-body {
+    margin-left: 300px !important;
+  }
+} */
 
 #main-wrapper.sidebar-collapsed .deznav {
   width: 80px;
@@ -29,7 +34,7 @@
 }
 
 @media screen and (min-width: 1920px) {
-   .content-body[_ngcontent-ng-c826715629] {
+  .content-body[_ngcontent-ng-c826715629] {
     margin-left: 336px;
   }
 }
@@ -40,14 +45,13 @@
   }
 }
 
-
 /* Adjust layout spacing based on sidebar */
 #main-wrapper {
   display: flex;
 }
 
 .content-body {
-  margin-left: 250px ;
+  margin-left: 250px;
   transition: margin-left 0.3s ease;
   width: 100%;
 }
@@ -60,6 +64,48 @@
 
 /* .sidebar-collapsed .content-body {
   margin-left: 80px;
+} */
+/* @media (min-width: 992px) and (max-width: 1199.98px) {
+  .content-body {
+    margin-left: 347px;
+  }
+} */
+
+@media (min-width: 1601px) {
+  .content-body {
+    margin-left: 347px;
+  }
+}
+
+/* @media (min-width: 769px) {
+  .content-body {
+    margin-left: 100px !important;
+  }
+} */
+@media (min-width: 768px) and (max-width: 1400px) {
+  .content-body {
+    /* margin-left: 100px !important; Override any leftover 250px */
+  }
+
+  [data-sidebar-style="mini"] .content-body {
+    margin-left: 5rem !important; /* Only when mini sidebar is active */
+  }
+}
+@media (min-width: 769px) and (max-width: 819px) {
+  .content-body {
+    margin-left: 100px !important;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1279px) {
+  .content-body {
+    margin-left: 100px !important;
+  }
+}
+/* @media (min-width: 1280) and (max-width: 1279px) {
+  .content-body {
+    margin-left: -100px !important;
+  }
 } */
 
 /* Responsive */

@@ -441,16 +441,31 @@ export class Login1Component {
     this.router
       .navigate(['/Admin/dashboard'])
       .then(() => {
-        window.location.reload();
-        this.toastr.success('Login Successful', 'Success');
+        window.location.reload(); // ⚠️ Toast will disappear after reload — not recommended
+        this.toastr.success('Login Successful', 'Success', {
+          timeOut: 3000, // ✅ 3 seconds = 3000 ms
+        });
       })
       .catch((error) => {
         console.error('Navigation error:', error);
-        this.toastr.error('Failed to navigate to dashboard', 'Error');
+        this.toastr.error('Failed to navigate to dashboard', 'Error', {
+          timeOut: 3000,
+        });
       });
 
     this.setupAutoLogout();
   }
+  // private handleSuccessfulLogin(token: string): void {
+  //   sessionStorage.setItem('token', token);
+
+  //   this.navState.showLoginToast = true;
+
+  //   this.router.navigate(['/Admin/dashboard'], {
+  //     replaceUrl: true,
+  //   });
+
+  //   this.setupAutoLogout();
+  // }
   // private handleSuccessfulLogin(token: string): void {
   //   sessionStorage.setItem('token', token);
 
@@ -461,14 +476,14 @@ export class Login1Component {
   //       .navigate(['/Admin/dashboard'])
   //       .then(() => {
   //         setTimeout(() => {
-  //           window.location.reload(); 
-  //         }, 600); 
+  //           window.location.reload();
+  //         }, 600);
   //       })
   //       .catch((error) => {
   //         console.error('Navigation error:', error);
   //         this.toastr.error('Failed to navigate to dashboard', 'Error');
   //       });
-  //   }, 1200); 
+  //   }, 1200);
 
   //   this.setupAutoLogout();
   // }

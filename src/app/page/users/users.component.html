@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="content-section active">
+  <div class="content-body">
     <!-- Breadcrumb -->
     <!-- <div class="page-titles">
       <ol class="breadcrumb">
@@ -43,10 +43,18 @@
         </a>
 
       </div>
-      <div class="col-xl-2 col-lg-3 col-md-4 mb-4 mb-md-0">
+      <!-- <div class="col-xl-2 col-lg-3 col-md-4 mb-4 mb-md-0">
         <div class="media-body ml-1">
           <p class="mb-1 fs-14 text-center">Total User</p>
           <h3 class="mb-0 text-black font-w600 fs-20 text-center">
+            {{ totalUser() }}
+          </h3>
+        </div>
+      </div> -->
+      <div class="col-xl-2 mb-4 mb-xl-0" style="margin-left: -2%;">
+        <div class="media-body text-center">
+          <p class="mb-1 fs-14">Total User</p>
+          <h3 class="mb-0 text-black font-w600 fs-20">
             {{ totalUser() }}
           </h3>
         </div>
@@ -68,7 +76,7 @@
               <label class="mr-2"></label>
               <select class="form-control" style="width: 80px; display: inline-block; border-radius: 5px;height:45px;"
                 (change)="onItemsPerPageChange($event)">
-                <option value="5">10</option>
+                <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
@@ -119,7 +127,7 @@
                   <td>{{ user.user_role }}</td>
                   <td>
 
-                    <div class="d-flex">
+                    <div class="d-flex ">
                       <!-- <a href="javascript:void(0);" data-target=".bd-example-modal-lg" data-toggle="modal"
                         class="btn btn-primary shadow btn-xs sharp mr-1" data-backdrop="false" (click)="onEdit(user)"><i
                           class="fa fa-pencil"></i></a> -->
@@ -128,15 +136,13 @@
                         <i class="fa fa-pencil"></i>
                       </a>
 
+
                       <!-- <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
-                        data-toggle="modal" data-target=".bd-example-modal-sm" data-backdrop="false"
-                        (click)="selectUserForDeletion(user)"><i class="fa fa-trash"></i></a> -->
-                      <!-- <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
-                        data-toggle="modal" data-target="#deleteUserModal" (click)="selectUserForDeletion(user)">
+                        (click)="openDeleteModal(user)">
                         <i class="fa fa-trash"></i>
                       </a> -->
-                      <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
-                        (click)="openDeleteModal(user)">
+                      <a href="javascript:void(0);" type="button"
+                        class="btn btn-danger shadow btn-xs sharp delete-btn-ipad" (click)="openDeleteModal(user)">
                         <i class="fa fa-trash"></i>
                       </a>
 
@@ -264,7 +270,7 @@
                 <div class="text-danger" *ngIf="
                   useForm.get('fname')?.invalid && useForm.get('fname')?.touched
                 ">
-                  <span *ngIf="useForm.get('fname')?.errors?.['required']">first name is required.</span>
+                  <span *ngIf="useForm.get('fname')?.errors?.['required']">First name is required.</span>
                 </div>
               </div>
 
@@ -283,41 +289,36 @@
                 <div class="text-danger" *ngIf="
                   useForm.get('lname')?.invalid && useForm.get('lname')?.touched
                 ">
-                  <span *ngIf="useForm.get('lname')?.errors?.['required']">last name is required.</span>
+                  <span *ngIf="useForm.get('lname')?.errors?.['required']">Last name is required.</span>
                 </div>
               </div>
 
               <!-- ROLE -->
-           <div class="col-md-6 form-group">
-  <label for="role_id" class="form-label">
-    Role Name <span class="text-danger">*</span>
-  </label>
+              <div class="col-md-6 form-group">
+                <label for="role_id" class="form-label">
+                  Role Name <span class="text-danger">*</span>
+                </label>
 
-  <select
-    id="role_id"
-    class="form-control form-control-lg"
-    formControlName="role_id"
-    [ngClass]="{
+                <select id="role_id" class="form-control form-control-lg" formControlName="role_id" [ngClass]="{
       'is-invalid':
         useForm.get('role_id')?.touched &&
         useForm.get('role_id')?.invalid
-    }"
-  >
-    <option [ngValue]="null" disabled hidden>Select Role</option>
-    <option *ngFor="let role of roleList()" [value]="role.role_id">
-      {{ role.role_name }}
-    </option>
-  </select>
+    }">
+                  <option [ngValue]="null" disabled hidden>Select Role</option>
+                  <option *ngFor="let role of roleList()" [value]="role.role_id">
+                    {{ role.role_name }}
+                  </option>
+                </select>
 
-  <div class="text-danger" *ngIf="
+                <div class="text-danger" *ngIf="
     useForm.get('role_id')?.touched &&
     useForm.get('role_id')?.invalid
   ">
-    <span *ngIf="useForm.get('role_id')?.errors?.['required']">
-      Role name is required.
-    </span>
-  </div>
-</div>
+                  <span *ngIf="useForm.get('role_id')?.errors?.['required']">
+                    Role name is required.
+                  </span>
+                </div>
+              </div>
 
 
               <!-- Email -->
@@ -346,25 +347,25 @@
                 <label for="team_name" class="form-label">
                   Team name <span class="text-danger">*</span>
                 </label>
-                <select id="team_name" class="form-control form-control-lg" formControlName="team_id" (change)="onTeamChange()"
-                  placeholder="team name" [ngClass]="{
-                                  'is-invalid':
-                                    useForm.get('team_id')?.touched &&
-                                    useForm.get('team_id')?.invalid
-                                }">
+                <select id="team_name" class="form-control form-control-lg" formControlName="team_id"
+                  (change)="onTeamChange()" placeholder="team name" [ngClass]="{
+      'is-invalid':
+        useForm.get('team_id')?.touched &&
+        useForm.get('team_id')?.invalid
+    }">
                   <option [ngValue]="null" disabled hidden>Select team name</option>
                   <option *ngFor="let team of teamList()" [value]="team.team_id">
                     {{ team.team_name }}
                   </option>
                 </select>
                 <div class="text-danger" *ngIf="
-                                useForm.get('team_id')?.touched &&   
-                                useForm.get('team_id')?.invalid
-                              ">
+    useForm.get('team_id')?.touched &&   
+    useForm.get('team_id')?.invalid
+  ">
                   <span>Team name is required.</span>
                 </div>
               </div>
-              
+
 
               <!-- Phone -->
               <div class="col-md-6 form-group">
