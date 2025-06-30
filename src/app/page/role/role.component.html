@@ -159,7 +159,7 @@
                 <label for="role_name" class="form-label">
                   Role Name <span class="text-danger">*</span>
                 </label>
-              
+
                 <select id="role_name" class="form-control form-control-lg" formControlName="role_name" [ngClass]="{
                                   'is-invalid':
                                     useForm.get('role_name')?.touched &&
@@ -170,7 +170,7 @@
                     {{ role.dealer_code }}
                   </option>
                 </select>
-              
+
                 <div class="text-danger" *ngIf="
                                   useForm.get('role_name')?.invalid &&
                                   useForm.get('role_name')?.touched
@@ -180,7 +180,7 @@
                   </span>
                 </div>
               </div>
-              
+
               <!-- <div class="col-md-6 form-group">
                 <label for="role_name" class="form-label">
                   Description <span class="text-danger">*</span> </label> <input id="description"

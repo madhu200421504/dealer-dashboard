@@ -197,135 +197,100 @@
                   </select>
                 </div> -->
 
-              <table class="table table-bordered table-striped text-center">
-                <thead>
-                  <tr>
-                    <!-- <th></th>
-                      <th>Today</th>
-                      <th>Upcoming</th>
-                      <th>Overdue</th> -->
-                  </tr>
-                </thead>
-                <div style="padding: 16px;">
-                  <table class="table table-bordered table-striped text-center">
-                    <thead>
-                      <tr>
-                        <th style="font-weight: 700;">Field</th>
 
-                        <!-- Today Column -->
-                        <!-- <th>
-                          <div class="d-flex align-items-center justify-content-center gap-2">
-                            <label style="margin: 0; font-weight: 500;">Today</label>
-                            <ng-container *ngIf="todayTestDrives.length > 1">
-                              <select id="todaySelect" class="form-select form-select-sm"
-                                style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedTodayIndex">
-                                <option *ngFor="let t of todayTestDrives; let i = index" [value]="i">
-                                  {{ i + 1 }}
-                                </option>
-                              </select>
-                            </ng-container>
-                          </div>
-                        </th> -->
-                        <th>
-                          <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                            <label style="margin: 0; font-weight: 600;">Today</label>
-                            <ng-container *ngIf="todayTestDrives.length > 1">
-                              <select id="todaySelect" class="form-select form-select-sm"
-                                style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedTodayIndex">
-                                <option *ngFor="let t of todayTestDrives; let i = index" [value]="i">
-                                  {{ i + 1 }}
-                                </option>
-                              </select>
-                            </ng-container>
-                          </div>
-                        </th>
-
-                        <!-- Upcoming Column -->
-                        <!-- Upcoming Column -->
-                        <!-- <th>
-                          <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                            <label style="margin: 0; font-weight: 500;">Upcoming</label>
-                            <ng-container *ngIf="upcomingTestDrives.length > 1">
-                              <select id="upcomingSelect" class="form-select form-select-sm"
-                                style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedUpcomingIndex">
-                                <option *ngFor="let u of upcomingTestDrives; let i = index" [value]="i">
-                                  {{ i + 1 }}
-                                </option>
-                              </select>
-                            </ng-container>
-                          </div>
-                        </th> -->
-                        <th>
-                          <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                            <label style="margin: 0;font-weight: 700;">Upcoming</label>
-                            <ng-container *ngIf="upcomingTestDrives.length > 1">
-                              <select id="upcomingSelect" class="form-select form-select-sm"
-                                style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedUpcomingIndex">
-                                <option *ngFor="let u of upcomingTestDrives ; let i = index" [value]="i">
-                                  {{ i + 1 }}
-                                </option>
-                              </select>
-                            </ng-container>
-                          </div>
-                        </th>
-                        <!-- Overdue Column -->
-                        <th>
-                          <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                            <label style="margin: 0; font-weight: 700;">Overdue</label>
-                            <ng-container *ngIf="overdueTestDrives.length > 1">
-                              <select id="overdueSelect" class="form-select form-select-sm"
-                                style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedOverdueIndex">
-                                <option *ngFor="let o of overdueTestDrives; let i = index" [value]="i">
-                                  {{ i + 1 }}
-                                </option>
-                              </select>
-                            </ng-container>
-                          </div>
-                        </th>
-
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      <tr>
-                        <th class="text-start" style="color:#000000;font-weight:400">Name</th>
-                        <td>{{ todayTestDrives[selectedTodayIndex].name || '-' }}</td>
-                        <td>{{ upcomingTestDrives[selectedUpcomingIndex].name || '-' }}</td>
-                        <td>{{ overdueTestDrives[selectedOverdueIndex].name || '-' }}</td>
-                      </tr>
-                      <tr>
-                        <th class="text-start" style="color:#000000;font-weight:400">Subject</th>
-                        <td>{{ todayTestDrives[selectedTodayIndex].subject || '-' }}</td>
-                        <td>{{ upcomingTestDrives[selectedUpcomingIndex].subject || '-' }}</td>
-                        <td>{{ overdueTestDrives[selectedOverdueIndex].subject || '-' }}</td>
-                      </tr>
-                      <tr>
-                        <th class="text-start" style="color:#000000;font-weight:400">PMI</th>
-                        <td>{{ todayTestDrives[selectedTodayIndex].PMI || '-' }}</td>
-                        <td>{{ upcomingTestDrives[selectedUpcomingIndex].PMI || '-' }}</td>
-                        <td>{{ overdueTestDrives[selectedOverdueIndex].PMI || '-' }}</td>
-                      </tr>
-                      <tr>
-                        <th style="color:#000000;font-weight:400">Location</th>
-                        <td>{{ todayTestDrives[selectedTodayIndex].location || '-' }}</td>
-                        <td>{{ upcomingTestDrives[selectedUpcomingIndex].location || '-' }}</td>
-                        <td>{{ overdueTestDrives[selectedOverdueIndex].location || '-' }}</td>
-                      </tr>
-                      <tr>
-                        <th style="color:#000000;font-weight:400">Start time</th>
-                        <td>{{ todayTestDrives[selectedTodayIndex].start_time || '-' }}</td>
-                        <td>{{ upcomingTestDrives[selectedUpcomingIndex].start_time || '-' }}</td>
-                        <td>{{ overdueTestDrives[selectedOverdueIndex].start_time || '-' }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+              <div style="padding: 16px;">
+                <table class="table table-bordered table-striped text-center">
+                  <thead>
+                    <tr>
+                      <th style="font-weight: 700;">Field</th>
+                
+                      <!-- Today Column -->
+                      <th>
+                        <div class="d-flex align-items-center justify-content-center gap-2">
+                          <label style="margin: 0; font-weight: 500;">Today</label>
+                          <ng-container *ngIf="todayTestDrives.length > 0">
+                            <select id="todaySelect" class="form-select form-select-sm" style="width: auto; padding: 3px 10px;"
+                              [(ngModel)]="selectedTodayIndex">
+                              <option *ngFor="let t of todayTestDrives; let i = index" [value]="i">
+                                {{ i + 1 }}
+                              </option>
+                            </select>
+                          </ng-container>
+                        </div>
+                      </th>
+                
+                      <!-- Upcoming Column -->
+                      <th>
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                          <label style="margin: 0; font-weight: 500;">Upcoming</label>
+                          <ng-container *ngIf="upcomingTestDrives.length > 0">
+                            <select id="upcomingSelect" class="form-select form-select-sm" style="width: auto; padding: 3px 10px;"
+                              [(ngModel)]="selectedUpcomingIndex">
+                              <option *ngFor="let u of upcomingTestDrives; let i = index" [value]="i">
+                                {{ i + 1 }}
+                              </option>
+                            </select>
+                          </ng-container>
+                        </div>
+                      </th>
+                
+                      <!-- Overdue Column -->
+                      <th>
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                          <label style="margin: 0; font-weight: 700;">Overdue</label>
+                          <ng-container *ngIf="overdueTestDrives.length > 0">
+                            <select id="overdueSelect" class="form-select form-select-sm" style="width: auto; padding: 3px 10px;"
+                              [(ngModel)]="selectedOverdueIndex">
+                              <option *ngFor="let o of overdueTestDrives; let i = index" [value]="i">
+                                {{ i + 1 }}
+                              </option>
+                            </select>
+                          </ng-container>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                
+                  <tbody *ngIf="todayTestDrives.length || upcomingTestDrives.length || overdueTestDrives.length">
+                    <tr>
+                      <th class="text-start" style="color:#000000;font-weight:400">Name</th>
+                      <td>{{ todayTestDrives?.[selectedTodayIndex]?.name || '-' }}</td>
+                      <td>{{ upcomingTestDrives?.[selectedUpcomingIndex]?.name || '-' }}</td>
+                      <td>{{ overdueTestDrives?.[selectedOverdueIndex]?.name || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th class="text-start" style="color:#000000;font-weight:400">Subject</th>
+                      <td>{{ todayTestDrives?.[selectedTodayIndex]?.subject || '-' }}</td>
+                      <td>{{ upcomingTestDrives?.[selectedUpcomingIndex]?.subject || '-' }}</td>
+                      <td>{{ overdueTestDrives?.[selectedOverdueIndex]?.subject || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th class="text-start" style="color:#000000;font-weight:400">PMI</th>
+                      <td>{{ todayTestDrives?.[selectedTodayIndex]?.PMI || '-' }}</td>
+                      <td>{{ upcomingTestDrives?.[selectedUpcomingIndex]?.PMI || '-' }}</td>
+                      <td>{{ overdueTestDrives?.[selectedOverdueIndex]?.PMI || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th style="color:#000000;font-weight:400">Location</th>
+                      <td>{{ todayTestDrives?.[selectedTodayIndex]?.location || '-' }}</td>
+                      <td>{{ upcomingTestDrives?.[selectedUpcomingIndex]?.location || '-' }}</td>
+                      <td>{{ overdueTestDrives?.[selectedOverdueIndex]?.location || '-' }}</td>
+                    </tr>
+                    <tr>
+                      <th style="color:#000000;font-weight:400">Start time</th>
+                      <td>{{ todayTestDrives?.[selectedTodayIndex]?.start_time || '-' }}</td>
+                      <td>{{ upcomingTestDrives?.[selectedUpcomingIndex]?.start_time || '-' }}</td>
+                      <td>{{ overdueTestDrives?.[selectedOverdueIndex]?.start_time || '-' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                
 
 
-                </div>
+              </div>
 
 
 
-              </table>
             </div>
 
             <!-- Modal Footer -->
@@ -491,7 +456,7 @@
       <div class="pagination-controls"
         style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
         <div style="display: flex; justify-content: center; align-items: center;">
-          <button (click)="prevPage()" [disabled]="currentPage === 1"
+          <!-- <button (click)="prevPage()" [disabled]="currentPage === 1"
             style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
             Previous
           </button>
@@ -501,7 +466,19 @@
           <button (click)="nextPage()" [disabled]="currentPage === totalPages"
             style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
             Next
+          </button> -->
+          <!-- Previous Button -->
+          <button (click)="prevPage()" [disabled]="currentPage === 1 || filteredTableTestDrives.length === 0"
+            style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
+            Previous
           </button>
+
+          <!-- Next Button -->
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages || filteredTableTestDrives.length === 0"
+            style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
+            Next
+          </button>
+
         </div>
 
         <!-- Record range info placed under the controls -->

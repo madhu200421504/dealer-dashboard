@@ -227,10 +227,15 @@ export class TargetComponent implements OnInit {
       // Editing an existing target
       this.targetobj = { ...target };
 
+      // this.useForm.patchValue({
+      //   enquiries: target.enquiries || '', // Use target.enquiries or fallback to empty string
+      //   testDrives: target.testDrives || '',
+      //   orders: target.orders || '',
+      // });
       this.useForm.patchValue({
-        enquiries: target.enquiries || '', // Use target.enquiries or fallback to empty string
-        testDrives: target.testDrives || '',
-        orders: target.orders || '',
+        enquiries: target.enquiries ?? null,
+        testDrives: target.testDrives ?? null,
+        orders: target.orders ?? null,
       });
     } else {
       // Creating a new target

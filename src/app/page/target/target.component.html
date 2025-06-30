@@ -225,7 +225,7 @@
                                 <div class="col-md-6 form-group">
                                     <label for="enquiries" class="form-label">Enquiries</label>
                                     <input id="enquiries" class="form-control form-control-lg" type="number"
-                                        formControlName="enquiries" placeholder="enquiries" [ngClass]="{
+                                        formControlName="enquiries" placeholder="Enquiries" [ngClass]="{
                   'is-invalid':
                     useForm.get('enquiries')?.touched &&
                     useForm.get('enquiries')?.invalid
@@ -242,7 +242,7 @@
                                 <div class="col-md-6 form-group">
                                     <label for="testDrives" class="form-label">Test Drives</label>
                                     <input id="testDrives" class="form-control form-control-lg" type="number"
-                                        formControlName="testDrives" placeholder="testDrives" [ngClass]="{
+                                        formControlName="testDrives" placeholder="Test Drives" [ngClass]="{
                                           'is-invalid':
                                             useForm.get('testDrives')?.touched &&
                                             useForm.get('testDrives')?.invalid
@@ -260,7 +260,7 @@
                                 <div class="col-md-6 form-group">
                                     <label for="orders" class="form-label">Orders</label>
                                     <input id="orders" class="form-control form-control-lg" type="number"
-                                        formControlName="orders" placeholder="orders" [ngClass]="{
+                                        formControlName="orders" placeholder="Orders" [ngClass]="{
                                                                   'is-invalid':
                                                                     useForm.get('orders')?.touched &&
                                                                     useForm.get('orders')?.invalid
@@ -283,8 +283,8 @@
                                             (click)="onUpdate()">
                                             Edit
                                         </button> -->
-                                        <button type="button" class="btn btn-outline-primary" [disabled]="!useForm.dirty || useForm.invalid"
-                                            (click)="onUpdate()">
+                                        <button type="button" class="btn btn-outline-primary"
+                                            [disabled]="!useForm.dirty || useForm.invalid" (click)="onUpdate()">
                                             Edit
                                         </button>
 

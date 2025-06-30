@@ -183,6 +183,7 @@ export class DashboardComponent implements OnInit {
       retailRank: 0,
     },
   };
+
   dropdownOpen1 = false;
   dropdownOpen2 = false;
   performanceData: { [userId: string]: any } = {};
@@ -562,13 +563,74 @@ export class DashboardComponent implements OnInit {
   //   return this._displayedUsers;
   // }
 
+  // showUserDetails(userId: string, name: string) {
+  //   console.log('Clicked user:', userId);
+  //   this.selectedUserId = userId;
+
+  //   const token = sessionStorage.getItem('token');
+  //   if (!token) {
+  //     console.error('No auth token found');
+  //     return;
+  //   }
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   this.http
+  //     .get<ApiResponse>(
+  //       `https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard?user_id=${userId}`,
+  //       { headers }
+  //     )
+  //     .subscribe({
+  //       next: (res) => {
+  //         const selectedUserFromApi = res?.data?.selectedUser || null;
+
+  //         if (selectedUserFromApi) {
+  //           this.selectedUser = { ...selectedUserFromApi, name };
+
+  //           // Use test drives directly from API
+  //           this.todayTestDrives = selectedUserFromApi.todayTestDrives || [];
+  //           this.upcomingTestDrives =
+  //             selectedUserFromApi.upcomingTestDrives || [];
+  //           this.overdueTestDrives =
+  //             selectedUserFromApi.overdueTestDrives || [];
+  //             this.selectedTodayIndex = 0;
+  //             this.selectedUpcomingIndex = 0;
+  //             this.selectedOverdueIndex = 0;
+
+  //           this.selectedUserData = [
+  //             ...this.todayTestDrives,
+  //             ...this.upcomingTestDrives,
+  //             ...this.overdueTestDrives,
+  //           ];
+  //           this.showUserModal = true;
+  //         } else {
+  //           this.selectedUser = null;
+  //           this.todayTestDrives = [];
+  //           this.upcomingTestDrives = [];
+  //           this.overdueTestDrives = [];
+  //           this.selectedUserData = [];
+  //         }
+
+  //         this.fullData = res.data;
+  //         this.loadFilteredTestDrives(this.filterOption);
+
+  //         // Remove or comment this if it overwrites test drive data
+  //         // this.loadTestDrives(res.data);
+  //       },
+  //       error: (err) => {
+  //         console.error('Failed to fetch user details', err);
+  //       },
+  //     });
+  // }
   showUserDetails(userId: string, name: string) {
-    console.log('Clicked user:', userId);
+    console.log('🔍 Clicked user:', userId);
     this.selectedUserId = userId;
 
     const token = sessionStorage.getItem('token');
     if (!token) {
-      console.error('No auth token found');
+      console.error('❌ No auth token found');
       return;
     }
 
@@ -585,15 +647,40 @@ export class DashboardComponent implements OnInit {
         next: (res) => {
           const selectedUserFromApi = res?.data?.selectedUser || null;
 
+          console.log('📦 Full API Response:', res);
+
           if (selectedUserFromApi) {
             this.selectedUser = { ...selectedUserFromApi, name };
 
-            // Use test drives directly from API
             this.todayTestDrives = selectedUserFromApi.todayTestDrives || [];
             this.upcomingTestDrives =
               selectedUserFromApi.upcomingTestDrives || [];
             this.overdueTestDrives =
               selectedUserFromApi.overdueTestDrives || [];
+
+            this.selectedTodayIndex = this.todayTestDrives.length > 0 ? 0 : -1;
+            this.selectedUpcomingIndex =
+              this.upcomingTestDrives.length > 0 ? 0 : -1;
+            this.selectedOverdueIndex =
+              this.overdueTestDrives.length > 0 ? 0 : -1;
+
+            console.log('✅ Today Test Drives:', this.todayTestDrives);
+            console.log('✅ Upcoming Test Drives:', this.upcomingTestDrives);
+            console.log('✅ Overdue Test Drives:', this.overdueTestDrives);
+
+            // Log individual subject to check if it exists
+            console.log(
+              '🔍 First Today Subject:',
+              this.todayTestDrives?.[0]?.subject
+            );
+            console.log(
+              '🔍 First Upcoming Subject:',
+              this.upcomingTestDrives?.[0]?.subject
+            );
+            console.log(
+              '🔍 First Overdue Subject:',
+              this.overdueTestDrives?.[0]?.subject
+            );
 
             this.selectedUserData = [
               ...this.todayTestDrives,
@@ -602,6 +689,7 @@ export class DashboardComponent implements OnInit {
             ];
             this.showUserModal = true;
           } else {
+            console.warn('⚠️ selectedUserFromApi is null');
             this.selectedUser = null;
             this.todayTestDrives = [];
             this.upcomingTestDrives = [];
@@ -611,12 +699,9 @@ export class DashboardComponent implements OnInit {
 
           this.fullData = res.data;
           this.loadFilteredTestDrives(this.filterOption);
-
-          // Remove or comment this if it overwrites test drive data
-          // this.loadTestDrives(res.data);
         },
         error: (err) => {
-          console.error('Failed to fetch user details', err);
+          console.error('❌ Failed to fetch user details', err);
         },
       });
   }

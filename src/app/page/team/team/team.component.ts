@@ -190,9 +190,6 @@ export class TeamComponent {
     }
   }
 
-
-
-  
   // onEdit(team: Teams) {
   //   // const nameParts = customer.account_name && customer.account_name.trim() ? customer.account_name.split(' ') : [];
   //   this.isEditMode = true; // Ensure edit mode is set
@@ -732,10 +729,11 @@ export class TeamComponent {
       },
       error: (err) => {
         console.error('Team creation error:', err);
-        this.toastr.error(
-          err.message || 'Failed to create team',
-          'Creation Error'
-        );
+
+        // Extracting the backend message if available
+        const backendMessage = err?.error?.message || 'Failed to create team';
+
+        this.toastr.error(backendMessage, 'Creation Error');
       },
     });
   }

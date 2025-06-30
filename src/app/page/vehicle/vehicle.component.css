@@ -88,3 +88,22 @@ input[type="text"]::-webkit-search-cancel-button {
     margin-top: 5px !important;
   }
 }
+
+.modal {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+.modal-dialog {
+  margin: 0;
+  top: 6%;
+  transform: none;
+}
+
+.modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+}
