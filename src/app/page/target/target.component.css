@@ -44,7 +44,28 @@
   }
 }
 @media only screen and (max-width: 1600px) {
-    .content-body {
-        margin-left: 0;
-    }
+  .content-body {
+    margin-left: 0;
+  }
+}
+
+/* Remove the default red cross icon from number inputs in invalid state */
+input[type="number"].form-control.is-invalid,
+input[type="number"].form-control-lg.is-invalid {
+  background-image: none !important;
+  padding-right: 0.75rem !important;
+}
+
+/* For consistency, remove clear (X) buttons from all number inputs (if browser shows them) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-clear-button,
+input[type="number"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"]::-ms-clear,
+input[type="number"]::-ms-reveal {
+  display: none;
 }

@@ -128,6 +128,14 @@ export class RoleComponent implements OnInit {
     });
   }
   onSave() {
+    if (this.useForm.invalid) {
+      this.useForm.markAllAsTouched(); // ✅ This ensures validation errors are shown
+      this.toastr.warning(
+        'Please fill all required fields correctly',
+        'Validation'
+      );
+      return;
+    }
     if (this.isSubmitting) return;
 
     this.markFormGroupTouched(this.useForm);
@@ -192,6 +200,7 @@ export class RoleComponent implements OnInit {
 
     this.paginateRoles();
   }
+
   closeModal() {
     this.isModalOpen = false;
     document.body.classList.remove('modal-open');

@@ -29,10 +29,10 @@
         </a>
 
       </div>
-      <div class="col-xl-2 mb-4 mb-xl-0">
-        <div class="media-body ml-1">
-          <p class="mb-1 fs-14 text-center">Total Team</p>
-          <h3 class="mb-0 text-black font-w600 fs-20 text-center">
+      <div class="col-xl-2 mb-4 mb-xl-0" style="margin-left: -2%;">
+        <div class="media-body text-center">
+          <p class="mb-1 fs-14">Total Team</p>
+          <h3 class="mb-0 text-black font-w600 fs-20">
             {{ totalteam() }}
           </h3>
         </div>
@@ -147,7 +147,11 @@
                     data-target=".bd-example-modal-sm" data-backdrop="false" (click)="selectteamForDeletion(team)">
                     <i class="fa fa-trash"></i>
                   </a> -->
-                  <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
+                  <!-- <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
+                    (click)="openDeleteModal(team)">
+                    <i class="fa fa-trash"></i>
+                  </a> -->
+                  <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp delete-btn-ipad"
                     (click)="openDeleteModal(team)">
                     <i class="fa fa-trash"></i>
                   </a>

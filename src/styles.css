@@ -4,7 +4,7 @@
 
 :host {
   /* font-family: 'Poppins', sans-serif !important; */
-  font-family: 'Inter', 'Roboto', sans-serif !important;
+  font-family: "Inter", "Roboto", sans-serif !important;
 }
 
 .cursor-pointer {
@@ -561,10 +561,7 @@ select.selectpicker {
   float: none;
 }
 
-.delete-box{
+.delete-box {
   top: 31% !important;
   left: 8% !important;
 }
-
-
-

@@ -23,14 +23,23 @@
           <i class="fa fa-plus mr-1"></i>Add Vehicle
         </a>
       </div>
-      <div class="col-xl-2 mb-4 mb-xl-0">
+      <!-- <div class="col-xl-2 mb-4 mb-xl-0">
         <div class="media-body ml-1">
           <p class="mb-1 fs-14 text-center">Total Vehicle</p>
           <h3 class="mb-0 text-black font-w600 fs-20 text-center">
             {{ count() }}
           </h3>
         </div>
+      </div> -->
+      <div class="col-xl-2 mb-4 mb-xl-0" style="margin-left: -2%;">
+        <div class="media-body text-center">
+          <p class="mb-1 fs-14">Total Vehicle</p>
+          <h3 class="mb-0 text-black font-w600 fs-20">
+            {{ count() }}
+          </h3>
+        </div>
       </div>
+
     </div>
     <div class="card-box p-4 mb-5"
       style="background-color: #fff; box-shadow: 0 0 15px rgba(0, 0, 0, 0.08); border-radius: 10px;">
@@ -40,11 +49,12 @@
         <div class="col-12">
           <!-- Items per page selector -->
           <div class="row mb-3">
+
             <div class="col-md-6 d-flex align-items-center">
               <label class="mr-2"></label>
               <select class="form-control" style="width: 80px; display: inline-block; border-radius: 5px;height:45px;"
                 (change)="onItemsPerPageChange($event)">
-                <option value="5">10</option>
+                <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
@@ -106,8 +116,12 @@
                         data-toggle="modal" data-target="#deleteUserModal" (click)="selectVehicleForDeletion(vehicle)">
                         <i class="fa fa-trash"></i>
                       </a> -->
-                      <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
+                      <!-- <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
                         (click)="openDeleteModal(vehicle)">
+                        <i class="fa fa-trash"></i>
+                      </a> -->
+                      <a href="javascript:void(0);" type="button"
+                        class="btn btn-danger shadow btn-xs sharp delete-btn-ipad" (click)="openDeleteModal(vehicle)">
                         <i class="fa fa-trash"></i>
                       </a>
 
@@ -301,26 +315,27 @@
 
                     </div> -->
 
-                    <div class="col-md-6 form-group">
-                      <label for="chasis_number" class="form-label" style="display: block; width: 100%; text-align: left;">
-                        Chasis Number <span class="text-danger">*</span>
-                      </label>
-                    
-                      <input id="chasis_number" class="form-control form-control-lg" type="text" placeholder="Enter Chassis Number"
-                        formControlName="chasis_number" [ngClass]="{
+            <div class="col-md-6 form-group">
+              <label for="chasis_number" class="form-label" style="display: block; width: 100%; text-align: left;">
+                Chasis Number <span class="text-danger">*</span>
+              </label>
+
+              <input id="chasis_number" class="form-control form-control-lg" type="text"
+                placeholder="Enter Chassis Number" formControlName="chasis_number" [ngClass]="{
                                               'is-invalid':
                                                 useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid
                                             }" />
-                    
-                      <!-- Error Message -->
-                      <div class="text-danger" *ngIf="useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid">
-                        <span *ngIf="useForm.get('chasis_number')?.errors?.['required']">Chasis number is required.</span>
-                      </div>
-                    </div>
-                    
+
+              <!-- Error Message -->
+              <div class="text-danger"
+                *ngIf="useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid">
+                <span *ngIf="useForm.get('chasis_number')?.errors?.['required']">Chasis number is required.</span>
+              </div>
+            </div>
 
 
-            <div class="row" style="margin-left:2px !important;">
+
+            <div class="row" style="margin-left:-3px !important;">
               <div class="col-md-6 form-group">
                 <label for="demo_start_date" class="form-label" style="display: block; width: 100%; text-align: left;">
                   Start date <span class="text-danger">*</span>
@@ -338,7 +353,7 @@
                 </div>
 
               </div>
-
+              <!-- 
               <div class="col-md-6 form-group">
                 <label for="demo_end_date" class="form-label" style="display: block; width: 100%; text-align: left;">
                   End date <span class="text-danger">*</span>
@@ -355,31 +370,42 @@
                   <span>End date is required.</span>
                 </div>
 
+              </div> -->
+              <div class="col-md-6 form-group">
+                <label for="demo_end_date" class="form-label"
+                  style="display: block; width: 100%; text-align: left;margin-left:-2px">
+                  End date <span class="text-danger">*</span>
+                </label>
+
+                <input id="demo_end_date" class="form-control form-control-lg" type="date" placeholder="end date"
+                  formControlName="demo_end_date" [ngClass]="{
+                                                  'is-invalid':
+                                                    useForm.get('demo_end_date')?.touched && useForm.get('demo_end_date')?.invalid
+                                                }" style="width:350px;" />
+
+                <div class="text-danger"
+                  *ngIf="useForm.get('demo_end_date')?.touched && useForm.get('demo_end_date')?.invalid">
+                  <span>end date is required.</span>
+                </div>
+
               </div>
               <div class="col-md-6 form-group" style="margin-left:5px;">
                 <label for="vin" class="form-label" style="display: block; width: 100%; text-align: left;">
                   VIN <span class="text-danger">*</span>
                 </label>
-              
-                <input
-                  id="vin"
-                  class="form-control form-control-lg"
-                  type="text"
-                  placeholder="VIN"
-                  style="margin-left:-10px;"
-                  formControlName="VIN"
-                  [ngClass]="{
+
+                <input id="vin" class="form-control form-control-lg" type="text" placeholder="VIN"
+                  style="margin-left:-5px;" formControlName="VIN" [ngClass]="{
                     'is-invalid':
                       useForm.get('VIN')?.touched && useForm.get('VIN')?.invalid
-                  }"
-                />
-              
+                  }" />
+
                 <!-- Error Message -->
                 <div class="text-danger" *ngIf="useForm.get('VIN')?.touched && useForm.get('VIN')?.invalid">
                   <span *ngIf="useForm.get('VIN')?.errors?.['required']">VIN is required.</span>
                 </div>
-            
-              
+
+
 
                 <!-- <div class="col-md-6 form-group" style="margin-top:-30px;">
                     <label for="end_date" class="form-label">End date</label>

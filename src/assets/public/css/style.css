@@ -70103,3 +70103,8 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
     /* margin-left: 30rem !important; */
   }
 }
+/* @media (min-width: 992px) {
+  .content-body {
+    margin-left: 347px;
+  }
+} */

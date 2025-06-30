@@ -189,6 +189,10 @@ export class TeamComponent {
       console.log('🆕 New Vehicle Mode: Reset vehicleObj', this.teamObj);
     }
   }
+
+
+
+  
   // onEdit(team: Teams) {
   //   // const nameParts = customer.account_name && customer.account_name.trim() ? customer.account_name.split(' ') : [];
   //   this.isEditMode = true; // Ensure edit mode is set

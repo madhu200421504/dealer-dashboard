@@ -131,3 +131,18 @@ body {
   display: flex;
   float: right;
 }
+/* Remove the red ❌ icon from .is-invalid fields */
+input.is-invalid {
+  background-image: none !important;
+  padding-right: 0.75rem !important; /* optional: adjust spacing after icon removal */
+}
+/* Remove the background ❌ icon from invalid select fields */
+select.form-control.is-invalid {
+  background-image: none !important;
+  padding-right: 0.75rem !important; /* optional spacing */
+}
+@media (min-width: 760px) and (max-width: 820px) {
+  .delete-btn-ipad {
+    margin-top: 5px !important;
+  }
+}
