@@ -1,15 +1,16 @@
-import {
-  FormGroupDirective,
-  NgControl,
-  NgForm,
-  Validators
-} from "./chunk-DDLCANCM.js";
+import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
   MAT_FORM_FIELD,
   MatFormField,
   MatFormFieldControl,
   MatFormFieldModule
-} from "./chunk-JLOGCGP5.js";
+} from "./chunk-QGHE4RBQ.js";
+import {
+  FormGroupDirective,
+  NgControl,
+  NgForm,
+  Validators
+} from "./chunk-J7DM2GBR.js";
 import {
   ErrorStateMatcher,
   MatCommonModule,
@@ -20,10 +21,10 @@ import {
   coerceNumberProperty,
   getSupportedInputTypes,
   normalizePassiveListenerOptions
-} from "./chunk-UGO4ASTV.js";
+} from "./chunk-VZYVJS2F.js";
 import {
   DOCUMENT
-} from "./chunk-UFF57FAO.js";
+} from "./chunk-FWX7UIPA.js";
 import {
   Directive,
   ElementRef,
@@ -52,18 +53,20 @@ import {
   ɵɵhostProperty,
   ɵɵinject,
   ɵɵlistener
-} from "./chunk-GCS7LTCL.js";
+} from "./chunk-BGEZPR2X.js";
 import {
-  fromEvent
-} from "./chunk-IC62NIWK.js";
+  require_cjs
+} from "./chunk-IT3GT3QQ.js";
 import {
-  EMPTY,
-  Subject,
-  auditTime,
-  takeUntil
-} from "./chunk-ZZ67MR3E.js";
+  require_operators
+} from "./chunk-T5SIKDG3.js";
+import {
+  __toESM
+} from "./chunk-NQ4HTGF6.js";
 
 // node_modules/@angular/cdk/fesm2022/text-field.mjs
+var import_rxjs = __toESM(require_cjs(), 1);
+var import_operators = __toESM(require_operators(), 1);
 var listenerOptions = normalizePassiveListenerOptions({
   passive: true
 });
@@ -75,14 +78,14 @@ var AutofillMonitor = class _AutofillMonitor {
   }
   monitor(elementOrRef) {
     if (!this._platform.isBrowser) {
-      return EMPTY;
+      return import_rxjs.EMPTY;
     }
     const element = coerceElement(elementOrRef);
     const info = this._monitoredElements.get(element);
     if (info) {
       return info.subject;
     }
-    const result = new Subject();
+    const result = new import_rxjs.Subject();
     const cssClass = "cdk-text-field-autofilled";
     const listener = (event) => {
       if (event.animationName === "cdk-text-field-autofill-start" && !element.classList.contains(cssClass)) {
@@ -237,7 +240,7 @@ var CdkTextareaAutosize = class _CdkTextareaAutosize {
     this._elementRef = _elementRef;
     this._platform = _platform;
     this._ngZone = _ngZone;
-    this._destroyed = new Subject();
+    this._destroyed = new import_rxjs.Subject();
     this._enabled = true;
     this._previousMinRows = -1;
     this._isViewInited = false;
@@ -267,7 +270,7 @@ var CdkTextareaAutosize = class _CdkTextareaAutosize {
       this.resizeToFitContent();
       this._ngZone.runOutsideAngular(() => {
         const window2 = this._getWindow();
-        fromEvent(window2, "resize").pipe(auditTime(16), takeUntil(this._destroyed)).subscribe(() => this.resizeToFitContent(true));
+        (0, import_rxjs.fromEvent)(window2, "resize").pipe((0, import_operators.auditTime)(16), (0, import_operators.takeUntil)(this._destroyed)).subscribe(() => this.resizeToFitContent(true));
         this._textareaElement.addEventListener("focus", this._handleFocusEvent);
         this._textareaElement.addEventListener("blur", this._handleFocusEvent);
       });
@@ -515,6 +518,7 @@ var TextFieldModule = class _TextFieldModule {
 })();
 
 // node_modules/@angular/material/fesm2022/input.mjs
+var import_rxjs2 = __toESM(require_cjs(), 1);
 function getMatInputUnsupportedTypeError(type) {
   return Error(`Input type "${type}" isn't supported by matInput.`);
 }
@@ -612,7 +616,7 @@ var MatInput = class _MatInput {
     this._uid = `mat-input-${nextUniqueId++}`;
     this._webkitBlinkWheelListenerAttached = false;
     this.focused = false;
-    this.stateChanges = new Subject();
+    this.stateChanges = new import_rxjs2.Subject();
     this.controlType = "mat-input";
     this.autofilled = false;
     this._disabled = false;
@@ -1002,4 +1006,4 @@ export {
   MatInput,
   MatInputModule
 };
-//# sourceMappingURL=chunk-ECYZ5MWJ.js.map
+//# sourceMappingURL=chunk-MZQFS6QR.js.map

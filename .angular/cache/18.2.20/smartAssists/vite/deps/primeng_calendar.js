@@ -17,15 +17,15 @@ import {
   zindexutils
 } from "./chunk-LSQG3WLJ.js";
 import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-DDLCANCM.js";
-import {
   animate,
   state,
   style,
   transition,
   trigger
 } from "./chunk-S4ZXZEEX.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-DDLCANCM.js";
 import {
   CommonModule,
   DOCUMENT,
