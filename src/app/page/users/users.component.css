@@ -7,6 +7,20 @@ body {
   padding: 0; /* Remove default browser padding */
 }
 
+.custom-modal-position {
+  top: 18%;
+}
+
+@media (max-width: 767px) {
+  .custom-modal-position {
+    top: 7%;
+    border: 2px solid red;
+  }
+}
+
+
+
+
 .sidebar {
   width: 250px;
   flex-shrink: 0; /* IMPORTANT: Prevents the sidebar from shrinking below 250px */
