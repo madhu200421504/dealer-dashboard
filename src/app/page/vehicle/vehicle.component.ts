@@ -72,7 +72,9 @@ export class VehicleComponent implements OnInit {
   isEditMode = false;
   previousValue: string = '';
   isModalOpen = false;
-
+  totalItems = 0;
+  visiblePages: number[] = [];
+  maxVisiblePages: number = 3;
   filteredVehicle: any[] = [];
   // vehicles: Vehicle[] = []; // All vehicle records
   // filteredVehicles: Vehicle[] = []; // Filtered by search
@@ -95,6 +97,10 @@ export class VehicleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.updateVisiblePages();
+    this.getAllVehicle(); // fetch data for page 1
     this.loadVehicles();
     this.filteredVehicles = this.vehicleList(); // Get full vehicle list initially
     this.paginateVehicles(); // Set up pagination
@@ -429,27 +435,64 @@ export class VehicleComponent implements OnInit {
   //     },
   //   });
   // }
+  // getAllVehicle() {
+  //   this.masterSrv.getAllVehicle().subscribe({
+  //     next: (res: VehicleResponse) => {
+  //       if (res && res.data.rows) {
+  //         this.totalVehicle.set(res.data.count);
+  //         this.vehicleList.set(res.data.rows);
+
+  //         // ✅ Update paginatedVehicles after setting vehicleList
+  //         this.paginatedVehicles = this.vehicleList().slice(
+  //           (this.currentPage - 1) * this.itemsPerPage,
+  //           this.currentPage * this.itemsPerPage
+  //         );
+  //       } else {
+  //         this.toastr.warning('No Vehicle found', 'Information');
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Vehicle fetch error:', err);
+  //       this.toastr.error(err.message || 'Failed to fetch vehicles', 'Error');
+  //     },
+  //   });
+  // }
   getAllVehicle() {
     this.masterSrv.getAllVehicle().subscribe({
       next: (res: VehicleResponse) => {
         if (res && res.data.rows) {
-          this.totalVehicle.set(res.data.count);
           this.vehicleList.set(res.data.rows);
+          this.filteredVehicles = res.data.rows; // ✅ Store for pagination/search
+          this.totalVehicle.set(res.data.rows.length);
 
-          // ✅ Update paginatedVehicles after setting vehicleList
-          this.paginatedVehicles = this.vehicleList().slice(
-            (this.currentPage - 1) * this.itemsPerPage,
-            this.currentPage * this.itemsPerPage
-          );
+          this.initializeVehiclePagination(); // ✅ Setup pages, visiblePages, paginated data
         } else {
+          this.vehicleList.set([]);
+          this.filteredVehicles = [];
           this.toastr.warning('No Vehicle found', 'Information');
+          this.totalVehicle.set(0);
+          this.initializeVehiclePagination(); // even for empty
         }
       },
       error: (err) => {
         console.error('Vehicle fetch error:', err);
         this.toastr.error(err.message || 'Failed to fetch vehicles', 'Error');
+        this.vehicleList.set([]);
+        this.filteredVehicles = [];
+        this.totalVehicle.set(0);
+        this.initializeVehiclePagination();
       },
     });
+  }
+  initializeVehiclePagination() {
+    const totalItems = this.filteredVehicles.length;
+    this.totalPages = Math.ceil(totalItems / this.itemsPerPage);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+
+    if (this.currentPage > this.totalPages) this.currentPage = 1;
+
+    this.updateVisiblePages();
+    this.paginateVehicles();
   }
 
   // Update Existing Vehicle
@@ -570,12 +613,17 @@ export class VehicleComponent implements OnInit {
     this.paginateVehicles();
   }
 
-  paginateVehicles(): void {
-    this.totalPages = Math.ceil(
-      this.filteredVehicles.length / this.itemsPerPage
-    );
-    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
-    this.updatePaginatedVehicles();
+  // paginateVehicles(): void {
+  //   this.totalPages = Math.ceil(
+  //     this.filteredVehicles.length / this.itemsPerPage
+  //   );
+  //   this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  //   this.updatePaginatedVehicles();
+  // }
+  paginateVehicles() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedVehicles = this.filteredVehicles.slice(startIndex, endIndex);
   }
 
   updatePaginatedVehicles(): void {
@@ -583,21 +631,49 @@ export class VehicleComponent implements OnInit {
     const end = start + this.itemsPerPage;
     this.paginatedVehicles = this.filteredVehicles.slice(start, end);
   }
-  goToPage(page: number): void {
-    this.currentPage = page;
-    this.updatePaginatedVehicles(); // Refresh the displayed items
+  // goToPage(page: number): void {
+  //   this.currentPage = page;
+  //   this.updatePaginatedVehicles(); // Refresh the displayed items
+  // }
+  // previousPage(): void {
+  //   if (this.currentPage > 1) {
+  //     this.currentPage--;
+  //     this.updatePaginatedVehicles();
+  //   }
+  // }
+
+  // nextPage(): void {
+  //   if (this.currentPage < this.totalPages) {
+  //     this.currentPage++;
+  //     this.updatePaginatedVehicles();
+  //   }
+  // }
+  updateVisiblePages() {
+    const start =
+      Math.floor((this.currentPage - 1) / this.maxVisiblePages) *
+      this.maxVisiblePages;
+    this.visiblePages = this.pages.slice(start, start + this.maxVisiblePages);
   }
-  previousPage(): void {
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.updateVisiblePages();
+    this.paginateVehicles(); // 🔥 Add this
+  }
+
+  previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.updatePaginatedVehicles();
+      this.updateVisiblePages();
+      this.paginateVehicles(); // 🔥 Add this
     }
   }
 
-  nextPage(): void {
+  nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.updatePaginatedVehicles();
+      this.updateVisiblePages();
+      this.paginateVehicles(); // 🔥 Add this
     }
   }
 

@@ -173,7 +173,8 @@
                     <a class="page-link" (click)="previousPage()">Previous</a>
                   </li>
 
-                  <li class="paginate_button page-item" *ngFor="let page of pages"
+                  <li class="paginate_button page-item" *ngFor="let page of visiblePages"
+
                     [class.active]="page === currentPage">
                     <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
                   </li>

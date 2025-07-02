@@ -30,5 +30,11 @@ export class ContextService {
     this.selectedOption.set(option);
   }
 
-  
+  // ✅ Page title stream added
+  private pageTitleSubject = new BehaviorSubject<string>('Dashboard');
+  pageTitle$ = this.pageTitleSubject.asObservable();
+
+  setPageTitle(title: string) {
+    this.pageTitleSubject.next(title);
+  }
 }

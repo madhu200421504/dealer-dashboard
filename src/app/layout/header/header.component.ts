@@ -63,6 +63,7 @@ export class HeaderComponent implements OnInit {
     // this.sidebarToggle.emit();
     this.sidebarService.toggleSidebar();
   }
+  
 
   private updateTitle(): void {
     const route = this.getDeepestChild(this.activatedRoute);

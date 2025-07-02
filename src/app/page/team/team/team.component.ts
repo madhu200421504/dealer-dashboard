@@ -67,9 +67,12 @@ export class TeamComponent {
   currentPage: number = 1;
   filteredTeam: any[] = [];
   isDeleteModalOpen = false;
-
+  visiblePages: number[] = [];
+  maxVisiblePages: number = 3;
   paginatedTeams: any[] = [];
   filteredTeamList: any[] = [];
+  totalItems = 0;
+
   constructor(
     private aleartsrv: AleartSrvService,
     private cdr: ChangeDetectorRef
@@ -78,6 +81,10 @@ export class TeamComponent {
   }
 
   ngOnInit() {
+    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.updateVisiblePages();
+    this.getAllTeams(); // fetch data for page 1
     // this.displayAllUser();
     // this.getAllDealer();
     this.getAllTeams();
@@ -447,6 +454,7 @@ export class TeamComponent {
     this.currentPage = 1;
 
     this.filterTeams(); // ✅ this ensures filteredTeamList is updated first
+    this.paginateTeams(); // 🔥 Important!
   }
 
   filterTeams() {
@@ -456,33 +464,69 @@ export class TeamComponent {
     this.paginateTeams();
   }
 
+  // paginateTeams() {
+  //   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  //   const endIndex = startIndex + this.itemsPerPage;
+  //   this.paginatedTeams = this.filteredTeamList.slice(startIndex, endIndex);
+  //   this.totalPages = Math.ceil(
+  //     this.filteredTeamList.length / this.itemsPerPage
+  //   );
+  //   this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  // }
   paginateTeams() {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedTeams = this.filteredTeamList.slice(startIndex, endIndex);
-    this.totalPages = Math.ceil(
-      this.filteredTeamList.length / this.itemsPerPage
-    );
-    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.paginatedTeams = this.filteredTeams.slice(startIndex, endIndex);
+
+    // (Optional: totalPages + pages setup can be done only once in initializeTeamPagination)
+  }
+
+  // previousPage() {
+  //   if (this.currentPage > 1) {
+  //     this.currentPage--;
+  //     this.paginateTeams();
+  //   }
+  // }
+
+  // nextPage() {
+  //   if (this.currentPage < this.totalPages) {
+  //     this.currentPage++;
+  //     this.paginateTeams();
+  //   }
+  // }
+
+  // goToPage(page: number) {
+  //   this.currentPage = page;
+  //   this.paginateTeams();
+  // }
+
+  updateVisiblePages() {
+    const start =
+      Math.floor((this.currentPage - 1) / this.maxVisiblePages) *
+      this.maxVisiblePages;
+    this.visiblePages = this.pages.slice(start, start + this.maxVisiblePages);
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.updateVisiblePages();
+    this.paginateTeams(); // 🔥 Add this
   }
 
   previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.paginateTeams();
+      this.updateVisiblePages();
+      this.paginateTeams(); // 🔥 Add this
     }
   }
 
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.paginateTeams();
+      this.updateVisiblePages();
+      this.paginateTeams(); // 🔥 Add this
     }
-  }
-
-  goToPage(page: number) {
-    this.currentPage = page;
-    this.paginateTeams();
   }
 
   // openModal(): void {
@@ -523,6 +567,30 @@ export class TeamComponent {
     }
   }
 
+  // displayAllTeams() {
+  //   console.log('Fetching all teams...');
+  //   this.masterSrv.getMultipleTeams().subscribe({
+  //     next: (res: TeamsResponse) => {
+  //       if (res && res.data.rows) {
+  //         this.teamList.set(res.data.rows);
+  //         this.filteredTeams = res.data.rows;
+
+  //         // ✅ Set totalteam count here
+  //         this.totalteam.set(res.data.rows.length);
+
+  //         this.updatePagination();
+  //       } else {
+  //         this.toastr.warning('No team found', 'Information');
+  //         this.totalteam.set(0); // optional: reset count to 0
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('team fetch error:', err);
+  //       this.toastr.error(err.message || 'Failed to fetch team', 'Error');
+  //       this.totalteam.set(0); // optional: reset count to 0 on error
+  //     },
+  //   });
+  // }
   displayAllTeams() {
     console.log('Fetching all teams...');
     this.masterSrv.getMultipleTeams().subscribe({
@@ -531,22 +599,36 @@ export class TeamComponent {
           this.teamList.set(res.data.rows);
           this.filteredTeams = res.data.rows;
 
-          // ✅ Set totalteam count here
           this.totalteam.set(res.data.rows.length);
-
-          this.updatePagination();
+          this.initializeTeamPagination(); // ✅ main setup
         } else {
+          this.teamList.set([]);
+          this.filteredTeams = [];
           this.toastr.warning('No team found', 'Information');
-          this.totalteam.set(0); // optional: reset count to 0
+          this.totalteam.set(0);
+          this.initializeTeamPagination(); // even if empty
         }
       },
       error: (err) => {
         console.error('team fetch error:', err);
         this.toastr.error(err.message || 'Failed to fetch team', 'Error');
-        this.totalteam.set(0); // optional: reset count to 0 on error
+        this.teamList.set([]);
+        this.filteredTeams = [];
+        this.totalteam.set(0);
+        this.initializeTeamPagination();
       },
     });
   }
+  initializeTeamPagination() {
+    const totalItems = this.filteredTeams.length;
+    this.totalPages = Math.ceil(totalItems / this.itemsPerPage);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    if (this.currentPage > this.totalPages) this.currentPage = 1;
+
+    this.updateVisiblePages();
+    this.paginateTeams();
+  }
+
   min(a: number, b: number): number {
     return Math.min(a, b);
   }

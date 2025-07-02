@@ -62,6 +62,9 @@ export class SidebarComponent implements AfterViewInit, OnDestroy {
     if (this.routerSub) this.routerSub.unsubscribe();
     if (this.metis) this.metis.dispose();
   }
+  onProfileChange(path: string, title: string) {
+    this.context.setPageTitle(title); // ✅ globally update page title
+  }
 
   private initMetisMenu(): void {
     const el = document.getElementById('menu');

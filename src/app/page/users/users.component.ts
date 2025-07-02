@@ -68,7 +68,8 @@ export class UsersComponent implements OnInit {
   totalteam = signal<number>(0);
   dealerObj: dealers = new dealers();
   roleList = signal<Role[]>([]);
-
+  visiblePages: number[] = [];
+  maxVisiblePages: number = 3;
   // Service injections
   masterSrv = inject(MasterService);
   private readonly toastr = inject(ToastrService);
@@ -103,6 +104,10 @@ export class UsersComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.updateVisiblePages();
+    this.displayAllUser(); // fetch data for page 1
     // Call your existing functions
     this.displayAllUser();
     // this.getAllDealer();
@@ -404,10 +409,19 @@ export class UsersComponent implements OnInit {
   }
 
   // Call this in ngOnInit or after fetching user data initially
+  // initializeUsers() {
+  //   this.filteredUsers = this.userList();
+  //   this.paginateUsers();
+  // }
   initializeUsers() {
-    this.filteredUsers = this.userList();
-    this.paginateUsers();
+    const totalItems = this.filteredUsers.length; // use filtered list
+    this.totalPages = Math.ceil(totalItems / this.itemsPerPage);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    if (this.currentPage > this.totalPages) this.currentPage = 1;
+    this.updateVisiblePages();
+    this.paginateUsers(); // 🔥 Important!
   }
+
   // get paginatedUsers() {
   //   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
   //   const endIndex = startIndex + this.itemsPerPage;
@@ -427,31 +441,47 @@ export class UsersComponent implements OnInit {
   // }
 
   // Pagination methods
+  // updateVisiblePages() {
+  //   let start =
+  //     Math.floor((this.currentPage - 1) / this.maxVisiblePages) *
+  //     this.maxVisiblePages;
+  //   this.visiblePages = this.pages.slice(start, start + this.maxVisiblePages);
+  // }
+
+  updateVisiblePages() {
+    const start =
+      Math.floor((this.currentPage - 1) / this.maxVisiblePages) *
+      this.maxVisiblePages;
+    this.visiblePages = this.pages.slice(start, start + this.maxVisiblePages);
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.updateVisiblePages();
+    this.paginateUsers(); // 🔥 Add this
+  }
+
   previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.paginateUsers(); // Update paginated users for new page
+      this.updateVisiblePages();
+      this.paginateUsers(); // 🔥 Add this
     }
   }
 
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.paginateUsers(); // Update paginated users for new page
+      this.updateVisiblePages();
+      this.paginateUsers(); // 🔥 Add this
     }
   }
 
-  goToPage(page: number) {
-    if (page !== this.currentPage) {
-      this.currentPage = page;
-      this.paginateUsers(); // Update paginated users for new page
-    }
-  }
   onItemsPerPageChange(event: any) {
     this.itemsPerPage = parseInt(event.target.value, 10);
     this.currentPage = 1;
-    console.log('Dropdown changed to:', this.itemsPerPage);
-    this.paginateUsers();
+    this.updateVisiblePages();
+    this.paginateUsers(); // 🔥 Important!
   }
 
   min(a: number, b: number): number {
@@ -645,7 +675,6 @@ export class UsersComponent implements OnInit {
   //   }
   // }
 
-  // Fetch all users
   displayAllUser() {
     this.masterSrv.getMultipleUser().subscribe({
       next: (res: MultiuserResponse) => {
@@ -653,19 +682,23 @@ export class UsersComponent implements OnInit {
           this.totalUser.set(res.data.count);
           this.userList.set(res.data.rows);
 
+          this.filteredUsers = res.data.rows; // ✅ Add this line!
+
           // ✅ Call this AFTER the data is available
           this.initializeUsers();
         } else {
           this.userList.set([]);
+          this.filteredUsers = []; // ✅ Add this too for fallback
           this.toastr.warning('No users found', 'Information');
-          this.initializeUsers(); // still initialize empty state
+          this.initializeUsers();
         }
       },
       error: (err) => {
         console.error('Users fetch error:', err);
         this.toastr.error(err.message || 'Failed to fetch users', 'Error');
         this.userList.set([]);
-        this.initializeUsers(); // optional fallback
+        this.filteredUsers = []; // ✅ Add this too for safety
+        this.initializeUsers();
       },
     });
   }

@@ -173,7 +173,7 @@
             </div>
 
             <!-- Right: Pagination controls -->
-            <div class="col-md-6 d-flex justify-content-end " style="display:flex;">
+            <!-- <div class="col-md-6 d-flex justify-content-end " style="display:flex;">
               <div class="dataTables_paginate paging_simple_numbers pagination-custom">
                 <ul class="pagination">
                   <li class="paginate_button page-item previous" [class.disabled]="currentPage === 1">
@@ -185,6 +185,23 @@
                     <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
                   </li>
 
+                  <li class="paginate_button page-item next" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link" (click)="nextPage()">Next</a>
+                  </li>
+                </ul>
+              </div>
+            </div> -->
+            <div class="col-md-6">
+              <div class="dataTables_paginate paging_simple_numbers float-right">
+                <ul class="pagination">
+                  <li class="paginate_button page-item previous" [class.disabled]="currentPage === 1">
+                    <a class="page-link" (click)="previousPage()">Previous</a>
+                  </li>
+            
+                  <li class="paginate_button page-item" *ngFor="let page of visiblePages" [class.active]="page === currentPage">
+                    <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+                  </li>
+            
                   <li class="paginate_button page-item next" [class.disabled]="currentPage === totalPages">
                     <a class="page-link" (click)="nextPage()">Next</a>
                   </li>
