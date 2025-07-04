@@ -7,6 +7,7 @@ import { Teams } from './team';
 export class UserList {
   user_id: string;
   account_id: string;
+  excellence: string;
   name: string;
   email: string;
   phone: number | undefined | null;
@@ -16,6 +17,7 @@ export class UserList {
   otp: string;
   otp_expiration: string;
   corporate_id: string;
+
   // dealer_code: number | undefined | null;
   // dealer_id: string;
   role_id: string;
@@ -47,6 +49,7 @@ export class UserList {
     this.team_id = '';
     this.team_name = '';
     this.fname = '';
+    this.excellence = '';
     this.lname = '';
 
     this.role = '';

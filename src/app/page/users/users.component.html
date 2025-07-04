@@ -108,6 +108,7 @@
                   <th>Sr No</th>
                   <th>Name</th>
                   <th>Email</th>
+                  <!-- <th>Excellence</th> -->
                   <th>Role</th>
                   <th>Action</th>
                 </tr>
@@ -174,7 +175,6 @@
                   </li>
 
                   <li class="paginate_button page-item" *ngFor="let page of visiblePages"
-
                     [class.active]="page === currentPage">
                     <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
                   </li>
@@ -389,6 +389,35 @@
                     Must not exceed 10 characters.
                   </span>
                   <span *ngIf="useForm.get('phone')?.errors?.['pattern']">
+                    Only numbers are allowed.
+                  </span>
+                </div>
+              </div>
+
+
+
+              <!-- EXCELLENCE -->
+              <div class="col-md-6 form-group">
+                <!-- <label for="phone" class="form-label">Phone</label> -->
+                <label for="Excellence" class="form-label">
+                  Excellence <span class="text-danger">*</span>
+                </label>
+                <input id="excellence" class="form-control form-control-lg" formControlName="excellence" type="text"
+                  maxlength="5" placeholder="Excellence" [ngClass]="{
+                  'is-invalid':
+                    useForm.get('excellence')?.touched &&
+                    useForm.get('excellence')?.invalid
+                }" (keypress)="restrictToNumbers($event)" />
+                <div class="text-danger" *ngIf="
+                  useForm.get('excellence')?.touched && useForm.get('excellence')?.invalid
+                ">
+                  <span *ngIf="useForm.get('excellence')?.errors?.['required']">
+                    Excellence is required.
+                  </span>
+                  <span *ngIf="useForm.get('excellence')?.errors?.['maxlength']">
+                    Must not exceed 10 characters.
+                  </span>
+                  <span *ngIf="useForm.get('excellence')?.errors?.['pattern']">
                     Only numbers are allowed.
                   </span>
                 </div>

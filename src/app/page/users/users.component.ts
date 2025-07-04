@@ -166,6 +166,12 @@ export class UsersComponent implements OnInit {
         Validators.pattern(/^\d{10}$/),
         Validators.maxLength(10),
       ]),
+      excellence: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^\d{1,5}$/), // allow 1 to 5 digits
+        Validators.maxLength(5),
+      ]),
+
       // team_name: new FormControl('', [
       //   Validators.required,
       //   Validators.pattern(/^\d{10}$/),
@@ -521,6 +527,7 @@ export class UsersComponent implements OnInit {
         team_name: user.team_name || '',
         fname: user.fname || '',
         lname: user.lname || '',
+        Excellence: user.excellence || '',
       });
 
       // Store previous email for comparison

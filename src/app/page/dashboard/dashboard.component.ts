@@ -480,8 +480,6 @@ export class DashboardComponent implements OnInit {
     this.selectedInitial = '';
   }
 
-
-  
   // toggleShowItems() {
   //   if (this.showingLimit >= this.filteredUsers.length) {
   //     this.showingLimit = this.defaultLimit;
