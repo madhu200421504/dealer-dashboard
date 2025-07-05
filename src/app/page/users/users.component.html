@@ -108,7 +108,7 @@
                   <th>Sr No</th>
                   <th>Name</th>
                   <th>Email</th>
-                  <!-- <th>Excellence</th> -->
+                  <th>Excellence</th>
                   <th>Role</th>
                   <th>Action</th>
                 </tr>
@@ -123,8 +123,9 @@
                   <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
                   <!-- <td>{{ user.name }}</td> -->
                   <td>{{ user.fname }} {{ user.lname }}</td>
-
                   <td>{{ user.email }}</td>
+                  <td>{{ user.excellence }}</td> <!-- Excellence (NEW) -->
+
                   <td>{{ user.user_role }}</td>
                   <td>
 
@@ -397,8 +398,7 @@
 
 
               <!-- EXCELLENCE -->
-              <div class="col-md-6 form-group">
-                <!-- <label for="phone" class="form-label">Phone</label> -->
+              <!-- <div class="col-md-6 form-group">
                 <label for="Excellence" class="form-label">
                   Excellence <span class="text-danger">*</span>
                 </label>
@@ -421,7 +421,37 @@
                     Only numbers are allowed.
                   </span>
                 </div>
+              </div> -->
+              <!-- EXCELLENCE -->
+              <div class="col-md-6 form-group">
+                <label for="Excellence" class="form-label">
+                  Excellence <span class="text-danger">*</span>
+                </label>
+                <input id="excellence" class="form-control form-control-lg" formControlName="excellence" type="text"
+                  maxlength="5" placeholder="Excellence" [ngClass]="{
+                          'is-invalid': useForm.get('excellence')?.touched && useForm.get('excellence')?.invalid
+                        }" (keypress)="restrictToNumbers($event)" (input)="onExcellenceInput($event)" />
+
+                <!-- Validation Errors -->
+                <div class="text-danger"
+                  *ngIf="useForm.get('excellence')?.touched && useForm.get('excellence')?.invalid">
+                  <span *ngIf="useForm.get('excellence')?.errors?.['required']">
+                    Excellence is required.
+                  </span>
+                  <span *ngIf="useForm.get('excellence')?.errors?.['maxlength']">
+                    Must not exceed 5 characters.
+                  </span>
+                  <span *ngIf="useForm.get('excellence')?.errors?.['pattern']">
+                    Only numbers are allowed.
+                  </span>
+                </div>
+
+                <!-- Backend API Response -->
+                <div *ngIf="excellenceMsg" class="text-success mt-1">
+                  {{ excellenceMsg }}
+                </div>
               </div>
+
             </div>
           </form>
         </div>

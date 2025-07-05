@@ -36,6 +36,7 @@ import { Role } from '../../model/class/role';
 import { error } from 'node:console';
 import { HttpHeaders } from '@angular/common/http';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { HttpClient } from '@angular/common/http';
 
 declare var $: any;
 
@@ -76,6 +77,8 @@ export class UsersComponent implements OnInit {
   currentPage = 1;
   itemsPerPage = 10;
   totalItems = 0;
+  excellenceMessage: string = ''; // holds API message
+
   // searchTerm: string = '';
   searchTerm: string = '';
   filteredUsers: any[] = []; // will hold the filtered user list
@@ -92,13 +95,16 @@ export class UsersComponent implements OnInit {
   user_id: string = ''; // Ensure this is properly initialized with the user ID
   dataTable: any;
   totalPages: number = 0;
+  excellenceMsg = '';
+
   pages: number[] = [];
   isDeleteModalOpen = false;
 
   columns: any[] = [];
   constructor(
     private aleartsrv: AleartSrvService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
   ) {
     this.initializeForm();
   }
@@ -166,9 +172,14 @@ export class UsersComponent implements OnInit {
         Validators.pattern(/^\d{10}$/),
         Validators.maxLength(10),
       ]),
+      // excellence: new FormControl('', [
+      //   Validators.required,
+      //   Validators.pattern(/^\d{1,5}$/), // allow 1 to 5 digits
+      //   Validators.maxLength(5),
+      // ]),
       excellence: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^\d{1,5}$/), // allow 1 to 5 digits
+        Validators.pattern(/^\d{5}$/), // only 5 digits
         Validators.maxLength(5),
       ]),
 
@@ -283,6 +294,34 @@ export class UsersComponent implements OnInit {
         this.toastr.error(err.message || 'Failed to fetch teams', 'Error');
       },
     });
+  }
+  onExcellenceInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input?.value || '';
+
+    this.excellenceMsg = '';
+
+    if (value.length === 5 && this.useForm.get('excellence')?.valid) {
+      const url = `https://uat.smartassistapp.in/api/dealer/existing-user-check?excellence=${value}`;
+
+      const token = sessionStorage.getItem('token'); // Replace 'token' if your key is different
+      if (!token) {
+        this.excellenceMsg = 'No token available. Please login again.';
+        return;
+      }
+
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+      this.http.get<any>(url, { headers }).subscribe({
+        next: (res) => {
+          if (res?.message) this.excellenceMsg = res.message;
+        },
+        error: (err) => {
+          console.error('API error', err);
+          this.excellenceMsg = err?.error?.message || 'Something went wrong.';
+        },
+      });
+    }
   }
 
   //   loadRole() {

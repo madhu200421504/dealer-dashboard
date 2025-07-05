@@ -353,11 +353,59 @@ export class VehicleComponent implements OnInit {
   //     },
   //   });
   // }
+  // THIS IS MY CODE FINAL WALA SAVING
+  // onSave() {
+  //   console.log('onsave being called');
+  //   console.log(this.useForm.value);
+  //   console.log('Form end_date value:', this.useForm.get('end_date')?.value);
 
+  //   if (this.useForm.invalid) {
+  //     this.markFormGroupTouched(this.useForm);
+  //     console.log('Form Values:', this.useForm.value); // Log form values to check role_name
+
+  //     this.toastr.warning(
+  //       'Please fill all required fields correctly',
+  //       'Validation'
+  //     );
+  //     return;
+  //   }
+
+  //   const formData = this.useForm.value;
+  //   console.log('Form Data being sent to API:', formData);
+
+  //   this.masterSrv.createNewVehicle(formData).subscribe({
+  //     next: () => {
+  //       this.toastr.success('Vehicle created successfully!', 'Success');
+  //       this.getAllVehicle();
+  //       this.closeModal();
+  //     },
+  //     error: (err) => {
+  //       console.error('Vehicle creation error:', err);
+
+  //       const backendMessage = err.error?.message || 'Failed to create vehicle';
+
+  //       this.toastr.error(backendMessage, 'Creation Error');
+  //     },
+  //   });
+  // }
   onSave() {
     console.log('onsave being called');
     console.log(this.useForm.value);
-    console.log('Form end_date value:', this.useForm.get('end_date')?.value);
+    console.log(
+      'Form end_date value:',
+      this.useForm.get('demo_end_date')?.value
+    );
+
+    const startDate = new Date(this.useForm.get('demo_start_date')?.value);
+    const endDate = new Date(this.useForm.get('demo_end_date')?.value);
+
+    if (endDate < startDate) {
+      this.toastr.error(
+        'End date cannot be before start date.',
+        'Date Validation'
+      );
+      return;
+    }
 
     if (this.useForm.invalid) {
       this.markFormGroupTouched(this.useForm);

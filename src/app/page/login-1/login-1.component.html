@@ -103,44 +103,45 @@
 
     </form>
     <!-- Verify Email Form -->
-    <form *ngIf="currentStep === 'verifyEmail'">
+    <!-- Verify Email Form -->
+    <form *ngIf="currentStep === 'verifyEmail'" #verifyForm="ngForm">
       <div class="flex justify-center">
-
-        <!-- <img src="../../../assets/admin-img/avatar (1).png" alt="" /> -->
         <img class="mx-auto inline-flex items-center justify-center" src="../../../assets/admin-img/jlr logo.svg"
           alt="Avatar Image" />
-
       </div>
-      <!-- <h2 class="title">Verify Email</h2> -->
+
       <h2 class="title" style="color:#3b86e9;font-size:20px;text-transform: capitalize;margin-top:15px;">
-        Verify Email</h2>
+        Verify Email
+      </h2>
 
       <div class="input-div">
         <div class="i mr-3">
           <i class="fas fa-envelope"></i>
         </div>
         <div class="div relative">
-          <!-- <h5 class="absolute left-2 top-1 text-gray-500 text-sm " >Email</h5> -->
-          <input [(ngModel)]="verifyObj.dealer_email" #inputElement type="email" class=" " name="dealer_email" required
-            placeholder="E-mail" />
+          <input [(ngModel)]="verifyObj.dealer_email" name="dealer_email" type="email" required email
+            placeholder="E-mail" #dealerEmail="ngModel" />
         </div>
-
       </div>
 
       <a href="javascript:void(0)" class="back-to-login" (click)="backToLogin()">Back to Login</a>
-      <input type="submit" class="btn" value="Send OTP" (click)="onVerifyEmail()" />
+
+      <!-- Disable if the form is invalid -->
+      <input type="submit" class="btn" value="Send OTP" (click)="onVerifyEmail()" [disabled]="verifyForm.invalid" />
     </form>
 
-    <!-- Verify OTP Form -->
-    <form *ngIf="currentStep === 'verifyOtp'">
-      <div class="flex justify-center">
 
-        <!-- <img src="../../../assets/admin-img/avatar (1).png" alt="" /> -->
+    <!-- Verify OTP Form -->
+    <form *ngIf="currentStep === 'verifyOtp'" #otpForm="ngForm">
+      <div class="flex justify-center">
         <img class="mx-auto inline-flex items-center justify-center" src="../../../assets/admin-img/jlr logo.svg"
           alt="Avatar Image" />
       </div>
+
       <h2 class="title" style="color:#3b86e9;font-size:20px;text-transform: capitalize;margin-top:15px;">
-        Verify OTP</h2>
+        Verify OTP
+      </h2>
+
       <div *ngIf="countdown > 0" class="text-center mb-4">
         Time remaining: {{ countdown }}s
       </div>
@@ -150,36 +151,20 @@
           <i class="fas fa-key color"></i>
         </div>
         <div class="relative z-0 w-full mb-1 group flex flex-col">
-          <input (input)="onOtpInput($event)" type="text" [(ngModel)]="loginObj.otp" name="otp" required
-            id="floating_email" class="" placeholder="OTP" required />
-          <!-- <label
-            for="floating_email"
-            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            > OTP</label
-          >  -->
+          <input (input)="onOtpInput($event)" type="text" [(ngModel)]="loginObj.otp" name="otp" #otp="ngModel" required
+            placeholder="OTP" class="" />
         </div>
-        <!-- <div class="div relative">
-          <h5 class="absolute left-2 top-1 text-gray-500 text-sm">OTP</h5>
-          <input
-            (input)="onOtpInput($event)"
-            type="number"
-            [(ngModel)]="loginObj.otp"
-            name="otp"
-            required
-            class="focus:outline-none focus:border-none border-transparent focus:ring-0 w-full py-2 px-4 bg-transparent text-gray-800"
-          />
-          min="6"
-            step="1"
-            pattern="\d*"
-        </div> -->
       </div>
 
       <div class="flex justify-end text-end w-full">
         <a style="cursor: pointer" class="back-to-login" (click)="backToLogin()">Back to Login</a>
         <a style="cursor: pointer" class="resend-otp" *ngIf="countdown === 0" (click)="onVerifyEmail()">Resend OTP</a>
       </div>
-      <input type="submit" class="btn" value="Verify OTP" (click)="onVerifyOtp()" />
+
+      <!-- Disable button if OTP input is invalid -->
+      <input type="submit" class="btn" value="Verify OTP" (click)="onVerifyOtp()" [disabled]="otpForm.invalid" />
     </form>
+
 
     <!-- New Password Form -->
     <form *ngIf="currentStep === 'newPassword'">

@@ -47,7 +47,7 @@ body {
 
 .login-content {
   display: flex;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   text-align: center;
   height: 97vh;
@@ -118,7 +118,7 @@ form {
   bottom: -2px;
   width: 0%;
   height: 2px;
-  background-color: #3b86e9;
+  /* background-color: #3b86e9; */
   transition: 0.4s;
 }
 
@@ -142,7 +142,7 @@ form {
 
 .input-div.focus > .i > i {
   /* color: #38d39f; */
-  color: #5298ee;
+  /* color: #5298ee; */
 }
 .input-div .focus h5 {
   top: -5px;
@@ -356,7 +356,7 @@ input[type="password"] {
   -moz-appearance: textfield;
 }
 
-.new-custom{
+.new-custom {
   display: flex;
   justify-content: center;
 }
@@ -366,9 +366,25 @@ input[type="password"] {
   top: 12px;
   left: 10px;
   font-size: 16px;
-  color: #9ca3af; 
+  color: #9ca3af;
   pointer-events: none;
   transition: all 0.2s ease;
+}
+input.forms-control {
+  background-color: transparent !important; /* Removes any unwanted background */
+  box-shadow: none !important; /* Removes autofill box shadow */
+  /* -webkit-box-shadow: 0 0 0px 1000px white inset !important; Chrome autofill fix */
+  transition: background-color 5000s ease-in-out 0s; /* Chrome autofill delay trick */
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  box-shadow: none !important; /* Removes autofill box shadow */
+  /* -webkit-box-shadow: 0 0 0px 1000px white inset !important; */
+  /* background-color: white !important; */
+  color: #000 !important;
+  transition: background-color 5000s ease-in-out 0s; /* Delay autofill style */
 }
 
 .div h5.floating {

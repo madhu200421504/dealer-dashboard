@@ -458,7 +458,7 @@ export class TeamComponent {
   }
 
   filterTeams() {
-    this.filteredTeamList = this.teamList().filter((team) =>
+    this.filteredTeams = this.teamList().filter((team) =>
       team.team_name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
     this.paginateTeams();

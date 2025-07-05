@@ -223,24 +223,32 @@
                             <div class="row">
                                 <!-- Name -->
                                 <div class="col-md-6 form-group">
-                                    <label for="enquiries" class="form-label">Enquiries</label>
+                                    <label for="enquiries" class="form-label">
+                                        Enquiries <span class="text-danger">*</span>
+                                    </label>
                                     <input id="enquiries" class="form-control form-control-lg" type="number"
                                         formControlName="enquiries" placeholder="Enquiries" [ngClass]="{
-                  'is-invalid':
-                    useForm.get('enquiries')?.touched &&
-                    useForm.get('enquiries')?.invalid
-                }" required />
+                                                                        'is-invalid':
+                                                                          useForm.get('enquiries')?.touched &&
+                                                                          useForm.get('enquiries')?.invalid
+                                                                      }" required />
+
                                     <div class="text-danger" *ngIf="
-                  useForm.get('enquiries')?.invalid && useForm.get('enquiries')?.touched
-                ">
-                                        <span *ngIf="useForm.get('enquiries')?.errors?.['required']">Enquiries is
-                                            required.</span>
+                                                                      useForm.get('enquiries')?.invalid && useForm.get('enquiries')?.touched
+                                                                    ">
+                                        <span *ngIf="useForm.get('enquiries')?.errors?.['required']">
+                                            Enquiries is required.
+                                        </span>
                                     </div>
                                 </div>
 
+
                                 <!-- LAST NAME -->
                                 <div class="col-md-6 form-group">
-                                    <label for="testDrives" class="form-label">Test Drives</label>
+                                    <!-- <label for="testDrives" class="form-label">Test Drives</label> -->
+                                    <label for="enquiries" class="form-label">
+                                        Test Drives<span class="text-danger">*</span>
+                                    </label>
                                     <input id="testDrives" class="form-control form-control-lg" type="number"
                                         formControlName="testDrives" placeholder="Test Drives" [ngClass]="{
                                           'is-invalid':
@@ -258,7 +266,10 @@
 
 
                                 <div class="col-md-6 form-group">
-                                    <label for="orders" class="form-label">Orders</label>
+                                    <!-- <label for="orders" class="form-label">Orders</label> -->
+                                    <label for="enquiries" class="form-label">
+                                        Orders<span class="text-danger">*</span>
+                                    </label>
                                     <input id="orders" class="form-control form-control-lg" type="number"
                                         formControlName="orders" placeholder="Orders" [ngClass]="{
                                                                   'is-invalid':
