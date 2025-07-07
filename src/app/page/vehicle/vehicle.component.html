@@ -369,7 +369,7 @@
 
                   <div class="text-danger"
                     *ngIf="useForm.get('demo_start_date')?.touched && useForm.get('demo_start_date')?.invalid">
-                    <span>start date is required.</span>
+                    <span>Start date is required.</span>
                   </div>
 
                 </div>
@@ -406,18 +406,18 @@
 
                   <div class="text-danger"
                     *ngIf="useForm.get('demo_end_date')?.touched && useForm.get('demo_end_date')?.invalid">
-                    <span>end date is required.</span>
+                    <span>End date is required.</span>
                   </div>
 
                   <!-- ✅ Custom validation message -->
-                  <div class="text-danger" *ngIf="
+                  <!-- <div class="text-danger" *ngIf="
                                       useForm.get('demo_start_date')?.value &&
                                       useForm.get('demo_end_date')?.value &&
                                       useForm.get('demo_end_date')?.touched &&
                                       useForm.get('demo_end_date')?.value < useForm.get('demo_start_date')?.value
                                     ">
                     <span>End date cannot be before start date.</span>
-                  </div>
+                  </div> -->
                 </div>
 
                 <div class="col-md-6 form-group" style="margin-left:5px;">

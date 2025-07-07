@@ -103,6 +103,7 @@ export class TeamComponent {
         Validators.minLength(2),
         Validators.maxLength(50),
       ]),
+      
       // team_lead_id: new FormControl('', [
       //   Validators.required,
       //   Validators.minLength(2),

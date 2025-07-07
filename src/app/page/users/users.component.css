@@ -157,3 +157,6 @@ select.form-control.is-invalid {
     margin-top: 5px !important;
   }
 }
+#user {
+  margin-left: 1rem;
+}
