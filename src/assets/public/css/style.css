@@ -11839,6 +11839,9 @@ a.active {
   padding-left: 40px;
 }
 
+#header2{
+  padding-top:50px;
+}
 @media only screen and (max-width: 1600px) {
   .content-body .container-fluid {
     padding-top: 30px;

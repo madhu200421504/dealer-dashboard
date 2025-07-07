@@ -428,7 +428,7 @@
                   Excellence <span class="text-danger">*</span>
                 </label>
                 <input id="excellence" class="form-control form-control-lg" formControlName="excellence" type="text"
-                  maxlength="5" placeholder="Excellence" [ngClass]="{
+                  maxlength="6" placeholder="Excellence" [ngClass]="{
                           'is-invalid': useForm.get('excellence')?.touched && useForm.get('excellence')?.invalid
                         }" (keypress)="restrictToNumbers($event)" (input)="onExcellenceInput($event)" />
 
@@ -439,8 +439,9 @@
                     Excellence is required.
                   </span>
                   <span *ngIf="useForm.get('excellence')?.errors?.['maxlength']">
-                    Must not exceed 5 characters.
+                    Must not exceed 6 characters.
                   </span>
+
                   <span *ngIf="useForm.get('excellence')?.errors?.['pattern']">
                     Only numbers are allowed.
                   </span>

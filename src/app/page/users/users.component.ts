@@ -179,8 +179,8 @@ export class UsersComponent implements OnInit {
       // ]),
       excellence: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^\d{5}$/), // only 5 digits
-        Validators.maxLength(5),
+        Validators.pattern(/^\d{6}$/), // only 5 digits
+        Validators.maxLength(6),
       ]),
 
       // team_name: new FormControl('', [
@@ -301,7 +301,7 @@ export class UsersComponent implements OnInit {
 
     this.excellenceMsg = '';
 
-    if (value.length === 5 && this.useForm.get('excellence')?.valid) {
+    if (value.length === 6 && this.useForm.get('excellence')?.valid) {
       const url = `https://uat.smartassistapp.in/api/dealer/existing-user-check?excellence=${value}`;
 
       const token = sessionStorage.getItem('token'); // Replace 'token' if your key is different
@@ -1162,6 +1162,7 @@ export class UsersComponent implements OnInit {
       fname: user.fname || '',
       lname: user.lname || '',
       user_role: user.user_role || '',
+      excellence: user.excellence || '',
     });
 
     console.log('userObj.user_id after setting:', this.userObj?.user_id);

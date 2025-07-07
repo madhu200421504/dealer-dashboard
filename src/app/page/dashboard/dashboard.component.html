@@ -1,5 +1,5 @@
-<div class="dashboard-container">
-  <div class="header" [ngClass]="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
+<div class="dashboard-container" id="header2">
+  <div class="header2" [ngClass]="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }" >
     <div class="nav-buttons">
       <button class="nav-button" [ngClass]="{ 'active': selectedSection === 'home' }" (click)="selectSection('home')"
         style="margin-left:10px;">
@@ -203,14 +203,14 @@
                   <thead>
                     <tr>
                       <th style="font-weight: 700;">Field</th>
-                
+
                       <!-- Today Column -->
                       <th>
                         <div class="d-flex align-items-center justify-content-center gap-2">
                           <label style="margin: 0; font-weight: 500;">Today</label>
                           <ng-container *ngIf="todayTestDrives.length > 0">
-                            <select id="todaySelect" class="form-select form-select-sm" style="width: auto; padding: 3px 10px;"
-                              [(ngModel)]="selectedTodayIndex">
+                            <select id="todaySelect" class="form-select form-select-sm"
+                              style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedTodayIndex">
                               <option *ngFor="let t of todayTestDrives; let i = index" [value]="i">
                                 {{ i + 1 }}
                               </option>
@@ -218,14 +218,14 @@
                           </ng-container>
                         </div>
                       </th>
-                
+
                       <!-- Upcoming Column -->
                       <th>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
                           <label style="margin: 0; font-weight: 500;">Upcoming</label>
                           <ng-container *ngIf="upcomingTestDrives.length > 0">
-                            <select id="upcomingSelect" class="form-select form-select-sm" style="width: auto; padding: 3px 10px;"
-                              [(ngModel)]="selectedUpcomingIndex">
+                            <select id="upcomingSelect" class="form-select form-select-sm"
+                              style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedUpcomingIndex">
                               <option *ngFor="let u of upcomingTestDrives; let i = index" [value]="i">
                                 {{ i + 1 }}
                               </option>
@@ -233,14 +233,14 @@
                           </ng-container>
                         </div>
                       </th>
-                
+
                       <!-- Overdue Column -->
                       <th>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
                           <label style="margin: 0; font-weight: 700;">Overdue</label>
                           <ng-container *ngIf="overdueTestDrives.length > 0">
-                            <select id="overdueSelect" class="form-select form-select-sm" style="width: auto; padding: 3px 10px;"
-                              [(ngModel)]="selectedOverdueIndex">
+                            <select id="overdueSelect" class="form-select form-select-sm"
+                              style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedOverdueIndex">
                               <option *ngFor="let o of overdueTestDrives; let i = index" [value]="i">
                                 {{ i + 1 }}
                               </option>
@@ -250,7 +250,7 @@
                       </th>
                     </tr>
                   </thead>
-                
+
                   <tbody *ngIf="todayTestDrives.length || upcomingTestDrives.length || overdueTestDrives.length">
                     <tr>
                       <th class="text-start" style="color:#000000;font-weight:400">Name</th>
@@ -284,7 +284,7 @@
                     </tr>
                   </tbody>
                 </table>
-                
+
 
 
               </div>
