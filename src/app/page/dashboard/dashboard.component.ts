@@ -160,7 +160,7 @@ export class DashboardComponent implements OnInit {
   // selectedPs1: any = '';
   // selectedPs2: string = '';
   loading: boolean = true; // <-- declare loading flag
-  activeFilter: 'Today' | 'MTD' | 'QTD' | 'YTD' = 'Today'; // default value
+  activeFilter: 'MTD' | 'QTD' | 'YTD' = 'MTD'; // set default selection
   dashboardMetrics: any = {
     enquiries: 0,
     testDrives: 0,
@@ -318,7 +318,7 @@ export class DashboardComponent implements OnInit {
     this.filteredTableTestDrives = this.data.tableTestDrives_today; // Make sure this line exists
 
     console.log('Loading dashboard metrics with default filter Today');
-    this.loadDashboardMetrics('Today');
+    this.loadDashboardMetrics('MTD');
     console.log('DashboardComponent loaded');
 
     // Test with a valid user ID (from your API)
@@ -1415,7 +1415,7 @@ export class DashboardComponent implements OnInit {
   //   this.loadFilteredTestDrives(this.filterOption);
   // }
 
-  onFilterClick(filter: 'Today' | 'MTD' | 'QTD' | 'YTD') {
+  onFilterClick(filter: 'MTD' | 'QTD' | 'YTD') {
     this.activeFilter = filter;
 
     // Your existing call
@@ -1492,7 +1492,7 @@ export class DashboardComponent implements OnInit {
         return [];
     }
   }
-  loadDashboardMetrics(filter: 'Today' | 'MTD' | 'QTD' | 'YTD') {
+  loadDashboardMetrics(filter: 'MTD' | 'QTD' | 'YTD') {
     const token = sessionStorage.getItem('token');
     if (!token) {
       console.error('Token not found');
@@ -1503,8 +1503,8 @@ export class DashboardComponent implements OnInit {
       Authorization: `Bearer ${token}`,
     });
 
-    let url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard`;
-    if (filter !== 'Today') {
+    let url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard`;
+    if (filter !== 'MTD') {
       url += `?type=${filter}`;
     }
 

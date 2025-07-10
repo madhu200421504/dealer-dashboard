@@ -30,6 +30,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { AleartSrvService } from '../../service/aleart-srv.service';
 import { Target } from '../../model/class/target';
+import { ContextService } from '../../service/context.service'; // adjust path
 
 @Component({
   selector: 'app-vehicle',
@@ -59,6 +60,8 @@ export class TargetComponent implements OnInit {
   filteredTeam = signal<Target[]>([]);
   paginatedTarget = signal<Target[]>([]);
   isModalOpen = false;
+  visiblePages: number[] = [];
+  maxVisiblePages: number = 3;
 
   searchTerm: string = '';
   currentPage = 1;
@@ -69,6 +72,8 @@ export class TargetComponent implements OnInit {
   totalTarget = signal<number>(0);
   isEditMode: boolean = false; // Default is add mode
   filteredTarget: any[] = [];
+  selectedTarget: any = null;
+  performanceTargets: any[] = [];
 
   // Dependency Injections
   private masterSrv = inject(MasterService);
@@ -88,14 +93,23 @@ export class TargetComponent implements OnInit {
   // Form Group
   useForm: FormGroup = new FormGroup({});
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef, private context: ContextService) {
     this.initializeForm();
   }
 
-  ngOnInit(): void {
-    this.loadTarget();
+  // ngOnInit(): void {
+  //   this.loadTarget();
 
-    // this.getAllTarget();
+  // }
+  ngOnInit(): void {
+    // ✅ Set the page title to "Target Management"
+    this.context.onSideBarClick$.next({
+      role: 'target',
+      pageTitle: 'Target Management',
+    });
+
+    // Load targets on init
+    this.loadTarget();
   }
 
   // Initialize Reactive Form
@@ -138,34 +152,35 @@ export class TargetComponent implements OnInit {
     this.masterSrv.getAllTarget().subscribe({
       next: (res: TargetResponse) => {
         console.log('Target API response:', res); // ✅ Check the full API response
-
-        // Optional: Log individual fields from the response
         console.log('Enquiries:', res?.data?.enquiries);
         console.log('Test Drives:', res?.data?.testDrives);
         console.log('Orders:', res?.data?.orders);
 
-        // Assuming res.data.count is the total count of targets (or whatever metric you want)
-        this.count.set(res.data.count);
+        this.count.set(res.data.count); // Optional: set count
 
-        // Setting the targetList signal with a single object from the response
-        // this.targetList.set([
-        //   {
-        //     enquiries: res.data.enquiries,
-        //     testDrives: res.data.testDrives,
-        //     orders: res.data.orders,
-        //   },
-        // ]);
         const { enquiries, testDrives, orders } = res.data || {};
 
         if (!enquiries && !testDrives && !orders) {
-          this.targetList.set([]); // Empty — show "Add Target" button
+          this.targetList.set([]); // Show "No data"
         } else {
-          this.targetList.set([{ enquiries, testDrives, orders }]);
+          // ✅ Add 'original' when setting targetList
+          this.targetList.set([
+            {
+              enquiries,
+              testDrives,
+              orders,
+              original: {
+                enquiries,
+                testDrives,
+                orders,
+              },
+            },
+          ]);
         }
 
-        // If you want to keep filteredTeam and paginatedTarget in sync, update them as well:
+        // ✅ Keep filteredTeam and pagination in sync
         this.filteredTeam.set(this.targetList());
-        this.setupPagination(); // Recalculate pagination based on new data
+        this.setupPagination();
       },
       error: (err) => {
         this.toastr.error('Failed to load target', 'Error');
@@ -212,6 +227,14 @@ export class TargetComponent implements OnInit {
   //     console.log('New vehicle Mode: Reset vehhicleobj', this.vehicleObj);
   //   }
   // }
+
+  selectTarget(target: any) {
+    this.selectedTarget = target;
+  }
+  onTargetChange(): void {
+    this.targetList.set([...this.targetList()]); // force signal update
+  }
+
   openModal(target?: Target) {
     console.log('✅ openModal() function called');
 
@@ -256,14 +279,34 @@ export class TargetComponent implements OnInit {
       this.useForm.dirty && this.useForm.value.team_name !== this.previousValue
     );
   }
+  // onSearchChange() {
+  //   const term = this.searchTerm.toLowerCase();
+  //   const filtered = this.targetList().filter(
+  //     (target) =>
+  //       target.enquiries.toString().includes(term) ||
+  //       target.testDrives.toString().includes(term) ||
+  //       target.orders.toString().includes(term)
+  //   );
+  //   this.filteredTeam.set(filtered);
+  //   this.currentPage = 1;
+  //   this.setupPagination();
+  // }
   onSearchChange() {
     const term = this.searchTerm.toLowerCase();
-    const filtered = this.targetList().filter(
-      (target) =>
+
+    const filtered = this.targetList().filter((target, i) => {
+      const name = `user ${i + 1}`;
+      const email = `user${i + 1}@example.com`;
+
+      return (
         target.enquiries.toString().includes(term) ||
         target.testDrives.toString().includes(term) ||
-        target.orders.toString().includes(term)
-    );
+        target.orders.toString().includes(term) ||
+        name.toLowerCase().includes(term) ||
+        email.toLowerCase().includes(term)
+      );
+    });
+
     this.filteredTeam.set(filtered);
     this.currentPage = 1;
     this.setupPagination();
@@ -301,6 +344,14 @@ export class TargetComponent implements OnInit {
       this.paginateTeams();
     }
   }
+  hasAnyChanges(): boolean {
+    return this.targetList().some(
+      (target) =>
+        target.enquiries !== target.original?.enquiries ||
+        target.testDrives !== target.original?.testDrives ||
+        target.orders !== target.original?.orders
+    );
+  }
 
   goToPage(page: number) {
     this.currentPage = page;
@@ -311,6 +362,19 @@ export class TargetComponent implements OnInit {
     const to = this.currentPage * this.itemsPerPage;
     return to > this.filteredTeam().length ? this.filteredTeam().length : to;
   }
+  onEditAll() {
+    // You can send all changed data here
+    const changedTargets = this.performanceTargets.filter(
+      (target) =>
+        target.enquiries !== target.original?.enquiries ||
+        target.testDrives !== target.original?.testDrives ||
+        target.orders !== target.original?.orders
+    );
+
+    console.log('Changed items:', changedTargets);
+    // Now send these to your backend or handle accordingly
+  }
+
   // Disable VIN for edit mode
   // this.useForm.get('VIN')?.disable();
   // this.useForm.get('YOM')?.disable();
@@ -948,34 +1012,19 @@ export class TargetComponent implements OnInit {
   //   );
   // }
 
-  onEdit(target: Target) {
-    this.isEditMode = true; // Set the edit mode flag
-    this.isModalOpen = true; // ✅ Add this line to open the modal
-    // console.log('user.userObj before setting:', ?.vehicle_id);
+  onEdit(target: any): void {
+    console.log('Editing target:', target);
 
-    // Copy user data to userObj
-    this.targetobj = { ...target }; // Spread operator to avoid reference issues
-
-    // Store the previous name for comparison
-    // this.previousValue = vehicle.vehicle_name;
-
-    // Initialize the form with current user data
-    this.useForm.patchValue({
-      // vehicle_name: vehicle.vehicle_name,
-      // VIN: vehicle.VIN,
-      // type: vehicle.type,
-      // YOM: this.formatDate(vehicle.YOM),
-      // chasis_number: vehicle.chasis_number,
-      enquiries: target.enquiries,
-      testDrives: target.testDrives,
-      orders: target.orders,
-    });
-
-    // console.log(
-    //   'vehicleobj.vehicle_id after setting:',
-    //   this.vehicleObj?.vehicle_id
-    // );
+    // ✅ Wait for the next cycle to update original
+    setTimeout(() => {
+      target.original = {
+        enquiries: target.enquiries,
+        testDrives: target.testDrives,
+        orders: target.orders,
+      };
+    }, 0);
   }
+
   // isVehicleNameChanged(): boolean {
   //   return this.useForm.value.name !== this.previousValue;
   // }
