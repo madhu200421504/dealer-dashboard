@@ -421,6 +421,12 @@ export class DashboardComponent implements OnInit {
   //   this.applyTableFilters();
   // }
 
+  updatePagination(): void {
+    this.totalPages = Math.ceil(
+      this.filteredTableTestDrives.length / this.itemsPerPage
+    );
+  }
+
   filterByInitial(initial: string) {
     if (this.selectedInitial === initial) {
       // If clicking the same initial again, toggle off
@@ -738,7 +744,7 @@ export class DashboardComponent implements OnInit {
     }
   }
   fetchPs1Data(userId: string, filterType: string) {
-    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}&type=${filterType}`;
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${userId}&type=${filterType}`;
     const token = sessionStorage.getItem('token');
     if (!token) return;
 
@@ -760,7 +766,7 @@ export class DashboardComponent implements OnInit {
     });
   }
   fetchPs2Data(userId: string, filterType: string) {
-    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}&type=${filterType}`;
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${userId}&type=${filterType}`;
     const token = sessionStorage.getItem('token');
     if (!token) return;
 
@@ -784,7 +790,7 @@ export class DashboardComponent implements OnInit {
 
   // Function to make the API call based on user and filter
   fetchFilteredData(userId: string, filterType: string) {
-    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}&type=${filterType}`;
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${userId}&type=${filterType}`;
     const token = sessionStorage.getItem('token');
 
     if (!token) {
@@ -875,7 +881,7 @@ export class DashboardComponent implements OnInit {
     console.log('Updated selected user in PS2:', this.selectedPs2);
 
     // Fetching data for PS2 as per the selected user
-    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${user.user_id}&type=${this.selectedFilter}`;
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${user.user_id}&type=${this.selectedFilter}`;
     console.log('Fetching PS2 data from URL:', url); // Log URL for debugging
 
     const token = sessionStorage.getItem('token');
@@ -1503,10 +1509,12 @@ export class DashboardComponent implements OnInit {
       Authorization: `Bearer ${token}`,
     });
 
-    let url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard`;
-    if (filter !== 'MTD') {
-      url += `?type=${filter}`;
-    }
+    // let url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard`;
+    // if (filter !== 'MTD') {
+    //   url += `?type=${filter}`;
+    // }
+
+    let url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}`;
 
     this.http.get<any>(url, { headers }).subscribe({
       next: (response) => {
@@ -1819,13 +1827,11 @@ export class DashboardComponent implements OnInit {
   //   return this.filteredTableTestDrives; // Make sure this returns filtered data
   // }
 
-  paginateTableData(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    // Update the data source for your table to show only the current page's data
-    // For simplicity, let's assume getFilteredTestDrives handles pagination
-    // in the HTML directly based on filteredTableTestDrives
-  }
+  // paginateTableData(): void {
+  //   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  //   const endIndex = startIndex + this.itemsPerPage;
+
+  // }
 
   getPaginatedTableData(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -1833,7 +1839,7 @@ export class DashboardComponent implements OnInit {
     return this.filteredTableTestDrives.slice(startIndex, endIndex);
   }
   loadCompareMetrics(userId: string, filter: string, isPs2: boolean = false) {
-    const url = `https://uat.smartassistapp.in/api/dealer/dealer/analysis/dashboard?userIds=${userId}&type=${filter}`;
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${userId}&type=${filter}`;
     const token = sessionStorage.getItem('token');
 
     if (!token) {
@@ -1904,7 +1910,14 @@ export class DashboardComponent implements OnInit {
           // ✅ Set default filter to Today
           this.filterOption = 'today';
           this.filteredTableTestDrives = [...this.testDrivesToday];
-          this.currentPage = 1; // reset pagination if applicable
+
+          // ✅ Reset pagination
+          this.currentPage = 1;
+
+          // ✅ 🔥 CRITICAL: update total pages
+          this.totalPages = Math.ceil(
+            this.filteredTableTestDrives.length / this.itemsPerPage
+          );
         },
         error: (error) => {
           console.error('API error:', error);

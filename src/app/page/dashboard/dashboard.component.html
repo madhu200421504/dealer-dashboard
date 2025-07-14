@@ -1,5 +1,5 @@
 <div class="dashboard-container" id="header2">
-  <div class="header2" [ngClass]="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }" >
+  <!-- <div class="header2" [ngClass]="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }" >
     <div class="nav-buttons">
       <button class="nav-button" [ngClass]="{ 'active': selectedSection === 'home' }" (click)="selectSection('home')"
         style="margin-left:10px;">
@@ -10,7 +10,21 @@
         Analysis
       </button>
     </div>
+  </div> -->
+  <div class="header2" [ngClass]="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
+    <div class="nav-button-group" style="margin-left:10px;">
+      <button class="nav-button" [ngClass]="{ 'active': selectedSection === 'home' }" (click)="selectSection('home')">
+        <i class="fas fa-home" style="margin-right: 6px;"></i> Home
+      </button>
+
+      <button class="nav-button" [ngClass]="{ 'active': selectedSection === 'analysis' }"
+        (click)="selectSection('analysis')">
+        <i class="fas fa-chart-line" style="margin-right: 8px;"></i> Analysis
+      </button>
+
+    </div>
   </div>
+
   <div class="main" *ngIf="selectedSection === 'home'" class="content-section active">
     <div class="main-content" style="margin-top: -45px;">
       <div class="container">
@@ -202,12 +216,12 @@
                 <table class="table table-bordered table-striped text-center">
                   <thead>
                     <tr>
-                      <th style="font-weight: 700;">Field</th>
+                      <th style="font-weight:700">Field</th>
 
                       <!-- Today Column -->
                       <th>
                         <div class="d-flex align-items-center justify-content-center gap-2">
-                          <label style="margin: 0; font-weight: 500;">Today</label>
+                          <label style="margin: 0; font-weight: 700;">Today</label> &nbsp;
                           <ng-container *ngIf="todayTestDrives.length > 0">
                             <select id="todaySelect" class="form-select form-select-sm"
                               style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedTodayIndex">
@@ -222,7 +236,7 @@
                       <!-- Upcoming Column -->
                       <th>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                          <label style="margin: 0; font-weight: 500;">Upcoming</label>
+                          <label style="margin: 0; font-weight: 700;">Upcoming</label> &nbsp;
                           <ng-container *ngIf="upcomingTestDrives.length > 0">
                             <select id="upcomingSelect" class="form-select form-select-sm"
                               style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedUpcomingIndex">
@@ -456,7 +470,7 @@
       <div class="pagination-controls"
         style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
         <div style="display: flex; justify-content: center; align-items: center;">
-          <!-- <button (click)="prevPage()" [disabled]="currentPage === 1"
+          <button (click)="prevPage()" [disabled]="currentPage === 1"
             style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
             Previous
           </button>
@@ -466,29 +480,30 @@
           <button (click)="nextPage()" [disabled]="currentPage === totalPages"
             style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
             Next
-          </button> -->
-          <!-- Previous Button -->
-          <button (click)="prevPage()" [disabled]="currentPage === 1 || filteredTableTestDrives.length === 0"
-            style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
-            Previous
           </button>
 
-          <!-- Next Button -->
-          <button (click)="nextPage()" [disabled]="currentPage === totalPages || filteredTableTestDrives.length === 0"
-            style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
-            Next
-          </button>
 
         </div>
 
         <!-- Record range info placed under the controls -->
-        <div style="font-weight: 500; font-size: 14px; margin-top: 8px;color:black">
+        <!-- <div style="font-weight: 500; font-size: 14px; margin-top: 8px;color:black">
           Showing {{ (currentPage - 1) * pageSize + 1 }}
           to {{ (currentPage - 1) * pageSize + getPaginatedTableData().length }}
           of {{ filteredTableTestDrives.length }} records
         </div>
-      </div>
+      </div> -->
+        <div style="font-weight: 500; font-size: 14px; margin-top: 8px; color: black">
+          <ng-container *ngIf="filteredTableTestDrives.length > 0; else noRecords">
+            Showing {{ (currentPage - 1) * itemsPerPage + 1 }}
+            to {{ (currentPage - 1) * itemsPerPage + getPaginatedTableData().length }}
+            of {{ filteredTableTestDrives.length }} records
+          </ng-container>
+          <ng-template #noRecords>
+            Showing 0 to 0 of 0 records
+          </ng-template>
 
+        </div>
+      </div>
 
 
 

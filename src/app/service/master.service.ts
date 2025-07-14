@@ -221,7 +221,7 @@ export class MasterService {
     const headers = this.getAuthHeaders();
 
     return this.http.get<roleResponse>(
-      'https://uat.smartassistapp.in/api/dealer/role/all'
+      'https://uatuat.smartassistapp.in/api/dealer/role/all'
     );
   }
 
@@ -421,10 +421,20 @@ export class MasterService {
   // }
   deleteUser(user_id: string): Observable<MultiuserResponse> {
     const headers = this.getAuthHeaders(); // Assuming this function provides the correct headers
-    return this.http.delete<MultiuserResponse>(
+    return this.http.put<MultiuserResponse>(
       `${this.apiUrl}dealer/users/${user_id}/delete`, // Ensure this is the correct endpoint
       { headers }
     );
+  }
+  updateTargets(apiUrl: string, data: any): Observable<any> {
+    const token = sessionStorage.getItem('token'); // or localStorage, based on your auth
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put(apiUrl, data, { headers });
   }
 
   // DELETE TEAM BY ID
@@ -503,11 +513,19 @@ export class MasterService {
 
   // TARGET
 
-  getAllTarget() {
-    const headers = this.getAuthHeaders();
-    return this.http.get<TargetResponse>(this.apiUrl + 'dealer/targets/all', {
-      headers,
+  // getAllTarget() {
+  //   const headers = this.getAuthHeaders();
+  //   return this.http.get<TargetResponse>(this.apiUrl + 'dealer/targets/all', {
+  //     headers,
+  //   });
+  // }
+  getAllTarget(apiUrl: string): Observable<TargetResponse> {
+    const token = sessionStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
     });
+
+    return this.http.get<TargetResponse>(apiUrl, { headers });
   }
 
   createRole(obj: Role): Observable<roleResponse[]> {

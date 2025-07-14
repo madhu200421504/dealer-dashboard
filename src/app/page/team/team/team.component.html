@@ -50,7 +50,7 @@
               <label class="mr-2"></label>
               <select class="form-control" style="width: 80px; display: inline-block; border-radius: 5px;height:45px;"
                 (change)="onItemsPerPageChange($event)">
-                <option value="5">10</option>
+                <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
@@ -197,11 +197,12 @@
                   <li class="paginate_button page-item previous" [class.disabled]="currentPage === 1">
                     <a class="page-link" (click)="previousPage()">Previous</a>
                   </li>
-            
-                  <li class="paginate_button page-item" *ngFor="let page of visiblePages" [class.active]="page === currentPage">
+
+                  <li class="paginate_button page-item" *ngFor="let page of visiblePages"
+                    [class.active]="page === currentPage">
                     <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
                   </li>
-            
+
                   <li class="paginate_button page-item next" [class.disabled]="currentPage === totalPages">
                     <a class="page-link" (click)="nextPage()">Next</a>
                   </li>

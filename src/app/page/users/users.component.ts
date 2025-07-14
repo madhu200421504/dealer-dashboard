@@ -179,7 +179,7 @@ export class UsersComponent implements OnInit {
       // ]),
       excellence: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^\d{6}$/), // only 5 digits
+        Validators.pattern(/^\d{6}$/),
         Validators.maxLength(6),
       ]),
 
@@ -302,7 +302,7 @@ export class UsersComponent implements OnInit {
     this.excellenceMsg = '';
 
     if (value.length === 6 && this.useForm.get('excellence')?.valid) {
-      const url = `https://uat.smartassistapp.in/api/dealer/existing-user-check?excellence=${value}`;
+      const url = `https://uatuat.smartassistapp.in/api/dealer/existing-user-check?excellence=${value}`;
 
       const token = sessionStorage.getItem('token'); // Replace 'token' if your key is different
       if (!token) {
@@ -951,76 +951,77 @@ export class UsersComponent implements OnInit {
   onUpdate() {
     console.log('on update');
     console.log('Form Values:', this.useForm.value);
+    const formValues = this.useForm.getRawValue(); // ✅ Get all fields
 
-    if (this.useForm.valid) {
-      const formValues = this.useForm.value;
+    // ✅ Return early if form is invalid
+    // if (!this.useForm.valid) {
+    //   this.toastr.error('Invalid form data. Please check inputs.', 'Error');
+    //   return;
+    // }
 
-      // Create the formatted name with proper space
-      const formattedName = `${(formValues.fname || '').trim()} ${(
-        formValues.lname || ''
-      ).trim()}`.replace(/\s+/g, ' ');
+    // const formValues = this.useForm.value;
 
-      // Set the name property correctly
-      formValues.name = formattedName;
+    // Create the formatted name with proper space
+    const formattedName = `${(formValues.fname || '').trim()} ${(
+      formValues.lname || ''
+    ).trim()}`.replace(/\s+/g, ' ');
 
-      // Update the userObj with all properties including the formatted name
-      this.userObj = { ...this.userObj, ...formValues };
-      console.log('📤 Payload sent to backend:', this.userObj);
+    // Set the name property correctly
+    formValues.name = formattedName;
 
-      console.log('🔍 Form Status:', this.useForm.status);
-      console.log('🚀 Updated Payload before API call:', this.userObj);
+    // Update the userObj with all properties including the formatted name
+    this.userObj = { ...this.userObj, ...formValues };
+    console.log('📤 Payload sent to backend:', this.userObj);
 
-      // Call the updateUser API with the updated user object
-      this.masterSrv.updateUser(this.userObj).subscribe(
-        (res: any) => {
-          if (res.status === 200) {
-            console.log('API Response:', res); // Log full response
+    console.log('🔍 Form Status:', this.useForm.status);
+    console.log('🚀 Updated Payload before API call:', this.userObj);
 
-            console.log('✅ Update Success:', res);
-            this.toastr.success(res.message, 'Success');
+    // Call the updateUser API with the updated user object
+    this.masterSrv.updateUser(this.userObj).subscribe(
+      (res: any) => {
+        if (res.status === 200) {
+          console.log('API Response:', res); // Log full response
 
-            // Update the UI immediately with the correctly formatted name
-            this.userList.set(
-              this.userList().map((user) =>
-                user.user_id === this.userObj.user_id
-                  ? {
-                      ...user,
-                      ...this.userObj,
-                      name: formattedName, // Ensure the name is correctly set with space
-                    }
-                  : user
-              )
-            );
+          console.log('✅ Update Success:', res);
+          this.toastr.success(res.message, 'Success');
 
-            setTimeout(() => {
-              this.cdr.detectChanges(); // Force UI update
-              this.cdr.markForCheck(); // Mark for change detection if using OnPush
-            }, 0);
+          // Update the UI immediately with the correctly formatted name
+          this.userList.set(
+            this.userList().map((user) =>
+              user.user_id === this.userObj.user_id
+                ? {
+                    ...user,
+                    ...this.userObj,
+                    name: formattedName, // Ensure the name is correctly set with space
+                  }
+                : user
+            )
+          );
 
-            // Fetch all users after update
-            this.displayAllUser();
+          setTimeout(() => {
+            this.cdr.detectChanges(); // Force UI update
+            this.cdr.markForCheck(); // Mark for change detection if using OnPush
+          }, 0);
 
-            // Close the modal
-            this.closeModal();
+          // Fetch all users after update
+          this.displayAllUser();
 
-            // Reset the form after successful update
-            this.useForm.reset();
-          } else {
-            this.toastr.error('Update failed', 'Error');
-          }
-        },
-        (error) => {
-          console.error('❌ API Error:', error);
-          if (error.response) {
-            this.toastr.error(error.response.data.message, 'Error');
-          } else {
-            this.toastr.error('Failed to update user', 'Error');
-          }
+          // Close the modal
+          this.closeModal();
+        } else {
+          this.toastr.warning('Update failed, check data.', 'Warning');
         }
-      );
-    } else {
-      this.toastr.error('Invalid form data. Please check inputs.', 'Error');
-    }
+      },
+      (error) => {
+        console.error('❌ API Error:', error);
+
+        // Try to extract the backend message
+        const errorMessage =
+          error?.error?.message || error?.message || 'Failed to update user';
+
+        this.toastr.error(errorMessage, 'Error');
+      }
+    );
   }
 
   // closeModal() {

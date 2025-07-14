@@ -85,18 +85,42 @@ export interface VehicleResponse {
   // vehicle: Vehicles[];
 }
 
-export interface TargetResponse {
-  status: number; // ✅ Required to avoid the error
-  message: string;
-  data: {
-    count: number;
-    rows: Target[];
-    enquiries: number;
-    testDrives: number; // Ensure the exact key as in the backend
-    orders: number;
-  };
+// export interface TargetResponse {
+//   status: number; 
+//   message: string;
+//   data: {
+//     count: number;
+//     rows: Target[];
+//     enquiries: number;
+//     testDrives: number; 
+//     orders: number;
+//   };
 
-  // vehicle: Vehicles[];
+// }
+export interface TargetResponse {
+  status: number;
+  message: string;
+  data: TargetRow[];
+}
+
+export interface TargetRow {
+  user: User;
+  targets: Target[] | number;
+}
+
+export interface User {
+  initials: string;
+  user_id: string;
+  fname: string;
+  lname: string;
+  name: string;
+  email: string;
+  user_role: string;
+  team_role: string;
+  dealer_name: string | null;
+  dealer_code: number;
+  team_id: string | null;
+  // Add other fields as needed
 }
 
 export interface Lead {

@@ -82,3 +82,33 @@ input[type="number"]::-ms-reveal {
   position: relative;
   z-index: 1056; /* higher than backdrop */
 }
+.filter-box {
+  background: white;
+  padding: 6px 10px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  max-width: fit-content; /* ✅ prevents full width */
+}
+
+.filter-btn {
+  border: none;
+  background-color: #f2f2f2;
+  color: #777;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.filter-btn.active {
+  background-color: #007bff;
+  color: white;
+}
+.update-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 1.5rem;
+  margin-top: -32px; /* 👈 Moves the button up slightly */
+}

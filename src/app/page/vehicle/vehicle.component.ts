@@ -524,7 +524,15 @@ export class VehicleComponent implements OnInit {
       },
       error: (err) => {
         console.error('Vehicle fetch error:', err);
-        this.toastr.error(err.message || 'Failed to fetch vehicles', 'Error');
+
+        // ✅ Show only backend message (do not fallback to frontend message)
+        if (err.error?.message) {
+          this.toastr.error(err.error.message, 'Error');
+        }
+
+        // You may choose to show nothing if no backend message is present
+        // else just silently fail
+
         this.vehicleList.set([]);
         this.filteredVehicles = [];
         this.totalVehicle.set(0);

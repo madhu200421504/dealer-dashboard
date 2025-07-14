@@ -103,7 +103,7 @@ export class TeamComponent {
         Validators.minLength(2),
         Validators.maxLength(50),
       ]),
-      
+
       // team_lead_id: new FormControl('', [
       //   Validators.required,
       //   Validators.minLength(2),
@@ -388,7 +388,8 @@ export class TeamComponent {
       },
       error: (err) => {
         console.error('teams fetch error:', err);
-        this.toastr.error(err.message || 'Failed to fetch users', 'Error');
+        const backendMessage = err.error?.message || 'Failed to fetch users';
+        this.toastr.error(backendMessage, 'Error');
       },
     });
   }

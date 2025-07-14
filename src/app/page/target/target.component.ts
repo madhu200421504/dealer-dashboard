@@ -17,6 +17,7 @@ import {
   MultivehicleResponse,
   SingleVehicleResponse,
   TargetResponse,
+  User,
   VehicleResponse,
 } from '../../model/interface/master';
 import { Vehicle } from '../../model/class/vehicle';
@@ -55,10 +56,13 @@ export class TargetComponent implements OnInit {
   // Signals for reactive state management
   count = signal<number>(0);
   vehicleList = signal<Vehicle[]>([]);
+  targetList = signal<{ user: User; target: Target }[]>([]);
 
-  targetList = signal<Target[]>([]);
-  filteredTeam = signal<Target[]>([]);
-  paginatedTarget = signal<Target[]>([]);
+  // targetList = signal<Target[]>([]);
+  // filteredTeam = signal<Target[]>([]);
+  filteredTeam = signal<{ user: User; target: Target }[]>([]);
+
+  paginatedTarget = signal<{ user: User; target: Target }[]>([]);
   isModalOpen = false;
   visiblePages: number[] = [];
   maxVisiblePages: number = 3;
@@ -89,6 +93,7 @@ export class TargetComponent implements OnInit {
   isModalVisible = false;
   // isEditMode = false;
   previousValue: string = '';
+  selectedRange: string = 'MTD'; // default selected
 
   // Form Group
   useForm: FormGroup = new FormGroup({});
@@ -148,47 +153,104 @@ export class TargetComponent implements OnInit {
   // ]),
 
   // Load All Vehicles
-  private loadTarget(): void {
-    this.masterSrv.getAllTarget().subscribe({
+  // private loadTarget(): void {
+  //   this.masterSrv.getAllTarget().subscribe({
+  //     next: (res: TargetResponse) => {
+  //       console.log('Target API response:', res); // ✅ Check the full API response
+  //       console.log('Enquiries:', res?.data?.enquiries);
+  //       console.log('Test Drives:', res?.data?.testDrives);
+  //       console.log('Orders:', res?.data?.orders);
+
+  //       this.count.set(res.data.count); // Optional: set count
+
+  //       const { enquiries, testDrives, orders } = res.data || {};
+
+  //       if (!enquiries && !testDrives && !orders) {
+  //         this.targetList.set([]); // Show "No data"
+  //       } else {
+  //         // ✅ Add 'original' when setting targetList
+  //         this.targetList.set([
+  //           {
+  //             enquiries,
+  //             testDrives,
+  //             orders,
+  //             original: {
+  //               enquiries,
+  //               testDrives,
+  //               orders,
+  //             },
+  //           },
+  //         ]);
+  //       }
+
+  //       // ✅ Keep filteredTeam and pagination in sync
+  //       this.filteredTeam.set(this.targetList());
+  //       this.setupPagination();
+  //     },
+  //     error: (err) => {
+  //       this.toastr.error('Failed to load target', 'Error');
+  //       console.error('Target load error:', err);
+  //     },
+  //   });
+  // }
+  private loadTarget(range: string = 'MTD'): void {
+    const apiUrl =
+      range && range !== 'ALL'
+        ? `https://uat.smartassistapp.in/api/dealer/targets/all?range=${range}`
+        : 'https://uat.smartassistapp.in/api/dealer/targets/all';
+
+    this.masterSrv.getAllTarget(apiUrl).subscribe({
       next: (res: TargetResponse) => {
-        console.log('Target API response:', res); // ✅ Check the full API response
-        console.log('Enquiries:', res?.data?.enquiries);
-        console.log('Test Drives:', res?.data?.testDrives);
-        console.log('Orders:', res?.data?.orders);
+        console.log('Target API response:', res);
+        console.table(
+          res.data.map((entry: any) => ({
+            name: entry.user?.name || entry.user?.fname,
+            enquiries: entry.targets?.[0]?.enquiries,
+            testDrives: entry.targets?.[0]?.testDrives,
+            orders: entry.targets?.[0]?.orders,
+          }))
+        );
 
-        this.count.set(res.data.count); // Optional: set count
+        if (Array.isArray(res.data)) {
+          const mappedData = res.data.map((entry) => {
+            const targetData = Array.isArray(entry.targets)
+              ? entry.targets[0]
+              : undefined;
+            return {
+              user: entry.user,
+              target: targetData ? new Target(targetData) : new Target(),
+            };
+          });
 
-        const { enquiries, testDrives, orders } = res.data || {};
+          this.targetList.set(mappedData);
+          this.filteredTeam.set(mappedData);
+          this.count.set(mappedData.length);
 
-        if (!enquiries && !testDrives && !orders) {
-          this.targetList.set([]); // Show "No data"
+          this.paginateTeams(); // ✅ Update pagination data
         } else {
-          // ✅ Add 'original' when setting targetList
-          this.targetList.set([
-            {
-              enquiries,
-              testDrives,
-              orders,
-              original: {
-                enquiries,
-                testDrives,
-                orders,
-              },
-            },
-          ]);
+          this.targetList.set([]);
+          this.filteredTeam.set([]);
+          this.count.set(0);
+
+          this.paginateTeams(); // ✅ Show empty state
         }
 
-        // ✅ Keep filteredTeam and pagination in sync
-        this.filteredTeam.set(this.targetList());
         this.setupPagination();
       },
       error: (err) => {
-        this.toastr.error('Failed to load target', 'Error');
-        console.error('Target load error:', err);
+        const backendMessage = err?.error?.message || err?.error?.error;
+
+        if (backendMessage) {
+          this.toastr.error(backendMessage, 'Error');
+        }
       },
     });
   }
 
+  onSelectRange(range: string) {
+    this.selectedRange = range;
+    this.onRangeChange(); // this should trigger your API call
+  }
   // private loadVehicles(): void {
   //   this.masterSrv.getAllVehicle().subscribe({
   //     next: (res: VehicleResponse) => {
@@ -294,16 +356,16 @@ export class TargetComponent implements OnInit {
   onSearchChange() {
     const term = this.searchTerm.toLowerCase();
 
-    const filtered = this.targetList().filter((target, i) => {
-      const name = `user ${i + 1}`;
-      const email = `user${i + 1}@example.com`;
+    const filtered = this.targetList().filter((entry, i) => {
+      const name = entry.user.name?.toLowerCase() || '';
+      const email = entry.user.email?.toLowerCase() || '';
 
       return (
-        target.enquiries.toString().includes(term) ||
-        target.testDrives.toString().includes(term) ||
-        target.orders.toString().includes(term) ||
-        name.toLowerCase().includes(term) ||
-        email.toLowerCase().includes(term)
+        entry.target.enquiries.toString().includes(term) ||
+        entry.target.testDrives.toString().includes(term) ||
+        entry.target.orders.toString().includes(term) ||
+        name.includes(term) ||
+        email.includes(term)
       );
     });
 
@@ -318,10 +380,23 @@ export class TargetComponent implements OnInit {
     this.setupPagination();
   }
 
+  // setupPagination() {
+  //   const filtered = this.filteredTeam();
+  //   this.totalPages = Math.ceil(filtered.length / this.itemsPerPage);
+  //   this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  //   this.paginateTeams();
+  // }
   setupPagination() {
-    const filtered = this.filteredTeam();
-    this.totalPages = Math.ceil(filtered.length / this.itemsPerPage);
-    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    const totalItems = this.filteredTeam().length;
+    this.totalPages = Math.ceil(totalItems / this.itemsPerPage);
+
+    // Create page number array like [1, 2, 3, ..., totalPages]
+    this.visiblePages = Array.from(
+      { length: this.totalPages },
+      (_, i) => i + 1
+    );
+
+    // Update the visible paginated data
     this.paginateTeams();
   }
 
@@ -346,10 +421,10 @@ export class TargetComponent implements OnInit {
   }
   hasAnyChanges(): boolean {
     return this.targetList().some(
-      (target) =>
-        target.enquiries !== target.original?.enquiries ||
-        target.testDrives !== target.original?.testDrives ||
-        target.orders !== target.original?.orders
+      (entry) =>
+        entry.target.enquiries !== entry.target.original?.enquiries ||
+        entry.target.testDrives !== entry.target.original?.testDrives ||
+        entry.target.orders !== entry.target.original?.orders
     );
   }
 
@@ -362,17 +437,39 @@ export class TargetComponent implements OnInit {
     const to = this.currentPage * this.itemsPerPage;
     return to > this.filteredTeam().length ? this.filteredTeam().length : to;
   }
-  onEditAll() {
-    // You can send all changed data here
-    const changedTargets = this.performanceTargets.filter(
-      (target) =>
-        target.enquiries !== target.original?.enquiries ||
-        target.testDrives !== target.original?.testDrives ||
-        target.orders !== target.original?.orders
-    );
+  onEditAll(): void {
+    const updatedTargets = this.targetList()
+      .filter(
+        (item) =>
+          item.target.enquiries !== item.target.original?.enquiries ||
+          item.target.testDrives !== item.target.original?.testDrives ||
+          item.target.orders !== item.target.original?.orders
+      )
+      .map((item) => ({
+        user_id: item.user.user_id,
+        enquiries: item.target.enquiries,
+        testDrives: item.target.testDrives,
+        orders: item.target.orders,
+      }));
 
-    console.log('Changed items:', changedTargets);
-    // Now send these to your backend or handle accordingly
+    if (updatedTargets.length === 0) {
+      this.toastr.info('No changes to update', 'Info');
+      return;
+    }
+
+    const apiUrl = `https://uat.smartassistapp.in/api/dealer/targets/new?range=${this.selectedRange}`;
+
+    this.masterSrv.updateTargets(apiUrl, updatedTargets).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Targets updated successfully', 'Success');
+        this.loadTarget(this.selectedRange); // reload using current filter
+      },
+      error: (err: any) => {
+        const backendMessage =
+          err?.error?.message || 'Failed to update targets';
+        this.toastr.error(backendMessage, 'Error');
+      },
+    });
   }
 
   // Disable VIN for edit mode
@@ -529,14 +626,73 @@ export class TargetComponent implements OnInit {
   isTargetNameChanged(): boolean {
     return this.useForm.value.enquiries !== this.previousValue;
   }
-  getAllTarget() {
-    this.masterSrv.getAllTarget().subscribe({
+  // getAllTarget() {
+  //   this.masterSrv.getAllTarget().subscribe({
+  //     next: (res: TargetResponse) => {
+  //       if (res && res.data.rows) {
+  //         this.totalTarget.set(res.data.count);
+  //         this.targetList.set(res.data.rows);
+  //       } else {
+  //         this.toastr.warning('No target found', 'Information');
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('target fetch error:', err);
+  //       this.toastr.error(err.message || 'Failed to fetch target', 'Error');
+  //     },
+  //   });
+  // }
+
+  onRangeChange(): void {
+    this.getAllTarget(this.selectedRange); // Reload data based on selected range
+  }
+  // getAllTarget(range: string = 'MTD') {
+  //   const apiUrl =
+  //     range && range !== 'ALL'
+  //       ? `https://uat.smartassistapp.in/api/dealer/targets/all?range=${range}`
+  //       : `https://uat.smartassistapp.in/api/dealer/targets/all`;
+
+  //   this.masterSrv.getAllTarget(apiUrl).subscribe({
+  //     next: (res: TargetResponse) => {
+  //       if (res && res.data.rows) {
+  //         this.totalTarget.set(res.data.count);
+  //         this.targetList.set(res.data.rows);
+  //       } else {
+  //         this.toastr.warning('No target found', 'Information');
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('target fetch error:', err);
+  //       this.toastr.error(err.message || 'Failed to fetch target', 'Error');
+  //     },
+  //   });
+  // }
+  getAllTarget(range: string = 'MTD') {
+    const apiUrl =
+      range && range !== 'ALL'
+        ? `https://uat.smartassistapp.in/api/dealer/targets/all?range=${range}`
+        : `https://uat.smartassistapp.in/api/dealer/targets/all`;
+
+    this.masterSrv.getAllTarget(apiUrl).subscribe({
       next: (res: TargetResponse) => {
-        if (res && res.data.rows) {
-          this.totalTarget.set(res.data.count);
-          this.targetList.set(res.data.rows);
+        if (res && Array.isArray(res.data)) {
+          const mappedData = res.data.map((entry) => ({
+            user: entry.user,
+            target:
+              Array.isArray(entry.targets) && entry.targets.length > 0
+                ? new Target(entry.targets[0])
+                : new Target(), // if 0 or empty
+          }));
+
+          this.targetList.set(mappedData); // assuming targetList is a signal or BehaviorSubject
+          this.filteredTeam.set(mappedData); // ✅ update filtered list
+          this.totalTarget.set(mappedData.length); // or whatever count you need
+          this.paginateTeams(); // ✅ update paginated data
         } else {
           this.toastr.warning('No target found', 'Information');
+          this.targetList.set([]);
+          this.filteredTeam.set([]);
+          this.paginateTeams(); // ✅ show empty pagination state
         }
       },
       error: (err) => {

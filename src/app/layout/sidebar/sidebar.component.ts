@@ -30,6 +30,7 @@ export class SidebarComponent implements AfterViewInit, OnDestroy {
   selectedValue: string = '';
   isMastersOpen = false;
   isSidebarOpen: boolean = true;
+  isMasterMenuOpen = false;
 
   private metis: any;
   private routerSub!: Subscription;
