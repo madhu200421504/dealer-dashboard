@@ -86,6 +86,9 @@ export class TargetComponent implements OnInit {
 
   // Component State Variables
   vehicleObj: Vehicle = new Vehicle();
+  allUsers: any[] = []; // Original full list (from API or static data)
+  filteredUsers: any[] = []; // The filtered list shown in the UI
+  // searchTerm: string = ''; // Two-way bound to the search input
 
   targetobj: Target = new Target();
 
@@ -114,6 +117,7 @@ export class TargetComponent implements OnInit {
     });
 
     // Load targets on init
+
     this.loadTarget();
   }
 
@@ -197,52 +201,55 @@ export class TargetComponent implements OnInit {
     const apiUrl =
       range && range !== 'ALL'
         ? `https://uat.smartassistapp.in/api/dealer/targets/all?range=${range}`
-        : 'https://uat.smartassistapp.in/api/dealer/targets/all';
+        : `https://uat.smartassistapp.in/api/dealer/targets/all`;
 
     this.masterSrv.getAllTarget(apiUrl).subscribe({
       next: (res: TargetResponse) => {
         console.log('Target API response:', res);
-        console.table(
-          res.data.map((entry: any) => ({
-            name: entry.user?.name || entry.user?.fname,
-            enquiries: entry.targets?.[0]?.enquiries,
-            testDrives: entry.targets?.[0]?.testDrives,
-            orders: entry.targets?.[0]?.orders,
-          }))
-        );
 
         if (Array.isArray(res.data)) {
           const mappedData = res.data.map((entry) => {
             const targetData = Array.isArray(entry.targets)
               ? entry.targets[0]
-              : undefined;
+              : null;
             return {
               user: entry.user,
               target: targetData ? new Target(targetData) : new Target(),
             };
           });
 
+          // Logging table for debug
+          console.table(
+            mappedData.map((item) => ({
+              name: item.user?.name || item.user?.fname || 'N/A',
+              enquiries: item.target?.enquiries,
+              testDrives: item.target?.testDrives,
+              orders: item.target?.orders,
+            }))
+          );
+
+          // ✅ Update signals or variables
           this.targetList.set(mappedData);
           this.filteredTeam.set(mappedData);
           this.count.set(mappedData.length);
 
-          this.paginateTeams(); // ✅ Update pagination data
+          // ✅ Update UI
+          this.paginateTeams();
         } else {
           this.targetList.set([]);
           this.filteredTeam.set([]);
           this.count.set(0);
-
-          this.paginateTeams(); // ✅ Show empty state
+          this.paginateTeams(); // show empty state
+          this.toastr.warning('No target data found', 'Info');
         }
 
+        // Setup pagination buttons or range counts if needed
         this.setupPagination();
       },
       error: (err) => {
-        const backendMessage = err?.error?.message || err?.error?.error;
-
-        if (backendMessage) {
-          this.toastr.error(backendMessage, 'Error');
-        }
+        console.error('Target fetch error:', err);
+        const backendMessage = err?.error?.message || 'Failed to fetch target';
+        this.toastr.error(backendMessage, 'Error');
       },
     });
   }

@@ -41,13 +41,20 @@
             </div> -->
         </div>
         <!-- FILTERS -->
-
-        <div class="col-md-6 d-flex justify-content-end align-items-center">
-            <div class="search-wrapper">
-                <input type="text" class="form-control search-input" placeholder="Search users..."
-                    [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+        <!-- ✅ Search bar aligned right, outside the card -->
+        <div class="row mb-3" style="margin-top:-70px">
+            <div class="col-12">
+                <div class="d-flex justify-content-end" style=" display: flex;
+  justify-content: flex-end;">
+                    <input type="text" class="form-control shadow-sm" placeholder="Search target..."
+                        [(ngModel)]="searchTerm" (input)="onSearchChange()"
+                        style="max-width: 250px; border-radius: 18px;" />
+                </div>
             </div>
         </div>
+
+
+
         <div class="card-box p-4 mb-5"
             style="background-color: #fff; box-shadow: 0 0 15px rgba(0, 0, 0, 0.08); border-radius: 10px;">
             <div class="row mb-4 align-items-center">

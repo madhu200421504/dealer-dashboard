@@ -477,10 +477,15 @@
 
           <span style="padding: 8px 12px;">Page {{ currentPage }} of {{ totalPages }}</span>
 
-          <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+          <!-- <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+            style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
+            Next
+          </button> -->
+          <button (click)="nextPage()" [disabled]="currentPage >= totalPages || totalPages === 0"
             style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
             Next
           </button>
+
 
 
         </div>

@@ -1812,14 +1812,11 @@ export class DashboardComponent implements OnInit {
       this.filteredTableTestDrives = [...this.testDrivesToday];
     } else if (this.filterOption === 'oneWeek') {
       this.filteredTableTestDrives = [...this.testDrivesOneWeek];
+    } else {
+      // this.filteredTableTestDrives = [...this.testDrivesAll]; // optional fallback
     }
 
-    this.currentPage = 1;
-
-    // ✅ THIS IS MISSING IN YOUR CODE
-    this.totalPages = Math.ceil(
-      this.filteredTableTestDrives.length / this.itemsPerPage
-    );
+    this.currentPage = 1; // ✅ always reset
   }
 
   // getPaginatedTableData(): any[] {

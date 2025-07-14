@@ -84,7 +84,7 @@ export class VehicleComponent implements OnInit {
   filteredVehicles: Vehicle[] = []; // ✅ make sure this is declared
 
   currentPage: number = 1;
-  itemsPerPage: number = 5;
+  itemsPerPage: number = 10;
   totalPages: number = 0;
   pages: number[] = [];
   isDeleteModalOpen = false;

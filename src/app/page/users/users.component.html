@@ -160,11 +160,17 @@
           <!-- Pagination -->
           <div class="row" style="margin-top:20px;">
             <div class="col-md-6">
+              <!-- <div class="dataTables_info">
+                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
+                {{ min(currentPage * itemsPerPage, userList().length) }} of
+                {{ userList().length }} entries
+              </div> -->
               <div class="dataTables_info">
                 Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
                 {{ min(currentPage * itemsPerPage, userList().length) }} of
                 {{ userList().length }} entries
               </div>
+
 
             </div>
 
@@ -489,4 +495,4 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <!-- Bootstrap Bundle (includes Popper) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>s
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
