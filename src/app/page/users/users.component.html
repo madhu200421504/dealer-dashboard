@@ -165,11 +165,12 @@
                 {{ min(currentPage * itemsPerPage, userList().length) }} of
                 {{ userList().length }} entries
               </div> -->
-              <div class="dataTables_info">
-                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
-                {{ min(currentPage * itemsPerPage, userList().length) }} of
-                {{ userList().length }} entries
-              </div>
+<div class="dataTables_info">
+  Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
+  {{ min(currentPage * itemsPerPage, filteredUsers.length) }} of
+  {{ filteredUsers.length }} entries
+</div>
+
 
 
             </div>

@@ -50,6 +50,7 @@
                         [(ngModel)]="searchTerm" (input)="onSearchChange()"
                         style="max-width: 250px; border-radius: 18px;" />
                 </div>
+
             </div>
         </div>
 
@@ -124,11 +125,10 @@
 
 
                                     <td>
-                                        <!-- <input type="number" class="form-control form-control-sm"
-                                                                                        [(ngModel)]="target.enquiries" style="border-radius:12px;font-size:14px" /> -->
+
                                         <input type="number" class="form-control form-control-sm"
                                             [(ngModel)]="target.target.enquiries" (ngModelChange)="onTargetChange()"
-                                            style="border-radius:12px;font-size:14px" />
+                                            style="border-radius:12px;font-size:14px;height:40px" />
 
                                     </td>
 
@@ -137,7 +137,7 @@
                                                                                         [(ngModel)]="target.testDrives" style="border-radius:12px;font-size:14px" /> -->
                                         <input type="number" class="form-control form-control-sm"
                                             [(ngModel)]="target.target.testDrives" (ngModelChange)="onTargetChange()"
-                                            style="border-radius:12px;font-size:14px" />
+                                            style="border-radius:12px;font-size:14px;height:40px" />
                                     </td>
 
                                     <td>
@@ -145,7 +145,7 @@
                                                                                         [(ngModel)]="target.orders" style="border-radius:12px;font-size:14px" /> -->
                                         <input type="number" class="form-control form-control-sm"
                                             [(ngModel)]="target.target.orders" (ngModelChange)="onTargetChange()"
-                                            style="border-radius:12px;font-size:14px" />
+                                            style="border-radius:12px;font-size:14px;height:40px" />
                                     </td>
 
 

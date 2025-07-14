@@ -1,15 +1,15 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import {
   HttpRequest,
   HttpHandlerFn,
   HttpEvent,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, tap, delay, switchMap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<any>,
@@ -29,20 +29,17 @@ export const authInterceptor: HttpInterceptorFn = (
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      const isUnauthorized =
+      // ✅ Match the backend's message
+      const isTokenInvalid =
         error.status === 401 &&
         error.error?.message?.includes('Invalid or expired token');
 
-      if (isUnauthorized) {
-        sessionStorage.clear();
-        toastr.error('Session expired. Please log in again.', 'Unauthorized');
+      if (isTokenInvalid) {
+        sessionStorage.clear(); // ✅ Clear session
+        toastr.error('Session expired. Please login again.', 'Unauthorized'); // ✅ Show message
 
-        // 🔁 Delay redirect so toast is visible
-        setTimeout(() => {
-          router.navigate(['/login']);
-        }, 1000);
-
-        return throwError(() => error); // Still propagate the error
+        // ✅ Optional: reload after redirect to ensure clean state
+        router.navigate(['/login']).then(() => window.location.reload());
       }
 
       return throwError(() => error);

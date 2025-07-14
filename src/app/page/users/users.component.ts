@@ -302,7 +302,7 @@ export class UsersComponent implements OnInit {
     this.excellenceMsg = '';
 
     if (value.length === 6 && this.useForm.get('excellence')?.valid) {
-      const url = `https://uatuat.smartassistapp.in/api/dealer/existing-user-check?excellence=${value}`;
+      const url = `https://uat.smartassistapp.in/api/dealer/existing-user-check?excellence=${value}`;
 
       const token = sessionStorage.getItem('token'); // Replace 'token' if your key is different
       if (!token) {
