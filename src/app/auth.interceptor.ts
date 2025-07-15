@@ -11,6 +11,9 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+// ✅ Global flag to show only one session expired toast
+let isAlreadyHandled = false;
+
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<any>,
   next: HttpHandlerFn
@@ -29,19 +32,29 @@ export const authInterceptor: HttpInterceptorFn = (
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // ✅ Match the backend's message
       const isTokenInvalid =
         error.status === 401 &&
         error.error?.message?.includes('Invalid or expired token');
 
-      if (isTokenInvalid) {
-        sessionStorage.clear(); // ✅ Clear session
-        toastr.error('Session expired. Please login again.', 'Unauthorized'); // ✅ Show message
+      if (isTokenInvalid && !isAlreadyHandled) {
+        isAlreadyHandled = true;
+        sessionStorage.clear();
+        toastr.error('Session expired. Please login again.', 'Unauthorized');
 
-        // ✅ Optional: reload after redirect to ensure clean state
-        router.navigate(['/login']).then(() => window.location.reload());
+        router.navigate(['/login']).then(() => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 4000);
+        });
       }
 
+      // ✅ Prevent showing other errors once session is handled
+      if (isAlreadyHandled) {
+        return throwError(() => null); // stop further error propagation
+      }
+
+      // ✅ Optional: handle other errors normally if session is still valid
+      // toastr.error(error.error?.message || 'Something went wrong', 'Error');
       return throwError(() => error);
     })
   );

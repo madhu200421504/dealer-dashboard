@@ -441,10 +441,15 @@ export class Login1Component {
     this.router
       .navigate(['/Admin/dashboard'])
       .then(() => {
-        window.location.reload(); // ⚠️ Toast will disappear after reload — not recommended
+        // ✅ Show toast first
         this.toastr.success('Login Successful', 'Success', {
-          timeOut: 3000, // ✅ 3 seconds = 3000 ms
+          timeOut: 1000,
         });
+
+        // ✅ Delay reload so toast is visible
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000); // 3 seconds delay
       })
       .catch((error) => {
         console.error('Navigation error:', error);
@@ -455,6 +460,7 @@ export class Login1Component {
 
     this.setupAutoLogout();
   }
+
   // private handleSuccessfulLogin(token: string): void {
   //   sessionStorage.setItem('token', token);
 

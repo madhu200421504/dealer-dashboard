@@ -314,7 +314,17 @@ body {
     gap: 0 !important; /* optional: remove spacing */
   }
 }
-
+/* Look for rules like these that might be applied at this width */
+@media (max-width: 768px) {
+  .sidebar {
+    pointer-events: none; /* This would disable clicks */
+    /* or */
+    display: none; /* This would hide it */
+    /* or */
+    position: fixed;
+    left: -100%; /* This might move it off-screen */
+  }
+}
 
 .performance-panel {
   flex: 1;
