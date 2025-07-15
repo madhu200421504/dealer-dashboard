@@ -227,11 +227,13 @@ body {
 }
 
 .panel-content {
-  height: 160px;
+  /* height: 160px; */
+  margin-top:-190px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #999;
+
 }
 
 /* Responsive adjustments */
@@ -306,6 +308,13 @@ body {
   box-sizing: border-box;
   /* include padding/borders in width */
 }
+@media (max-width: 1024px) and (min-width: 768px) {
+  .performance-panels {
+    display: block !important; /* or inline-block, grid, etc., based on your layout needs */
+    gap: 0 !important; /* optional: remove spacing */
+  }
+}
+
 
 .performance-panel {
   flex: 1;
