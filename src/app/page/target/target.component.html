@@ -126,25 +126,28 @@
 
                                     <td>
 
-                                        <input type="number" class="form-control form-control-sm"
+                                        <!-- <input type="number" class="form-control form-control-sm"
                                             [(ngModel)]="target.target.enquiries" (ngModelChange)="onTargetChange()"
-                                            style="border-radius:12px;font-size:14px;height:40px" />
+                                            style="border-radius:12px;font-size:14px;height:40px" /> -->
 
+                                            <input type="number" class="form-control form-control-sm" [(ngModel)]="target.target.enquiries"
+                                                (ngModelChange)="onTargetChange()" (input)="limitDigits($event)" [max]="999999" [min]="0"
+                                                style="border-radius:12px;font-size:14px;height:40px" />
                                     </td>
 
                                     <td>
                                         <!-- <input type="number" class="form-control form-control-sm"
                                                                                         [(ngModel)]="target.testDrives" style="border-radius:12px;font-size:14px" /> -->
-                                        <input type="number" class="form-control form-control-sm"
-                                            [(ngModel)]="target.target.testDrives" (ngModelChange)="onTargetChange()"
+                                        <input type="number" class="form-control form-control-sm" [(ngModel)]="target.target.testDrives"
+                                            (ngModelChange)="onTargetChange()" (input)="limitDigits($event)" [max]="999999" [min]="0"
                                             style="border-radius:12px;font-size:14px;height:40px" />
                                     </td>
 
                                     <td>
                                         <!-- <input type="number" class="form-control form-control-sm"
                                                                                         [(ngModel)]="target.orders" style="border-radius:12px;font-size:14px" /> -->
-                                        <input type="number" class="form-control form-control-sm"
-                                            [(ngModel)]="target.target.orders" (ngModelChange)="onTargetChange()"
+                                        <input type="number" class="form-control form-control-sm" [(ngModel)]="target.target.orders"
+                                            (ngModelChange)="onTargetChange()" (input)="limitDigits($event)" [max]="999999" [min]="0"
                                             style="border-radius:12px;font-size:14px;height:40px" />
                                     </td>
 

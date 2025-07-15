@@ -258,6 +258,12 @@ export class TargetComponent implements OnInit {
     this.selectedRange = range;
     this.onRangeChange(); // this should trigger your API call
   }
+  limitDigits(event: any): void {
+    const input = event.target;
+    if (input.value.length > 6) {
+      input.value = input.value.slice(0, 6);
+    }
+  }
   // private loadVehicles(): void {
   //   this.masterSrv.getAllVehicle().subscribe({
   //     next: (res: VehicleResponse) => {
