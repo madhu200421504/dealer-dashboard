@@ -474,8 +474,13 @@
             style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
             Previous
           </button>
+          <span *ngIf="totalPages > 0">
+            Page {{ currentPage }} of {{ totalPages }}
+          </span>
+          <span *ngIf="totalPages === 0">
+            No data available
+          </span>
 
-          <span style="padding: 8px 12px;">Page {{ currentPage }} of {{ totalPages }}</span>
 
           <!-- <button (click)="nextPage()" [disabled]="currentPage === totalPages"
             style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
