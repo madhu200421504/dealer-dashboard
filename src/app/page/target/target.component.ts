@@ -306,8 +306,73 @@ export class TargetComponent implements OnInit {
   selectTarget(target: any) {
     this.selectedTarget = target;
   }
-  onTargetChange(): void {
-    this.targetList.set([...this.targetList()]); // force signal update
+  // onTargetChange(): void {
+  //   this.targetList.set([...this.targetList()]); // force signal update
+  // }
+  // onTargetChange(target: any): void {
+  //   if (target.target.enquiries === null || target.target.enquiries === '') {
+  //     target.target.enquiries = 0;
+  //   }
+
+  //   if (target.target.testDrives === null || target.target.testDrives === '') {
+  //     target.target.testDrives = 0;
+  //   }
+
+  //   if (target.target.orders === null || target.target.orders === '') {
+  //     target.target.orders = 0;
+  //   }
+
+  //   this.targetList.set([...this.targetList()]);
+
+  //   console.log('Updated Target:', target);
+  // }
+  validateMax(obj: any, field: 'enquiries' | 'testDrives' | 'orders') {
+    const max = 999999;
+    const min = 0;
+
+    if (obj[field] > max) obj[field] = max;
+    if (obj[field] < min) obj[field] = min;
+  }
+
+  onTargetChange(updatedTarget: any): void {
+    // Ensure default values
+    updatedTarget.target.enquiries =
+      updatedTarget.target.enquiries !== null &&
+      updatedTarget.target.enquiries !== ''
+        ? +updatedTarget.target.enquiries.toString().slice(0, 6)
+        : 0;
+
+    updatedTarget.target.testDrives =
+      updatedTarget.target.testDrives !== null &&
+      updatedTarget.target.testDrives !== ''
+        ? +updatedTarget.target.testDrives.toString().slice(0, 6)
+        : 0;
+
+    updatedTarget.target.orders =
+      updatedTarget.target.orders !== null && updatedTarget.target.orders !== ''
+        ? +updatedTarget.target.orders.toString().slice(0, 6)
+        : 0;
+
+    // ✅ Map and update the correct item by email
+    const updatedList = this.targetList().map((item) => {
+      if (item.user.email === updatedTarget.user.email) {
+        return {
+          ...item,
+          target: {
+            enquiries: updatedTarget.target.enquiries,
+            testDrives: updatedTarget.target.testDrives,
+            orders: updatedTarget.target.orders,
+          },
+        };
+      }
+      return item;
+    });
+
+    this.targetList.set(updatedList);
+    this.filteredTeam.set(updatedList); // optional, if you use filtering
+    this.paginateTeams(); // refresh page data
+
+    console.log('Updated Target:', updatedTarget);
   }
 
   openModal(target?: Target) {
