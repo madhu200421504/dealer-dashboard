@@ -1,27 +1,41 @@
-.ai-icon {
+.metismenu li.active > a {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 30px;
   display: flex;
   align-items: center;
+  gap: 8px;
+  transition: none !important;    /* ← cancel transition here */
 }
 
-.metismenu a {
-  display: flex;
-  align-items: center;
-}
-.icon-responsive {
-  display: flex;
-  justify-content: center;
-}
-.menu {
-  margin-top: 10px;
-}
-/* .deznav-scroll{
-  scroll-behavior: none !important;
-} */
 
-/* Active link style */
-
-/* Keep the hover effect too */
-.metismenu a:hover {
-  /* background-color: #ffffff; */
-  color: #000;
+.metismenu li.active > a i {
+ 
 }
+/* 1) Your existing base icon styles — leave these unchanged */
+.deznav .metismenu > li > a > i {
+  font-size: 1.5rem;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 1.5rem 0 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 64px;
+  height: 64px;
+  line-height: 64px;
+  text-align: center;
+  border-radius: 64px;
+  /* note: you had duplicate 'position' and 'padding'; this is the cleaned version */
+}
+
+.nav-text{
+  font-size:16px;
+}
+/* 2) Only override background & color in the active state */
+.metismenu li.active > a i {
+  background-color: #fff !important;  /* white circle */
+  color: #222fb9 !important;             /* dark icon */
+  /* everything else (size, positioning) comes from the base rule */
+}
+

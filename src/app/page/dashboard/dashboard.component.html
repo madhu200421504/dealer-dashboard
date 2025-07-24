@@ -1,325 +1,35 @@
-<div class="dashboard-container" id="header2">
-  <!-- <div class="header2" [ngClass]="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }" >
-    <div class="nav-buttons">
-      <button class="nav-button" [ngClass]="{ 'active': selectedSection === 'home' }" (click)="selectSection('home')"
-        style="margin-left:10px;">
-        Home
-      </button>
-      <button class="nav-button" [ngClass]="{ 'active': selectedSection === 'analysis' }"
-        (click)="selectSection('analysis')">
-        Analysis
-      </button>
+<ng-container *ngIf="!selectedUser">
+
+  <div class="dashboard-container" id="header2">
+
+    <div class="header2" [ngClass]="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
+      <div class="nav-button-group" style="margin-left:10px;">
+        <button class="nav-button" [ngClass]="{ 'active': selectedSection === 'home' }" (click)="selectSection('home')">
+          <i class="fas fa-home" style="margin-right: 6px;"></i> Home
+        </button>
+
+        <button class="nav-button" [ngClass]="{ 'active': selectedSection === 'analysis' }"
+          (click)="selectSection('analysis')">
+          <i class="fas fa-chart-line" style="margin-right: 8px;"></i> Analysis
+        </button>
+
+      </div>
     </div>
-  </div> -->
-  <div class="header2" [ngClass]="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
-    <div class="nav-button-group" style="margin-left:10px;">
-      <button class="nav-button" [ngClass]="{ 'active': selectedSection === 'home' }" (click)="selectSection('home')">
-        <i class="fas fa-home" style="margin-right: 6px;"></i> Home
-      </button>
 
-      <button class="nav-button" [ngClass]="{ 'active': selectedSection === 'analysis' }"
-        (click)="selectSection('analysis')">
-        <i class="fas fa-chart-line" style="margin-right: 8px;"></i> Analysis
-      </button>
+    <div class="main" *ngIf="selectedSection === 'home'" class="content-section active">
+      <div class="main-content" style="margin-top: -45px;">
+        <div class="container">
 
-    </div>
-  </div>
-
-  <div class="main" *ngIf="selectedSection === 'home'" class="content-section active">
-    <div class="main-content" style="margin-top: -45px;">
-      <div class="container">
-
-        <!-- width:142% -->
-        <!-- width: 142%; -->
-        <div class="card" style="background-color:#fff; padding: 15px; box-shadow: 0 0 8px #ccc;overflow:scroll;">
-          <!-- Header with Title and Search -->
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="card-title" style="font-size:25px;color:#313131;font-family:Montserrat;font-weight:600">
-              Today's Actions
-            </div>
-            <div>
-              <input type="text" [(ngModel)]="searchText" (input)="applyTableFilters()" placeholder="Search by name..."
-                style="padding: 6px 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; width: 200px;" />
-            </div>
-          </div>
-          <!--           
-          <div style="margin-top: 15px; display: flex; justify-content: flex-end;">
-            <button (click)="toggleShowItems()"
-              style="padding: 6px 12px; font-size: 14px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100px; white-space: nowrap;">
-              {{ showingLimit >= filteredUsers.length ? 'Show Less' : 'Show More' }}
-            </button>
-          </div> -->
+          <!-- width:142% -->
 
 
 
 
 
-          <!-- User Icons Grid (Only Big Initial Circles) -->
-          <!-- Show Initials Circles Always -->
-          <div *ngIf="filteredUsers.length > 0 || noResultsFound === false"
-            style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 20px;">
-            <div class="profile" *ngFor="let initial of initialsList.slice(0, showingLimit); let i = index"
-              style="text-align: center;">
-              <div class="avatar" (click)="filterByInitial(initial)" [ngStyle]="{
-                             'background-color': avatarColors[i % avatarColors.length],
-                             'width': '70px',
-                             'height': '70px',
-                             'border-radius': '50%',
-                             'display': 'flex',
-                             'align-items': 'center',
-                             'justify-content': 'center',
-                             'margin': '0 auto',
-                             'font-size': '36px',
-                             'cursor': 'pointer',
-                             'box-shadow': selectedInitial === initial ? '0 0 0 3px #4e73df' : 'none',
-                             'border': selectedInitial === initial ? '2px solid #4e73df' : '2px solid transparent'
-                           }">
-                <span style="color: #4e73df; font-weight: bold;">{{ initial }}</span>
-              </div>
-              <div class="name"
-                style="margin-top: 8px; font-size: 14px; max-width: 80px; margin-left: auto; margin-right: auto;">
-                {{ initial }}
-              </div>
-            </div>
-          </div>
 
 
 
-          <!-- Filtered Users Section (Appears when initial clicked) -->
-          <div *ngIf="(selectedInitial || searchText) && filteredUsers.length > 0" style="margin-top: 30px;">
-            <div style="display: flex; flex-wrap: wrap; gap: 15px;">
-              <div *ngFor="let user of filteredUsers" class="profile" style="text-align: center;">
-                <!-- <div class="avatar"
-                  style="width: 60px; height: 60px; background-color:#FFCDD2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer;"
-                  (click)="showUserDetails(user.user_id, user.name)"> -->
-                <div class="avatar" [ngStyle]="{
-                      'width': '60px',
-                      'height': '60px',
-                      'background-color': selectedColor || '#FFCDD2',
-                      'border-radius': '50%',
-                      'display': 'flex',
-                      'align-items': 'center',
-                      'justify-content': 'center',
-                      'font-size': '28px',
-                      'cursor': 'pointer'
-                    }" (click)="showUserDetails(user.user_id, user.name)">
-
-                  <span style="color: #4e73df; font-weight: bold;">{{ getUserInitials(user.name) }}</span>
-                </div>
-                <div class="name" style="margin-top: 6px; font-size: 13px; line-height: 1.2;">
-                  <!-- <div *ngIf="user.name">
-                    {{ user.name.split(' ')[0] }}<br />
-                    <span *ngIf="user.name.split(' ').length > 1">
-                      {{ user.name.split(' ').slice(1).join(' ') }}
-                    </span>
-                  </div> -->
-                  <div *ngIf="user.name">
-                    {{ capitalizeAndFormatName(user.fname + ' ' + user.lname) }}
-                  </div>
-
-
-
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- <div style="margin-top: 15px; display: flex; justify-content: flex-end;">
-            <button (click)="toggleShowItems()"
-              style="padding: 6px 12px; font-size: 14px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100px; white-space: nowrap;">
-              {{ showingLimit >= filteredUsers.length ? 'Show Less' : 'Show More' }}
-            </button>
-          </div> -->
-
-
-
-          <!-- THIS IS PROEPR -->
-          <!-- <div style="margin-top: 15px; display: flex; justify-content: flex-end;">
-            <button (click)="toggleShowItems()" [disabled]="filteredUsers.length <= defaultLimit"
-              style="padding: 6px 12px; font-size: 14px; background-color: #007bff; color: white; border: none; border-radius: 4px; width: 100px; white-space: nowrap;">
-              {{ showingLimit > defaultLimit ? 'Show Less' : 'Show More' }}
-            </button>
-
-          </div> -->
-          <div style="margin-top: 15px; display: flex; justify-content: flex-end;">
-            <button (click)="toggleShowItems()" [disabled]="initialsList.length <= defaultLimit" [ngStyle]="{
-                          'background-color': initialsList.length <= defaultLimit ? '#ccc' : '#007bff',
-                          'color': initialsList.length <= defaultLimit ? '#666' : 'white',
-                          'cursor': initialsList.length <= defaultLimit ? 'not-allowed' : 'pointer'
-                        }"
-              style="padding: 6px 12px; font-size: 14px; border: none; border-radius: 4px; width: 100px; white-space: nowrap;">
-              {{ showingLimit >= initialsList.length ? 'Show Less' : 'Show More' }}
-            </button>
-          </div>
-
-
-
-
-
-          <!-- Show 'No users found' message -->
-          <div *ngIf="noResultsFound && filteredUsers.length === 0" style="margin-top: 30px; text-align: center;">
-            <p style="font-size: 25px; font-weight:550; font-family:Montserrat;color:#000000">No users found</p>
-          </div>
-        </div>
-
-
-
-
-        <!-- ✅ Add this inside your component template (at the end of the file) -->
-        <!-- Modal Wrapper -->
-        <div *ngIf="showUserModal" style="
-       position: fixed;
-       inset: 0;
-       background: rgba(0, 0, 0, 0.5);
-       display: flex;
-       justify-content: center;
-       align-items: center;
-       z-index: 1050;
-    ">
-
-          <!-- Modal Box -->
-          <div style="
-     background: white;
-     border-radius: 12px;
-     /* width: 90%; */
-     /* max-width: 900px; */
-     /* max-height: 90vh; */
-     overflow-y: auto;
-     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-    ">
-
-            <!-- Modal Header -->
-            <div
-              style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #dee2e6;">
-              <h5 style="margin: 0;">User Details - {{ selectedUser?.name }}</h5>
-              <!-- <button type="button" class="btn-close" (click)="closeModal()" style="transform: scale(1.8);"></button> -->
-              <button (click)="closeModal()"
-                style="font-size: 24px; font-weight: bold; background: none; border: none; cursor: pointer; line-height: 1; padding: 0 10px;">
-                ×
-              </button>
-
-            </div>
-
-            <!-- Modal Body -->
-            <div style="padding: 16px;">
-              <!-- <div *ngIf="overdueTestDrives.length > 1" style="margin-bottom: 10px;">
-                  <label for="overdueSelect"><strong>Select Overdue:</strong></label>
-                  <select id="overdueSelect" class="form-select w-auto d-inline-block ms-2"
-                    [(ngModel)]="selectedOverdueIndex">
-                    <option *ngFor="let o of overdueTestDrives; let i = index" [value]="i">
-                      Overdue {{ i + 1 }}
-                    </option>
-                  </select>
-                </div> -->
-
-
-              <div style="padding: 16px;">
-                <table class="table table-bordered table-striped text-center">
-                  <thead>
-                    <tr>
-                      <th style="font-weight:700">Field</th>
-
-                      <!-- Today Column -->
-                      <th>
-                        <div class="d-flex align-items-center justify-content-center gap-2">
-                          <label style="margin: 0; font-weight: 700;">Today</label> &nbsp;
-                          <ng-container *ngIf="todayTestDrives.length > 0">
-                            <select id="todaySelect" class="form-select form-select-sm"
-                              style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedTodayIndex">
-                              <option *ngFor="let t of todayTestDrives; let i = index" [value]="i">
-                                {{ i + 1 }}
-                              </option>
-                            </select>
-                          </ng-container>
-                        </div>
-                      </th>
-
-                      <!-- Upcoming Column -->
-                      <th>
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                          <label style="margin: 0; font-weight: 700;">Upcoming</label> &nbsp;
-                          <ng-container *ngIf="upcomingTestDrives.length > 0">
-                            <select id="upcomingSelect" class="form-select form-select-sm"
-                              style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedUpcomingIndex">
-                              <option *ngFor="let u of upcomingTestDrives; let i = index" [value]="i">
-                                {{ i + 1 }}
-                              </option>
-                            </select>
-                          </ng-container>
-                        </div>
-                      </th>
-
-                      <!-- Overdue Column -->
-                      <th>
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                          <label style="margin: 0; font-weight: 700;">Overdue</label>
-                          <ng-container *ngIf="overdueTestDrives.length > 0">
-                            <select id="overdueSelect" class="form-select form-select-sm"
-                              style="width: auto; padding: 3px 10px;" [(ngModel)]="selectedOverdueIndex">
-                              <option *ngFor="let o of overdueTestDrives; let i = index" [value]="i">
-                                {{ i + 1 }}
-                              </option>
-                            </select>
-                          </ng-container>
-                        </div>
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody *ngIf="todayTestDrives.length || upcomingTestDrives.length || overdueTestDrives.length">
-                    <tr>
-                      <th class="text-start" style="color:#000000;font-weight:400">Name</th>
-                      <td>{{ todayTestDrives?.[selectedTodayIndex]?.name || '-' }}</td>
-                      <td>{{ upcomingTestDrives?.[selectedUpcomingIndex]?.name || '-' }}</td>
-                      <td>{{ overdueTestDrives?.[selectedOverdueIndex]?.name || '-' }}</td>
-                    </tr>
-                    <tr>
-                      <th class="text-start" style="color:#000000;font-weight:400">Subject</th>
-                      <td>{{ todayTestDrives?.[selectedTodayIndex]?.subject || '-' }}</td>
-                      <td>{{ upcomingTestDrives?.[selectedUpcomingIndex]?.subject || '-' }}</td>
-                      <td>{{ overdueTestDrives?.[selectedOverdueIndex]?.subject || '-' }}</td>
-                    </tr>
-                    <tr>
-                      <th class="text-start" style="color:#000000;font-weight:400">PMI</th>
-                      <td>{{ todayTestDrives?.[selectedTodayIndex]?.PMI || '-' }}</td>
-                      <td>{{ upcomingTestDrives?.[selectedUpcomingIndex]?.PMI || '-' }}</td>
-                      <td>{{ overdueTestDrives?.[selectedOverdueIndex]?.PMI || '-' }}</td>
-                    </tr>
-                    <tr>
-                      <th style="color:#000000;font-weight:400">Location</th>
-                      <td>{{ todayTestDrives?.[selectedTodayIndex]?.location || '-' }}</td>
-                      <td>{{ upcomingTestDrives?.[selectedUpcomingIndex]?.location || '-' }}</td>
-                      <td>{{ overdueTestDrives?.[selectedOverdueIndex]?.location || '-' }}</td>
-                    </tr>
-                    <tr>
-                      <th style="color:#000000;font-weight:400">Start time</th>
-                      <td>{{ todayTestDrives?.[selectedTodayIndex]?.start_time || '-' }}</td>
-                      <td>{{ upcomingTestDrives?.[selectedUpcomingIndex]?.start_time || '-' }}</td>
-                      <td>{{ overdueTestDrives?.[selectedOverdueIndex]?.start_time || '-' }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-
-
-              </div>
-
-
-
-            </div>
-
-            <!-- Modal Footer -->
-            <div style="padding: 16px; border-top: 1px solid #dee2e6; text-align: right;">
-              <button class="btn btn-secondary" (click)="closeModal()" style="
-                background-color: #007bff;border:none;color:white;">Close</button>
-            </div>
-
-          </div>
-        </div>
-
-
-
-
-        <!-- 
+          <!-- 
           <div class="actions" style=" background-color: #fff;">
             <div class="action-row">
 
@@ -391,207 +101,252 @@
 
             </div>
           </div> -->
+        </div>
       </div>
-    </div>
-    <div></div>
-    <div class="card" style=" background-color: #fff; padding: 20px; box-shadow: 0 0 8px #ccc; ">
-      <div class="card-title" style="display:flex; justify-content: space-between; align-items: center;">
-        <span style="font-size:25px;color:#313131;font-family:Montserrat;font-weight:600">Test Drive Schedule</span>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <!-- <input type="text" [(ngModel)]="searchText" (input)="applyTableFilters()" placeholder="Search..."
-              style="padding: 5px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"> -->
-          <!-- <input type="text" [(ngModel)]="searchTextUserDetails" (input)="applyTableFilters()" placeholder="Search..."
-              style="padding: 5px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"> -->
-          <!-- <select [(ngModel)]="filterOption" (change)="applyTableFilters()"
+      <div></div>
+      <div class="card" style=" background-color: #fff; padding: 20px; box-shadow: 0 0 8px #ccc; ">
+        <div class="card-title" style="display:flex; justify-content: space-between; align-items: center;">
+          <span style="font-size:30px;color:#000000;font-family:Montserrat;font-weight:600">Test Drive Schedule</span>
+          <div style="display: flex; align-items: center; gap: 10px;">
+
+            <select [(ngModel)]="filterOption" (change)="onFilterOptionChange()"
               style="padding: 6px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; background-color: #fff;">
               <option value="today">Today</option>
               <option value="oneWeek">Upcoming Week</option>
-            </select> -->
-          <select [(ngModel)]="filterOption" (change)="onFilterOptionChange()"
-            style="padding: 6px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; background-color: #fff;">
-            <option value="today">Today</option>
-            <option value="oneWeek">Upcoming Week</option>
-          </select>
-          <!-- <div style="font-weight: 500; font-size: 14px;">
-            Showing {{ getPaginatedTableData().length }} of {{ filteredTableTestDrives.length }} records  </div> -->
-          <!-- <div style="font-weight: 500; font-size: 14px;">
-              Showing {{ (currentPage - 1) * pageSize + 1 }} to
-              {{ (currentPage - 1) * pageSize + getPaginatedTableData().length }}
+            </select>
+
+
+
+
+          </div>
+        </div>
+
+        <table class="table" style="width: 100%; margin-top: 10px;">
+          <thead>
+            <tr style="background-color: transparent !important;">
+              <th style="font-weight: 600; color:#0F3153;">Subject</th>
+              <th style="font-weight: 600; color:#0F3153;">VIN</th>
+              <th style="font-weight: 600; color:#0F3153;">PMI</th>
+              <th style="font-weight: 600; color:#0F3153;">Assigned to</th>
+              <th style="font-weight: 600; color: #0F3153;">Date</th>
+              <th style="font-weight: 600; color: #0F3153;">Start time</th>
+              <th style="font-weight: 600; color:#0F3153;">End time</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="getPaginatedTableData().length === 0">
+              <td colspan="7" style="text-align: center;">No data found</td>
+            </tr>
+
+            <tr *ngFor="let testDrive of getPaginatedTableData()">
+              <td>{{ testDrive.subject || 'N/A' }}</td>
+              <td>{{ testDrive.VIN || 'N/A' }}</td>
+              <td>{{ testDrive.PMI || 'N/A' }}</td>
+              <td>{{ testDrive.assigned_to || 'N/A' }}</td>
+              <td>{{ testDrive.start_date | date:'yyyy-MM-dd' }}</td>
+              <td>{{ testDrive.start_time }}</td>
+              <td>{{ testDrive.end_time }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pagination-controls"
+          style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap;">
+
+          <!-- Showing entries on the left -->
+          <div style="font-weight: 500; font-size: 14px; color: black;">
+            <ng-container *ngIf="filteredTableTestDrives.length > 0; else noRecords">
+              Showing {{ (currentPage - 1) * itemsPerPage + 1 }}
+              to {{ (currentPage - 1) * itemsPerPage + getPaginatedTableData().length }}
               of {{ filteredTableTestDrives.length }} records
+            </ng-container>
+            <ng-template #noRecords>
+              Showing 0 to 0 of 0 records
+            </ng-template>
+          </div>
+
+          <!-- Pagination controls on the right -->
+          <div style="display: flex; align-items: center; gap: 10px; justify-content: center; margin-top: 20px;">
+            <button (click)="prevPage()" [disabled]="currentPage === 1"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
+              Previous
+            </button>
+
+            <span *ngIf="totalPages > 0">
+              Page {{ currentPage }} of {{ totalPages }}
+            </span>
+            <span *ngIf="totalPages === 0">
+              No data available
+            </span>
+
+            <button (click)="nextPage()" [disabled]="currentPage >= totalPages || totalPages === 0"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
+              Next
+            </button>
+          </div>
+
+
+        </div>
+
+
+
+
+      </div>
+
+
+      <!-- FIRST NAME -->
+      <div class="main-content">
+        <ng-container *ngIf="!selectedUser">
+
+          <div *ngFor="let team of hierarchy" class="team-wrapper" style="margin-bottom: 20px;">
+
+            <!-- Clickable Team Header -->
+            <div class="team-container" (click)="showUsers(team.team_id)">
+              <div class="team-name" style="display: flex; justify-content: space-between; align-items: center;">
+                {{ team.team_name }}'s Team
+                <i class="fas" [ngClass]="{
+                
+                 }" style="margin-left: 10px;"></i>
+              </div>
+
+              <!-- Metrics -->
+              <div class="metrics-wrapper">
+                <div class="metric-card" style="background-color:#6FCBF9;color:#FFFFFF;">
+                  <i class="fas fa-car"></i>
+                  <div class="header-box1">Enquiries</div>
+                  <span class="metric-value">15</span>
+                </div>
+                <div class="metric-card" style="background-color:#FF9CDE;color:#FFFFFF;">
+                  <i class="fas fa-file-alt"></i>
+                  <span>Test Drive</span>
+                  <span class="metric-value">8</span>
+                </div>
+                <div class="metric-card" style="background-color:#BFDCFC;color:#FFFFFF;">
+                  <i class="fas fa-times-circle"></i>
+                  <span>New Orders</span>
+                  <span class="metric-value">8</span>
+                </div>
+                <div class="metric-card" style="background-color:#9CED97;color:#FFFFFF;">
+                  <i class="fas fa-shopping-cart"></i>
+                  <span>Cancellation</span>
+                  <span class="metric-value">8</span>
+                </div>
+                <div class="metric-card" style="background-color:#C59CFF;color:#FFFFFF;">
+                  <i class="fas fa-store"></i>
+                  <span>Net Orders</span>
+                  <span class="metric-value">8</span>
+                </div>
+                <div class="metric-card" style="background-color:#DCF471;color:#FFFFFF;">
+                  <i class="fas fa-store"></i>
+                  <span>Retail</span>
+                  <span class="metric-value">8</span>
+                </div>
+              </div>
             </div>
-             -->
 
-          <!-- <div style="display: flex; gap: 4px; align-items: center;">
-              <button (click)="filterOption = 'today'; applyTableFilters()"
-                [ngClass]="{ 'active-filter-today': filterOption === 'today' }" class="filter-btn">
-                Today
-              </button>
+            <!-- Users List (below team box) -->
+            <div *ngIf="selectedTeamId === team.team_id" class="user-row" style="margin-top: 10px;">
+              <div class="user-cards-wrapper">
+                <div *ngFor="let user of team.ps_users" class="user-card" (click)="selectname({
+                     user_id: user.ps_id,
+                     dealer_id: team.team_id,
+                     name: user.ps_name,
+                     todayTestDrives: [],
+                     upcomingTestDrives: [],
+                     overdueTestDrives: []
+                   }); $event.stopPropagation()">
+                  <div class="user-avatar">{{ user.ps_name.charAt(0) }}</div>
+                  <div class="user-name">{{ user.ps_name }}</div>
+                </div>
+              </div>
+            </div>
 
-              <button (click)="filterOption = 'oneWeek'; applyTableFilters()"
-                [ngClass]="{ 'active-filter-upcoming': filterOption === 'oneWeek' }" class="filter-btn">
-                Upcoming Week
-              </button>
-            </div> -->
+          </div>
 
-
-
-        </div>
+        </ng-container>
       </div>
 
-      <table class="table table-striped" style="width: 100%; margin-top: 10px;">
-        <thead>
-          <tr>
-            <th style="font-weight: 600; color: #222;">Subject</th>
-            <th style="font-weight: 600; color: #222;">VIN</th>
-            <th style="font-weight: 600; color: #222;">PMI</th>
-            <th style="font-weight: 600; color: #222;">Assigned to</th>
-            <th style="font-weight: 600; color: #222;">Date</th>
-            <th style="font-weight: 600; color: #222;">Start time</th>
-            <th style="font-weight: 600; color: #222;">End time</th>
 
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="getPaginatedTableData().length === 0">
-            <td colspan="7" style="text-align: center;">No data found</td>
-          </tr>
-
-          <tr *ngFor="let testDrive of getPaginatedTableData()">
-            <td>{{ testDrive.subject || 'N/A' }}</td>
-            <td>{{ testDrive.VIN || 'N/A' }}</td>
-            <td>{{ testDrive.PMI || 'N/A' }}</td>
-            <td>{{ testDrive.assigned_to || 'N/A' }}</td>
-            <td>{{ testDrive.start_date | date:'yyyy-MM-dd' }}</td>
-            <td>{{ testDrive.start_time }}</td>
-            <td>{{ testDrive.end_time }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="pagination-controls"
-        style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
-        <div style="display: flex; justify-content: center; align-items: center;">
-          <button (click)="prevPage()" [disabled]="currentPage === 1"
-            style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
-            Previous
-          </button>
-          <span *ngIf="totalPages > 0">
-            Page {{ currentPage }} of {{ totalPages }}
-          </span>
-          <span *ngIf="totalPages === 0">
-            No data available
-          </span>
-
-
-          <!-- <button (click)="nextPage()" [disabled]="currentPage === totalPages"
-            style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
-            Next
-          </button> -->
-          <button (click)="nextPage()" [disabled]="currentPage >= totalPages || totalPages === 0"
-            style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
-            Next
-          </button>
-
-
-
-        </div>
-
-        <!-- Record range info placed under the controls -->
-        <!-- <div style="font-weight: 500; font-size: 14px; margin-top: 8px;color:black">
-          Showing {{ (currentPage - 1) * pageSize + 1 }}
-          to {{ (currentPage - 1) * pageSize + getPaginatedTableData().length }}
-          of {{ filteredTableTestDrives.length }} records
-        </div>
-      </div> -->
-        <div style="font-weight: 500; font-size: 14px; margin-top: 8px; color: black">
-          <ng-container *ngIf="filteredTableTestDrives.length > 0; else noRecords">
-            Showing {{ (currentPage - 1) * itemsPerPage + 1 }}
-            to {{ (currentPage - 1) * itemsPerPage + getPaginatedTableData().length }}
-            of {{ filteredTableTestDrives.length }} records
-          </ng-container>
-          <ng-template #noRecords>
-            Showing 0 to 0 of 0 records
-          </ng-template>
-
-        </div>
-      </div>
-
+      <br>
 
 
     </div>
-  </div>
 
 
 
-  <div *ngIf="selectedSection === 'analysis'" class="dashboard-content content-section active">
-    <!-- CONTENT FOR ANALYSIS -->
-    <div class="dashboard-container" style="margin-top:60px;">
-      <!-- Metrics and Filters Row (Combined) -->
-      <div class="metrics-row" style=" display: flex; gap: 15px; " style="margin-top: -45px;">
+    <div *ngIf="selectedSection === 'analysis'" class="dashboard-content content-section active">
+      <!-- CONTENT FOR ANALYSIS -->
+      <div class="dashboard-container" style="margin-top:60px;">
+        <!-- Metrics and Filters Row (Combined) -->
+        <div class="metrics-row" style=" display: flex; gap: 15px; " style="margin-top: -45px;">
 
-        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.enquiries }}
+          <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+            <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.enquiries
+              }}
+            </div>
+            <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Enquiries</div>
           </div>
-          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Enquiries</div>
-        </div>
-        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.testDrives
-            }}
+          <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+            <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.testDrives
+              }}
+            </div>
+            <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Test Drives</div>
           </div>
-          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Test Drives</div>
-        </div>
-        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.newOrders }}
+          <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+            <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.newOrders
+              }}
+            </div>
+            <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">New Orders</div>
           </div>
-          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">New Orders</div>
-        </div>
-        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{
-            dashboardMetrics.cancellations
-            }}</div>
-          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Cancellation</div>
-        </div>
-        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.netOrders }}
+          <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+            <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{
+              dashboardMetrics.cancellations
+              }}</div>
+            <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Cancellation</div>
           </div>
-          <div class="metric-label" style="color:black;font-size:20px;font-weight:500;;">Net Order</div>
-        </div>
-        <div class="metric-box" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-          <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.retail }}
+          <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+            <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.netOrders
+              }}
+            </div>
+            <div class="metric-label" style="color:black;font-size:20px;font-weight:500;;">Net Order</div>
           </div>
-          <div class="metric-label" style="color:black;font-size:20px;font-weight:500">Retail</div>
-        </div>
+          <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+            <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.retail }}
+            </div>
+            <div class="metric-label" style="color:black;font-size:20px;font-weight:500">Retail</div>
+          </div>
 
-        <!-- Last box with filters inside -->
-        <div class="metric-box"
-          style="display: flex; flex-direction: column; align-items: center; width: 500px; box-sizing: border-box; padding: 10px;border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
-          <!-- Removed metric-value and label -->
+          <!-- Last box with filters inside -->
+          <div class="metric-box"
+            style="display: flex; flex-direction: column; align-items: center; width: 500px; box-sizing: border-box; padding: 10px;border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+            <!-- Removed metric-value and label -->
 
 
-          <!-- Filters inside last box -->
-          <div class="filters-title" style="margin-bottom: 8px;color:black;font-size:18px;font-weight:400;">Filters
-          </div>
-          <div class="time-filters" style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;">
-            <!-- <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+            <!-- Filters inside last box -->
+            <div class="filters-title" style="margin-bottom: 8px;color:black;font-size:18px;font-weight:400;">Filters
+            </div>
+            <div class="time-filters" style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;">
+              <!-- <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
               [class.active]="activeFilter === 'Today'" (click)="onFilterClick('Today')">
               Today
             </button> -->
-            <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
-              [class.active]="activeFilter === 'MTD'" (click)="onFilterClick('MTD')">
-              MTD
-            </button>
-            <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
-              [class.active]="activeFilter === 'QTD'" (click)="onFilterClick('QTD')">
-              QTD
-            </button>
-            <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
-              [class.active]="activeFilter === 'YTD'" (click)="onFilterClick('YTD')">
-              YTD
-            </button>
+              <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+                [class.active]="activeFilter === 'MTD'" (click)="onFilterClick('MTD')">
+                MTD
+              </button>
+              <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+                [class.active]="activeFilter === 'QTD'" (click)="onFilterClick('QTD')">
+                QTD
+              </button>
+              <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+                [class.active]="activeFilter === 'YTD'" (click)="onFilterClick('YTD')">
+                YTD
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- FILTERS SECTION (TOP SMALL BOX) -->
-      <!-- <div class="filter-section" style="margin-left: auto;">
+        <!-- FILTERS SECTION (TOP SMALL BOX) -->
+        <!-- <div class="filter-section" style="margin-left: auto;">
           <div class="filters-title">Filters</div>
           <div class="time-filters">
             <button class="filter-button" [class.active]="activeFilter === 'Today'" (click)="onFilterClick('Today')">
@@ -610,190 +365,493 @@
           </div>
         </div>
       </div> -->
-    </div>
-
-    <div class="performance-panels">
-      <div class="performance-panel">
-        <!-- Row with KPI and two dropdowns inside performance-panel -->
-        <h2 class="panel-title" style="font-size:25px;color:#313131;font-family:Montserrat;font-weight:600">
-          Compare Performance
-        </h2>
-
-        <table border="1" cellpadding="8" cellspacing="0"
-          style="width: 100%; border-collapse: collapse; text-align: center;height:500px;">
-          <thead>
-            <tr>
-              <!-- KPI Header -->
-              <th style="width: 30%; padding: 10px; color:#313131;font-weight:500;font-size:18px">KPI</th>
-
-
-              <!-- PS1 Dropdown -->
-              <!-- PS1 Dropdown -->
-              <!-- PS1 Dropdown -->
-              <th style="padding: 10px;">
-                <div style="position: relative;">
-                  <div (click)="dropdownOpen1 = !dropdownOpen1"
-                    style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc; background-color: transparent; cursor: pointer; user-select: none; border-radius: 20px; color: #333; font-weight: normal;">
-                    {{ getUserName(selectedPs1) || 'PS1' }}
-                    <span style="margin-left: 8px;">&#x25BC;</span>
-                  </div>
-
-                  <div *ngIf="dropdownOpen1" class="custom-scroll"
-                    style="position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; background: white; z-index: 1000;">
-
-                    <div *ngFor="let user of users" (click)="handlePs1Click(user)"
-                      style="padding: 6px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: normal; color: #333;"
-                      [style.backgroundColor]="selectedPs1 === user.user_id ? '#ddd' : isUserSelectedInPs2(user.user_id) ? '#f0f0f0' : 'white'"
-                      [style.color]="isUserSelectedInPs2(user.user_id) ? '#999' : '#333'"
-                      [style.pointerEvents]="isUserSelectedInPs2(user.user_id) ? 'none' : 'auto'">
-
-                      {{ user.name }}
-                      <span *ngIf="isUserSelectedInPs2(user.user_id)"
-                        style="font-size: 20px; color: green;font-weight: bold;">&#10003;</span>
-                    </div>
-
-                  </div>
-                </div>
-              </th>
-
-              <!-- PS2 Dropdown -->
-              <th style="padding: 10px;">
-                <div style="position: relative;">
-                  <div (click)="dropdownOpen2 = !dropdownOpen2"
-                    style="padding: 6px 10px; font-size: 1rem; border: 1px solid #ccc; background-color: transparent; cursor: pointer; user-select: none; border-radius: 20px; color: #333; font-weight: normal;">
-                    {{ selectedPs2Names.length > 0 ? selectedPs2Names[0] : 'PS2' }}
-                    <span style="margin-left: 8px;">&#x25BC;</span>
-                  </div>
-
-                  <div *ngIf="dropdownOpen2" class="custom-scroll"
-                    style="position: absolute; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; background: white; z-index: 1000;">
-
-                    <div *ngFor="let user of users" (click)="handlePs2Click(user)"
-                      style="padding: 6px 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: normal; color: #333;"
-                      [style.backgroundColor]="selectedPs2.includes(user.user_id) ? '#ddd' : isPs1User(user.user_id) ? '#f0f0f0' : 'white'"
-                      [style.color]="isPs1User(user.user_id) ? '#999' : '#333'"
-                      [style.pointerEvents]="isPs1User(user.user_id) ? 'none' : 'auto'">
-                      {{ user.name }}
-                      <span *ngIf="isPs1User(user.user_id)"
-                        style="font-size: 20px; color: green;font-weight: bold;">&#10003;</span>
-                    </div>
-
-                  </div>
-                </div>
-              </th>
-            </tr>
-          <tbody>
-            <tr>
-              <td style="text-align: left; padding: 12px; color: black;">Enquiries</td>
-              <td style="color: black;font-size:18px;">{{ enquiriesCount }}</td>
-              <td style="color: black;font-size:18px;">{{ enquiriesCountPs2 }}</td>
-            </tr>
-            <tr>
-              <td style="text-align: left; padding: 12px; color: black;">Test Drives</td>
-              <td style=" color: black;font-size:18px;">{{ testDrivesCount }}</td>
-              <td style="color: black;font-size:18px;">{{ testDrivesCountPs2 }}</td>
-            </tr>
-            <tr>
-              <td style="text-align: left; padding: 12px; color: black;">New Orders</td>
-              <td style="color: black;font-size:18px;">{{ newOrdersCount }}</td>
-              <td style="color: black;font-size:18px;">{{ newOrdersCountPs2 }}</td>
-            </tr>
-            <tr>
-              <td style="text-align: left; padding: 12px; color: black;">Cancellations</td>
-              <td style="color: black;font-size:18px;">{{ cancellationsCount }}</td>
-              <td style=" color: black;font-size:18px;">{{ cancellationsCountPs2 }}</td>
-            </tr>
-            <tr>
-              <td style="text-align: left; padding: 12px; color: black;">Net Orders</td>
-              <td style=" color: black;font-size:18px;">{{ netOrdersCount }}</td>
-              <td style="color: black;font-size:18px;">{{ netOrdersCountPs2 }}</td>
-            </tr>
-            <tr>
-              <td style="text-align: left; padding: 12px; color: black;">Retail</td>
-              <td style="color: black;font-size:18px;">{{ retailCount }}</td>
-              <td style=" color: black;font-size:18px;">{{ retailCountPs2}}</td>
-            </tr>
-          </tbody>
-        </table>
-
-
-
       </div>
 
-      <div class="performance-panel">
-        <h2 class="panel-title" style="font-size:25px;color:#313131;;font-family:Montserrat;font-weight:600">Performance
-          Analysis</h2>
-        <div class="panel-content">
+      <div class="performance-panels">
+        <div class="performance-panel">
+          <div class="header-row">
+            <h2 class="panel-title">
+              Compare Performance
+              <br>
+              <p style="background:none">Select Dealers to compare their KPIs</p>
+            </h2>
 
-          <table border="1" cellpadding="8" cellspacing="0"
-            style="width:100%; border-collapse: collapse; text-align: center; margin-top: 190px;padding:100px;height:500px">
+            <!-- 👇 Debug: Show users data as JSON -->
+            <pre>{{ users | json }}</pre>
+
+            <div style="position: relative; display: inline-block;">
+              <!-- Dropdown Button -->
+              <div (click)="toggleDropdown()"
+                style="padding: 10px; border: none; border-radius: 20px; background-color: #EBEDF0; cursor: pointer;">
+                {{ getUserName(selectedUserId) || 'Select Dealer' }}
+                <span style="margin-left: 8px;">&#x25BC;</span>
+              </div>
+
+              <!-- Dropdown List -->
+              <div *ngIf="dropdownOpen"
+                style="position: absolute; top: 100%; left: 0; width: 220px; background: white; border: 1px solid #ccc; z-index: 1000;">
+                <ng-container *ngIf="users && users.length > 0; else noUsers">
+                  <div *ngFor="let user of users" (click)="selectUser(user.user_id)"
+                    style="padding: 8px 12px; cursor: pointer;">
+                    {{ user.name }}
+                  </div>
+                </ng-container>
+
+                <ng-template #noUsers>
+                  <div style="padding:10px; color: red;">No users available</div>
+                </ng-template>
+              </div>
+
+
+
+            </div>
+
+
+
+          </div>
+
+          <!-- Your table starts here -->
+
+          <table>
             <thead>
               <tr>
-                <th rowspan="2" style="width: 20%;"></th>
-                <th colspan="2" style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Performance</th>
-                <th colspan="2" style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Rank</th>
-              </tr>
-              <tr>
-                <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Dealership</th>
-                <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">All India</th>
-                <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">All India</th>
+                <th style="color:#090909;font-size:24px;">Comparison</th>
+                <th>
+                  <div class="header-box1">
+                    <i class="fas fa-phone"></i>
+                    Enquiries
+                  </div>
+                </th>
+                <th>
+                  <div class="header-box2">
+                    <i class="fas fa-car"></i>
+                    Test Drive
+                  </div>
+                </th>
+                <th>
+                  <div class="header-box3">
+                    <i class="fas fa-shopping-cart"></i>
+                    New Orders
+                  </div>
+                </th>
+                <th>
+                  <div class="header-box4">
+                    <i class="fas fa-times-circle"></i>
+                    Cancellations
+                  </div>
+                </th>
+                <th>
+                  <div class="header-box5">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    Net Orders
+                  </div>
+                </th>
+                <th>
+                  <div class="header-box6">
+                    <i class="fas fa-handshake"></i>
+                    Retail
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td style="text-align: left; padding:12px; color:black;">Enquiries</td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.enquiries }}</td>
-                <td style="color: black;font-size:18px;">{{
-                  dashboardMetrics.allIndiaBestPerformace.enquiriesCount
-                  }}
+              <tr *ngFor="let user of selectedUsersPerformance" style="background-color: #F8F8FA !important;">
+
+                <td style="text-align: left;">
+                  <div style="display: flex; align-items: center;">
+                    <div style="
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    background-color: white;
+                    border-radius: 20px;
+                    padding: 4px 10px;
+                    /* border: 1px solid #ccc; */
+                  ">
+                      <div style="
+                        width: 32px;
+                        height: 32px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: bold;
+                        color: #fff;
+                        font-size: 14px;
+                      " [style.background-color]="getColorForUser(user.name)">
+                        {{ user.name.charAt(0) }}
+                      </div>
+                      <span style="font-weight: 500; color: #333;">{{ user.name }}</span>
+                    </div>
+                  </div>
                 </td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.enquiriesRank }}</td>
-              </tr>
-              <tr>
-                <td style="text-align: left; padding:12px; color:black;">Test Drive</td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.testDrives }}</td>
-                <td style="color: black;font-size:18px;">{{
-                  dashboardMetrics.allIndiaBestPerformace.testDrivesCount
-                  }}</td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.testDrivesRank }}</td>
-              </tr>
-              <tr>
-                <td style="text-align: left; padding:12px; color:black;">New Orders</td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.newOrders }}</td>
-                <td style="color: black;font-size:18px;">{{
-                  dashboardMetrics.allIndiaBestPerformace.newOrdersCount
-                  }}
-                </td>
-                <td style="color: black;">{{ dashboardMetrics.allIndiaRank.newOrdersRank }}</td>
-              </tr>
-              <tr>
-                <td style="text-align: left; padding:12px; color:black;">Cancellations</td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.cancellations }}</td>
-                <td style="color: black;font-size:18px;">{{
-                  dashboardMetrics.allIndiaBestPerformace.cancellationsCount }}</td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.cancellationsRank }}
-                </td>
-              </tr>
-              <tr>
-                <td style="text-align: left; padding:12px; color:black;">Net Orders</td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.netOrders }}</td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
-                  }}
-                </td>
-                <td style="color: black;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
-              </tr>
-              <tr>
-                <td style="text-align: left; padding:12px; color:black;">Retail</td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.retail }}</td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
-                  }}
-                </td>
-                <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
+
+
+
+
+                <td>{{ user.enquiries }}</td>
+                <td>{{ user.testDrives }}</td>
+                <td>{{ user.newOrders }}</td>
+                <td>{{ user.cancellations }}</td>
+                <td>{{ user.netOrders }}</td>
+                <td>{{ user.retail }}</td>
               </tr>
             </tbody>
+
+
+
           </table>
+        </div>
+
+
+        <!-- <div class="performance-panel">
+          <h2 class="panel-title" style="font-size:25px;color:#313131;;font-family:Montserrat;font-weight:600">
+            Performance
+            Analysis</h2>
+          <div class="panel-content">
+
+            <table border="1" cellpadding="8" cellspacing="0"
+              style="width:100%; border-collapse: collapse; text-align: center; margin-top: 190px;padding:100px;height:500px">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="width: 20%;"></th>
+                  <th colspan="2" style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Performance</th>
+                  <th colspan="2" style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Rank</th>
+                </tr>
+                <tr>
+                  <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">Dealership</th>
+                  <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">All India</th>
+                  <th style="padding:10px;color:#313131;font-weight:500;font-size:18px;">All India</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="text-align: left; padding:12px; color:black;">Enquiries</td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.enquiries }}</td>
+                  <td style="color: black;font-size:18px;">{{
+                    dashboardMetrics.allIndiaBestPerformace.enquiriesCount
+                    }}
+                  </td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.enquiriesRank }}</td>
+                </tr>
+                <tr>
+                  <td style="text-align: left; padding:12px; color:black;">Test Drive</td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.testDrives }}</td>
+                  <td style="color: black;font-size:18px;">{{
+                    dashboardMetrics.allIndiaBestPerformace.testDrivesCount
+                    }}</td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.testDrivesRank }}</td>
+                </tr>
+                <tr>
+                  <td style="text-align: left; padding:12px; color:black;">New Orders</td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.newOrders }}</td>
+                  <td style="color: black;font-size:18px;">{{
+                    dashboardMetrics.allIndiaBestPerformace.newOrdersCount
+                    }}
+                  </td>
+                  <td style="color: black;">{{ dashboardMetrics.allIndiaRank.newOrdersRank }}</td>
+                </tr>
+                <tr>
+                  <td style="text-align: left; padding:12px; color:black;">Cancellations</td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.cancellations }}</td>
+                  <td style="color: black;font-size:18px;">{{
+                    dashboardMetrics.allIndiaBestPerformace.cancellationsCount }}</td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.cancellationsRank }}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: left; padding:12px; color:black;">Net Orders</td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.netOrders }}</td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
+                    }}
+                  </td>
+                  <td style="color: black;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
+                </tr>
+                <tr>
+                  <td style="text-align: left; padding:12px; color:black;">Retail</td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.retail }}</td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaBestPerformace.retailCount
+                    }}
+                  </td>
+                  <td style="color: black;font-size:18px;">{{ dashboardMetrics.allIndiaRank.retailRank }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div> -->
+      </div>
+
+    </div>
+  </div>
+</ng-container>
+<!-- <div *ngIf="selectedUser" class="user-details">
+  <button (click)="backToDashboard()">← Back</button>
+  <h2 style="font-size: 40px; color:black;">Hi 👋</h2>
+  <p>This is static content shown when a user is selected.</p>
+</div> -->
+
+
+<!-- MTD FILTER DIV  -->
+
+<div *ngIf="selectedUser" class="user-details" style="padding: 20px;">
+  <button class="back-button" (click)="backToDashboard()">←</button>
+  <h2 style="font-weight: 600; font-size: 24px; margin-bottom: 10px;">Ruhi Dave</h2>
+
+  <div class="dashboard-container" style="margin-top:60px;">
+    <!-- Metrics and Filters Row (Combined) -->
+    <div class="metrics-row" style=" display: flex; gap: 15px; " style="margin-top: -45px;">
+
+      <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.enquiries
+          }}
+        </div>
+        <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Enquiries</div>
+      </div>
+      <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.testDrives
+          }}
+        </div>
+        <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Test Drives</div>
+      </div>
+      <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.newOrders
+          }}
+        </div>
+        <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">New Orders</div>
+      </div>
+      <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{
+          dashboardMetrics.cancellations
+          }}</div>
+        <div class="metric-label" style="color:black;font-size:20px;font-weight:500;">Cancellation</div>
+      </div>
+      <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.netOrders
+          }}
+        </div>
+        <div class="metric-label" style="color:black;font-size:20px;font-weight:500;;">Net Order</div>
+      </div>
+      <div class="metric-box" style="border: 1px solid #E4E4E7; border-radius: 10px; overflow: hidden;">
+        <div class="metric-value" style="color:black;font-size:21px;font-weight:300;">{{ dashboardMetrics.retail }}
+        </div>
+        <div class="metric-label" style="color:black;font-size:20px;font-weight:500">Retail</div>
+      </div>
+
+      <!-- Last box with filters inside -->
+      <div class="metric-box"
+        style="display: flex; flex-direction: column; align-items: center; width: 500px; box-sizing: border-box; padding: 10px;border: 1px solid #ccc; border-radius: 10px; overflow: hidden;">
+        <!-- Removed metric-value and label -->
+
+
+        <!-- Filters inside last box -->
+        <div class="filters-title" style="margin-bottom: 8px;color:black;font-size:18px;font-weight:400;">Filters
+        </div>
+        <div class="time-filters" style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;">
+          <!-- <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+                  [class.active]="activeFilter === 'Today'" (click)="onFilterClick('Today')">
+                  Today
+                </button> -->
+          <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+            [class.active]="activeFilter === 'MTD'" (click)="onFilterClick('MTD')">
+            MTD
+          </button>
+          <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+            [class.active]="activeFilter === 'QTD'" (click)="onFilterClick('QTD')">
+            QTD
+          </button>
+          <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
+            [class.active]="activeFilter === 'YTD'" (click)="onFilterClick('YTD')">
+            YTD
+          </button>
         </div>
       </div>
     </div>
 
   </div>
+  <!-- Activity Section -->
+  <div style="margin-bottom: 20px;">
+    <h3 style="font-weight: 600;">Activities</h3>
+    <div style="display: flex; gap: 12px; margin-top: 10px;">
+      <span class="badge badge-today">Today</span>
+      <span class="badge badge-upcoming">Upcoming</span>
+      <span class="badge badge-overdue">Overdue</span>
+    </div>
+  </div>
+
+  <!-- Styled Table -->
+  <div
+    style="background: #ffffff; padding: 16px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-top: 20px;">
+
+    <!-- Outer border and radius applied here -->
+    <div style="border: 2px solid #D4D4D8; border-radius: 12px; overflow: hidden;">
+      <table class="table" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Customer Name</th>
+            <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Model Name</th>
+            <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Action</th>
+            <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">Ravi Kumar</td>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">Baleno</td>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">Test Drive Scheduled</td>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">10:30 AM</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">Sneha Sharma</td>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">Swift</td>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">Follow-up Call</td>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">12:45 PM</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">Ajay Mehta</td>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">Vitara Brezza</td>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">Vehicle Delivered</td>
+            <td style="border: 1px solid #E4E4E7; padding: 8px;">03:00 PM</td>
+          </tr>
+          <tr class="no-bottom-border">
+            <td style="padding: 8px;">Pooja Reddy</td>
+            <td style="padding: 8px;">Ignis</td>
+            <td style="padding: 8px;">Inquiry Received</td>
+            <td style="padding: 8px;">04:15 PM</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+  <div style="margin-top: 30px;">
+    <h3 style="font-weight: 600;">Call Analysis</h3>
+
+    <!-- Badges Row -->
+    <div style="display: flex; gap: 12px; margin-top: 10px; margin-bottom: 16px;">
+      <span class="badge badge-enquiry">Enquiry</span>
+      <span class="badge badge-coldcalls">Cold Calls</span>
+    </div>
+
+    <!-- Two Side-by-Side White Boxes -->
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+      <!-- Left Box -->
+      <div
+        style="background: white; flex: 1; min-width: 280px; padding: 16px; border-radius: 12px; box-shadow: 0 0 6px rgba(0,0,0,0.1);">
+
+        <!-- Filter buttons group -->
+        <div
+          style="display: flex; gap: 10px; flex-wrap: wrap; background: #f0f0f0; padding: 10px 12px; border-radius: 12px; width: fit-content;">
+          <span
+            style="background: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 500;">1W</span>
+          <span
+            style="background: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 500;">1D</span>
+          <span
+            style="background: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 500;">1Q</span>
+          <span
+            style="background: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 500;">1Y</span>
+        </div>
+
+        <!-- Count row: left, center, right -->
+        <div style="margin-top: 50px; display: flex; justify-content: space-between;">
+          <!-- Left -->
+          <div style="flex: 1; text-align: left;">
+            <div style="font-size: 24px; font-weight: bold;">123</div>
+            <div style="font-size: 12px; color: #666;">Total Connected</div>
+          </div>
+          <!-- Center -->
+          <div style="flex: 1; text-align: center;">
+            <div style="font-size: 24px; font-weight: bold;">123</div>
+            <div style="font-size: 12px; color: #666;">Total Connected</div>
+          </div>
+          <!-- Right -->
+          <div style="flex: 1; text-align: right;">
+            <div style="font-size: 24px; font-weight: bold;">123</div>
+            <div style="font-size: 12px; color: #666;">Total Connected</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Box -->
+      <div
+        style="background: white; flex: 1; min-width: 280px; padding: 16px; border-radius: 12px; box-shadow: 0 0 6px rgba(0,0,0,0.1);">
+        <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+          <thead>
+            <tr>
+              <th style="padding: 10px; border-bottom: 1px solid #ddd;"></th>
+              <th style="padding: 10px; border-bottom: 1px solid #ddd;">Calls</th>
+              <th style="padding: 10px; border-bottom: 1px solid #ddd;">Duration</th>
+              <th style="padding: 10px; border-bottom: 1px solid #ddd;">Clients</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 10px;">
+                <div style="display: flex; align-items: center;">
+                  <i class="fas fa-phone-alt" style="margin-right: 8px; color: #3498db;"></i> All Calls
+                </div>
+              </td>
+              <td style="padding: 10px;">0</td>
+              <td style="padding: 10px;">0</td>
+              <td style="padding: 10px;">0</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 10px;">
+                <div style="display: flex; align-items: center;">
+                  <i class="fas fa-check-circle" style="margin-right: 8px; color: #2ecc71;"></i> Connected
+                </div>
+              </td>
+              <td style="padding: 10px;">0</td>
+              <td style="padding: 10px;">0</td>
+              <td style="padding: 10px;">0</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 10px;">
+                <div style="display: flex; align-items: center;">
+                  <i class="fas fa-times-circle" style="margin-right: 8px; color: #e74c3c;"></i> Missed
+                </div>
+              </td>
+              <td style="padding: 10px;">0</td>
+              <td style="padding: 10px;">0</td>
+              <td style="padding: 10px;">0</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px;">
+                <div style="display: flex; align-items: center;">
+                  <i class="fas fa-ban" style="margin-right: 8px; color: #9e9e9e;"></i> Rejected
+                </div>
+              </td>
+              <td style="padding: 10px;">0</td>
+              <td style="padding: 10px;">0</td>
+              <td style="padding: 10px;">0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    </div>
+
+
+
+
+    <!-- Chart Container -->
+    <div
+      style="background: white; padding: 20px; border-radius: 8px; width: 100%; max-width: 600px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin-top: 30px;">
+      <h3 style="margin-bottom: 20px; font-weight: bold;">Hourly Analysis</h3>
+      <canvas id="hourlyChart" height="200"></canvas>
+    </div>
+
+
+    <!-- <div class="filter-wrapper">
+    <div class="filter-options">
+      <button class="filter-btn active">1D</button>
+      <button class="filter-btn">1W</button>
+      <button class="filter-btn">1M</button>
+      <button class="filter-btn">1Q</button>
+      <button class="filter-btn">1Y</button>
+    </div>
+  </div> -->

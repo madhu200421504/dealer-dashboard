@@ -1,56 +1,73 @@
-<div class="deznav">
+<div class="deznav" style="background-color: #222fb9;">
   <div>
     <ul class="metismenu" id="menu" [ngClass]="{ 'collapsed': !isSidebarOpen }">
-
-      <!-- Dashboard -->
-      <li>
-        <a routerLink="/Admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-          class="ai-icon icon-responsive" (click)="onRoleChange('dashboard', 'Dashboard')">
-          <i class="fa fa-tachometer-alt" id="dash"></i>
-          <span class="nav-text" style="font-size:18px;">Dashboard</span>
+      <li [class.active]="isActive('dashboard')">
+        <a routerLink="/Admin/dashboard" (click)="onMenuClick('dashboard','Dashboard')">
+          <i class="flaticon-381-user"></i>
+          <span class="nav-text">Dashboard</span>
         </a>
       </li>
 
-
-      <!-- Masters Menu -->
-      <li routerLinkActive="menu-open" [routerLinkActiveOptions]="{ exact: false }">
-        <a style="cursor: pointer;" class="has-arrow ai-icon icon-responsive">
-
-          <i class="flaticon-381-television"></i>
-          <span class="nav-text" style="font-size:18px;margin-left:-10px;">
-            Masters
-          </span>
+      <li [class.active]="isActive('user-all')">
+        <a routerLink="/Admin/user-all" (click)="onMenuClick('user-all','User Management')">
+          <i class="flaticon-381-user"></i>
+          <span class="nav-text">User Management</span>
         </a>
+      </li>
 
-        <ul>
-          <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-            <a routerLink="/Admin/user-all" (click)="onRoleChange('user-all', 'User Management')">
-              User Management
-            </a>
-          </li>
-          <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-            <a routerLink="/Admin/role" (click)="onRoleChange('role', 'Role Management')">
-              Role Management
-            </a>
-          </li>
-          <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-            <a routerLink="/Admin/team" (click)="onRoleChange('team-all', 'Team Management')">
-              Team Management
-            </a>
-          </li>
-          <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-            <a routerLink="/Admin/vehicle" (click)="onRoleChange('vehicle', 'Vehicle Management')">
-              Vehicle Management
-            </a>
-          </li>
-          <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-            <a routerLink="/Admin/target" (click)="onTargetChange('target', 'Target Management')">
-              Set Targets
-            </a>
-          </li>
-        </ul>
+      <!-- <li [class.active]="isActive('role')">
+        <a routerLink="/Admin/role" (click)="onMenuClick('role','Role Management')">
+          <i class="flaticon-381-network"></i>
+          <span class="nav-text">Role Management</span>
+        </a>
+      </li> -->
+      <li [class.active]="isActive('role')">
+        <a routerLink="/Admin/role" (click)="onMenuClick('role','Role Management')">
+          <i class="flaticon-381-user"></i>
+          <span class="nav-text">Role Management</span>
+        </a>
+      </li>
+
+      <!-- <li [class.active]="isActive('team')">
+        <a routerLink="/Admin/team" (click)="onMenuClick('team','Team Management')">
+          <i class="flaticon-381-network"></i>
+          <span class="nav-text">Team Management</span>
+        </a>
+      </li> -->
+      <li [class.active]="isActive('team')">
+        <a routerLink="/Admin/team" (click)="onMenuClick('team','Team Management')">
+          <i class="flaticon-381-user"></i>
+          <span class="nav-text">Team Management</span>
+        </a>
+      </li>
+
+      <!-- <li [class.active]="isActive('vehicle')">
+        <a routerLink="/Admin/vehicle" (click)="onMenuClick('vehicle','Vehicle Management')">
+          <i class="flaticon-381-network"></i>
+          <span class="nav-text">Vehicle Management</span>
+        </a>
+      </li> -->
+      <li [class.active]="isActive('vehicle')">
+        <a routerLink="/Admin/vehicle" (click)="onMenuClick('vehicle','Vehicle Management')">
+          <i class="flaticon-381-user"></i>
+          <span class="nav-text">Vehicle Management</span>
+        </a>
+      </li>
+
+      <!-- <li [class.active]="isActive('target')">
+        <a routerLink="/Admin/target" (click)="onMenuClick('target','Target Management')">
+          <i class="flaticon-381-target"></i>
+          <span class="nav-text">Set Targets</span>
+        </a>
+      </li> -->
+      <li [class.active]="isActive('target')">
+        <a routerLink="/Admin/target" (click)="onMenuClick('target','Target Management')">
+          <i class="flaticon-381-user"></i>
+          <span class="nav-text">Set Targets</span>
+        </a>
       </li>
     </ul>
+
 
     <div class="copyright" style="margin-top:280px;">
       <!-- <p>Tixia Ticketing Admin Dashboard© 2020 All Rights Reserved</p> -->

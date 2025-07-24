@@ -4,7 +4,7 @@
     <div class="page-titles">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="javascript:void(0)" style="cursor: auto">Utils</a>
+          <a href="javascript:void(0)" style="cursor: auto;color: #222fb9;">Utils</a>
         </li>
         <li class="breadcrumb-item active">
           <a href="javascript:void(0)" style="cursor: auto; font-weight: 700 !important; color: black">Team Master</a>
@@ -23,10 +23,15 @@
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
           <i class="fa fa-plus mr-1"></i>Add Team
         </a> -->
-        <a style="cursor: pointer; color: white !important" (click)="openModal()"
+        <!-- <a style="cursor: pointer; color: white !important" (click)="openModal()"
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
           <i class="fa fa-plus mr-1"></i>Add Team
+        </a> -->
+        <a style="cursor: pointer; color:  white !important;background-color: #222fb9;" (click)="openModal()"
+          class="btn light btn-lg btn-block rounded shadow px-2 buttons">
+          <i class="fa fa-plus mr-1"></i>Add Team
         </a>
+
 
       </div>
       <div class="col-xl-2 mb-4 mb-xl-0" style="margin-left: -2%;">
@@ -139,8 +144,12 @@
                 <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
                 <td>{{ team.team_name }}</td>
                 <td class="d-flex">
-                  <a href="javascript:void(0);" class="btn btn-primary shadow btn-xs sharp mr-1"
+                  <!-- <a href="javascript:void(0);" class="btn btn-primary shadow btn-xs sharp mr-1"
                     data-target=".bd-example-modal-lg" data-toggle="modal" data-backdrop="false" (click)="onEdit(team)">
+                    <i class="fa fa-pencil"></i>
+                  </a> -->
+                  <a href="javascript:void(0);" class="btn shadow btn-xs sharp mr-1" (click)="onEdit(team)"
+                    style="background-color: #222fb9;color:white;">
                     <i class="fa fa-pencil"></i>
                   </a>
                   <!-- <a href="javascript:void(0);" class="btn btn-danger shadow btn-xs sharp" data-toggle="modal"
@@ -305,8 +314,8 @@
 
         <div class="modal-footer">
           <ng-container *ngIf="teamObj.team_id; else saveButton">
-            <button type="button" class="btn btn-outline-primary" data-dismiss="modal" (click)="onUpdate()"
-              [disabled]="!isTeamNameChanged()">
+            <button type="button" class="btn " data-dismiss="modal" (click)="onUpdate()"
+              [disabled]="!isTeamNameChanged()" style="border-color:#222fb9">
               Edit
             </button>
           </ng-container>
@@ -314,8 +323,8 @@
             Close
           </button>
           <ng-template #saveButton>
-            <button type="button" class="btn btn-outline-primary" (click)="onSave()"
-              [attr.data-dismiss]="useForm.valid ? 'modal' : null">
+            <button type="button" class="btn " (click)="onSave()" [attr.data-dismiss]="useForm.valid ? 'modal' : null"
+              style="border-color:#222fb9">
               save
             </button>
           </ng-template>

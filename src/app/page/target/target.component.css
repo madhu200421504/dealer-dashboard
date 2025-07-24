@@ -103,7 +103,7 @@ input[type="number"]::-ms-reveal {
 }
 
 .filter-btn.active {
-  background-color: #007bff;
+  background-color: #222fb9;
   color: white;
 }
 .update-btn-container {

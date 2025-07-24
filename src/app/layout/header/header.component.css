@@ -34,12 +34,22 @@
     display: block !important;
   }
 }
+/* .nav-control {
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #ccc; 
+  border-radius: 8px; 
+  cursor: pointer;
+  height:45px;
+  width:45px;
+  transition: background 0.2s;
+} */
 
 .menu-toggle .header {
   padding: 0 !important;
 }
 
- .logo-abbr {
+.logo-abbr {
   display: none;
 }
 .brand-title {

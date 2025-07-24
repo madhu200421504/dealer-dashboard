@@ -17,9 +17,8 @@
           data-target=".bd-example-modal-lg"
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons"><i class="fa fa-plus mr-1"></i>Add
           Vehicle</a> -->
-        <a style="cursor: pointer; color: white !important" (click)="openModal()" type="button" data-toggle="modal"
-          data-target=".bd-example-modal-lg" data-backdrop="false"
-          class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
+        <a style="cursor: pointer; color:  white !important;background-color: #222fb9;" (click)="openModal()"
+          class="btn light btn-lg btn-block rounded shadow px-2 buttons">
           <i class="fa fa-plus mr-1"></i>Add Vehicle
         </a>
       </div>
@@ -103,8 +102,8 @@
                   <td>
                     <div class="d-flex">
                       <a href="javascript:void(0);" data-target=".bd-example-modal-lg" data-toggle="modal"
-                        class="btn btn-primary shadow btn-xs sharp mr-1" data-backdrop="false"
-                        (click)="onEdit(vehicle)">
+                        class="btn  shadow btn-xs sharp mr-1" data-backdrop="false"
+                        (click)="onEdit(vehicle)" style="background-color:#222fb9;color:white;">
                         <i class="fa fa-pencil"></i>
                       </a>
                       <!-- <a href="javascript:void(0);" type="button" class="btn btn-danger shadow btn-xs sharp"
@@ -522,7 +521,7 @@
             </button>
           </ng-template> -->
               <ng-template #saveButton>
-                <button type="button" class="btn btn-outline-primary" (click)="onSave()">
+                <button type="button" class="btn " (click)="onSave()" style="border-color:#222fb9">
                   Save
                 </button>
               </ng-template>

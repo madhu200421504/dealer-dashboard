@@ -4,7 +4,7 @@
     <div class="page-titles">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="javascript:void(0)" style="cursor: auto">Users</a>
+          <a href="javascript:void(0)" style="cursor: auto;color: #222fb9;">Users</a>
         </li>
         <li class="breadcrumb-item active">
           <a href="javascript:void(0)" style="cursor: auto; font-weight: 700 !important; color: black">Role Master</a>
@@ -24,10 +24,14 @@
           <i class="fa fa-plus mr-1"></i>Add Role
         </a> -->
 
-        <a style="cursor: pointer; color: white !important" (click)="openModal()"
+        <!-- <a style="cursor: pointer; color: white !important" (click)="openModal()"
           class="btn btn-primary light btn-lg btn-block rounded shadow px-2 buttons">
           <i class="fa fa-plus mr-1"></i>Add Roles
-        </a>
+        </a> -->
+          <a style="cursor: pointer; color:  white !important;background-color: #222fb9;" (click)="openModal()"
+            class="btn light btn-lg btn-block rounded shadow px-2 buttons">
+            <i class="fa fa-plus mr-1"></i>Add Roles
+          </a>
 
 
 
@@ -250,7 +254,7 @@
                   [attr.data-dismiss]="useForm.valid ? 'modal' : null">
                   save
                 </button> -->
-                <button type="button" class="btn btn-outline-primary" (click)="onSave()">
+                <button type="button" class="btn " (click)="onSave()" style="border-color:#222fb9">
                   Save
                 </button>
 

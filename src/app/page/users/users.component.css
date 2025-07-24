@@ -160,6 +160,21 @@ select.form-control.is-invalid {
 #user {
   margin-left: -2rem;
 }
+/* Hover effect */
+.pagination .page-link:hover {
+  color: white;
+  background-color: #222fb9;
+  border-color: #222fb9;
+}
 
+/* Active page */
+.pagination .page-item.active .page-link {
+  color: white;
+  background-color: #222fb9;
+  border-color: #222fb9;
+}
 
-
+/* Optional: remove default focus ring */
+.pagination .page-link:focus {
+  box-shadow: none;
+}

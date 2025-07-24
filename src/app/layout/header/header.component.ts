@@ -14,7 +14,7 @@ import {
   Router,
   RouterLink,
 } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Token } from '@angular/compiler';
 import { filter, map } from 'rxjs';
 import { ContextService } from '../../service/context.service';
@@ -24,7 +24,7 @@ import { UserService } from '../../service/user.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'], // corrected `styleUrl` to `styleUrls`
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,9 +32,11 @@ import { UserService } from '../../service/user.service';
 export class HeaderComponent implements OnInit {
   @Output() sidebarToggle = new EventEmitter<void>();
   guestDetails: any;
+  isSidebarOpen: boolean = true; // or false
   // pageTitle: string = 'Dashboard';
   currentHeading: string = 'Dashboard';
   userName: string = '';
+  selectedSection: string = 'home';
 
   constructor(
     private router: Router,
@@ -87,7 +89,9 @@ export class HeaderComponent implements OnInit {
       },
     });
   }
-
+  selectSection(section: string): void {
+    this.selectedSection = section;
+  }
   onToggleClick() {
     console.log('Hamburger clicked'); // 👈 test log
     // this.sidebarToggle.emit();

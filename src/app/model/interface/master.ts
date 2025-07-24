@@ -86,13 +86,13 @@ export interface VehicleResponse {
 }
 
 // export interface TargetResponse {
-//   status: number; 
+//   status: number;
 //   message: string;
 //   data: {
 //     count: number;
 //     rows: Target[];
 //     enquiries: number;
-//     testDrives: number; 
+//     testDrives: number;
 //     orders: number;
 //   };
 
@@ -427,6 +427,17 @@ export interface TestDrive {
   name: string; // present in selectedUser's test drives
   location: string;
 }
+export interface UserPerformance {
+  userId: string;
+  name: string;
+  enquiries: number;
+  testDrives: number;
+  newOrders: number;
+  cancellations: number;
+  netOrders: number;
+  retail: number;
+}
+
 export interface SelectedUserData {
   name: string;
   today: TestDrive | null;

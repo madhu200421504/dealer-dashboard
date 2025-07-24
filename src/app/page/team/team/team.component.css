@@ -106,3 +106,21 @@ input.form-control.form-control-lg.is-invalid {
     margin-top: 5px !important;
   }
 }
+/* Hover effect */
+.pagination .page-link:hover {
+  color: white;
+  background-color: #222fb9;
+  border-color: #222fb9;
+}
+
+/* Active page */
+.pagination .page-item.active .page-link {
+  color: white;
+  background-color: #222fb9;
+  border-color: #222fb9;
+}
+
+/* Optional: remove default focus ring */
+.pagination .page-link:focus {
+  box-shadow: none;
+}

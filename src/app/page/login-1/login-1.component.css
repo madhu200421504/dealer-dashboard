@@ -13,7 +13,7 @@ body {
   width: 90% !important;
 }
 .fas {
-  color: #3b86e9 !important;
+  color: #222fb9 !important;
 }
 html,
 body {
@@ -208,7 +208,7 @@ a {
 }
 
 a:hover {
-  color: #3b86e9;
+  color: #222fb9;
 }
 
 .btn {
@@ -218,7 +218,7 @@ a:hover {
   border-radius: 25px;
   outline: none;
   border: none;
-  background-image: linear-gradient(to right, #3b86e9, #5496e7, #5298ee);
+  background-image: linear-gradient(to right, #222fb9);
   background-size: 200%;
   font-size: 1.2rem;
   color: #fff;
@@ -391,7 +391,7 @@ input:-webkit-autofill:focus {
   top: -10px;
   left: 5px;
   font-size: 12px;
-  color: #3b86e9;
+  color: #222fb9;
   background: white;
   padding: 0 5px;
   z-index: 10;
@@ -405,4 +405,12 @@ input:-webkit-autofill:focus {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+#verify-email {
+  text-decoration: underline !important;
+  color: #222fb9 !important;
+  font-size: 20px;
+  text-transform: capitalize;
+  margin-top: 15px;
 }
