@@ -5,13 +5,18 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: none !important;    /* ← cancel transition here */
+  transition: none !important; /* ← cancel transition here */
 }
-
 
 .metismenu li.active > a i {
- 
 }
+
+/* Disable white circle when sidebar is collapsed */
+.collapsed-sidebar .metismenu li.active > a i {
+  background-color: transparent !important;
+  color: #fff !important;
+}
+
 /* 1) Your existing base icon styles — leave these unchanged */
 .deznav .metismenu > li > a > i {
   font-size: 1.5rem;
@@ -29,13 +34,19 @@
   /* note: you had duplicate 'position' and 'padding'; this is the cleaned version */
 }
 
-.nav-text{
-  font-size:16px;
+.nav-text {
+  font-size: 15px;
 }
 /* 2) Only override background & color in the active state */
 .metismenu li.active > a i {
-  background-color: #fff !important;  /* white circle */
-  color: #222fb9 !important;             /* dark icon */
+  background-color: #fff !important; /* white circle */
+  color: #222fb9 !important; /* dark icon */
   /* everything else (size, positioning) comes from the base rule */
 }
 
+@media (width: 1000px) and (height: 1080px) {
+  .collapsed-sidebar .metismenu li.active > a i {
+    background-color: transparent !important;
+    color: #fff !important;
+  }
+}

@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" >
   <div class="content-section active">
     <div class="page-titles">
       <ol class="breadcrumb">
@@ -504,8 +504,14 @@
               <!-- Ensure Edit button appears only if vehicle_id is defined -->
               <ng-container
                 *ngIf="vehicleObj.vehicle_id !== null && vehicleObj.vehicle_id !== undefined; else saveButton">
-                <button type="button" class="btn btn-outline-primary" (click)="onUpdate()"
+                <!-- <button type="button" class="btn btn-outline-primary" (click)="onUpdate()"
                   [disabled]="!isVehicleNameChanged()">
+                  Edit
+                </button> -->
+                <button type="button" class="btn" data-dismiss="modal" (click)="onUpdate()" [disabled]="!isVehicleNameChanged()" [ngClass]="{
+                        'btn-outline-primary': !isVehicleNameChanged(),
+                        'btn-edit-enabled': isVehicleNameChanged()
+                      }">
                   Edit
                 </button>
               </ng-container>
@@ -521,9 +527,14 @@
             </button>
           </ng-template> -->
               <ng-template #saveButton>
-                <button type="button" class="btn " (click)="onSave()" style="border-color:#222fb9">
+                <!-- <button type="button" class="btn " (click)="onSave()" style="border-color:#222fb9">
                   Save
-                </button>
+                </button> -->
+                  <button type="button" class="btn btn-outline-primary" (click)="onSave()"
+                    [attr.data-dismiss]="useForm.valid ? 'modal' : null">
+                    Save
+                  </button>
+
               </ng-template>
 
             </div>

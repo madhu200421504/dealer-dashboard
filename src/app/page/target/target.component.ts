@@ -95,7 +95,7 @@ export class TargetComponent implements OnInit {
   // dtOptions: Config = {};
   isModalVisible = false;
   // isEditMode = false;
-  
+
   previousValue: string = '';
   selectedRange: string = 'MTD'; // default selected
 
@@ -111,6 +111,8 @@ export class TargetComponent implements OnInit {
 
   // }
   ngOnInit(): void {
+    this.loadTarget(this.selectedRange); // ✅ This must fetch updated data
+
     // ✅ Set the page title to "Target Management"
     this.context.onSideBarClick$.next({
       role: 'target',
@@ -206,13 +208,17 @@ export class TargetComponent implements OnInit {
 
     this.masterSrv.getAllTarget(apiUrl).subscribe({
       next: (res: TargetResponse) => {
+        console.log('LoadTarget API Response:', res); // 👈 check here
+
         console.log('Target API response:', res);
 
         if (Array.isArray(res.data)) {
           const mappedData = res.data.map((entry) => {
-            const targetData = Array.isArray(entry.targets)
-              ? entry.targets[0]
-              : null;
+            const targetData =
+              Array.isArray(entry.targets) && entry.targets.length > 0
+                ? entry.targets[entry.targets.length - 1]
+                : null;
+
             return {
               user: entry.user,
               target: targetData ? new Target(targetData) : new Target(),
@@ -516,40 +522,40 @@ export class TargetComponent implements OnInit {
     const to = this.currentPage * this.itemsPerPage;
     return to > this.filteredTeam().length ? this.filteredTeam().length : to;
   }
-  onEditAll(): void {
-    const updatedTargets = this.targetList()
-      .filter(
-        (item) =>
-          item.target.enquiries !== item.target.original?.enquiries ||
-          item.target.testDrives !== item.target.original?.testDrives ||
-          item.target.orders !== item.target.original?.orders
-      )
-      .map((item) => ({
-        user_id: item.user.user_id,
-        enquiries: item.target.enquiries,
-        testDrives: item.target.testDrives,
-        orders: item.target.orders,
-      }));
+  // onEditAll(): void {
+  //   const updatedTargets = this.targetList()
+  //     .filter(
+  //       (item) =>
+  //         item.target.enquiries !== item.target.original?.enquiries ||
+  //         item.target.testDrives !== item.target.original?.testDrives ||
+  //         item.target.orders !== item.target.original?.orders
+  //     )
+  //     .map((item) => ({
+  //       user_id: item.user.user_id,
+  //       enquiries: item.target.enquiries,
+  //       testDrives: item.target.testDrives,
+  //       orders: item.target.orders,
+  //     }));
 
-    if (updatedTargets.length === 0) {
-      this.toastr.info('No changes to update', 'Info');
-      return;
-    }
+  //   if (updatedTargets.length === 0) {
+  //     this.toastr.info('No changes to update', 'Info');
+  //     return;
+  //   }
 
-    const apiUrl = `https://uat.smartassistapp.in/api/dealer/targets/new?range=${this.selectedRange}`;
+  //   const apiUrl = `https://uat.smartassistapp.in/api/dealer/targets/new?range=${this.selectedRange}`;
 
-    this.masterSrv.updateTargets(apiUrl, updatedTargets).subscribe({
-      next: (res: any) => {
-        this.toastr.success('Targets updated successfully', 'Success');
-        this.loadTarget(this.selectedRange); // reload using current filter
-      },
-      error: (err: any) => {
-        const backendMessage =
-          err?.error?.message || 'Failed to update targets';
-        this.toastr.error(backendMessage, 'Error');
-      },
-    });
-  }
+  //   this.masterSrv.updateTargets(apiUrl, updatedTargets).subscribe({
+  //     next: (res: any) => {
+  //       this.toastr.success('Targets updated successfully', 'Success');
+  //       // this.loadTarget(this.selectedRange); // reload using current filter
+  //     },
+  //     error: (err: any) => {
+  //       const backendMessage =
+  //         err?.error?.message || 'Failed to update targets';
+  //       this.toastr.error(backendMessage, 'Error');
+  //     },
+  //   });
+  // }
 
   // Disable VIN for edit mode
   // this.useForm.get('VIN')?.disable();
@@ -701,6 +707,54 @@ export class TargetComponent implements OnInit {
   // isTargetNameChanged(): boolean {
   //   return this.useForm.value.name !== this.previousValue;
   // }
+  onEditAll(): void {
+    const updatedTargets = this.targetList()
+      .filter(
+        (item) =>
+          item.target.enquiries !== item.target.original?.enquiries ||
+          item.target.testDrives !== item.target.original?.testDrives ||
+          item.target.orders !== item.target.original?.orders
+      )
+      .map((item) => ({
+        user_id: item.user.user_id,
+        enquiries: item.target.enquiries,
+        testDrives: item.target.testDrives,
+        orders: item.target.orders,
+      }));
+
+    if (updatedTargets.length === 0) {
+      this.toastr.info('No changes to update', 'Info');
+      return;
+    }
+
+    const apiUrl = `https://uat.smartassistapp.in/api/dealer/targets/new?range=${this.selectedRange}`;
+
+    this.masterSrv.updateTargets(apiUrl, updatedTargets).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Targets updated successfully', 'Success');
+
+        // ✅ Set original on the target object, not the item
+        this.targetList().forEach((item) => {
+          item.target.original = {
+            enquiries: item.target.enquiries,
+            testDrives: item.target.testDrives,
+            orders: item.target.orders,
+          };
+        });
+
+        // ✅ Optional: Save to localStorage
+        localStorage.setItem(
+          'cachedTargets',
+          JSON.stringify(this.targetList())
+        );
+      },
+      error: (err: any) => {
+        const backendMessage =
+          err?.error?.message || 'Failed to update targets';
+        this.toastr.error(backendMessage, 'Error');
+      },
+    });
+  }
 
   isTargetNameChanged(): boolean {
     return this.useForm.value.enquiries !== this.previousValue;
@@ -759,7 +813,7 @@ export class TargetComponent implements OnInit {
             user: entry.user,
             target:
               Array.isArray(entry.targets) && entry.targets.length > 0
-                ? new Target(entry.targets[0])
+                ? new Target(entry.targets.at(-1)) // ✅ Corrected usage here
                 : new Target(), // if 0 or empty
           }));
 

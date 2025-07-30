@@ -220,12 +220,15 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Called when you click any menu item */
   onMenuClick(key: string, pageTitle: string) {
-    this.activeMenu = key;
+    // this.activeMenu = key;
     this.context.onSideBarClick$.next({ role: key, pageTitle });
   }
 
   /** helper for template to check active state */
-  isActive(key: string): boolean {
-    return this.activeMenu === key;
+  // isActive(key: string): boolean {
+  //   return this.activeMenu === key;
+  // }
+  isActive(route: string): boolean {
+    return this.router.url.split('?')[0].endsWith(route);
   }
 }

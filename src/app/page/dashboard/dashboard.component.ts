@@ -30,10 +30,12 @@ import { SidebarComponent } from '../../layout/sidebar/sidebar.component';
 import { HeaderComponent } from '../../layout/header/header.component';
 import {
   ApiResponse,
+  DashboardResponse,
   SelectedUser,
   SelectedUserData,
   TestDrive,
   TodayTestDrive,
+  User,
   UserPerformance,
 } from '../../model/interface/master';
 import { ActivatedRoute } from '@angular/router';
@@ -55,18 +57,35 @@ Chart.register(
 );
 
 // Define User interface
-interface User {
-  user_id: string;
-  name: string;
-  fname: string;
-  lname: string;
-  dealer_id:string;
-}
 // interface User {
 //   user_id: string;
-//   dealer_id: string;
 //   name: string;
+//   fname: string;
+//   lname: string;
 // }
+// interface User {
+//   user_id: string;
+//   name: string;
+//   enquiries?: number;
+//   testDrives?: number;
+//   newOrders?: number;
+//   cancellations?: number;
+//   netOrders?: number;
+//   dealer_id: string;
+//   retail?: number;
+// }
+interface PsUser {
+  ps_id: string;
+  ps_fname: string;
+  ps_lname: string;
+  enquiries: number;
+  testDrives: number;
+  orders: number;
+  cancellation: number;
+  net_orders: number;
+  retail: number;
+}
+
 
 @Component({
   selector: 'app-dashboard',
@@ -78,6 +97,8 @@ interface User {
 export class DashboardComponent implements OnInit {
   isSidebarOpen = true;
   sidebarSub!: Subscription;
+  selectedPSUser: PsUser | null = null;
+
   kpis = [
     { name: 'Enquiries', key: 'enquiries' },
     { name: 'Test Drives', key: 'test_drives' },
@@ -103,19 +124,31 @@ export class DashboardComponent implements OnInit {
     netOrders: number;
     retail: number;
   } | null = null;
+  errorMessage = '';
 
   maxValue = 100;
   kpiData: any = {};
   noResultsFound: boolean = false;
   selectedUsersPerformance: UserPerformance[] = [];
+  hourlyChartLabels: string[] = []; // For example: ['Q1', 'Q2', 'Q3', 'Q4']
+  hourlyChartData: number[] = []; // Number of calls (for bar height)
 
   selectedSection: 'home' | 'analysis' = 'home';
   users: User[] = [];
-  selectedUser: (SelectedUser & { name: string }) | null = null; // Extend SelectedUser with name
+  // selectedUser: (SelectedUser & { name: string }) | null = null; // Extend SelectedUser with name
+  selectedUser: any = null;
+
   selectedUserData: TestDrive[] = [];
   todayTestDrives: TodayTestDrive[] = [];
   // ps1Total = 0;
   // ps2Total = 0;
+  clickedUser: any = null;
+  callSummaryOrder: any = {}; // or proper type if you know it
+
+  currentPageforCompare: number = 1;
+  itemsPerPageforCompare: number = 10;
+  selectedDuration: string = '1M'; // Default is 1 Day
+
   upcomingTestDrives: TestDrive[] = [];
   overdueTestDrives: TestDrive[] = [];
   fullData: ApiResponse['data'] | null = null;
@@ -125,7 +158,17 @@ export class DashboardComponent implements OnInit {
   selectedType: string = ''; // Add this line to define selectedType
   selectedPs2UserId: string = '';
   pageSize: number = 10; // or whatever number of items per page you're showing
-  selectedUserIds: number[] = [];
+  // selectedUserIds: number[] = [];
+  selectedUserIds: string[] = []; // ✅ correct
+  // hourlyChartLabels: string[] = [];
+  // hourlyConnectedCalls: number[] = [];
+
+  smData: any[] = []; // 👈 declare the property to avoid the error
+  // hourlyChartLabels: string[] = [];
+  hourlyAllCalls: number[] = [];
+  hourlyConnectedCalls: number[] = [];
+  hourlyMissedCalls: number[] = [];
+  // hourlyChartLabels: string[] = [];
 
   testDrives: any[] = []; // <-- Declare testDrives here
   dashboardData: any = {
@@ -134,6 +177,8 @@ export class DashboardComponent implements OnInit {
   };
   isUserSelected = false;
   // ps1Total = 0;
+  private hourlyChartInstance: Chart | null = null;
+
   // ps2Total = 0;
   enquiriesCount = 0;
   testDrivesCount = 0;
@@ -147,8 +192,11 @@ export class DashboardComponent implements OnInit {
 
   ps1Total = 0;
   ps2Total = 0;
+  compareSmData: any[] = [];
+  currentUserId: string = '';
+  currentSmId: string = '';
 
-  selectedFilter: string = ''; // Store the selected filter
+  selectedFilter: string = 'MTD'; // ✅ default to MTD
   selectedUserId: string = ''; // Store the selected userId
   ps2Available: boolean = false;
   // enquiriesCount: number = 0;
@@ -236,6 +284,7 @@ export class DashboardComponent implements OnInit {
   selectedRole: string = '';
   showRoleForm: boolean = false;
   selectedColor: string = '';
+  selectedSmId: string | null = null;
 
   // selectedUserId = '';
   isGridView: boolean = true; // Toggle between grid and table view
@@ -273,12 +322,14 @@ export class DashboardComponent implements OnInit {
   // selectedUser: any = null;
   // displayedUsers: any[] = [];
   data: any; // <-- Add this line
+  // selectedFilter: string = 'MTD'; // 👈 Default selected
+  activeActivity: string = 'Enquiry'; // default
+
   selectedOverdueIndex: number = 0;
   selectedTodayIndex: number = 0;
   ps2Performance: { [userId: string]: any } = {};
   selectedTeamId: string | null = null;
   selectedTeam: string | null = null;
-  // users: any[] = [];
 
   selectedUpcomingIndex: number = 0;
   // selectedOverdueIndex: number = 0;
@@ -289,6 +340,7 @@ export class DashboardComponent implements OnInit {
   maxDriveCount: number = 0;
   indexes: number[] = [];
   // defaultLimit = 10;
+  // activeActivity: string = 'Upcoming'; // default
 
   uniqueInitials: string[] = []; // ✅ renamed to avoid clash
   avatarColors: string[] = [
@@ -316,27 +368,63 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('ngOnInit called');
-
-    this.fetchHierarchy();
-    this.loadCompareUsers();
-
+    const savedUserIds = localStorage.getItem('selectedUserIds');
     const savedPerformance = localStorage.getItem('selectedUsersPerformance');
-    if (savedPerformance) {
-      this.selectedUsersPerformance = JSON.parse(savedPerformance);
+
+    if (savedUserIds) {
+      this.selectedUserIds = JSON.parse(savedUserIds);
+    } else {
+      this.selectedUserIds = [];
     }
 
+    if (savedPerformance) {
+      this.selectedUsersPerformance = JSON.parse(savedPerformance);
+    } else {
+      this.selectedUsersPerformance = [];
+    }
+
+    // Re-fetch users list if not present
+    if (!this.users || this.users.length === 0) {
+      this.fetchAllUsers();
+    }
+
+    // this.fetchUsersFromAPI(); // ✅ Call API if cache not found
+    this.selectedFilter = 'MTD'; // Set default filter
+    this.onFilterChange('MTD'); // Trigger logic on load
+    this.fetchHierarchy();
+
+    this.loadCompareMetrics;
+    // this.fetchUserPerformance();
+    // this.loadDashboardData();
+
+    // const savedPerformance = localStorage.getItem('selectedUsersPerformance');
+    // if (savedPerformance) {
+    //   this.selectedUsersPerformance = JSON.parse(savedPerformance);
+    // }
+
+    // If needed: Load saved performance from localStorage
+    // const savedPerformance = localStorage.getItem('selectedUsersPerformance');
+    // if (savedPerformance) {
+    //   this.selectedUsersPerformance = JSON.parse(savedPerformance);
+    //   console.log(
+    //     'Loaded selectedUsersPerformance:',
+    //     this.selectedUsersPerformance
+    //   );
+    // } else {
+    //   console.warn('No performance data found in localStorage');
+    // }
+
     // Also fetch user list and initialize activeFilter
-    this.fetchUsers();
-    this.activeFilter = 'MTD'; // or your default filter
+    // this.fetchUsers();
+    // this.activeFilter = 'MTD'; // or your default filter
 
     console.log('✅ DashboardComponent initialized');
 
     this.sidebarService.isOpen$.subscribe((open) => {
       this.isSidebarOpen = open;
     });
-    this.fetchUsers();
-    this.fetchDashboardData();
+    // this.fetchUsers();
+    // this.fetchDashboardData();
     this.loadTestDriveData();
     this.onFilterOptionChange(); // Apply default filter on load
     this.initializeFilters();
@@ -378,9 +466,27 @@ export class DashboardComponent implements OnInit {
   get firstRowUsers() {
     return this.filteredUsers.slice(0, 10); // assuming 1st row is first 10 users
   }
-
+  onUserClickForCompare(user: any) {
+    this.clickedUser = user;
+  }
   selectSection(section: 'home' | 'analysis'): void {
     this.selectedSection = section;
+  }
+  selectPSUser(user: PsUser) {
+    this.selectedPSUser = user;
+  }
+  getUserTotal(user: PsUser | null, metric: keyof PsUser): number {
+    return user ? Number(user[metric]) : 0;
+  }
+
+  get currentSummary() {
+    return this.activeActivity === 'Enquiry'
+      ? this.selectedUser?.summaryEnquiry
+      : this.selectedUser?.summaryColdCalls;
+  }
+
+  onActivityClick(activity: string): void {
+    this.activeActivity = activity;
   }
   // getUserInitials(name: string): string {
   //   if (!name) return '';
@@ -400,13 +506,281 @@ export class DashboardComponent implements OnInit {
   //     this.selectedTeam = team; // otherwise set the selected team
   //   }
   // }
-  showUsers(teamId: string) {
-    // Toggle the selected team
-    this.selectedTeamId = this.selectedTeamId === teamId ? null : teamId;
+  // showUsers(teamId: string) {
+  //   this.selectedTeamId = this.selectedTeamId === teamId ? null : teamId;
+  // }
+
+  // selectUserps(psUser: any): void {
+  //   console.log('Selected PS:', psUser);
+
+  //   this.selectedUser = {
+  //     fname: psUser.ps_fname,
+  //     lname: psUser.ps_lname,
+  //     name: psUser.ps_fname + ' ' + psUser.ps_lname, // ✅ Required by your type
+
+  //     upcomingTestDrives: [],
+  //     completedTestDrives: [],
+  //     overdueTestDrives: [],
+  //     summaryEnquiry: {
+  //       totalConnected: 0,
+  //       conversationTime: '0h 0m 0s',
+  //       notConnected: 0,
+  //       summary: {},
+  //       hourlyAnalysis: {},
+  //     },
+  //     summaryColdCalls: {
+  //       totalConnected: 0,
+  //       conversationTime: '0h 0m 0s',
+  //       notConnected: 0,
+  //       summary: {},
+  //       hourlyAnalysis: {},
+  //     },
+  //   };
+  // }
+
+  //   showUsers(teamId: string, smId: string): void {
+  // this.selectedTeamId = teamId;
+
+  //     if (this.selectedTeamId) {
+  //       this.fetchSMData(smId);
+  //     }
+  //   }
+  // showUsers(teamId: string, smId: string): void {
+  //   this.selectedTeamId = teamId;
+  //   if (this.selectedTeamId) {
+  //     this.fetchSMData(smId);
+  //   }
+  // }
+  // showUsers(teamId: string, smId: string): void {
+  //   if (this.selectedTeamId === teamId) {
+  //     this.selectedTeamId = null;
+  //     this.selectedSmId = null;
+  //   } else {
+  //     this.selectedTeamId = teamId;
+  //     this.selectedSmId = smId;
+  //     this.fetchSMData(smId);
+  //   }
+  // }
+  showUsers(teamId: string, smId: string): void {
+    if (this.selectedTeamId === teamId) {
+      // Collapse if already selected
+      this.selectedTeamId = null;
+      this.selectedSmId = null;
+    } else {
+      // Open the clicked team
+      this.selectedTeamId = teamId;
+      this.selectedSmId = smId;
+
+      // Trigger the selected filter (MTD, QTD, YTD) instead of default 'YTD'
+      this.fetchSMData(smId, this.selectedFilter);
+    }
   }
-  toggleDropdown(): void {
+
+  // fetchSMData(smId: string): void {
+  //   const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?sm_id=${smId}&type=YTD`;
+  //   const token = sessionStorage.getItem('token');
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   this.http.get<any>(apiUrl, { headers }).subscribe({
+  //     next: (res) => {
+  //       const updatedSm = res.data.smData[0];
+
+  //       // 🔥 Find the team in your current smData list
+  //       const index = this.smData.findIndex(
+  //         (team) => team.team_id === updatedSm.team_id
+  //       );
+  //       if (index !== -1) {
+  //         // 🔥 Instead of mutating directly, replace the whole object (trigger change detection)
+  //         this.smData[index] = {
+  //           ...this.smData[index],
+  //           ps_list: updatedSm.ps_list,
+  //         };
+
+  //         // 👇 Add console here to confirm
+  //         console.log(
+  //           'Updated smData after injecting ps_list:',
+  //           this.smData[index]
+  //         );
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching SM data:', err);
+  //     },
+  //   });
+  // }
+
+  // selectCompareUser(userId: string, smId: string): void {
+  //   const token = sessionStorage.getItem('token');
+  //   const filterType = this.selectedFilter || 'YTD'; // Or MTD, QTD if dynamic
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${filterType}`;
+
+  //   this.http.get<any>(apiUrl, { headers }).subscribe({
+  //     next: (res) => {
+  //       if (res.status === 200 && res.data?.selectedUser) {
+  //         this.selectedUser = res.data.selectedUser;
+  //         console.log('Selected User:', this.selectedUser);
+  //         // Optional: scroll to view or change layout
+  //       } else {
+  //         console.warn('No selectedUser data in response:', res);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching selected user:', err);
+  //     },
+  //   });
+  // }
+
+  // getTeamTotal(psList: any[], metric: string): number {
+  //   return psList.reduce((sum, ps) => sum + (ps[metric] || 0), 0);
+  // }
+  // onActivityClick(activity: string): void {
+  //   this.activeActivity = activity;
+  //   console.log('Selected Activity:', activity);
+  // }
+  fetchSMData(smId: string, type: string = 'YTD'): void {
+    const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?sm_id=${smId}&type=${type}`;
+    const token = sessionStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http.get<any>(apiUrl, { headers }).subscribe({
+      next: (res) => {
+        const updatedSm = res.data.smData.find((sm: any) => sm.sm_id === smId);
+
+        if (!updatedSm) {
+          console.warn('No matching SM found in API response for sm_id:', smId);
+          return;
+        }
+
+        const index = this.smData.findIndex((sm: any) => sm.sm_id === smId);
+
+        if (index !== -1) {
+          this.smData[index] = {
+            ...this.smData[index],
+            ps_list: updatedSm.ps_list,
+          };
+
+          console.log('✅ Updated SM with ps_list:', this.smData[index]);
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error fetching SM data:', err);
+      },
+    });
+  }
+
+  isUserInTable(userId: string): boolean {
+    return this.selectedUsersPerformance.some((u) => u.userId === userId);
+  }
+
+  selectCompareUser(userId: string, smId: string): void {
+    console.log('📌 selectCompareUser called with:', { userId, smId });
+
+    if (!userId || !smId) {
+      console.warn('User ID or SM ID is missing', { userId, smId });
+      return;
+    }
+
+    const token = sessionStorage.getItem('token');
+    const filterType = this.selectedFilter || 'YTD';
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${filterType}`;
+
+    this.http.get<any>(apiUrl, { headers }).subscribe({
+      next: (res) => {
+        if (res.status === 200 && res.data) {
+          const userData = res.data;
+
+          this.selectedUser = {
+            ps_id: userId, // <-- this was missing
+
+            fname: userData.selectedUser?.fname || '',
+            lname: userData.selectedUser?.lname || '',
+            upcomingTestDrives: userData.selectedUser?.upcomingTestDrives || [],
+            completedTestDrives:
+              userData.selectedUser?.completedTestDrives || [],
+            overdueTestDrives: userData.selectedUser?.overdueTestDrives || [],
+            summaryEnquiry: userData.selectedUser?.summaryEnquiry || {},
+            summaryColdCalls: userData.selectedUser?.summaryColdCalls || {},
+          };
+
+          this.compareSmData = userData.smData;
+          console.log('✅ Selected User:', this.selectedUser);
+          console.log('✅ Compare SM Data:', this.compareSmData);
+        } else {
+          console.warn('⚠️ Incomplete response:', res);
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error fetching selected user:', err);
+      },
+    });
+  }
+
+  // getTeamTotal(psList: any[], key: string): number {
+  //   if (!psList || psList.length === 0) return 0;
+
+  //   return psList.reduce((total, user) => {
+  //     const value = Number(user[key]) || 0;
+  //     return total + value;
+  //   }, 0);
+  // }
+  getTeamTotal(psList: any[], key: string): number {
+    if (!psList || psList.length === 0) return 0;
+
+    console.log('Key:', key);
+    console.log('psList sample:', psList[0]); // Check the first item
+
+    return psList.reduce((total, user) => {
+      const value = Number(user[key]) || 0;
+      return total + value;
+    }, 0);
+  }
+  // getUserTotal(user: any, key: string): number {
+  //   if (!user) return 0;
+  //   return this.getTeamTotal([user], key); // Reuse getTeamTotal logic
+  // }
+  // toggleDropdown() {
+  //   this.dropdownOpen = !this.dropdownOpen;
+  // }
+  toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
-    console.log('Dropdown toggled:', this.dropdownOpen);
+    if (this.dropdownOpen && this.users.length === 0) {
+      this.fetchAllUsers();
+    }
+  }
+
+  getColor(index: number): { background: string; text: string } {
+    const colorPairs = [
+      { background: '#E2E0F5', text: '#4B3C9B' }, // Lavender bg, dark purple
+      { background: '#C4FEFB', text: '#007A78' }, // Aqua bg, teal
+      { background: '#FED1CF', text: '#C9302C' }, // Light red bg, deep red
+      { background: '#E3FFDF', text: '#3E8E41' }, // Light green bg, green
+      { background: '#CFDFFE', text: '#2C4DB2' }, // Blue bg, navy
+      { background: '#FFEDFE', text: '#AF4C96' }, // Peach bg, deep pink
+      { background: '#EAD1DC', text: '#9C2550' }, // Pink bg, magenta
+      { background: '#FFF2CC', text: '#B58900' }, // Yellow bg, gold
+      { background: '#D9EAD3', text: '#3B7A2A' }, // Mint green, green
+      { background: '#F4CCCC', text: '#990000' }, // Coral bg, dark red
+      { background: '#F3F3F3', text: '#4D4D4D' }, // Grey bg, dark grey
+      { background: '#FFE6F0', text: '#C2185B' }, // Rose bg, berry pink
+    ];
+
+    return colorPairs[index % colorPairs.length];
   }
 
   getSelectedUserName(): string {
@@ -418,11 +792,19 @@ export class DashboardComponent implements OnInit {
   formatUserName(name: string): string {
     return name.replace(/([a-z])([A-Z])/g, '$1 $2');
   }
+  // onUserSelect(userId: number): void {
+  //   if (!this.selectedUserIds.includes(userId)) {
+  //     this.selectedUserIds.push(userId);
+  //   }
+  // }
   onUserSelect(userId: number): void {
-    if (!this.selectedUserIds.includes(userId)) {
-      this.selectedUserIds.push(userId);
+    const userIdStr = userId.toString(); // or `${userId}`
+
+    if (!this.selectedUserIds.includes(userIdStr)) {
+      this.selectedUserIds.push(userIdStr);
     }
   }
+
   getColorForUser(name: string): string {
     const colors = [
       '#bfdcfc',
@@ -486,6 +868,7 @@ export class DashboardComponent implements OnInit {
     });
     this.initialsList = Array.from(initialsSet).sort();
   }
+
   groupUsersByInitial() {
     this.groupedUsers = {};
     this.allUsers.forEach((user) => {
@@ -668,6 +1051,47 @@ export class DashboardComponent implements OnInit {
       this.visibleUserCount = this.paginatedUsers.length;
     }
   }
+
+  // get paginatedUsersPerformance() {
+  //   const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  //   const endIndex = startIndex + this.itemsPerPage;
+  //   return this.selectedUsersPerformance.slice(startIndex, endIndex);
+  // }
+
+  // get totalPagesforCompare() {
+  //   return Math.ceil(this.selectedUsersPerformance.length / this.itemsPerPage);
+  // }
+
+  get paginatedUsersPerformance() {
+    const startIndex =
+      (this.currentPageforCompare - 1) * this.itemsPerPageforCompare;
+    const endIndex = startIndex + this.itemsPerPageforCompare;
+    return this.selectedUsersPerformance.slice(startIndex, endIndex);
+  }
+
+  // get totalPagesForCompare() {
+  //   return Math.ceil(
+  //     this.selectedUsersPerformance.length / this.itemsPerPageforCompare
+  //   );
+  // }
+  get totalPagesForCompare(): number {
+    return Math.ceil(this.selectedUsersPerformance.length / 10);
+  }
+  get visiblePagesForCompare(): number[] {
+    const total = this.totalPagesForCompare;
+    const current = this.currentPageforCompare;
+    const visible: number[] = [];
+
+    const start = Math.max(1, current);
+    const end = Math.min(total, start + 2); // show only 3 pages
+
+    for (let i = start; i <= end; i++) {
+      visible.push(i);
+    }
+
+    return visible;
+  }
+
   // get displayedUsers(): any[] {
   //   return this._displayedUsers;
   // }
@@ -733,88 +1157,131 @@ export class DashboardComponent implements OnInit {
   //       },
   //     });
   // }
-  showUserDetails(userId: string, name: string) {
-    console.log('🔍 Clicked user:', userId);
-    this.selectedUserId = userId;
-
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-      console.error('❌ No auth token found');
-      return;
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
-    this.http
-      .get<ApiResponse>(
-        `https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard?user_id=${userId}`,
-        { headers }
-      )
-      .subscribe({
-        next: (res) => {
-          const selectedUserFromApi = res?.data?.selectedUser || null;
-
-          console.log('📦 Full API Response:', res);
-
-          if (selectedUserFromApi) {
-            this.selectedUser = { ...selectedUserFromApi, name };
-
-            this.todayTestDrives = selectedUserFromApi.todayTestDrives || [];
-            this.upcomingTestDrives =
-              selectedUserFromApi.upcomingTestDrives || [];
-            this.overdueTestDrives =
-              selectedUserFromApi.overdueTestDrives || [];
-
-            this.selectedTodayIndex = this.todayTestDrives.length > 0 ? 0 : -1;
-            this.selectedUpcomingIndex =
-              this.upcomingTestDrives.length > 0 ? 0 : -1;
-            this.selectedOverdueIndex =
-              this.overdueTestDrives.length > 0 ? 0 : -1;
-
-            console.log('✅ Today Test Drives:', this.todayTestDrives);
-            console.log('✅ Upcoming Test Drives:', this.upcomingTestDrives);
-            console.log('✅ Overdue Test Drives:', this.overdueTestDrives);
-
-            // Log individual subject to check if it exists
-            console.log(
-              '🔍 First Today Subject:',
-              this.todayTestDrives?.[0]?.subject
-            );
-            console.log(
-              '🔍 First Upcoming Subject:',
-              this.upcomingTestDrives?.[0]?.subject
-            );
-            console.log(
-              '🔍 First Overdue Subject:',
-              this.overdueTestDrives?.[0]?.subject
-            );
-
-            this.selectedUserData = [
-              ...this.todayTestDrives,
-              ...this.upcomingTestDrives,
-              ...this.overdueTestDrives,
-            ];
-            this.showUserModal = true;
-          } else {
-            console.warn('⚠️ selectedUserFromApi is null');
-            this.selectedUser = null;
-            this.todayTestDrives = [];
-            this.upcomingTestDrives = [];
-            this.overdueTestDrives = [];
-            this.selectedUserData = [];
-          }
-
-          this.fullData = res.data;
-          this.loadFilteredTestDrives(this.filterOption);
-        },
-        error: (err) => {
-          console.error('❌ Failed to fetch user details', err);
-        },
-      });
+  getSmDataByTeamId(teamId: string): any {
+    return this.smData.find((sm) => sm.team_id === teamId);
   }
 
+  // PLS REFER TO THIS AFTERQWADS MADHU PLS
+  // showUserDetails(userId: string, name: string) {
+  //   console.log('🔍 Clicked user:', userId);
+  //   this.selectedUserId = userId;
+
+  //   const token = sessionStorage.getItem('token');
+  //   if (!token) {
+  //     console.error('❌ No auth token found');
+  //     return;
+  //   }
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   this.http
+  //     .get<ApiResponse>(
+  //       `https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard?user_id=${userId}`,
+  //       { headers }
+  //     )
+  //     .subscribe({
+  //       next: (res) => {
+  //         const selectedUserFromApi = res?.data?.selectedUser || null;
+
+  //         console.log('📦 Full API Response:', res);
+
+  //         if (selectedUserFromApi) {
+  //           this.selectedUser = { ...selectedUserFromApi, name };
+
+  //           this.todayTestDrives = selectedUserFromApi.todayTestDrives || [];
+  //           this.upcomingTestDrives =
+  //             selectedUserFromApi.upcomingTestDrives || [];
+  //           this.overdueTestDrives =
+  //             selectedUserFromApi.overdueTestDrives || [];
+
+  //           this.selectedTodayIndex = this.todayTestDrives.length > 0 ? 0 : -1;
+  //           this.selectedUpcomingIndex =
+  //             this.upcomingTestDrives.length > 0 ? 0 : -1;
+  //           this.selectedOverdueIndex =
+  //             this.overdueTestDrives.length > 0 ? 0 : -1;
+
+  //           console.log('✅ Today Test Drives:', this.todayTestDrives);
+  //           console.log('✅ Upcoming Test Drives:', this.upcomingTestDrives);
+  //           console.log('✅ Overdue Test Drives:', this.overdueTestDrives);
+
+  //           // Log individual subject to check if it exists
+  //           console.log(
+  //             '🔍 First Today Subject:',
+  //             this.todayTestDrives?.[0]?.subject
+  //           );
+  //           console.log(
+  //             '🔍 First Upcoming Subject:',
+  //             this.upcomingTestDrives?.[0]?.subject
+  //           );
+  //           console.log(
+  //             '🔍 First Overdue Subject:',
+  //             this.overdueTestDrives?.[0]?.subject
+  //           );
+
+  //           this.selectedUserData = [
+  //             ...this.todayTestDrives,
+  //             ...this.upcomingTestDrives,
+  //             ...this.overdueTestDrives,
+  //           ];
+  //           this.showUserModal = true;
+  //         } else {
+  //           console.warn('⚠️ selectedUserFromApi is null');
+  //           this.selectedUser = null;
+  //           this.todayTestDrives = [];
+  //           this.upcomingTestDrives = [];
+  //           this.overdueTestDrives = [];
+  //           this.selectedUserData = [];
+  //         }
+
+  //         this.fullData = res.data;
+  //         this.loadFilteredTestDrives(this.filterOption);
+  //       },
+  //       error: (err) => {
+  //         console.error('❌ Failed to fetch user details', err);
+  //       },
+  //     });
+  // }
+
+  // fetchUsersFromAPI() {
+  //   const token = sessionStorage.getItem('token');
+  //   if (!token) {
+  //     console.warn('No token found in sessionStorage');
+  //     return;
+  //   }
+
+  //   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  //   const url =
+  //     'https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=MTD';
+
+  //   this.http.get<any>(url, { headers }).subscribe({
+  //     next: (res) => {
+  //       console.log('API response:', res);
+
+  //       if (Array.isArray(res?.data?.users) && res.data.users.length > 0) {
+  //         this.users = res.data.users.map((user: any) => {
+  //           const nameParts = user.name?.split(' ') || [];
+  //           return {
+  //             user_id: user.user_id,
+  //             name: user.name,
+  //             dealer_id: user.dealer_id,
+  //             fname: nameParts[0] || user.name,
+  //             lname: nameParts.slice(1).join(' ') || '',
+  //           };
+  //         });
+
+  //         console.log('Mapped users:', this.users);
+  //       } else {
+  //         console.warn('No users found');
+  //         this.users = [];
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('API error:', err);
+  //     },
+  //   });
+  // }
   // selectUser(userId: string) {
   //   this.selectedPs1 = userId;
   //   console.log('Selected User ID on selectUser:', userId);
@@ -866,19 +1333,83 @@ export class DashboardComponent implements OnInit {
   //       });
   //   }
   // }
-  selectUser(userId: string) {
-    console.log('User selected:', userId);
 
-    if (this.selectedUsersPerformance.some((u) => u.userId === userId)) {
-      return;
+  // fetchUsersFromAPI() {
+  //   const token = sessionStorage.getItem('token');
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   this.http
+  //     .get<any>(
+  //       'https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=MTD',
+  //       { headers }
+  //     )
+  //     .subscribe({
+  //       next: (response) => {
+  //         console.log('API Responsemmmmmmmmmmmmmmm:', response.data.users[0]);
+  //         if (response && response.data && response.data.users) {
+  //           this.users = response.data.users;
+  //           // console.log('api res for compare:',response)
+  //           sessionStorage.setItem('cachedUsers', JSON.stringify(this.users));
+  //         } else {
+  //           console.warn('API response does not contain users array');
+  //         }
+  //       },
+  //       error: (error) => {
+  //         console.error('API Error:', error);
+  //       },
+  //     });
+  // }
+
+  // selectUser(userId: string) {
+  //   console.log('User selected:', userId);
+  //   this.selectedUserId = userId; // ✅ Add this line
+
+  //   if (this.selectedUsersPerformance.some((u) => u.userId === userId)) {
+  //     return;
+  //   }
+
+  //   if (this.activeFilter) {
+  //     this.fetchUserPerformance(userId, this.activeFilter)
+  //       .then(() => {
+  //         sessionStorage.setItem(
+  //           'selectedUsersPerformance',
+  //           JSON.stringify(this.selectedUsersPerformance)
+  //         );
+  //       })
+  //       .catch((err) => {
+  //         console.error('Error fetching user performance:', err);
+  //       });
+  //   }
+  // }
+  selectUser(userId: string): void {
+    const index = this.selectedUserIds.indexOf(userId);
+
+    if (index > -1) {
+      // Already selected, so deselect
+      this.selectedUserIds.splice(index, 1);
+    } else {
+      // Not selected, so add to list
+      this.selectedUserIds.push(userId);
     }
 
-    this.dropdownOpen1 = false;
+    // ✅ Save updated list to localStorage
+    localStorage.setItem(
+      'selectedUserIds',
+      JSON.stringify(this.selectedUserIds)
+    );
 
-    if (this.activeFilter) {
+    // Only fetch if not already present
+    const alreadyFetched = this.selectedUsersPerformance.some(
+      (u) => u.userId === userId
+    );
+
+    if (!alreadyFetched && this.activeFilter) {
       this.fetchUserPerformance(userId, this.activeFilter)
         .then(() => {
-          sessionStorage.setItem(
+          localStorage.setItem(
             'selectedUsersPerformance',
             JSON.stringify(this.selectedUsersPerformance)
           );
@@ -889,54 +1420,145 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  // fetchUserPerformance(userId: string, filterType: string): Promise<void> {
-  //   return new Promise((resolve, reject) => {
-  //     const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${userId}&type=${filterType}`;
-  //     const token = sessionStorage.getItem('token');
+  fetchUserPerformance(userId: string, filterType: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${userId}&type=${filterType}`;
+      const token = sessionStorage.getItem('token');
 
-  //     if (!token) {
-  //       console.error('No token found in sessionStorage');
-  //       reject('No token found');
-  //       return;
-  //     }
+      if (!token) {
+        console.error('No token found in sessionStorage');
+        reject('No token found');
+        return;
+      }
 
-  //     const headers = new HttpHeaders({
-  //       Authorization: `Bearer ${token}`,
-  //     });
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
 
-  //     this.http.get<any>(url, { headers }).subscribe({
+      this.http.get<any>(url, { headers }).subscribe({
+        next: (res) => {
+          // SET USERS FROM RESPONSE
+          // if (res?.data?.users) {
+          //   this.users = res.data.users;
+          // }
+          if (res?.data?.users && res.data.users.length > 0) {
+            for (const u of res.data.users) {
+              if (
+                !this.users.find((existing) => existing.user_id === u.user_id)
+              ) {
+                this.users.push(u); // Add only if not already in the list
+              }
+            }
+          }
+
+          const performance = res?.data?.performance?.[0];
+          const user = this.users.find((u) => u.user_id === userId);
+
+          if (user && performance) {
+            const userPerf = {
+              userId,
+              name: user.name,
+              enquiries: performance.enquiries ?? 0,
+              testDrives: performance.testDrives ?? 0,
+              newOrders: performance.newOrders ?? 0,
+              cancellations: performance.cancellations ?? 0,
+              netOrders: performance.netOrders ?? 0,
+              retail: performance.retail ?? 0,
+            };
+
+            this.selectedUsersPerformance.push(userPerf);
+
+            localStorage.setItem(
+              'selectedUsersPerformance',
+              JSON.stringify(this.selectedUsersPerformance)
+            );
+          }
+
+          resolve();
+        },
+
+        error: (err) => {
+          console.error('Performance fetch error:', err);
+          reject(err);
+        },
+      });
+    });
+  }
+  fetchAllUsers(): void {
+    const token = sessionStorage.getItem('token');
+
+    if (!token) {
+      console.warn('⚠️ No token found in sessionStorage.');
+      return;
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    this.http
+      .get<DashboardResponse>(
+        'https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=MTD',
+        { headers }
+      )
+      .subscribe({
+        next: (res) => {
+          console.log('✅ API fetchAllUsers response:', res);
+
+          if (res?.data?.users?.length) {
+            // this.users = res.data.users;
+            this.users = [...res.data.users]; // Safer shallow copy
+
+            console.log('👥 Loaded users:', this.users);
+          } else {
+            console.warn('⚠️ No users found in API response.');
+            this.users = []; // Clear in case of empty
+          }
+        },
+        error: (err) => {
+          console.error('❌ Error fetching users:', err);
+          this.users = []; // Clear users on error
+        },
+      });
+  }
+
+  // loadCompareUsers() {
+  //   const allUserIds = this.users.map((u) => u.user_id); // assuming `this.users` is filled
+  //   this.selectedUsersPerformance = []; // clear before refill
+
+  //   const promises = allUserIds.map((userId) =>
+  //     this.fetchUserPerformance(userId, this.activeFilter)
+  //   );
+
+  //   Promise.all(promises).then(() => {
+  //     console.log(
+  //       'All user performances loaded:',
+  //       this.selectedUsersPerformance
+  //     );
+  //   });
+  // }
+
+  // loadDashboardData() {
+  //   const token = sessionStorage.getItem('token');
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   this.http
+  //     .get<any>(
+  //       'https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=MTD',
+  //       {
+  //         headers,
+  //       }
+  //     )
+  //     .subscribe({
   //       next: (res) => {
-  //         const performance = res?.data?.performance?.[0];
-  //         const user = this.users.find((u) => u.user_id === userId);
-
-  //         if (user && performance) {
-  //           const userPerf = {
-  //             userId,
-  //             name: user.name,
-  //             enquiries: performance.enquiries ?? 0,
-  //             testDrives: performance.testDrives ?? 0,
-  //             newOrders: performance.newOrders ?? 0,
-  //             cancellations: performance.cancellations ?? 0,
-  //             netOrders: performance.netOrders ?? 0,
-  //             retail: performance.retail ?? 0,
-  //           };
-
-  //           this.selectedUsersPerformance.push(userPerf);
-
-  //           localStorage.setItem(
-  //             'selectedUsersPerformance',
-  //             JSON.stringify(this.selectedUsersPerformance)
-  //           );
-  //         }
-
-  //         resolve();
+  //         console.log('Dashboard response:', res);
+  //         this.users = res?.data?.users ?? []; // ✅ correct path
+  //         console.log('Loaded users:', this.users);
   //       },
   //       error: (err) => {
-  //         console.error('Performance fetch error:', err);
-  //         reject(err);
+  //         console.error('Failed to load dashboard data', err);
   //       },
   //     });
-  //   });
   // }
 
   // fetchPs1Data(userId: string, filterType: string) {
@@ -986,79 +1608,365 @@ export class DashboardComponent implements OnInit {
 
   // Function to make the API call based on user and filter
 
-  fetchUserPerformance(userId: string, filterType: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${userId}&type=${filterType}`;
-      const token = sessionStorage.getItem('token');
+  // fetchUserPerformance(userId: string, filterType: string): Promise<void> {
+  //   return new Promise((resolve, reject) => {
+  //     const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${userId}&type=${filterType}`;
+  //     const token = sessionStorage.getItem('token');
 
-      if (!token) {
-        console.error('No token found in sessionStorage');
-        reject('No token found');
-        return;
-      }
+  //     if (!token) {
+  //       console.error('No token found in sessionStorage');
+  //       reject('No token found');
+  //       return;
+  //     }
 
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${token}`,
-      });
+  //     const headers = new HttpHeaders({
+  //       Authorization: `Bearer ${token}`,
+  //     });
 
-      this.http.get<any>(url, { headers }).subscribe({
-        next: (res) => {
-          // 👇 Add this line
-          if (res?.data?.users?.length) {
-            this.users = res.data.users;
-          }
+  //     this.http.get<any>(url, { headers }).subscribe({
+  //       next: (res) => {
+  //         const performance = res?.data?.performance?.[0];
+  //         const user = this.users.find((u) => u.user_id === userId);
 
-          const performance = res?.data?.performance?.[0];
-          const user = this.users.find((u) => u.user_id === userId);
+  //         if (user && performance) {
+  //           const userPerf = {
+  //             userId,
+  //             name: user.name,
+  //             enquiries: performance.enquiries ?? 0,
+  //             testDrives: performance.testDrives ?? 0,
+  //             newOrders: performance.newOrders ?? 0,
+  //             cancellations: performance.cancellations ?? 0,
+  //             netOrders: performance.netOrders ?? 0,
+  //             retail: performance.retail ?? 0,
+  //           };
 
-          if (user && performance) {
-            const userPerf = {
-              userId,
-              name: user.name,
-              enquiries: performance.enquiries ?? 0,
-              testDrives: performance.testDrives ?? 0,
-              newOrders: performance.newOrders ?? 0,
-              cancellations: performance.cancellations ?? 0,
-              netOrders: performance.netOrders ?? 0,
-              retail: performance.retail ?? 0,
-            };
+  //           this.selectedUsersPerformance.push(userPerf);
 
-            this.selectedUsersPerformance.push(userPerf);
+  //           sessionStorage.setItem(
+  //             'selectedUsersPerformance',
+  //             JSON.stringify(this.selectedUsersPerformance)
+  //           );
+  //         }
 
-            sessionStorage.setItem(
-              'selectedUsersPerformance',
-              JSON.stringify(this.selectedUsersPerformance)
-            );
-          }
+  //         resolve();
+  //       },
+  //       error: (err) => {
+  //         console.error('Performance fetch error:', err);
+  //         reject(err);
+  //       },
+  //     });
+  //   });
+  // }
 
-          resolve();
-        },
+  // onDurationSelect(duration: string): void {
+  //   this.selectedDuration = duration;
+  //   this.fetchSelectedUserData();
+  // }
 
-        error: (err) => {
-          console.error('Performance fetch error:', err);
-          reject(err);
-        },
-      });
+  // onDurationSelect(duration: string): void {
+  //   this.selectedDuration = duration;
+  //   this.fetchSelectedUserData(); // ✅ fixed
+  // }
+  onDurationSelect(duration: string): void {
+    this.selectedDuration = duration;
+
+    switch (duration) {
+      case '1D':
+        this.selectedFilter = 'DAY';
+        break;
+      case '1W':
+        this.selectedFilter = 'WEEK';
+        break;
+      case '1M':
+        this.selectedFilter = 'MTD';
+        break;
+      case '1Q':
+        this.selectedFilter = 'QTD';
+        break;
+      case '1Y':
+        this.selectedFilter = 'YTD';
+        break;
+      default:
+        this.selectedFilter = 'DAY';
+    }
+
+    console.log(`Selected Filter: ${duration} - ${this.selectedFilter}`);
+
+    // 🔴 ADD THIS CHECK
+    if (!this.selectedUser || !this.selectedUser.ps_id) {
+      console.warn('❌ No user selected — cannot fetch data.');
+      return;
+    }
+
+    this.fetchSelectedUserData(); // ✅ fetch with updated filter
+  }
+
+  // selectCompareUserps(psUser: any, smId: string): void {
+  //   this.selectedUser = psUser;
+  //   this.selectedSmId = smId;
+
+  //   this.fetchSelectedUserData(); // Initial fetch with default or selected duration
+  // }
+  selectCompareUserps(psUser: any, smId: string): void {
+    this.selectedUser = {
+      ps_id: psUser.ps_id, // ✅ Use explicitly
+      fname: psUser.ps_fname,
+      lname: psUser.ps_lname,
+      upcomingTestDrives: [],
+      completedTestDrives: [],
+      overdueTestDrives: [],
+      summaryEnquiry: {
+        totalConnected: 0,
+        conversationTime: '0h 0m 0s',
+        notConnected: 0,
+        summary: {},
+        hourlyAnalysis: {},
+      },
+    };
+
+    this.selectedSmId = smId;
+    this.selectedDuration = this.selectedDuration || '1D';
+    this.fetchSelectedUserData();
+  }
+
+  // fetchSelectedUserData(): void {
+  //   const userId = this.selectedUser?.ps_id;
+  //   const smId = this.selectedSmId;
+
+  //   if (!userId || !smId) {
+  //     console.warn('User ID or SM ID missing for fetch', { userId, smId });
+  //     return;
+  //   }
+
+  //   const token = sessionStorage.getItem('token');
+  //   const filterType = this.selectedFilter || 'YTD';
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${filterType}`;
+
+  //   this.http.get<any>(apiUrl, { headers }).subscribe({
+  //     next: (res) => {
+  //       if (res.status === 200 && res.data) {
+  //         const userData = res.data;
+
+  //         // 🧠 Preserve the summaryEnquiry + summaryColdCalls
+  //         const summaryEnquiry = userData.selectedUser?.summaryEnquiry || {};
+
+  //         const summaryColdCalls =
+  //           userData.selectedUser?.summaryColdCalls || {};
+  //         const enquirySummaryRaw = summaryEnquiry.summary || {};
+
+  //         // ✅ Normalize for HTML template
+  //         this.callSummaryOrder = {
+  //           all: {
+  //             calls: enquirySummaryRaw['All Calls']?.calls || 0,
+  //             duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['All Calls']?.uniqueClients || 0,
+  //           },
+  //           connected: {
+  //             calls: enquirySummaryRaw['Connected']?.calls || 0,
+  //             duration: enquirySummaryRaw['Connected']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['Connected']?.uniqueClients || 0,
+  //           },
+  //           missed: {
+  //             calls: enquirySummaryRaw['Missed']?.calls || 0,
+  //             duration: enquirySummaryRaw['Missed']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['Missed']?.uniqueClients || 0,
+  //           },
+  //           rejected: {
+  //             calls: enquirySummaryRaw['Rejected']?.calls || 0,
+  //             duration: enquirySummaryRaw['Rejected']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['Rejected']?.uniqueClients || 0,
+  //           },
+  //         };
+
+  //         // 👤 Assign selected user details
+  //         this.selectedUser = {
+  //           ps_id: userId,
+  //           fname: userData.selectedUser?.fname || '',
+  //           lname: userData.selectedUser?.lname || '',
+  //           upcomingTestDrives: userData.selectedUser?.upcomingTestDrives || [],
+  //           completedTestDrives:
+  //             userData.selectedUser?.completedTestDrives || [],
+  //           overdueTestDrives: userData.selectedUser?.overdueTestDrives || [],
+  //           summaryEnquiry,
+  //           summaryColdCalls,
+  //         };
+
+  //         this.compareSmData = userData.smData;
+
+  //         console.log('✅ Selected User:', this.selectedUser);
+  //         console.log('📞 Call Summary Order:', this.callSummaryOrder);
+  //         console.log('✅ Compare SM Data:', this.compareSmData);
+  //       } else {
+  //         console.warn('⚠️ Incomplete response:', res);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('❌ Error fetching selected user:', err);
+  //     },
+  //   });
+  // }
+
+  fetchSelectedUserData(): void {
+    const userId = this.selectedUser?.ps_id;
+    const smId = this.selectedSmId;
+
+    if (!userId || !smId) {
+      console.warn('User ID or SM ID missing for fetch', { userId, smId });
+      return;
+    }
+
+    const token = sessionStorage.getItem('token');
+    const filterType = this.selectedFilter || 'YTD';
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${filterType}`;
+
+    this.http.get<any>(apiUrl, { headers }).subscribe({
+      next: (res) => {
+        if (res.status === 200 && res.data) {
+          const userData = res.data;
+
+          const summaryEnquiry = userData.selectedUser?.summaryEnquiry || {};
+          const summaryColdCalls =
+            userData.selectedUser?.summaryColdCalls || {};
+          const enquirySummaryRaw = summaryEnquiry.summary || {};
+
+          const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {}; // ✅ Only here
+
+          this.callSummaryOrder = {
+            all: {
+              calls: enquirySummaryRaw['All Calls']?.calls || 0,
+              duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['All Calls']?.uniqueClients || 0,
+            },
+            connected: {
+              calls: enquirySummaryRaw['Connected']?.calls || 0,
+              duration: enquirySummaryRaw['Connected']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Connected']?.uniqueClients || 0,
+            },
+            missed: {
+              calls: enquirySummaryRaw['Missed']?.calls || 0,
+              duration: enquirySummaryRaw['Missed']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Missed']?.uniqueClients || 0,
+            },
+            rejected: {
+              calls: enquirySummaryRaw['Rejected']?.calls || 0,
+              duration: enquirySummaryRaw['Rejected']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Rejected']?.uniqueClients || 0,
+            },
+          };
+
+          this.selectedUser = {
+            ps_id: userId,
+            fname: userData.selectedUser?.fname || '',
+            lname: userData.selectedUser?.lname || '',
+            upcomingTestDrives: userData.selectedUser?.upcomingTestDrives || [],
+            completedTestDrives:
+              userData.selectedUser?.completedTestDrives || [],
+            overdueTestDrives: userData.selectedUser?.overdueTestDrives || [],
+            summaryEnquiry,
+            summaryColdCalls,
+          };
+
+          this.compareSmData = userData.smData;
+
+          console.log('✅ Selected User:', this.selectedUser);
+          console.log('📞 Call Summary Order:', this.callSummaryOrder);
+          console.log('✅ Compare SM Data:', this.compareSmData);
+
+          // 📊 Parse and render chart data
+          this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
+
+          this.hourlyAllCalls = this.hourlyChartLabels.map(
+            (key) => hourlyAnalysisData[key]?.AllCalls?.calls || 0
+          );
+
+          this.hourlyConnectedCalls = this.hourlyChartLabels.map(
+            (key) => hourlyAnalysisData[key]?.Connected?.calls || 0
+          );
+
+          this.hourlyMissedCalls = this.hourlyChartLabels.map(
+            (key) => hourlyAnalysisData[key]?.missedCalls || 0
+          );
+
+          this.renderHourlyChart();
+        } else {
+          console.warn('⚠️ Incomplete response:', res);
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error fetching selected user:', err);
+      },
     });
   }
-  loadCompareUsers() {
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.http
-      .get<any>(
-        'https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=MTD',
-        { headers }
-      )
-      .subscribe({
-        next: (res) => {
-          this.users = res?.data?.users || [];
-          console.log('✅ Users loaded:', this.users);
+  renderHourlyChart(): void {
+    const ctx = (
+      document.getElementById('hourlyChart') as HTMLCanvasElement
+    )?.getContext('2d');
+    if (!ctx) return;
+
+    // 🔥 Destroy previous instance to avoid overlaps
+    if (this.hourlyChartInstance) {
+      this.hourlyChartInstance.destroy();
+    }
+
+    // ✅ Create and save new instance
+    this.hourlyChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: this.hourlyChartLabels,
+        datasets: [
+          {
+            label: 'All Calls',
+            data: this.hourlyAllCalls,
+            borderColor: '#3498db',
+            backgroundColor: 'rgba(52, 152, 219, 0.2)',
+            fill: true,
+            tension: 0.3,
+          },
+          {
+            label: 'Connected',
+            data: this.hourlyConnectedCalls,
+            borderColor: '#2ecc71',
+            backgroundColor: 'rgba(46, 204, 113, 0.2)',
+            fill: true,
+            tension: 0.3,
+          },
+          {
+            label: 'Missed',
+            data: this.hourlyMissedCalls,
+            borderColor: '#e74c3c',
+            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+            fill: true,
+            tension: 0.3,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top' },
         },
-        error: (err) => {
-          console.error('❌ Failed to load users', err);
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Number of Calls' },
+          },
+          x: {
+            title: { display: true, text: 'Time Block' },
+          },
         },
-      });
+      },
+    });
   }
 
   fetchFilteredData(userId: string, filterType: string) {
@@ -1209,6 +2117,36 @@ export class DashboardComponent implements OnInit {
   //     }
   //   }
   // }
+  getCallIcon(type: string): string {
+    switch (type) {
+      case 'All Calls':
+        return 'fas fa-phone-alt';
+      case 'Connected':
+        return 'fas fa-check-circle';
+      case 'Missed':
+        return 'fas fa-times-circle';
+      case 'Rejected':
+        return 'fas fa-ban';
+      default:
+        return 'fas fa-question-circle';
+    }
+  }
+
+  getCallColor(type: string): string {
+    switch (type) {
+      case 'All Calls':
+        return '#3498db';
+      case 'Connected':
+        return '#2ecc71';
+      case 'Missed':
+        return '#e74c3c';
+      case 'Rejected':
+        return '#9e9e9e';
+      default:
+        return '#000000';
+    }
+  }
+
   handlePs2Click(user: any): void {
     if (!this.isPs1User(user.user_id)) {
       this.selectedPs2 = [user.user_id];
@@ -1408,20 +2346,31 @@ export class DashboardComponent implements OnInit {
   // }
 
   // Method to handle filter selection
-  onFilterChange(filter: string) {
-    this.selectedFilter = filter;
+  // onFilterChange(filter: string) {
+  //   this.selectedFilter = filter;
 
-    // ✅ Update PS1 if selected
-    if (this.selectedPs1) {
-      this.fetchCounts(this.selectedPs1, filter);
+  //   // ✅ Update PS1 if selected
+  //   if (this.selectedPs1) {
+  //     this.fetchCounts(this.selectedPs1, filter);
+  //   }
+
+  //   // ✅ Update PS2 users if selected
+  //   if (this.selectedPs2 && this.selectedPs2.length > 0) {
+  //     this.selectedPs2.forEach((userId) => {
+  //       this.fetchCounts(userId, filter);
+  //     });
+  //   }
+  // }
+  onFilterChange(filterType: string): void {
+    this.selectedFilter = filterType;
+
+    // Call fetchSMData again with the updated filter
+
+    if (this.selectedTeamId && this.selectedSmId) {
+      this.fetchSMData(this.selectedSmId, filterType);
     }
 
-    // ✅ Update PS2 users if selected
-    if (this.selectedPs2 && this.selectedPs2.length > 0) {
-      this.selectedPs2.forEach((userId) => {
-        this.fetchCounts(userId, filter);
-      });
-    }
+    console.log('🟡 Filter changed to:', filterType);
   }
 
   onUserChange(userId: string, filterType: string) {
@@ -1854,8 +2803,8 @@ export class DashboardComponent implements OnInit {
   //   return user ? user.name : '';
   // }
   getUserName(id: any): string {
-    if (!id || !this.users || !Array.isArray(this.users)) return '';
-    const user = this.users.find((u) => u.user_id?.trim() === id.trim());
+    if (!this.users || !Array.isArray(this.users)) return '';
+    const user = this.users.find((u) => u.user_id.trim() === id.trim());
     return user ? user.name : '';
   }
 
@@ -2052,36 +3001,36 @@ export class DashboardComponent implements OnInit {
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
       .join(' ');
   }
-  fetchHierarchy() {
-    const token = sessionStorage.getItem('token'); // 👈 get token from session storage
+  // fetchHierarchy() {
+  //   const token = sessionStorage.getItem('token'); // 👈 get token from session storage
 
-    if (!token) {
-      console.error('Token not found in session storage');
-      return;
-    }
+  //   if (!token) {
+  //     console.error('Token not found in session storage');
+  //     return;
+  //   }
 
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
+  //   const headers = {
+  //     Authorization: `Bearer ${token}`,
+  //   };
 
-    this.http
-      .get('https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard', {
-        headers,
-      })
-      .subscribe({
-        next: (res: any) => {
-          if (res.status === 200 && res.data?.hierarchy) {
-            this.hierarchy = res.data.hierarchy;
-            console.log('Hierarchy:', this.hierarchy);
-          } else {
-            console.error('Unexpected response:', res);
-          }
-        },
-        error: (err) => {
-          console.error('HTTP error:', err);
-        },
-      });
-  }
+  //   this.http
+  //     .get('https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard', {
+  //       headers,
+  //     })
+  //     .subscribe({
+  //       next: (res: any) => {
+  //         if (res.status === 200 && res.data?.hierarchy) {
+  //           this.hierarchy = res.data.hierarchy;
+  //           console.log('Hierarchy:', this.hierarchy);
+  //         } else {
+  //           console.error('Unexpected response:', res);
+  //         }
+  //       },
+  //       error: (err) => {
+  //         console.error('HTTP error:', err);
+  //       },
+  //     });
+  // }
 
   // calculateTotalPages(): void {
   //   this.totalPages = Math.ceil(
@@ -2098,6 +3047,45 @@ export class DashboardComponent implements OnInit {
   //   // Reset pagination (optional)
   //   this.currentPage = 1;
   // }
+  fetchHierarchy() {
+    const token = sessionStorage.getItem('token'); // 👈 get token from session storage
+
+    if (!token) {
+      console.error('Token not found in session storage');
+      return;
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    // ✅ Use the selected filter dynamically, fallback to 'MTD' if not set
+    const filterType = this.selectedFilter || 'MTD';
+
+    this.http
+      .get(
+        `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?type=${filterType}`,
+        {
+          headers,
+        }
+      )
+      .subscribe({
+        next: (res: any) => {
+          if (res.status === 200 && res.data?.smData) {
+            // this.hierarchy = res.data.smData;
+            this.smData = res.data.smData;
+
+            console.log('Updated hierarchy (from smData):', this.hierarchy);
+          } else {
+            console.error('Unexpected response:', res);
+          }
+        },
+
+        error: (err) => {
+          console.error('HTTP error:', err);
+        },
+      });
+  }
 
   initializeFilters(): void {
     // Set default filter option and apply it
@@ -2302,60 +3290,5 @@ export class DashboardComponent implements OnInit {
     if (this.currentPage > 1) {
       this.currentPage--;
     }
-  }
-
-  renderHourlyChart() {
-    const ctx = document.getElementById('hourlyChart') as HTMLCanvasElement;
-    if (!ctx) {
-      console.error('Canvas not found');
-      return;
-    }
-
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: [
-          '1AM',
-          '2AM',
-          '3AM',
-          '4AM',
-          '5AM',
-          '6AM',
-          '7AM',
-          '8AM',
-          '9AM',
-          '10AM',
-        ],
-        datasets: [
-          {
-            label: 'Activity',
-            data: [5, 10, 7, 15, 12, 20, 18, 15, 10, 5],
-            borderColor: 'red',
-            backgroundColor: 'red',
-            tension: 0.4,
-            fill: false,
-            pointBackgroundColor: 'red',
-            pointBorderColor: 'red',
-            pointRadius: 5,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              stepSize: 5,
-            },
-          },
-        },
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
-      },
-    });
   }
 }

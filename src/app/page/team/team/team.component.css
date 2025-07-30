@@ -124,3 +124,37 @@ input.form-control.form-control-lg.is-invalid {
 .pagination .page-link:focus {
   box-shadow: none;
 }
+.btn-outline-primary:hover {
+  background-color: #222fb9;
+  color: white;
+}
+.btn-outline-primary {
+  border-color: #222fb9;
+  color: #222fb9;
+}
+#closebtn {
+  color: #ff2625;
+}
+.search-input:focus {
+  border-color: #222fb9 !important;
+  /* box-shadow: 0 0 0 0.2rem rgba(34, 47, 185, 0.25); Optional shadow for better visibility */
+  outline: none; /* Remove default outline */
+}
+/* When enabled */
+.btn-edit-enabled {
+  border: 1px solid #222fb9;
+  color: #222fb9;
+  background-color: transparent;
+}
+
+/* On hover when enabled */
+.btn-edit-enabled:hover {
+  background-color: #222fb9;
+  color: #fff;
+}
+
+/* Optional: to keep consistent border when disabled */
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

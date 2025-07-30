@@ -46,7 +46,8 @@ body {
 .dashboard-container {
   /* max-width: 1200px; */
   margin: 0 auto;
-  font-family: Arial, sans-serif;
+  /* font-family: Arial, sans-serif; */
+  font-family: "Poppins", sans-serif;
 }
 
 .header {
@@ -86,7 +87,7 @@ body {
 }
 .nav-button {
   color: black;
-  font-size: 18px;
+  /* font-size: 18px; */
 }
 .nav-button:hover {
   background-color: blue;
@@ -237,8 +238,9 @@ body {
 .person-n .panel-title {
   text-align: center;
   font-size: 1.8rem;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 1rem;
+  font-family: "Poppins", sans-serif;
 }
 
 .panel-content {
@@ -424,7 +426,9 @@ body {
 
 /* claude */
 body {
-  font-family: Arial, sans-serif;
+  /* font-family: Arial, sans-serif; */
+  font-family: "Poppins", sans-serif;
+
   margin: 0;
   padding: 0;
 }
@@ -623,6 +627,8 @@ table td {
   margin-top: 0;
   margin-bottom: 15px;
   padding-bottom: 10px;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
   /* border-bottom: 1px solid #eee; */
 }
 
@@ -702,11 +708,22 @@ table.table-striped tbody tr {
 }
 
 .team-name {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #333;
+  font-size: 17px;
+  color: #000;
   white-space: nowrap;
-  flex-shrink: 0;
+  font-weight: 500;
+
+  font-family: "Poppins", sans-serif;
+}
+.user-cards-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+.user-cards-wrapper::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+.user-cards-wrapper::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* Card container (right side) */
@@ -1771,67 +1788,64 @@ td {
   border-collapse: collapse;
   outline: none !important; /* Just in case outlines are showing */
 }
-.header-box1 {
-  display: inline-flex;
-  align-items: center;
-  gap: 18px; /* Controls the space between icon and text */
-  background-color: #6fcbf9; /* optional */
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 600;
-  color: #ffffff;
-}
-.header-box2 {
-  display: inline-flex;
-  align-items: center;
-  gap: 18px; /* Controls the space between icon and text */
-  background-color: #ff9cde; /* optional */
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.header-box3 {
-  display: inline-flex;
-  align-items: center;
-  gap: 18px; /* Controls the space between icon and text */
-  background-color: #bfdcfc; /* optional */
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.header-box4 {
-  display: inline-flex;
-  align-items: center;
-  gap: 18px; /* Controls the space between icon and text */
-  background-color: #9ced97; /* optional */
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 600;
-  color: #ffffff;
-}
-.header-box5 {
-  display: inline-flex;
-  align-items: center;
-  gap: 18px; /* Controls the space between icon and text */
-  background-color: #c59cff; /* optional */
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 600;
-  color: #ffffff;
-}
+/*  */
+.header-box1,
+.header-box2,
+.header-box3,
+.header-box4,
+.header-box5,
 .header-box6 {
-  display: inline-flex;
+  display: flex;
+  flex-direction: column; /* Stack icon and text vertically on small screens */
   align-items: center;
-  gap: 18px; /* Controls the space between icon and text */
-  background-color: #dcf471; /* optional */
-  padding: 6px 12px;
+  justify-content: center;
+  gap: 6px; /* Reduce spacing */
+  padding: 6px 8px; /* Make it more compact */
   border-radius: 12px;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 400;
+  color: #000000;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+
+  white-space: normal; /* Allow wrapping */
+}
+
+.pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pagination-container button {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination-container button:hover:not(:disabled) {
+  background-color: #222fb9;
+  color: white;
+  border-color: #222fb9;
+}
+
+.pagination-container button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination-container button.active-page {
+  background-color: #222fb9;
+  color: white;
+  font-weight: bold;
+  border-color: #222fb9;
 }
 
 th,
@@ -1852,7 +1866,9 @@ td {
 .panel-title {
   font-size: 25px;
   color: #313131;
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
+  font-family: "Poppins", sans-serif;
+
   font-weight: 600;
   border-radius: 20px;
   margin: 0;
@@ -2047,7 +2063,7 @@ tr td:last-child {
   color: #b91c1c;
 }
 
-.badge-today {
+.badge-completed {
   background-color: #fef3c7;
   color: #b45309;
 }
@@ -2056,7 +2072,9 @@ tr td:last-child {
   background-color: #fee2e2;
   color: #b91c1c;
 }
-
+.nav-button {
+  font-family: "Poppins", sans-serif;
+}
 table th {
   font-weight: 600;
   color: #1f2937;
@@ -2164,8 +2182,152 @@ table td {
   background-color: #222fb9;
   color: white;
 }
-.dropdown ul {
-  position: absolute; /* Ensures it floats over other content */
-  background: white; /* Gives it a visible background */
-  z-index: 10; /* Makes sure it's above other elements */
+
+/*  */
+/* Default: full width (up to 11 cards) */
+.user-cards-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 16px;
+  padding-bottom: 10px;
+  max-width: calc(15 * (80px + 16px));
+  width: 100%;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
 }
+.active-filter {
+  background-color: #222fb9 !important;
+  color: white !important;
+}
+.pill-button {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif; /* 👈 Added font */
+
+  background-color: transparent;
+  color: #000;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pill-active {
+  background-color: #222fb9; /* or any blue shade */
+  color: white;
+}
+
+/* Only apply smaller width between 1000–1190px screens */
+@media (min-width: 850px) and (max-width: 2000px) {
+  .user-cards-wrapper {
+    max-width: calc(8 * (80px + 16px));
+  }
+}
+@media (min-width: 768px) and (max-width: 1080px) {
+  .user-cards-wrapper {
+    max-width: calc(6 * (80px + 16px));
+  }
+  .dashboard-container {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 800px) and (max-width: 899px) {
+  .user-cards-wrapper {
+    max-width: calc(5 * (80px + 16px)) !important;
+  }
+}
+
+/* Webkit scrollbar styling */
+.user-cards-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.user-cards-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.user-cards-wrapper::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.user-cards-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+.user-card {
+  flex: 0 0 auto; /* Prevent cards from shrinking */
+  min-width: 80px; /* Adjust based on your card design */
+  cursor: pointer;
+  /* transition: transform 0.2s ease; */
+}
+
+.user-card:hover {
+  /* transform: translateY(-2px); */
+}
+
+/* Optional: Add fade effect at the end to indicate more content */
+.user-row {
+  position: relative;
+}
+
+.user-row::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8));
+  pointer-events: none;
+  z-index: 1;
+}
+/* RADIO BTN */
+.dashboard-container {
+  padding: 10px;
+}
+
+/*  */
+/* 
+.pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pagination-container button {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination-container button:hover:not(:disabled) {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination-container button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination-container button.active-page {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  border-color: #007bff;
+}
+ */

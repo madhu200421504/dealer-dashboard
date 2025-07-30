@@ -1,3 +1,6 @@
+<!-- padding:65px;
+content body remove margin expcet 2rem
+container remove padding; -->
 <div class="container-fluid">
     <!-- <div class="content-body"> -->
     <div class="content-section active">
@@ -131,8 +134,7 @@
                                             style="border-radius:12px;font-size:14px;height:40px" /> -->
 
                                         <input type="number" class="form-control form-control-sm"
-                                            [(ngModel)]="target.target.enquiries"
-                                            (ngModelChange)="onTargetChange(target)" [max]="999999" [min]="0"
+                                            [(ngModel)]="target.target.enquiries" [max]="999999" [min]="0"
                                             style="border-radius:12px;font-size:14px;height:40px" />
 
                                     </td>
@@ -141,8 +143,7 @@
                                         <!-- <input type="number" class="form-control form-control-sm"
                                                                                         [(ngModel)]="target.testDrives" style="border-radius:12px;font-size:14px" /> -->
                                         <input type="number" class="form-control form-control-sm"
-                                            [(ngModel)]="target.target.testDrives"
-                                            (ngModelChange)="onTargetChange(target)" (input)="limitDigits($event)"
+                                            [(ngModel)]="target.target.testDrives" (input)="limitDigits($event)"
                                             [max]="999999" [min]="0"
                                             style="border-radius:12px;font-size:14px;height:40px" />
                                     </td>
@@ -151,8 +152,8 @@
                                         <!-- <input type="number" class="form-control form-control-sm"
                                                                                         [(ngModel)]="target.orders" style="border-radius:12px;font-size:14px" /> -->
                                         <input type="number" class="form-control form-control-sm"
-                                            [(ngModel)]="target.target.orders" (ngModelChange)="onTargetChange(target)"
-                                            (input)="limitDigits($event)" [max]="999999" [min]="0"
+                                            [(ngModel)]="target.target.orders" (input)="limitDigits($event)"
+                                            [max]="999999" [min]="0"
                                             style="border-radius:12px;font-size:14px;height:40px" />
                                     </td>
 

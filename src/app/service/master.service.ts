@@ -268,7 +268,7 @@ export class MasterService {
   // update target
   updateTarget(obj: Target): Observable<TargetResponse> {
     const headers = this.getAuthHeaders();
-    return this.http.post<TargetResponse>(
+    return this.http.put<TargetResponse>(
       this.apiUrl + 'dealer/targets/new',
       obj,
       { headers }

@@ -77,3 +77,11 @@
     display: block !important;
   }
 }
+.nav-control {
+    border: 1px solid #ccc; /* 1px solid border with a light grey color */
+    /* You can adjust the width, style, and color as needed */
+    /* Example: border: 2px dashed red; */
+    height:40px;
+    /* padding: 5px; Add some padding so the content isn't right against the border */
+    border-radius: 5px; /* (Optional) Adds rounded corners */
+}

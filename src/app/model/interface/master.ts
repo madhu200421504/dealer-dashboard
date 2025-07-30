@@ -437,6 +437,57 @@ export interface UserPerformance {
   netOrders: number;
   retail: number;
 }
+export interface PsUser {
+  ps_id: string;
+  ps_fname: string;
+  ps_lname: string;
+  enquiries: number;
+  testDrives: number;
+  orders: number;
+  cancellation: number;
+  net_orders: number;
+  retail: number;
+}
+
+export interface User {
+  user_id: string;
+  name: string;
+  // fname: string;
+  dealer_id: string;
+
+  // lname: string;
+}
+export interface DashboardResponse {
+  status: number;
+  message: string;
+  data: {
+    enquiries: number;
+    testDrives: number;
+    newOrders: number;
+    cancellations: number;
+    netOrders: number;
+    retail: number;
+    performance: any[]; // or a more specific interface if needed
+
+    allIndiaBestPerformace: {
+      enquiriesCount: number;
+      testDrivesCount: number;
+      newOrdersCount: number;
+      cancellationsCount: number;
+      retailCount: number;
+    };
+
+    allIndiaRank: {
+      enquiriesRank: number;
+      testDrivesRank: number;
+      newOrdersRank: number;
+      cancellationsRank: number;
+      retailRank: number;
+    };
+
+    users: User[]; // ⬅️ 26 users as you saw
+  };
+}
 
 export interface SelectedUserData {
   name: string;
@@ -467,13 +518,45 @@ export interface Performance {
 }
 
 // Represents the selectedUser object containing test drives
+// export interface SelectedUser {
+//   user_id: string;
+//   dealer_id: string;
+//   name: string;
+
+//   todayTestDrives: TestDrive[];
+//   upcomingTestDrives: TestDrive[];
+//   overdueTestDrives: TestDrive[];
+// }
+export interface SummaryAnalysis {
+  totalConnected: number;
+  conversationTime: string;
+  notConnected: number;
+  summary: Record<string, any>;
+  hourlyAnalysis: Record<string, any>;
+}
+
 export interface SelectedUser {
-  user_id: string;
-  dealer_id: string;
-  name: string;
-  todayTestDrives: TestDrive[];
-  upcomingTestDrives: TestDrive[];
-  overdueTestDrives: TestDrive[];
+  fname: string;
+lname: string;
+  
+  upcomingTestDrives: any[]; // You can replace `any` with a proper interface if you have details
+  completedTestDrives: any[];
+  overdueTestDrives: any[];
+  summaryEnquiry: SummaryAnalysis;
+  summaryColdCalls: SummaryAnalysis;
+}
+
+
+export interface PsUser {
+  ps_id: string;
+  ps_fname: string;
+  ps_lname: string;
+  enquiries: number;
+  testDrives: number;
+  orders: number;
+  cancellation: number;
+  net_orders: number;
+  retail: number;
 }
 
 // Represents each user in the user list

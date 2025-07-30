@@ -254,9 +254,13 @@
                   [attr.data-dismiss]="useForm.valid ? 'modal' : null">
                   save
                 </button> -->
-                <button type="button" class="btn " (click)="onSave()" style="border-color:#222fb9">
+                <!-- <button type="button" class="btn " (click)="onSave()" style="border-color:#222fb9">
                   Save
-                </button>
+                </button> -->
+                  <button type="button" class="btn btn-outline-primary" (click)="onSave()"
+                    [attr.data-dismiss]="useForm.valid ? 'modal' : null">
+                    Save
+                  </button>
 
                 <!-- <button type="button" class="btn btn-outline-primary" (click)="onSaveAndClose()">
                     save </button> -->

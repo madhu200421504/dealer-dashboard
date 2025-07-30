@@ -1,4 +1,6 @@
-<div class="deznav" style="background-color: #222fb9;">
+<!-- <div class="deznav" style="background-color: #222fb9;"> -->
+<div class="deznav" [ngClass]="{ 'collapsed-sidebar': !isSidebarOpen }" style="background-color: #222fb9;">
+
   <div>
     <ul class="metismenu" id="menu" [ngClass]="{ 'collapsed': !isSidebarOpen }">
       <li [class.active]="isActive('dashboard')">

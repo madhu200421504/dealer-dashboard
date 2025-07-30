@@ -314,19 +314,30 @@
 
         <div class="modal-footer">
           <ng-container *ngIf="teamObj.team_id; else saveButton">
-            <button type="button" class="btn " data-dismiss="modal" (click)="onUpdate()"
+            <!-- <button type="button" class="btn " data-dismiss="modal" (click)="onUpdate()"
               [disabled]="!isTeamNameChanged()" style="border-color:#222fb9">
               Edit
+            </button> -->
+            <button type="button" class="btn" data-dismiss="modal" (click)="onUpdate()" [disabled]="!isTeamNameChanged()" [ngClass]="{
+                    'btn-outline-primary': !isTeamNameChanged(),
+                    'btn-edit-enabled': isTeamNameChanged()
+                  }">
+              Edit
             </button>
+
           </ng-container>
           <button type="button" class="btn btn-outline-danger" data-dismiss="modal" (click)="closeModal()">
             Close
           </button>
           <ng-template #saveButton>
-            <button type="button" class="btn " (click)="onSave()" [attr.data-dismiss]="useForm.valid ? 'modal' : null"
+            <!-- <button type="button" class="btn " (click)="onSave()" [attr.data-dismiss]="useForm.valid ? 'modal' : null"
               style="border-color:#222fb9">
               save
-            </button>
+            </button> -->
+              <button type="button" class="btn btn-outline-primary" (click)="onSave()"
+                [attr.data-dismiss]="useForm.valid ? 'modal' : null">
+                Save
+              </button>
           </ng-template>
         </div>
 
