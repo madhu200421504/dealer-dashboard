@@ -334,8 +334,8 @@ export class DashboardComponent implements OnInit {
   // displayedUsers: any[] = [];
   data: any; // <-- Add this line
   // selectedFilter: string = 'MTD'; // 👈 Default selected
-  activeActivity: string = 'Enquiry'; // default
-
+  activeActivity: string = 'Enquiry'; // for Enquiry/Cold Calls
+  activeTestDriveStatus: string = 'Upcoming'; // for Upcoming/Completed/Overdue
   selectedOverdueIndex: number = 0;
   selectedTodayIndex: number = 0;
   ps2Performance: { [userId: string]: any } = {};
@@ -508,6 +508,10 @@ export class DashboardComponent implements OnInit {
 
   onActivityClick(activity: string): void {
     this.activeActivity = activity;
+  }
+
+  onTestDriveClick(status: string): void {
+    this.activeTestDriveStatus = status;
   }
   // getUserInitials(name: string): string {
   //   if (!name) return '';
@@ -3173,7 +3177,20 @@ export class DashboardComponent implements OnInit {
         },
       });
   }
+  getActiveTestDriveList(): any[] {
+    if (!this.selectedUser) return [];
 
+    switch (this.activeTestDriveStatus) {
+      case 'Upcoming':
+        return this.selectedUser.upcomingTestDrives || [];
+      case 'Completed':
+        return this.selectedUser.completedTestDrives || [];
+      case 'Overdue':
+        return this.selectedUser.overdueTestDrives || [];
+      default:
+        return [];
+    }
+  }
   getFilteredTestDrives() {
     switch (this.filterOption) {
       case 'today':

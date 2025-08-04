@@ -822,15 +822,15 @@
     <h3 style="font-weight: 600;">Activities</h3>
     <div style="display: flex; gap: 12px; margin-top: 10px;">
       <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
-        [class.active]="activeActivity === 'Upcoming'" (click)="onActivityClick('Upcoming')">
+        [class.active]="activeTestDriveStatus === 'Upcoming'" (click)="onTestDriveClick('Upcoming')">
         Upcoming
       </button>
       <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
-        [class.active]="activeActivity === 'Completed'" (click)="onActivityClick('Completed')">
+        [class.active]="activeTestDriveStatus === 'Completed'" (click)="onTestDriveClick('Completed')">
         Completed
       </button>
       <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;"
-        [class.active]="activeActivity === 'Overdue'" (click)="onActivityClick('Overdue')">
+        [class.active]="activeTestDriveStatus === 'Overdue'" (click)="onTestDriveClick('Overdue')">
         Overdue
       </button>
     </div>
@@ -845,65 +845,23 @@
       <table class="table" style="width: 100%; border-collapse: collapse;">
         <thead>
           <tr>
-            <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Customer Name</th>
-            <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Model Name</th>
-            <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Action</th>
-            <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Time</th>
+            <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Name</th>
+            <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Subject</th>
+            <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">PMI</th>
+            <!-- <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Time</th> -->
           </tr>
         </thead>
-        <!-- <tbody>
-          <tr>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Ravi Kumar</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Baleno</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Test Drive Scheduled</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">10:30 AM</td>
-          </tr>
-          <tr>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Sneha Sharma</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Swift</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Follow-up Call</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">12:45 PM</td>
-          </tr>
-          <tr>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Ajay Mehta</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Vitara Brezza</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Vehicle Delivered</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">03:00 PM</td>
-          </tr>
-          <tr class="no-bottom-border">
-            <td style="padding: 8px;">Pooja Reddy</td>
-            <td style="padding: 8px;">Ignis</td>
-            <td style="padding: 8px;">Inquiry Received</td>
-            <td style="padding: 8px;">04:15 PM</td>
-          </tr>
-
-        </tbody> -->
+      
 
         <tbody>
           <!-- Upcoming -->
-          <tr *ngFor="let item of selectedUser.upcomingTestDrives">
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.customerName }}</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.modelName }}</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Upcoming</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.time }}</td>
-          </tr>
+      <tr *ngFor="let item of getActiveTestDriveList()">
+        <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.name }}</td>
+        <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.subject }}</td>
+        <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.PMI }}</td>
+      </tr>
 
-          <!-- Completed -->
-          <tr *ngFor="let item of selectedUser.completedTestDrives">
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.customerName }}</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.modelName }}</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Completed</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.time }}</td>
-          </tr>
 
-          <!-- Overdue -->
-          <tr *ngFor="let item of selectedUser.overdueTestDrives">
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.customerName }}</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.modelName }}</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">Overdue</td>
-            <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.time }}</td>
-          </tr>
-        </tbody>
 
       </table>
     </div>
