@@ -457,6 +457,37 @@ export interface User {
 
   // lname: string;
 }
+// export interface DashboardResponse {
+//   status: number;
+//   message: string;
+//   data: {
+//     enquiries: number;
+//     testDrives: number;
+//     newOrders: number;
+//     cancellations: number;
+//     netOrders: number;
+//     retail: number;
+//     performance: any[]; // or a more specific interface if needed
+
+//     allIndiaBestPerformace: {
+//       enquiriesCount: number;
+//       testDrivesCount: number;
+//       newOrdersCount: number;
+//       cancellationsCount: number;
+//       retailCount: number;
+//     };
+
+//     allIndiaRank: {
+//       enquiriesRank: number;
+//       testDrivesRank: number;
+//       newOrdersRank: number;
+//       cancellationsRank: number;
+//       retailRank: number;
+//     };
+
+//     users: User[]; // ⬅️ 26 users as you saw
+//   };
+// }
 export interface DashboardResponse {
   status: number;
   message: string;
@@ -467,7 +498,7 @@ export interface DashboardResponse {
     cancellations: number;
     netOrders: number;
     retail: number;
-    performance: any[]; // or a more specific interface if needed
+    performance: any[];
 
     allIndiaBestPerformace: {
       enquiriesCount: number;
@@ -485,7 +516,10 @@ export interface DashboardResponse {
       retailRank: number;
     };
 
-    users: User[]; // ⬅️ 26 users as you saw
+    users: {
+      count: number;
+      rows: User[];
+    };
   };
 }
 

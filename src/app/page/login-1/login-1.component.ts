@@ -435,21 +435,43 @@ export class Login1Component {
   //   this.setupAutoLogout();
   // }
   // WPKRING CODE DOWN WALA
+  // private handleSuccessfulLogin(token: string): void {
+  //   sessionStorage.setItem('token', token);
+
+  //   this.router
+  //     .navigate(['/Admin/dashboard'])
+  //     .then(() => {
+  //       // ✅ Show toast first
+  //       this.toastr.success('Login Successful', 'Success', {
+  //         timeOut: 1000,
+  //       });
+
+  //       // ✅ Delay reload so toast is visible
+  //       setTimeout(() => {
+  //         window.location.reload();
+  //       }, 1000); // 3 seconds delay
+  //     })
+  //     .catch((error) => {
+  //       console.error('Navigation error:', error);
+  //       this.toastr.error('Failed to navigate to dashboard', 'Error', {
+  //         timeOut: 3000,
+  //       });
+  //     });
+
+  //   this.setupAutoLogout();
+  // }
   private handleSuccessfulLogin(token: string): void {
     sessionStorage.setItem('token', token);
 
     this.router
       .navigate(['/Admin/dashboard'])
       .then(() => {
-        // ✅ Show toast first
-        this.toastr.success('Login Successful', 'Success', {
-          timeOut: 1000,
-        });
+        // ❌ Removed: this.toastr.success('Login Successful', 'Success');
 
-        // ✅ Delay reload so toast is visible
+        // ✅ Just reload the page after short delay
         setTimeout(() => {
           window.location.reload();
-        }, 1000); // 3 seconds delay
+        }, 1000);
       })
       .catch((error) => {
         console.error('Navigation error:', error);

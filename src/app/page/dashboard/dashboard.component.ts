@@ -6,6 +6,8 @@ import {
   WritableSignal,
   ChangeDetectorRef,
 } from '@angular/core';
+import { SimpleChanges, OnChanges } from '@angular/core';
+
 import {
   HttpClient,
   HttpClientModule,
@@ -86,7 +88,6 @@ interface PsUser {
   retail: number;
 }
 
-
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -98,6 +99,7 @@ export class DashboardComponent implements OnInit {
   isSidebarOpen = true;
   sidebarSub!: Subscription;
   selectedPSUser: PsUser | null = null;
+  isLoadingUsers = false;
 
   kpis = [
     { name: 'Enquiries', key: 'enquiries' },
@@ -125,6 +127,7 @@ export class DashboardComponent implements OnInit {
     retail: number;
   } | null = null;
   errorMessage = '';
+  currentSlide = 0;
 
   maxValue = 100;
   kpiData: any = {};
@@ -144,11 +147,12 @@ export class DashboardComponent implements OnInit {
   // ps2Total = 0;
   clickedUser: any = null;
   callSummaryOrder: any = {}; // or proper type if you know it
+  selectedDurationFilter: string = 'MTD'; // for duration box
 
   currentPageforCompare: number = 1;
   itemsPerPageforCompare: number = 10;
-  selectedDuration: string = '1M'; // Default is 1 Day
-
+  selectedDuration: string = '1M';
+  selectedFilter: string = 'MTD'; // ensure default matches the selectedDuration
   upcomingTestDrives: TestDrive[] = [];
   overdueTestDrives: TestDrive[] = [];
   fullData: ApiResponse['data'] | null = null;
@@ -162,6 +166,9 @@ export class DashboardComponent implements OnInit {
   selectedUserIds: string[] = []; // ✅ correct
   // hourlyChartLabels: string[] = [];
   // hourlyConnectedCalls: number[] = [];
+  // selectedFilter: string = 'enquiries';
+  categoryName: string = 'enquiries'; // default category
+  selectedPerformanceFilter: string = 'MTD'; // for performance cards
 
   smData: any[] = []; // 👈 declare the property to avoid the error
   // hourlyChartLabels: string[] = [];
@@ -196,7 +203,7 @@ export class DashboardComponent implements OnInit {
   currentUserId: string = '';
   currentSmId: string = '';
 
-  selectedFilter: string = 'MTD'; // ✅ default to MTD
+  // selectedFilter: string = 'MTD'; // ✅ default to MTD
   selectedUserId: string = ''; // Store the selected userId
   ps2Available: boolean = false;
   // enquiriesCount: number = 0;
@@ -309,6 +316,8 @@ export class DashboardComponent implements OnInit {
   filteredUsers: any[] = [];
   selectedInitial: string | null = null;
   allUsers: any[] = [];
+  activeCategory: string = 'enquiries';
+  activePeriod: string = 'MTD';
 
   displayedUsers: any[] = [];
   initialsList: string[] = [];
@@ -317,6 +326,8 @@ export class DashboardComponent implements OnInit {
   // showingLimit = 10;
   defaultLimit = 10;
   showingLimit = this.defaultLimit;
+  // @Input() selectedUser: any;
+  // @Input() selectedSmId: string;
   // filteredUsers: any[] = [];
 
   // selectedUser: any = null;
@@ -368,6 +379,16 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.onFilterClick('MTD'); // ⬅️ This will simulate clicking the MTD button on load
+
+    this.selectedDuration = '1M';
+    this.selectedFilter = 'MTD';
+
+    const defaultUser = this.allUsers?.[0]; // or however you get initial user
+    if (defaultUser) {
+      this.onUserSelect(defaultUser.ps_id); // ✅ triggers right box update
+    }
+
     const savedUserIds = localStorage.getItem('selectedUserIds');
     const savedPerformance = localStorage.getItem('selectedUsersPerformance');
 
@@ -382,49 +403,41 @@ export class DashboardComponent implements OnInit {
     } else {
       this.selectedUsersPerformance = [];
     }
+    // 🔁 Re-fetch performance for saved users
+    if (this.selectedUserIds.length && this.selectedFilter) {
+      this.selectedUserIds.forEach((userId) => {
+        this.fetchUserPerformance(userId, this.selectedFilter)
+          .then(() => {
+            // Save updated list in localStorage (in case API returns latest)
+            localStorage.setItem(
+              'selectedUsersPerformance',
+              JSON.stringify(this.selectedUsersPerformance)
+            );
+          })
+          .catch((err) => {
+            console.error(`Failed to fetch performance for ${userId}`, err);
+          });
+      });
+    }
 
-    // Re-fetch users list if not present
     if (!this.users || this.users.length === 0) {
       this.fetchAllUsers();
     }
 
-    // this.fetchUsersFromAPI(); // ✅ Call API if cache not found
     this.selectedFilter = 'MTD'; // Set default filter
     this.onFilterChange('MTD'); // Trigger logic on load
+    this.loadDashboardMetrics('MTD'); // ✅ If this also depends on users
+
     this.fetchHierarchy();
 
     this.loadCompareMetrics;
-    // this.fetchUserPerformance();
-    // this.loadDashboardData();
-
-    // const savedPerformance = localStorage.getItem('selectedUsersPerformance');
-    // if (savedPerformance) {
-    //   this.selectedUsersPerformance = JSON.parse(savedPerformance);
-    // }
-
-    // If needed: Load saved performance from localStorage
-    // const savedPerformance = localStorage.getItem('selectedUsersPerformance');
-    // if (savedPerformance) {
-    //   this.selectedUsersPerformance = JSON.parse(savedPerformance);
-    //   console.log(
-    //     'Loaded selectedUsersPerformance:',
-    //     this.selectedUsersPerformance
-    //   );
-    // } else {
-    //   console.warn('No performance data found in localStorage');
-    // }
-
-    // Also fetch user list and initialize activeFilter
-    // this.fetchUsers();
-    // this.activeFilter = 'MTD'; // or your default filter
 
     console.log('✅ DashboardComponent initialized');
 
     this.sidebarService.isOpen$.subscribe((open) => {
       this.isSidebarOpen = open;
     });
-    // this.fetchUsers();
-    // this.fetchDashboardData();
+
     this.loadTestDriveData();
     this.onFilterOptionChange(); // Apply default filter on load
     this.initializeFilters();
@@ -436,7 +449,6 @@ export class DashboardComponent implements OnInit {
     console.log('Loading dashboard metrics with default filter Today');
     this.loadDashboardMetrics('MTD');
     console.log('DashboardComponent loaded');
-    // Test with a valid user ID (from your API)
     const userJson = sessionStorage.getItem('user');
     if (userJson) {
       const user = JSON.parse(userJson);
@@ -454,6 +466,15 @@ export class DashboardComponent implements OnInit {
 
   ngAfterViewInit() {
     this.renderHourlyChart();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      this.selectedUser?.ps_id &&
+      this.selectedSmId &&
+      !this.callSummaryOrder
+    ) {
+      this.onDurationSelect('1M');
+    }
   }
   // ngOnDestroy() {
   //   this.sidebarSub.unsubscribe();
@@ -645,6 +666,39 @@ export class DashboardComponent implements OnInit {
   //   this.activeActivity = activity;
   //   console.log('Selected Activity:', activity);
   // }
+  // fetchSMData(smId: string, type: string = 'YTD'): void {
+  //   const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?sm_id=${smId}&type=${type}`;
+  //   const token = sessionStorage.getItem('token');
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   this.http.get<any>(apiUrl, { headers }).subscribe({
+  //     next: (res) => {
+  //       const updatedSm = res.data.smData.find((sm: any) => sm.sm_id === smId);
+
+  //       if (!updatedSm) {
+  //         console.warn('No matching SM found in API response for sm_id:', smId);
+  //         return;
+  //       }
+
+  //       const index = this.smData.findIndex((sm: any) => sm.sm_id === smId);
+
+  //       if (index !== -1) {
+  //         this.smData[index] = {
+  //           ...this.smData[index],
+  //           ps_list: updatedSm.ps_list,
+  //         };
+
+  //         console.log('✅ Updated SM with ps_list:', this.smData[index]);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('❌ Error fetching SM data:', err);
+  //     },
+  //   });
+  // }
   fetchSMData(smId: string, type: string = 'YTD'): void {
     const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?sm_id=${smId}&type=${type}`;
     const token = sessionStorage.getItem('token');
@@ -665,12 +719,19 @@ export class DashboardComponent implements OnInit {
         const index = this.smData.findIndex((sm: any) => sm.sm_id === smId);
 
         if (index !== -1) {
+          // Update ALL properties, not just ps_list
           this.smData[index] = {
             ...this.smData[index],
+            enquiries: updatedSm.enquiries,
+            testDrives: updatedSm.testDrives,
+            orders: updatedSm.orders,
+            cancellations: updatedSm.cancellations,
+            net_orders: updatedSm.net_orders,
+            retail: updatedSm.retail,
             ps_list: updatedSm.ps_list,
           };
 
-          console.log('✅ Updated SM with ps_list:', this.smData[index]);
+          console.log('✅ Updated SM with all data:', this.smData[index]);
         }
       },
       error: (err) => {
@@ -678,11 +739,166 @@ export class DashboardComponent implements OnInit {
       },
     });
   }
-
   isUserInTable(userId: string): boolean {
     return this.selectedUsersPerformance.some((u) => u.userId === userId);
   }
 
+  // selectCompareUser(userId: string, smId: string): void {
+  //   console.log('📌 selectCompareUser called with:', { userId, smId });
+
+  //   if (!userId || !smId) {
+  //     console.warn('User ID or SM ID is missing', { userId, smId });
+  //     return;
+  //   }
+
+  //   const token = sessionStorage.getItem('token');
+  //   const filterType = this.selectedFilter || 'YTD';
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${filterType}`;
+
+  //   this.http.get<any>(apiUrl, { headers }).subscribe({
+  //     next: (res) => {
+  //       if (res.status === 200 && res.data) {
+  //         const userData = res.data;
+
+  //         this.selectedUser = {
+  //           ps_id: userId, // <-- this was missing
+
+  //           fname: userData.selectedUser?.fname || '',
+  //           lname: userData.selectedUser?.lname || '',
+  //           upcomingTestDrives: userData.selectedUser?.upcomingTestDrives || [],
+  //           completedTestDrives:
+  //             userData.selectedUser?.completedTestDrives || [],
+  //           overdueTestDrives: userData.selectedUser?.overdueTestDrives || [],
+  //           summaryEnquiry: userData.selectedUser?.summaryEnquiry || {},
+  //           summaryColdCalls: userData.selectedUser?.summaryColdCalls || {},
+  //         };
+
+  //         this.compareSmData = userData.smData;
+  //         console.log('✅ Selected User:', this.selectedUser);
+  //         console.log('✅ Compare SM Data:', this.compareSmData);
+  //       } else {
+  //         console.warn('⚠️ Incomplete response:', res);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('❌ Error fetching selected user:', err);
+  //     },
+  //   });
+  // }
+
+  // getTeamTotal(psList: any[], key: string): number {
+  //   if (!psList || psList.length === 0) return 0;
+
+  //   return psList.reduce((total, user) => {
+  //     const value = Number(user[key]) || 0;
+  //     return total + value;
+  //   }, 0);
+  // }
+  // selectCompareUser(userId: string, smId: string): void {
+  //   console.log('📌 selectCompareUser called with:', { userId, smId });
+
+  //   if (!userId || !smId) {
+  //     console.warn('User ID or SM ID is missing', { userId, smId });
+  //     return;
+  //   }
+
+  //   this.selectedDuration = '1M'; // default for right box
+  //   this.selectedFilter = 'MTD'; // default for chart
+
+  //   const token = sessionStorage.getItem('token');
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${this.selectedFilter}`;
+
+  //   this.http.get<any>(apiUrl, { headers }).subscribe({
+  //     next: (res) => {
+  //       if (res.status === 200 && res.data) {
+  //         const userData = res.data;
+
+  //         const summaryEnquiry = userData.selectedUser?.summaryEnquiry || {};
+  //         const enquirySummaryRaw = summaryEnquiry.summary || {};
+  //         const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
+
+  //         // ✅ Assign selected user data
+  //         this.selectedUser = {
+  //           ps_id: userId,
+  //           fname: userData.selectedUser?.fname || '',
+  //           lname: userData.selectedUser?.lname || '',
+  //           upcomingTestDrives: userData.selectedUser?.upcomingTestDrives || [],
+  //           completedTestDrives:
+  //             userData.selectedUser?.completedTestDrives || [],
+  //           overdueTestDrives: userData.selectedUser?.overdueTestDrives || [],
+  //           summaryEnquiry,
+  //           summaryColdCalls: userData.selectedUser?.summaryColdCalls || {},
+  //         };
+
+  //         this.compareSmData = userData.smData;
+
+  //         // ✅ Set callSummaryOrder for right-side box
+  //         this.callSummaryOrder = {
+  //           all: {
+  //             calls: enquirySummaryRaw['All Calls']?.calls || 0,
+  //             duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['All Calls']?.uniqueClients || 0,
+  //           },
+  //           connected: {
+  //             calls: enquirySummaryRaw['Connected']?.calls || 0,
+  //             duration: enquirySummaryRaw['Connected']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['Connected']?.uniqueClients || 0,
+  //           },
+  //           missed: {
+  //             calls: enquirySummaryRaw['Missed']?.calls || 0,
+  //             duration: enquirySummaryRaw['Missed']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['Missed']?.uniqueClients || 0,
+  //           },
+  //           rejected: {
+  //             calls: enquirySummaryRaw['Rejected']?.calls || 0,
+  //             duration: enquirySummaryRaw['Rejected']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['Rejected']?.uniqueClients || 0,
+  //           },
+  //         };
+
+  //         // ✅ Prepare chart for weekly (MTD) format
+  //         // ✅ Prepare chart for weekly (MTD) format
+  //         this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
+
+  //         this.hourlyAllCalls = this.hourlyChartLabels.map(
+  //           (key) => hourlyAnalysisData[key]?.AllCalls?.calls || 0
+  //         );
+
+  //         this.hourlyConnectedCalls = this.hourlyChartLabels.map(
+  //           (key) => hourlyAnalysisData[key]?.Connected?.calls || 0
+  //         );
+
+  //         this.hourlyMissedCalls = this.hourlyChartLabels.map(
+  //           (key) => hourlyAnalysisData[key]?.missedCalls || 0
+  //         );
+
+  //         // ✅ First detect DOM updates for *ngIf-bound canvas
+  //         this.cdr.detectChanges();
+
+  //         // ✅ Then render the chart
+  //         this.renderHourlyChart();
+
+  //         console.log('✅ Selected User:', this.selectedUser);
+  //         console.log('📞 Call Summary Order:', this.callSummaryOrder);
+  //         console.log('📊 Chart Labels:', this.hourlyChartLabels);
+  //       } else {
+  //         console.warn('⚠️ Incomplete response:', res);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('❌ Error fetching selected user:', err);
+  //     },
+  //   });
+  // }
   selectCompareUser(userId: string, smId: string): void {
     console.log('📌 selectCompareUser called with:', { userId, smId });
 
@@ -691,36 +907,88 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    const token = sessionStorage.getItem('token');
-    const filterType = this.selectedFilter || 'YTD';
+    this.selectedDuration = '1M'; // default for right box
+    this.selectedFilter = 'MTD'; // default for chart
 
+    const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
 
-    const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${filterType}`;
+    const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${this.selectedFilter}`;
 
     this.http.get<any>(apiUrl, { headers }).subscribe({
       next: (res) => {
         if (res.status === 200 && res.data) {
           const userData = res.data;
 
-          this.selectedUser = {
-            ps_id: userId, // <-- this was missing
+          const summaryEnquiry = userData.selectedUser?.summaryEnquiry || {};
+          const enquirySummaryRaw = summaryEnquiry.summary || {};
+          const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
 
+          // ✅ Performance log added here
+          console.log('🎯 Performance:', userData.selectedUser?.performance);
+
+          // ✅ Assign selected user data
+          this.selectedUser = {
+            ps_id: userId,
             fname: userData.selectedUser?.fname || '',
             lname: userData.selectedUser?.lname || '',
             upcomingTestDrives: userData.selectedUser?.upcomingTestDrives || [],
             completedTestDrives:
               userData.selectedUser?.completedTestDrives || [],
             overdueTestDrives: userData.selectedUser?.overdueTestDrives || [],
-            summaryEnquiry: userData.selectedUser?.summaryEnquiry || {},
+            summaryEnquiry,
             summaryColdCalls: userData.selectedUser?.summaryColdCalls || {},
+            performance: userData.selectedUser?.performance || {}, // 🔥 THIS WAS MISSING
           };
 
           this.compareSmData = userData.smData;
+
+          // ✅ Set callSummaryOrder for right-side box
+          this.callSummaryOrder = {
+            all: {
+              calls: enquirySummaryRaw['All Calls']?.calls || 0,
+              duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['All Calls']?.uniqueClients || 0,
+            },
+            connected: {
+              calls: enquirySummaryRaw['Connected']?.calls || 0,
+              duration: enquirySummaryRaw['Connected']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Connected']?.uniqueClients || 0,
+            },
+            missed: {
+              calls: enquirySummaryRaw['Missed']?.calls || 0,
+              duration: enquirySummaryRaw['Missed']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Missed']?.uniqueClients || 0,
+            },
+            rejected: {
+              calls: enquirySummaryRaw['Rejected']?.calls || 0,
+              duration: enquirySummaryRaw['Rejected']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Rejected']?.uniqueClients || 0,
+            },
+          };
+
+          this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
+
+          this.hourlyAllCalls = this.hourlyChartLabels.map(
+            (key) => hourlyAnalysisData[key]?.AllCalls?.calls || 0
+          );
+
+          this.hourlyConnectedCalls = this.hourlyChartLabels.map(
+            (key) => hourlyAnalysisData[key]?.Connected?.calls || 0
+          );
+
+          this.hourlyMissedCalls = this.hourlyChartLabels.map(
+            (key) => hourlyAnalysisData[key]?.missedCalls || 0
+          );
+
+          this.cdr.detectChanges();
+          this.renderHourlyChart();
+
           console.log('✅ Selected User:', this.selectedUser);
-          console.log('✅ Compare SM Data:', this.compareSmData);
+          console.log('📞 Call Summary Order:', this.callSummaryOrder);
+          console.log('📊 Chart Labels:', this.hourlyChartLabels);
         } else {
           console.warn('⚠️ Incomplete response:', res);
         }
@@ -731,14 +999,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // getTeamTotal(psList: any[], key: string): number {
-  //   if (!psList || psList.length === 0) return 0;
-
-  //   return psList.reduce((total, user) => {
-  //     const value = Number(user[key]) || 0;
-  //     return total + value;
-  //   }, 0);
-  // }
   getTeamTotal(psList: any[], key: string): number {
     if (!psList || psList.length === 0) return 0;
 
@@ -757,13 +1017,20 @@ export class DashboardComponent implements OnInit {
   // toggleDropdown() {
   //   this.dropdownOpen = !this.dropdownOpen;
   // }
+  // toggleDropdown() {
+  //   this.dropdownOpen = !this.dropdownOpen;
+  //   if (this.dropdownOpen && this.users.length === 0) {
+  //     this.fetchAllUsers();
+  //   }
+  // }
   toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
-    if (this.dropdownOpen && this.users.length === 0) {
+    if (this.users.length === 0) {
+      this.isLoadingUsers = true;
       this.fetchAllUsers();
+    } else {
+      this.dropdownOpen = !this.dropdownOpen;
     }
   }
-
   getColor(index: number): { background: string; text: string } {
     const colorPairs = [
       { background: '#E2E0F5', text: '#4B3C9B' }, // Lavender bg, dark purple
@@ -797,11 +1064,29 @@ export class DashboardComponent implements OnInit {
   //     this.selectedUserIds.push(userId);
   //   }
   // }
-  onUserSelect(userId: number): void {
-    const userIdStr = userId.toString(); // or `${userId}`
+  // onUserSelect(userId: number): void {
+  //   const userIdStr = userId.toString(); // or `${userId}`
 
+  //   if (!this.selectedUserIds.includes(userIdStr)) {
+  //     this.selectedUserIds.push(userIdStr);
+  //   }
+  // }
+
+  onUserSelect(userId: number): void {
+    const userIdStr = userId.toString();
+
+    // Add to selectedUserIds only if not already added
     if (!this.selectedUserIds.includes(userIdStr)) {
       this.selectedUserIds.push(userIdStr);
+    }
+
+    // ⬇️ Set selectedUser and fetch data for the right box
+    const selected = this.allUsers.find((user) => user.ps_id === userIdStr);
+    if (selected) {
+      this.selectedUser = selected;
+      this.fetchSelectedUserData(); // 👈 This ensures right box data loads
+    } else {
+      console.warn('User not found in allUsers for ID:', userIdStr);
     }
   }
 
@@ -857,7 +1142,13 @@ export class DashboardComponent implements OnInit {
     );
     return [...new Set(initials)];
   }
+  // selectFilter(filter: string): void {
+  //   this.selectedFilter = filter;
+  // }
 
+  selectCategory(category: string): void {
+    this.categoryName = category;
+  }
   generateInitialsList() {
     const initialsSet = new Set<string>();
     this.displayedUsers.forEach((user) => {
@@ -1384,24 +1675,55 @@ export class DashboardComponent implements OnInit {
   //       });
   //   }
   // }
+  // selectUser(userId: string): void {
+  //   const index = this.selectedUserIds.indexOf(userId);
+
+  //   if (index > -1) {
+  //     // Already selected, so deselect
+  //     this.selectedUserIds.splice(index, 1);
+  //   } else {
+  //     // Not selected, so add to list
+  //     this.selectedUserIds.push(userId);
+  //   }
+
+  //   // ✅ Save updated list to localStorage
+  //   localStorage.setItem(
+  //     'selectedUserIds',
+  //     JSON.stringify(this.selectedUserIds)
+  //   );
+
+  //   // Only fetch if not already present
+  //   const alreadyFetched = this.selectedUsersPerformance.some(
+  //     (u) => u.userId === userId
+  //   );
+
+  //   if (!alreadyFetched && this.activeFilter) {
+  //     this.fetchUserPerformance(userId, this.activeFilter)
+  //       .then(() => {
+  //         localStorage.setItem(
+  //           'selectedUsersPerformance',
+  //           JSON.stringify(this.selectedUsersPerformance)
+  //         );
+  //       })
+  //       .catch((err) => {
+  //         console.error('Error fetching user performance:', err);
+  //       });
+  //   }
+  // }
   selectUser(userId: string): void {
     const index = this.selectedUserIds.indexOf(userId);
 
     if (index > -1) {
-      // Already selected, so deselect
       this.selectedUserIds.splice(index, 1);
     } else {
-      // Not selected, so add to list
       this.selectedUserIds.push(userId);
     }
 
-    // ✅ Save updated list to localStorage
     localStorage.setItem(
       'selectedUserIds',
       JSON.stringify(this.selectedUserIds)
     );
 
-    // Only fetch if not already present
     const alreadyFetched = this.selectedUsersPerformance.some(
       (u) => u.userId === userId
     );
@@ -1413,13 +1735,16 @@ export class DashboardComponent implements OnInit {
             'selectedUsersPerformance',
             JSON.stringify(this.selectedUsersPerformance)
           );
+
+          // ✅ Call duration select after user is set
+          this.selectedDuration = '1M';
+          this.onDurationSelect(this.selectedDuration);
         })
         .catch((err) => {
           console.error('Error fetching user performance:', err);
         });
     }
   }
-
   fetchUserPerformance(userId: string, filterType: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${userId}&type=${filterType}`;
@@ -1437,41 +1762,48 @@ export class DashboardComponent implements OnInit {
 
       this.http.get<any>(url, { headers }).subscribe({
         next: (res) => {
-          // SET USERS FROM RESPONSE
-          // if (res?.data?.users) {
-          //   this.users = res.data.users;
-          // }
+          // Store users from response if not already present
           if (res?.data?.users && res.data.users.length > 0) {
             for (const u of res.data.users) {
               if (
                 !this.users.find((existing) => existing.user_id === u.user_id)
               ) {
-                this.users.push(u); // Add only if not already in the list
+                this.users.push(u);
               }
             }
           }
 
-          const performance = res?.data?.performance?.[0];
-          const user = this.users.find((u) => u.user_id === userId);
+          // Handle performance data (can have multiple users)
+          const performances = res?.data?.performance || [];
 
-          if (user && performance) {
-            const userPerf = {
-              userId,
-              name: user.name,
-              enquiries: performance.enquiries ?? 0,
-              testDrives: performance.testDrives ?? 0,
-              newOrders: performance.newOrders ?? 0,
-              cancellations: performance.cancellations ?? 0,
-              netOrders: performance.netOrders ?? 0,
-              retail: performance.retail ?? 0,
-            };
-
-            this.selectedUsersPerformance.push(userPerf);
-
-            localStorage.setItem(
-              'selectedUsersPerformance',
-              JSON.stringify(this.selectedUsersPerformance)
+          for (const performance of performances) {
+            const user = this.users.find(
+              (u) => u.user_id === performance.user_id
             );
+
+            if (user) {
+              const userPerf = {
+                userId: performance.user_id,
+                name: user.name || 'Unknown',
+                enquiries: performance.enquiries ?? 0,
+                testDrives: performance.testDrives ?? 0,
+                newOrders: performance.newOrders ?? 0,
+                cancellations: performance.cancellations ?? 0,
+                netOrders: performance.netOrders ?? 0,
+                retail: performance.retail ?? 0,
+              };
+
+              // ✅ Replace existing entry if already present
+              const existingIndex = this.selectedUsersPerformance.findIndex(
+                (u) => u.userId === userPerf.userId
+              );
+
+              if (existingIndex > -1) {
+                this.selectedUsersPerformance[existingIndex] = userPerf;
+              } else {
+                this.selectedUsersPerformance.push(userPerf);
+              }
+            }
           }
 
           resolve();
@@ -1484,7 +1816,8 @@ export class DashboardComponent implements OnInit {
       });
     });
   }
-  fetchAllUsers(): void {
+
+  fetchAllUsers(type: 'MTD' | 'QTD' | 'YTD' = 'MTD'): void {
     const token = sessionStorage.getItem('token');
 
     if (!token) {
@@ -1496,21 +1829,19 @@ export class DashboardComponent implements OnInit {
 
     this.http
       .get<DashboardResponse>(
-        'https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=MTD',
+        `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${type}`,
         { headers }
       )
       .subscribe({
         next: (res) => {
           console.log('✅ API fetchAllUsers response:', res);
-
-          if (res?.data?.users?.length) {
-            // this.users = res.data.users;
-            this.users = [...res.data.users]; // Safer shallow copy
-
+          if (res?.data?.users?.rows?.length) {
+            this.users = [...res.data.users.rows]; // ✅ Now you get the actual user list
+            // this.dropdownOpen = true;
             console.log('👥 Loaded users:', this.users);
           } else {
             console.warn('⚠️ No users found in API response.');
-            this.users = []; // Clear in case of empty
+            this.users = [];
           }
         },
         error: (err) => {
@@ -1667,6 +1998,32 @@ export class DashboardComponent implements OnInit {
   //   this.selectedDuration = duration;
   //   this.fetchSelectedUserData(); // ✅ fixed
   // }
+  // onDurationSelect(duration: string): void {
+  //   this.selectedDuration = duration;
+
+  //   switch (duration) {
+  //     case '1D':
+  //       this.selectedFilter = 'DAY';
+  //       break;
+  //     case '1W':
+  //       this.selectedFilter = 'WEEK';
+  //       break;
+  //     case '1M':
+  //       this.selectedFilter = 'MTD';
+  //       break;
+  //     case '1Q':
+  //       this.selectedFilter = 'QTD';
+  //       break;
+  //     case '1Y':
+  //       this.selectedFilter = 'YTD';
+  //       break;
+  //     default:
+  //       this.selectedFilter = 'MTD';
+  //   }
+
+  //   console.log('✅ Filter Set:', this.selectedFilter);
+  //   this.fetchSelectedUserData();
+  // }
   onDurationSelect(duration: string): void {
     this.selectedDuration = duration;
 
@@ -1687,18 +2044,13 @@ export class DashboardComponent implements OnInit {
         this.selectedFilter = 'YTD';
         break;
       default:
-        this.selectedFilter = 'DAY';
+        this.selectedFilter = 'MTD';
     }
 
-    console.log(`Selected Filter: ${duration} - ${this.selectedFilter}`);
+    console.log('✅ Filter Set:', this.selectedFilter);
 
-    // 🔴 ADD THIS CHECK
-    if (!this.selectedUser || !this.selectedUser.ps_id) {
-      console.warn('❌ No user selected — cannot fetch data.');
-      return;
-    }
-
-    this.fetchSelectedUserData(); // ✅ fetch with updated filter
+    // Only fetch summary-related data
+    this.fetchCallSummaryData(); // <- this function should fetch only summaryEnquiry/summaryColdCalls
   }
 
   // selectCompareUserps(psUser: any, smId: string): void {
@@ -1810,18 +2162,20 @@ export class DashboardComponent implements OnInit {
   //     },
   //   });
   // }
-
-  fetchSelectedUserData(): void {
+  fetchCallSummaryData(): void {
     const userId = this.selectedUser?.ps_id;
     const smId = this.selectedSmId;
 
     if (!userId || !smId) {
-      console.warn('User ID or SM ID missing for fetch', { userId, smId });
+      console.warn('User ID or SM ID missing for call summary fetch', {
+        userId,
+        smId,
+      });
       return;
     }
 
     const token = sessionStorage.getItem('token');
-    const filterType = this.selectedFilter || 'YTD';
+    const filterType = this.selectedFilter || 'MTD';
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -1838,9 +2192,9 @@ export class DashboardComponent implements OnInit {
           const summaryColdCalls =
             userData.selectedUser?.summaryColdCalls || {};
           const enquirySummaryRaw = summaryEnquiry.summary || {};
+          const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
 
-          const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {}; // ✅ Only here
-
+          // ✅ Only update call summary object
           this.callSummaryOrder = {
             all: {
               calls: enquirySummaryRaw['All Calls']?.calls || 0,
@@ -1864,25 +2218,14 @@ export class DashboardComponent implements OnInit {
             },
           };
 
+          // ✅ Merge updated summaries only — don't touch performance
           this.selectedUser = {
-            ps_id: userId,
-            fname: userData.selectedUser?.fname || '',
-            lname: userData.selectedUser?.lname || '',
-            upcomingTestDrives: userData.selectedUser?.upcomingTestDrives || [],
-            completedTestDrives:
-              userData.selectedUser?.completedTestDrives || [],
-            overdueTestDrives: userData.selectedUser?.overdueTestDrives || [],
+            ...this.selectedUser,
             summaryEnquiry,
             summaryColdCalls,
           };
 
-          this.compareSmData = userData.smData;
-
-          console.log('✅ Selected User:', this.selectedUser);
-          console.log('📞 Call Summary Order:', this.callSummaryOrder);
-          console.log('✅ Compare SM Data:', this.compareSmData);
-
-          // 📊 Parse and render chart data
+          // Update hourly chart data
           this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
 
           this.hourlyAllCalls = this.hourlyChartLabels.map(
@@ -1897,6 +2240,117 @@ export class DashboardComponent implements OnInit {
             (key) => hourlyAnalysisData[key]?.missedCalls || 0
           );
 
+          this.cdr.detectChanges();
+          this.renderHourlyChart();
+
+          console.log('✅ Call Summary Updated:', this.callSummaryOrder);
+        } else {
+          console.warn('⚠️ Incomplete call summary response:', res);
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error fetching call summary data:', err);
+      },
+    });
+  }
+
+  fetchSelectedUserData(): void {
+    const duration = this.selectedDuration || '1M';
+
+    const userId = this.selectedUser?.ps_id;
+    const smId = this.selectedSmId;
+
+    if (!userId || !smId) {
+      console.warn('User ID or SM ID missing for fetch', { userId, smId });
+      return;
+    }
+
+    const token = sessionStorage.getItem('token');
+    const filterType = this.selectedFilter || 'MTD';
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${filterType}`;
+
+    this.http.get<any>(apiUrl, { headers }).subscribe({
+      next: (res) => {
+        if (res.status === 200 && res.data) {
+          const userData = res.data;
+
+          const summaryEnquiry = userData.selectedUser?.summaryEnquiry || {};
+          const summaryColdCalls =
+            userData.selectedUser?.summaryColdCalls || {};
+          const enquirySummaryRaw = summaryEnquiry.summary || {};
+          const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
+
+          this.callSummaryOrder = {
+            all: {
+              calls: enquirySummaryRaw['All Calls']?.calls || 0,
+              duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['All Calls']?.uniqueClients || 0,
+            },
+            connected: {
+              calls: enquirySummaryRaw['Connected']?.calls || 0,
+              duration: enquirySummaryRaw['Connected']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Connected']?.uniqueClients || 0,
+            },
+            missed: {
+              calls: enquirySummaryRaw['Missed']?.calls || 0,
+              duration: enquirySummaryRaw['Missed']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Missed']?.uniqueClients || 0,
+            },
+            rejected: {
+              calls: enquirySummaryRaw['Rejected']?.calls || 0,
+              duration: enquirySummaryRaw['Rejected']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Rejected']?.uniqueClients || 0,
+            },
+          };
+          console.log(
+            '🎯 Performanceeeeee:',
+            userData.selectedUser?.performance
+          );
+
+          this.selectedUser = {
+            ...this.selectedUser,
+            ps_id: userId,
+            fname: userData.selectedUser?.fname || '',
+            lname: userData.selectedUser?.lname || '',
+            upcomingTestDrives: userData.selectedUser?.upcomingTestDrives || [],
+            completedTestDrives:
+              userData.selectedUser?.completedTestDrives || [],
+            overdueTestDrives: userData.selectedUser?.overdueTestDrives || [],
+            summaryEnquiry,
+            summaryColdCalls,
+            performance: userData.selectedUser?.performance || {},
+          };
+          console.log('🔁 After assignment:', this.selectedUser);
+
+          // ✅ Added logs for debugging
+          console.log('🎯 Performance:', userData.selectedUser?.performance);
+          console.log('🔁 After assignment:', this.selectedUser);
+
+          this.compareSmData = userData.smData;
+
+          console.log('📞 Call Summary Order:', this.callSummaryOrder);
+          console.log('✅ Compare SM Data:', this.compareSmData);
+
+          this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
+
+          this.hourlyAllCalls = this.hourlyChartLabels.map(
+            (key) => hourlyAnalysisData[key]?.AllCalls?.calls || 0
+          );
+
+          this.hourlyConnectedCalls = this.hourlyChartLabels.map(
+            (key) => hourlyAnalysisData[key]?.Connected?.calls || 0
+          );
+
+          this.hourlyMissedCalls = this.hourlyChartLabels.map(
+            (key) => hourlyAnalysisData[key]?.missedCalls || 0
+          );
+
+          this.cdr.detectChanges();
           this.renderHourlyChart();
         } else {
           console.warn('⚠️ Incomplete response:', res);
@@ -2361,14 +2815,22 @@ export class DashboardComponent implements OnInit {
   //     });
   //   }
   // }
+  // onFilterChange(filterType: string): void {
+  //   this.selectedFilter = filterType;
+
+  //   if (this.selectedTeamId && this.selectedSmId) {
+  //     this.fetchSMData(this.selectedSmId, filterType);
+  //   }
+
+  //   console.log('🟡 Filter changed to:', filterType);
+  // }
   onFilterChange(filterType: string): void {
     this.selectedFilter = filterType;
 
-    // Call fetchSMData again with the updated filter
-
-    if (this.selectedTeamId && this.selectedSmId) {
-      this.fetchSMData(this.selectedSmId, filterType);
-    }
+    // Fetch updated data for all SMs with the new filter
+    this.smData.forEach((sm) => {
+      this.fetchSMData(sm.sm_id, filterType);
+    });
 
     console.log('🟡 Filter changed to:', filterType);
   }
@@ -2637,23 +3099,31 @@ export class DashboardComponent implements OnInit {
   //   this.currentPage = 1;
   // }
 
-  // onFilterChange(newFilter: 'today' | 'oneWeek') {
-  //   this.filterOption = newFilter;
-  //   this.loadFilteredTestDrives(this.filterOption);
-  // }
+  // onFilterClick(filter: 'MTD' | 'QTD' | 'YTD') {
+  //   this.activeFilter = filter;
 
+  //   this.loadDashboardMetrics(filter);
+
+  //   if (this.selectedUserId) {
+  //     this.loadCompareMetrics(this.selectedUserId, filter);
+  //   }
+
+  //   if (this.selectedPs2UserId) {
+  //     this.loadCompareMetrics(this.selectedPs2UserId, filter, true);
+  //   }
+  // }
   onFilterClick(filter: 'MTD' | 'QTD' | 'YTD') {
     this.activeFilter = filter;
 
-    // Your existing call
+    // Update top cards
     this.loadDashboardMetrics(filter);
 
-    // ✅ Add this to update PS1 performance data automatically
-    if (this.selectedUserId) {
-      this.loadCompareMetrics(this.selectedUserId, filter);
-    }
+    // 🔁 Re-fetch compare performance for all users currently in comparison
+    this.selectedUsersPerformance.forEach((user) => {
+      this.loadCompareMetrics(user.userId, filter);
+    });
 
-    // ✅ Already added: update PS2 performance
+    // PS2 (if used separately)
     if (this.selectedPs2UserId) {
       this.loadCompareMetrics(this.selectedPs2UserId, filter, true);
     }
@@ -2719,6 +3189,79 @@ export class DashboardComponent implements OnInit {
         return [];
     }
   }
+
+  goToSlide(index: number): void {
+    this.currentSlide = index;
+  }
+  // loadDashboardMetrics(filter: 'MTD' | 'QTD' | 'YTD') {
+  //   const token = sessionStorage.getItem('token');
+  //   if (!token) {
+  //     console.error('Token not found');
+  //     return;
+  //   }
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}`;
+
+  //   this.http.get<any>(url, { headers }).subscribe({
+  //     next: (response) => {
+  //       const data = response?.data || {};
+
+  //       // Update main metrics
+  //       this.dashboardMetrics = {
+  //         enquiries: data.enquiries || 0,
+  //         testDrives: data.testDrives || 0,
+  //         newOrders: data.newOrders || 0,
+  //         cancellations: data.cancellations || 0,
+  //         netOrders: data.netOrders || 0,
+  //         retail: data.retail || 0,
+  //         performance: (data.performance || []).map((user: any) => ({
+  //           userId: user.user_id,
+  //           name: user.name || '',
+  //           enquiries: user.enquiries || 0,
+  //           testDrives: user.testDrives || 0,
+  //           newOrders: user.newOrders || 0,
+  //           cancellations: user.cancellations || 0,
+  //           netOrders: user.netOrders || 0,
+  //           retail: user.retail || 0,
+  //         })),
+  //         allIndiaBestPerformace: data.allIndiaBestPerformace || {
+  //           enquiriesCount: 0,
+  //           testDrivesCount: 0,
+  //           newOrdersCount: 0,
+  //           cancellationsCount: 0,
+  //           retailCount: 0,
+  //         },
+  //         allIndiaRank: data.allIndiaRank || {
+  //           enquiriesRank: 0,
+  //           testDrivesRank: 0,
+  //           newOrdersRank: 0,
+  //           cancellationsRank: 0,
+  //           retailRank: 0,
+  //         },
+  //       };
+
+  //       // 🔁 Update the table data used in UI
+  //       // this.selectedUsersPerformance = this.dashboardMetrics.performance;
+  //     },
+  //     error: (err) => {
+  //       console.error('Dashboard data fetch error', err);
+  //     },
+  //   });
+  // }
+
+  // onPsChange() {
+  //   this.http
+  //     .get<any[]>(
+  //       `https://uat.smartassistapp.in/api/dealer/dealer-analysis?ps=${this.selectedPs}`
+  //     )
+  //     .subscribe((data) => {
+  //       this.roles = data;
+  //     });
+  // }
   loadDashboardMetrics(filter: 'MTD' | 'QTD' | 'YTD') {
     const token = sessionStorage.getItem('token');
     if (!token) {
@@ -2730,17 +3273,21 @@ export class DashboardComponent implements OnInit {
       Authorization: `Bearer ${token}`,
     });
 
-    // let url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard`;
-    // if (filter !== 'MTD') {
-    //   url += `?type=${filter}`;
-    // }
+    // 👇 Get selected user IDs from your current selection (ensure this.selectedUserIds exists and is up to date)
+    const selectedUserIds = this.selectedUserIds?.length
+      ? this.selectedUserIds.join(',')
+      : '';
 
-    let url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}`;
+    // 👇 Append userIds to the API URL if any are selected
+    const url = selectedUserIds
+      ? `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${selectedUserIds}&type=${filter}`
+      : `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}`;
 
     this.http.get<any>(url, { headers }).subscribe({
       next: (response) => {
         const data = response?.data || {};
 
+        // Update main metrics
         this.dashboardMetrics = {
           enquiries: data.enquiries || 0,
           testDrives: data.testDrives || 0,
@@ -2748,6 +3295,16 @@ export class DashboardComponent implements OnInit {
           cancellations: data.cancellations || 0,
           netOrders: data.netOrders || 0,
           retail: data.retail || 0,
+          performance: (data.performance || []).map((user: any) => ({
+            userId: user.user_id,
+            name: user.name || '',
+            enquiries: user.enquiries || 0,
+            testDrives: user.testDrives || 0,
+            newOrders: user.newOrders || 0,
+            cancellations: user.cancellations || 0,
+            netOrders: user.netOrders || 0,
+            retail: user.retail || 0,
+          })),
           allIndiaBestPerformace: data.allIndiaBestPerformace || {
             enquiriesCount: 0,
             testDrivesCount: 0,
@@ -2763,21 +3320,15 @@ export class DashboardComponent implements OnInit {
             retailRank: 0,
           },
         };
+
+        // ✅ Update table data used in UI
+        this.selectedUsersPerformance = this.dashboardMetrics.performance;
       },
       error: (err) => {
         console.error('Dashboard data fetch error', err);
       },
     });
   }
-  // onPsChange() {
-  //   this.http
-  //     .get<any[]>(
-  //       `https://uat.smartassistapp.in/api/dealer/dealer-analysis?ps=${this.selectedPs}`
-  //     )
-  //     .subscribe((data) => {
-  //       this.roles = data;
-  //     });
-  // }
 
   onPs1Change() {
     if (!this.selectedPs1) {
@@ -3130,6 +3681,7 @@ export class DashboardComponent implements OnInit {
     const endIndex = startIndex + this.itemsPerPage;
     return this.filteredTableTestDrives.slice(startIndex, endIndex);
   }
+
   loadCompareMetrics(userId: string, filter: string, isPs2: boolean = false) {
     const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${userId}&type=${filter}`;
     const token = sessionStorage.getItem('token');
@@ -3216,6 +3768,27 @@ export class DashboardComponent implements OnInit {
         },
       });
   }
+  changeCategory(category: string): void {
+    this.activeCategory = category;
+    // Call API or load data dynamically if needed
+  }
+
+  // changePeriod(period: string): void {
+  //   this.activePeriod = period;
+  // }
+  // changePeriod(period: string): void {
+  //   this.activePeriod = period;
+  //   this.selectedPerformanceFilter = period;
+
+  //   this.fetchSelectedUserData(); // 🔥 This is the only thing you need
+  // }
+
+  changePeriod(period: string): void {
+    this.activePeriod = period;
+    this.selectedPerformanceFilter = period;
+
+    this.fetchPerformanceData(); // 🔥 only for performance
+  }
 
   // Navigation for pagination
   // goToPage(page: number): void {
@@ -3237,6 +3810,32 @@ export class DashboardComponent implements OnInit {
   // }
 
   //
+
+  fetchPerformanceData(): void {
+    const userId = this.selectedUser?.ps_id;
+    const smId = this.selectedSmId;
+    const token = sessionStorage.getItem('token');
+
+    if (!userId || !smId) return;
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${this.selectedPerformanceFilter}`;
+
+    this.http.get<any>(apiUrl, { headers }).subscribe({
+      next: (res) => {
+        if (res.status === 200 && res.data?.selectedUser?.performance) {
+          this.selectedUser.performance = res.data.selectedUser.performance;
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching performance:', err);
+      },
+    });
+  }
+
   kpiMaxValues: { [key: string]: number } = {
     enquiries: 20, // Example: If the maximum enquiries any user can have is 20
     testDrives: 15, // Example: If max test drives is 15

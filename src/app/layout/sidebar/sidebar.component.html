@@ -1,79 +1,72 @@
-<!-- <div class="deznav" style="background-color: #222fb9;"> -->
+<!-- Sidebar Wrapper
 <div class="deznav" [ngClass]="{ 'collapsed-sidebar': !isSidebarOpen }" style="background-color: #222fb9;">
 
   <div>
     <ul class="metismenu" id="menu" [ngClass]="{ 'collapsed': !isSidebarOpen }">
-      <li [class.active]="isActive('dashboard')">
-        <a routerLink="/Admin/dashboard" (click)="onMenuClick('dashboard','Dashboard')">
+
+      <li [class.active]="isActive('dashboard')" style="margin-bottom:10px;">
+        <a routerLink="/Admin/dashboard" >
           <i class="flaticon-381-user"></i>
           <span class="nav-text">Dashboard</span>
         </a>
       </li>
 
-      <li [class.active]="isActive('user-all')">
-        <a routerLink="/Admin/user-all" (click)="onMenuClick('user-all','User Management')">
+      <li [class.active]="isActive('user-all')" style="margin-bottom:10px;">
+        <a routerLink="/Admin/user-all" >
           <i class="flaticon-381-user"></i>
           <span class="nav-text">User Management</span>
         </a>
       </li>
 
-      <!-- <li [class.active]="isActive('role')">
-        <a routerLink="/Admin/role" (click)="onMenuClick('role','Role Management')">
-          <i class="flaticon-381-network"></i>
-          <span class="nav-text">Role Management</span>
-        </a>
-      </li> -->
-      <li [class.active]="isActive('role')">
-        <a routerLink="/Admin/role" (click)="onMenuClick('role','Role Management')">
+      <li [class.active]="isActive('role')" style="margin-bottom:10px;">
+        <a routerLink="/Admin/role" >
           <i class="flaticon-381-user"></i>
           <span class="nav-text">Role Management</span>
         </a>
       </li>
 
-      <!-- <li [class.active]="isActive('team')">
-        <a routerLink="/Admin/team" (click)="onMenuClick('team','Team Management')">
-          <i class="flaticon-381-network"></i>
-          <span class="nav-text">Team Management</span>
-        </a>
-      </li> -->
-      <li [class.active]="isActive('team')">
-        <a routerLink="/Admin/team" (click)="onMenuClick('team','Team Management')">
+      <li [class.active]="isActive('team')" style="margin-bottom:10px;">
+        <a routerLink="/Admin/team" >
           <i class="flaticon-381-user"></i>
           <span class="nav-text">Team Management</span>
         </a>
       </li>
 
-      <!-- <li [class.active]="isActive('vehicle')">
-        <a routerLink="/Admin/vehicle" (click)="onMenuClick('vehicle','Vehicle Management')">
-          <i class="flaticon-381-network"></i>
-          <span class="nav-text">Vehicle Management</span>
-        </a>
-      </li> -->
-      <li [class.active]="isActive('vehicle')">
-        <a routerLink="/Admin/vehicle" (click)="onMenuClick('vehicle','Vehicle Management')">
+      <li [class.active]="isActive('vehicle')" style="margin-bottom:10px;">
+        <a routerLink="/Admin/vehicle" >
           <i class="flaticon-381-user"></i>
           <span class="nav-text">Vehicle Management</span>
         </a>
       </li>
 
-      <!-- <li [class.active]="isActive('target')">
-        <a routerLink="/Admin/target" (click)="onMenuClick('target','Target Management')">
-          <i class="flaticon-381-target"></i>
-          <span class="nav-text">Set Targets</span>
-        </a>
-      </li> -->
-      <li [class.active]="isActive('target')">
-        <a routerLink="/Admin/target" (click)="onMenuClick('target','Target Management')">
+      <li [class.active]="isActive('target')" style="margin-bottom:10px;">
+        <a routerLink="/Admin/target" >
           <i class="flaticon-381-user"></i>
           <span class="nav-text">Set Targets</span>
         </a>
       </li>
     </ul>
 
+    <div class="copyright" style="margin-top:280px;">
+    </div>
+  </div>
+</div> -->
+
+
+
+<div class="deznav" [ngClass]="{ 'collapsed-sidebar': !isSidebarOpen }" style="background-color: #222fb9;">
+  <div>
+    <ul class="metismenu" id="menu" [ngClass]="{ 'collapsed': !isSidebarOpen }">
+      <li *ngFor="let item of menuItems" [class.active]="isActive(item.key)" style="margin-bottom:10px;">
+        <a [routerLink]="item.route" >
+          <i class="flaticon-381-user"></i>
+          <span class="nav-text">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
 
     <div class="copyright" style="margin-top:280px;">
-      <!-- <p>Tixia Ticketing Admin Dashboard© 2020 All Rights Reserved</p> -->
-      <!-- <p class="op5">Made with <i class="fa fa-heart"></i> by DexignZone</p> -->
+      <!-- <p>Smart Assist Admin Dashboard © All Rights Reserved</p> -->
     </div>
   </div>
 </div>

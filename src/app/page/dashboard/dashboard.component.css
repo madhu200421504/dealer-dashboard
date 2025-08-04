@@ -649,7 +649,7 @@ table td {
 }
 
 table th {
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
 }
 .content-section {
   display: none;
@@ -677,17 +677,17 @@ table th {
 }
 .table-striped > tbody > tr:nth-of-type(odd) {
   --bs-table-accent-bg: transparent !important;
-  background-color: transparent !important;
+  /* background-color: transparent !important; */
 }
 table.table-striped tbody tr:nth-of-type(odd) {
-  background-color: transparent !important;
+  background-color: red !important;
 }
 table tr,
 table tr td,
 table tbody tr:nth-child(even),
 table tbody tr:nth-child(odd),
 table.table-striped tbody tr {
-  background-color: transparent !important;
+  /* background-color: transparent !important; */
 }
 
 .content-section {
@@ -747,7 +747,7 @@ table.table-striped tbody tr {
   text-align: center;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
-  min-width: 150px;
+  /* min-width: 150px; */
   height: 50px;
 }
 
@@ -1412,7 +1412,40 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
     box-sizing: border-box;
   }
 }
+/* Add background to every 2nd row (leaving one row) */
+/* This will highlight every alternate row (1st, 3rd, 5th, etc.) */
 
+::ng-deep table.highlight-alt-rows tbody tr:nth-child(even) {
+  background-color: #f3f9ff !important;
+}
+
+::ng-deep table.highlight-alt-rows tbody tr:nth-child(even) td {
+  background-color: #f3f9ff !important;
+}
+
+::ng-deep .highlight-alt-rows tbody tr:nth-child(1) {
+  background-color: transparent !important;
+}
+
+::ng-deep .highlight-alt-rows tbody tr:nth-child(1) td {
+  background-color: transparent !important;
+}
+
+::ng-deep .highlight-alt-rows tbody tr:nth-child(3) {
+  background-color: transparent !important;
+}
+
+::ng-deep .highlight-alt-rows tbody tr:nth-child(3) td {
+  background-color: transparent !important;
+}
+
+::ng-deep .highlight-alt-rows tbody tr:nth-child(5) {
+  background-color: transparent !important;
+}
+
+::ng-deep .highlight-alt-rows tbody tr:nth-child(5) td {
+  background-color: transparent !important;
+}
 /* home today actions */
 @media (max-width: 768px) {
   /* Force grid for first row to 4 columns */
@@ -1573,26 +1606,7 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   }
 }
 
-.filter-btn {
-  padding: 5px 12px;
-  font-size: 14px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  background-color: white;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  color: #333;
-}
 
-.filter-btn:hover {
-  background-color: #f2f2f2;
-}
-
-.active-filter-today {
-  background: linear-gradient(#222fb9);
-  color: white;
-  /* border-color: #4e73df; */
-}
 
 .active-filter-upcoming {
   background: linear-gradient(#222fb9);
@@ -2017,7 +2031,7 @@ td {
   padding: 14px;
   text-align: center;
   font-weight: 500;
-  color: #1d3557;
+  color: #000000;
   border: none;
   padding: 30px;
   transition: all 0.3s ease;
@@ -2081,7 +2095,7 @@ table th {
 }
 
 table td {
-  color: #4b5563;
+  /* color: #4b5563; */
 }
 /*  */
 .filter-wrapper {
@@ -2125,7 +2139,7 @@ table td {
   border-radius: 8px;
   width: fit-content; /* ensures the box only wraps its contents */
 }
-
+/* 
 .filter-options {
   display: flex;
   gap: 10px;
@@ -2142,7 +2156,7 @@ table td {
 .filter-btn.active {
   background-color: #126893;
   color: white;
-}
+} */
 .no-bottom-border td {
   border-bottom: none !important;
 }
@@ -2331,3 +2345,303 @@ table td {
   border-color: #007bff;
 }
  */
+@media (max-width: 991.98px) {
+  .performance-panels {
+    flex-direction: column;
+  }
+}
+
+
+
+/* 
+.filter-wrapper {
+  width: fit-content;
+  background: white; 
+  padding: 5px;
+  border-radius: 8px;
+  margin-top: 10px;
+} */
+.filter-wrapper {
+  width: fit-content;
+  background: white;
+  padding: 5px;
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-left:15px;
+
+  /* Add this */
+  display: flex;
+  justify-content: flex-start;
+}
+.filter-group {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.filter-btn {
+  border: none;
+  background: transparent;
+  padding: 10px 16px;
+  border-radius: 6px;
+  color: #333;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+  white-space: nowrap;
+  
+}
+
+/* .filter-btn:hover {
+  background: #f0f0f0;
+} */
+
+.active-btn {
+  background-color: #222fb9;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+}
+.card-section {
+  margin-top: 15px;
+  padding: 10px;
+  /* background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05); */
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.toggle-group {
+  display: flex;
+  gap: 8px;
+  margin-left:13px;
+}
+
+.toggle-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+  background: #f5f5f5;
+  border-radius: 16px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.toggle-btn.active {
+  background: #dfe8ff;
+  color: #0033cc;
+}
+
+.enquiry-bank {
+  background: #f5f5f5;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 13px;
+}
+
+.enquiry-bank strong {
+  margin-left: 5px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.card-box {
+  padding: 12px;
+  border-radius: 12px;
+  color: #333;
+  background: #f9f9f9;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+  position: relative;
+}
+
+.card-box h4 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.card-box.green h4 {
+  color: green;
+}
+
+.card-box.red h4 {
+  color: red;
+}
+
+.card-box.blue {
+  grid-column: span 2;
+  background: #e6f0ff;
+  position: relative;
+}
+
+.card-box.full {
+  padding-right: 40px;
+}
+
+
+/*  */
+.slider-container {
+  overflow: hidden;
+  width: 100%;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+.slide {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  flex-shrink: 0; /* This prevents the slide from shrinking */
+  min-height: 200px; /* Add a minimum height to contain the content */
+}
+
+.top-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.card-box {
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  flex: 1;
+  color: #333;
+}
+
+.card-box h4 {
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+
+.card-box p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.light-grey {
+  background-color: #F6F6F6;
+}
+
+.light-blue {
+  background-color: #E3F2FD;
+  position: relative;
+}
+
+.full {
+  width: 100%;
+}
+
+.plus-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: #1E88E5;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  line-height: 24px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.dots {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  margin: 0 5px;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background-color: #1E88E5;
+}
+.row-layout {
+  display: flex;
+  gap: 10px;
+  height: 100%;
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.right-full {
+  flex: 1;
+  position: relative;
+}
+.dual-metric .metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dual-metric .metric {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dual-metric .metric h4 {
+  margin: 0;
+  font-size: 24px;
+  min-width: 30px; /* keep numbers aligned */
+  color: #333;
+}
+
+.dual-metric .metric p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+.red-text {
+  color: #e74c3c; /* soft red */
+}
+
+.green-text {
+  color: #27ae60; /* soft green */
+}
+ .custom-table tr {
+    background: white !important;
+  }
+@media (min-width: 1366px) {
+  .metrics-wrapper {
+    flex-wrap: nowrap !important;
+  }
+}
+.custom-table tr:nth-child(even) {
+  background-color: white !important;
+}
+.custom-table tr:nth-child(odd) {
+  background-color: white !important;
+}
+.custom-table tbody tr {
+  background-color: white !important;
+}

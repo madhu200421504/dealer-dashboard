@@ -1,23 +1,33 @@
+/* Active menu item text & icon styles */
 .metismenu li.active > a {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
   border-radius: 30px;
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: none !important; /* ← cancel transition here */
+  transition: none !important;
 }
 
-.metismenu li.active > a i {
+/* Keep white background icon for active menu item when sidebar is expanded */
+.deznav:not(.collapsed-sidebar) .metismenu li.active > a i {
+  background-color: #fff !important;
+  color: #222fb9 !important;
 }
 
-/* Disable white circle when sidebar is collapsed */
+/* Remove white icon bg when sidebar is collapsed */
 .collapsed-sidebar .metismenu li.active > a i {
   background-color: transparent !important;
   color: #fff !important;
 }
 
-/* 1) Your existing base icon styles — leave these unchanged */
+/* Prevent hover from overriding active icon styles */
+.metismenu li > a:hover i {
+  background-color: inherit !important;
+  color: inherit !important;
+}
+
+/* Optional: regular icon styling (unchanged) */
 .deznav .metismenu > li > a > i {
   font-size: 1.5rem;
   display: inline-block;
@@ -31,22 +41,8 @@
   line-height: 64px;
   text-align: center;
   border-radius: 64px;
-  /* note: you had duplicate 'position' and 'padding'; this is the cleaned version */
 }
 
 .nav-text {
   font-size: 15px;
-}
-/* 2) Only override background & color in the active state */
-.metismenu li.active > a i {
-  background-color: #fff !important; /* white circle */
-  color: #222fb9 !important; /* dark icon */
-  /* everything else (size, positioning) comes from the base rule */
-}
-
-@media (width: 1000px) and (height: 1080px) {
-  .collapsed-sidebar .metismenu li.active > a i {
-    background-color: transparent !important;
-    color: #fff !important;
-  }
 }

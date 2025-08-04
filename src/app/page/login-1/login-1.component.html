@@ -89,8 +89,8 @@
       </div>
 
       <a href="javascript:void(0)" class="forgot-password" (click)="showVerifyEmail()">Forgot Password?</a>
-      <!-- <input type="submit" class="btn" value="Login" (click)="onLogin()" /> -->
-      <input type="submit" class="btn" value="Login" [disabled]="!loginForm.form.valid" (click)="onLogin()" />
+      <input type="submit" class="btn" value="Login" (click)="onLogin()" />
+      <!-- <input type="submit" class="btn" value="Login" [disabled]="!loginForm.form.valid" (click)="onLogin()" /> -->
 
 
 
@@ -129,7 +129,7 @@
       <a href="javascript:void(0)" class="back-to-login" (click)="backToLogin()">Back to Login</a>
 
       <!-- Disable if the form is invalid -->
-      <input type="submit" class="btn" value="Send OTP" (click)="onVerifyEmail()" [disabled]="verifyForm.invalid" />
+      <input type="submit" class="btn" value="Send OTP" (click)="onVerifyEmail()" />
     </form>
 
 
@@ -164,7 +164,7 @@
       </div>
 
       <!-- Disable button if OTP input is invalid -->
-      <input type="submit" class="btn" value="Verify OTP" (click)="onVerifyOtp()" [disabled]="otpForm.invalid" />
+      <input type="submit" class="btn" value="Verify OTP" (click)="onVerifyOtp()" />
     </form>
 
 

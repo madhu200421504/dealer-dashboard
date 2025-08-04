@@ -77,3 +77,35 @@ select.form-control.form-control-lg.is-invalid {
 #closebtn {
   color: #ff2625;
 }
+#example5.table {
+  border: none !important;
+  border-collapse: collapse;
+}
+
+/* Remove vertical borders, keep horizontal */
+#example5.table th,
+#example5.table td {
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+}
+
+/* Keep header bottom border */
+#example5.table thead th {
+  border-bottom: 1px solid #dee2e6 !important;
+}
+
+/* Keep row bottom borders */
+#example5.table tbody tr {
+  border-bottom: 1px solid #f1f1f1 !important;
+}
+
+/* Optional: Remove border from last row */
+#example5.table tbody tr:last-child {
+  border-bottom: none !important;
+}
+
+/* Remove borders from table wrapper */
+.table-responsive {
+  border: none !important;
+}
