@@ -2645,3 +2645,13 @@ table td {
 .custom-table tbody tr {
   background-color: white !important;
 }
+
+
+/*  */
+.metric-value2 {
+  color: #000000;
+}
+.pagination-container {
+  position: relative;
+  z-index: 10;
+}

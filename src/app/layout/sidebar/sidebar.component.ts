@@ -238,12 +238,42 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private routerSub!: Subscription;
 
   menuItems = [
-    { key: 'dashboard', label: 'Dashboard', route: '/Admin/dashboard' },
-    { key: 'user-all', label: 'User Management', route: '/Admin/user-all' },
-    { key: 'role', label: 'Role Management', route: '/Admin/role' },
-    { key: 'team', label: 'Team Management', route: '/Admin/team' },
-    { key: 'vehicle', label: 'Vehicle Management', route: '/Admin/vehicle' },
-    { key: 'target', label: 'Set Targets', route: '/Admin/target' },
+    {
+      key: 'dashboard',
+      label: 'Dashboard',
+      route: '/Admin/dashboard',
+      icon: 'fas fa-tachometer-alt', // Dashboard icon
+    },
+    {
+      key: 'user-all',
+      label: 'User Management',
+      route: '/Admin/user-all',
+      icon: 'fas fa-users', // 👥 Group of users
+    },
+    {
+      key: 'role',
+      label: 'Role Management',
+      route: '/Admin/role',
+      icon: 'fas fa-user-shield', // 👮 User with shield (for roles/permissions)
+    },
+    {
+      key: 'team',
+      label: 'Team Management',
+      route: '/Admin/team',
+      icon: 'fas fa-users-cog', // 👥⚙️ Team with settings
+    },
+    {
+      key: 'vehicle',
+      label: 'Vehicle Management',
+      route: '/Admin/vehicle',
+      icon: 'fas fa-car', // 🚗 Car icon
+    },
+    {
+      key: 'target',
+      label: 'Set Targets',
+      route: '/Admin/target',
+      icon: 'fas fa-bullseye', // 🎯 Bullseye target
+    },
   ];
 
   constructor(

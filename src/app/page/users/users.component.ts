@@ -532,61 +532,54 @@ export class UsersComponent implements OnInit {
   min(a: number, b: number): number {
     return Math.min(a, b);
   }
-  openModal(user?: UserList) {
-    console.log('✅ openModal() function calledm of user');
-    console.log('User object received in openModal:', user);
+  // openModal(user?: UserList) {
+  //   console.log('✅ openModal() function calledm of user');
+  //   console.log('User object received in openModal:', user);
 
-    // Show the modal
-    this.isModalOpen = true;
+  //   // Show the modal
+  //   this.isModalOpen = true;
 
-    // Reset the form to clear previous data, but only reset the userObj in create mode
-    if (!user) {
-      this.userObj = {} as UserList; // Reset userObj only if no user is passed (create mode)
-    }
+  //   // Reset the form to clear previous data, but only reset the userObj in create mode
+  //   if (!user) {
+  //     this.userObj = {} as UserList; // Reset userObj only if no user is passed (create mode)
+  //   }
 
-    this.useForm.reset();
+  //   this.useForm.reset();
 
-    // Determine if we're in edit mode
-    this.isEditMode = !!user;
+  //   // Determine if we're in edit mode
+  //   this.isEditMode = !!user;
 
-    if (user) {
-      // If we have a user, we are in edit mode
-      // Populate the form with the user data for editing
-      this.useForm.patchValue({
-        user_id: user.user_id,
-        name: user.name || '',
-        account_id: user.account_id || '',
-        email: user.email || '',
-        phone: user.phone || '',
-        role_id: user.role_id || '',
-        user_role: user.role_name || '',
-        // dealer_code: user.dealer_code || '',
-        // dealer_id: user.dealer_id || null,
-        team_id: user.team_id || null,
-        team_name: user.team_name || '',
-        fname: user.fname || '',
-        lname: user.lname || '',
-        Excellence: user.excellence || '',
-      });
+  //   if (user) {
+  //     // If we have a user, we are in edit mode
+  //     // Populate the form with the user data for editing
+  //   this.useForm.patchValue({
+  //     fname: user.fname || '',
+  //     lname: user.lname || '',
+  //     email: user.email || '',
+  //     phone: user.phone || '',
+  //     role_id: user.role_id || '',
+  //     team_id: user.team_id || null,
+  //     user_role: user.user_role || '',
+  //     excellence: user.excellence || '',
+  //   });
+  //     // Store previous email for comparison
+  //     this.previousEmail = user.email || '';
 
-      // Store previous email for comparison
-      this.previousEmail = user.email || '';
+  //     // Log team information for debugging
+  //     console.log('User team info:', user.team);
+  //     console.log('Form team values:', {
+  //       team_id: this.useForm.get('team_id')?.value,
+  //       team_name: this.useForm.get('team_name')?.value,
+  //     });
 
-      // Log team information for debugging
-      console.log('User team info:', user.team);
-      console.log('Form team values:', {
-        team_id: this.useForm.get('team_id')?.value,
-        team_name: this.useForm.get('team_name')?.value,
-      });
-
-      // Set userObj with user details for editing
-      this.userObj = { ...user }; // Spread operator to copy the user object
-    } else {
-      // If no user is passed, we are in create mode
-      // Create a new user object
-      this.userObj = {} as UserList; // This will create an empty UserList object
-    }
-  }
+  //     // Set userObj with user details for editing
+  //     this.userObj = { ...user }; // Spread operator to copy the user object
+  //   } else {
+  //     // If no user is passed, we are in create mode
+  //     // Create a new user object
+  //     this.userObj = {} as UserList; // This will create an empty UserList object
+  //   }
+  // }
 
   // Handle dealer code change
   // onDealerChange() {
@@ -604,6 +597,44 @@ export class UsersComponent implements OnInit {
   //   }
   // }
   // Handle dealer code change
+  openModal(user?: UserList) {
+    console.log('✅ openModal() function called of user');
+    console.log('User object received in openModal:', user);
+
+    // Show the modal
+    this.isModalOpen = true;
+
+    // Reset form (this clears validation)
+    this.useForm.reset();
+
+    // Determine edit mode
+    this.isEditMode = !!user;
+
+    if (user) {
+      // We're editing — patch data
+      this.useForm.patchValue({
+        fname: user.fname || '',
+        lname: user.lname || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        role_id: user.role_id || '',
+        team_id: user.team_id || null,
+        user_role: user.user_role || '',
+        excellence: user.excellence || '',
+      });
+
+      this.previousEmail = user.email || '';
+      this.userObj = { ...user };
+
+      // ✅ Mark the form as untouched and pristine
+      this.useForm.markAsPristine();
+      this.useForm.markAsUntouched();
+    } else {
+      // Create mode — fresh object
+      this.userObj = {} as UserList;
+    }
+  }
+
   onDealerChange() {
     const dealerCodeControl = this.useForm.get('dealer_code');
     const dealerIdControl = this.useForm.get('dealer_id');
@@ -951,75 +982,58 @@ export class UsersComponent implements OnInit {
   onUpdate() {
     console.log('on update');
     console.log('Form Values:', this.useForm.value);
+
     const formValues = this.useForm.getRawValue(); // ✅ Get all fields
 
-    // ✅ Return early if form is invalid
+    // ✅ Ensure form is valid
     // if (!this.useForm.valid) {
     //   this.toastr.error('Invalid form data. Please check inputs.', 'Error');
     //   return;
     // }
 
-    // const formValues = this.useForm.value;
-
-    // Create the formatted name with proper space
+    // Format the full name
     const formattedName = `${(formValues.fname || '').trim()} ${(
       formValues.lname || ''
     ).trim()}`.replace(/\s+/g, ' ');
 
-    // Set the name property correctly
     formValues.name = formattedName;
 
-    // Update the userObj with all properties including the formatted name
+    // Merge into userObj
     this.userObj = { ...this.userObj, ...formValues };
     console.log('📤 Payload sent to backend:', this.userObj);
 
-    console.log('🔍 Form Status:', this.useForm.status);
-    console.log('🚀 Updated Payload before API call:', this.userObj);
-
-    // Call the updateUser API with the updated user object
+    // Make the API call
     this.masterSrv.updateUser(this.userObj).subscribe(
       (res: any) => {
         if (res.status === 200) {
-          console.log('API Response:', res); // Log full response
-
-          console.log('✅ Update Success:', res);
           this.toastr.success(res.message, 'Success');
 
-          // Update the UI immediately with the correctly formatted name
+          // Update list with new values
           this.userList.set(
             this.userList().map((user) =>
               user.user_id === this.userObj.user_id
                 ? {
                     ...user,
                     ...this.userObj,
-                    name: formattedName, // Ensure the name is correctly set with space
+                    name: formattedName,
                   }
                 : user
             )
           );
 
           setTimeout(() => {
-            this.cdr.detectChanges(); // Force UI update
-            this.cdr.markForCheck(); // Mark for change detection if using OnPush
+            this.cdr.detectChanges();
+            this.cdr.markForCheck();
           }, 0);
 
-          // Fetch all users after update
           this.displayAllUser();
-
-          // Close the modal
           this.closeModal();
         } else {
           this.toastr.warning('Update failed, check data.', 'Warning');
         }
       },
       (error) => {
-        console.error('❌ API Error:', error);
-
-        // Try to extract the backend message
-        const errorMessage =
-          error?.error?.message || error?.message || 'Failed to update user';
-
-        this.toastr.error(errorMessage, 'Error');
+        // Handle error here if needed
       }
     );
   }
@@ -1133,31 +1147,33 @@ export class UsersComponent implements OnInit {
 
   // Method to handle the Edit button click
   onEdit(user: UserList) {
-    this.isEditMode = true; // Set the edit mode flag
-    this.isModalOpen = true; // ✅ Add this line to open the modal
+    this.isEditMode = true;
+    this.isModalOpen = true;
+
     console.log('user.userObj before setting:', user?.user_id);
 
-    // Copy user data to userObj
-    this.userObj = { ...user }; // Spread operator to avoid reference issues
-
-    // Store the previous name for comparison
+    this.userObj = { ...user };
     this.previousValue = user.name;
 
-    // Create formatted name (ensure exactly one space between fname and lname)
     const formattedName = `${user.fname || ''} ${user.lname || ''}`
       .trim()
       .replace(/\s+/g, ' ');
 
-    console.log('Formatted name onEdit:', formattedName); // Log the formatted name to check
+    console.log('Formatted name onEdit:', formattedName);
 
-    // Initialize the form with current user data
+    // ✅ Find role_id by matching role name
+    const matchedRole = this.roleList().find(
+      (role) => role.role_name === user.user_role
+    );
+    const matchedRoleId = matchedRole ? matchedRole.role_id : null;
+
     this.useForm.patchValue({
       user_id: user.user_id,
-      name: formattedName, // Use the formatted name here
+      name: formattedName,
       account_id: user.account_id || '',
       email: user.email || '',
       phone: user.phone || '',
-      role_id: user.role_id || '',
+      role_id: matchedRoleId, // ✅ Use the resolved role_id
       team_id: user.team_id || null,
       team_name: user.team_name || '',
       fname: user.fname || '',
@@ -1167,10 +1183,10 @@ export class UsersComponent implements OnInit {
     });
 
     console.log('userObj.user_id after setting:', this.userObj?.user_id);
+
     setTimeout(() => {
-      // Manually trigger modal if needed
       ($('#myModal') as any).modal({ backdrop: false });
-    }, 100); // Slight delay ensures modal and form are ready
+    }, 100);
   }
 
   // Check if the name field has been changed

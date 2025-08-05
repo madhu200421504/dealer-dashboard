@@ -185,6 +185,7 @@ export class DashboardComponent implements OnInit {
   isUserSelected = false;
   // ps1Total = 0;
   private hourlyChartInstance: Chart | null = null;
+  // visiblePagesForCompare: number[] = [];
 
   // ps2Total = 0;
   enquiriesCount = 0;
@@ -513,6 +514,7 @@ export class DashboardComponent implements OnInit {
   onTestDriveClick(status: string): void {
     this.activeTestDriveStatus = status;
   }
+
   // getUserInitials(name: string): string {
   //   if (!name) return '';
 
@@ -926,14 +928,20 @@ export class DashboardComponent implements OnInit {
         if (res.status === 200 && res.data) {
           const userData = res.data;
 
+          // ✅ Add this block here to extract stats from ps_list
+          let matchedUserStats: any = {};
+          for (const sm of userData.smData || []) {
+            const ps = sm.ps_list?.find((p: any) => p.ps_id === userId);
+            if (ps) {
+              matchedUserStats = ps;
+              break;
+            }
+          }
+
           const summaryEnquiry = userData.selectedUser?.summaryEnquiry || {};
           const enquirySummaryRaw = summaryEnquiry.summary || {};
           const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
 
-          // ✅ Performance log added here
-          console.log('🎯 Performance:', userData.selectedUser?.performance);
-
-          // ✅ Assign selected user data
           this.selectedUser = {
             ps_id: userId,
             fname: userData.selectedUser?.fname || '',
@@ -944,12 +952,19 @@ export class DashboardComponent implements OnInit {
             overdueTestDrives: userData.selectedUser?.overdueTestDrives || [],
             summaryEnquiry,
             summaryColdCalls: userData.selectedUser?.summaryColdCalls || {},
-            performance: userData.selectedUser?.performance || {}, // 🔥 THIS WAS MISSING
+            performance: userData.selectedUser?.performance || {},
+
+            // ✅ Add the metrics from matchedUserStats
+            enquiries: matchedUserStats?.enquiries || 0,
+            testDrives: matchedUserStats?.testDrives || 0,
+            orders: matchedUserStats?.orders || 0,
+            cancellation: matchedUserStats?.cancellation || 0,
+            net_orders: matchedUserStats?.net_orders || 0,
+            retail: matchedUserStats?.retail || 0,
           };
 
           this.compareSmData = userData.smData;
 
-          // ✅ Set callSummaryOrder for right-side box
           this.callSummaryOrder = {
             all: {
               calls: enquirySummaryRaw['All Calls']?.calls || 0,
@@ -974,15 +989,12 @@ export class DashboardComponent implements OnInit {
           };
 
           this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
-
           this.hourlyAllCalls = this.hourlyChartLabels.map(
             (key) => hourlyAnalysisData[key]?.AllCalls?.calls || 0
           );
-
           this.hourlyConnectedCalls = this.hourlyChartLabels.map(
             (key) => hourlyAnalysisData[key]?.Connected?.calls || 0
           );
-
           this.hourlyMissedCalls = this.hourlyChartLabels.map(
             (key) => hourlyAnalysisData[key]?.missedCalls || 0
           );
@@ -1364,28 +1376,62 @@ export class DashboardComponent implements OnInit {
     return this.selectedUsersPerformance.slice(startIndex, endIndex);
   }
 
-  // get totalPagesForCompare() {
-  //   return Math.ceil(
-  //     this.selectedUsersPerformance.length / this.itemsPerPageforCompare
-  //   );
-  // }
   get totalPagesForCompare(): number {
-    return Math.ceil(this.selectedUsersPerformance.length / 10);
+    return Math.ceil(
+      this.selectedUsersPerformance.length / this.itemsPerPageforCompare
+    );
   }
+
   get visiblePagesForCompare(): number[] {
-    const total = this.totalPagesForCompare;
-    const current = this.currentPageforCompare;
-    const visible: number[] = [];
-
-    const start = Math.max(1, current);
-    const end = Math.min(total, start + 2); // show only 3 pages
-
-    for (let i = start; i <= end; i++) {
-      visible.push(i);
+    const pages: number[] = [];
+    for (let i = 1; i <= this.totalPagesForCompare; i++) {
+      pages.push(i);
     }
-
-    return visible;
+    return pages;
   }
+
+  changeComparePage(page: number): void {
+    if (page >= 1 && page <= this.totalPagesForCompare) {
+      this.currentPageforCompare = page;
+    }
+  }
+  // get totalPagesForCompare(): number {
+  //   return Math.ceil(this.selectedUsersPerformance.length / 10);
+  // }
+  // get visiblePagesForCompare(): number[] {
+  //   const total = this.totalPagesForCompare;
+  //   const current = this.currentPageforCompare;
+  //   const visible: number[] = [];
+
+  //   let start = current - 1;
+  //   let end = current + 1;
+
+  //   if (start < 1) {
+  //     start = 1;
+  //     end = Math.min(3, total);
+  //   }
+
+  //   if (end > total) {
+  //     end = total;
+  //     start = Math.max(1, total - 2);
+  //   }
+
+  //   for (let i = start; i <= end; i++) {
+  //     visible.push(i);
+  //   }
+
+  //   return visible;
+  // }
+  // changeComparePage(page: number): void {
+  //   if (page < 1 || page > this.totalPagesForCompare) return;
+  //   this.currentPageforCompare = page;
+  // }
+
+  // get comparePaginatedUsers() {
+  //   const start = (this.currentPageforCompare - 1) * this.itemsPerPage;
+  //   const end = start + this.itemsPerPage;
+  //   return this.selectedUsersPerformance.slice(start, end);
+  // }
 
   // get displayedUsers(): any[] {
   //   return this._displayedUsers;

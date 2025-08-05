@@ -58,8 +58,8 @@
   <div>
     <ul class="metismenu" id="menu" [ngClass]="{ 'collapsed': !isSidebarOpen }">
       <li *ngFor="let item of menuItems" [class.active]="isActive(item.key)" style="margin-bottom:10px;">
-        <a [routerLink]="item.route" >
-          <i class="flaticon-381-user"></i>
+        <a [routerLink]="item.route">
+    <i [ngClass]="item.icon" style="padding-left:12px;"></i>
           <span class="nav-text">{{ item.label }}</span>
         </a>
       </li>

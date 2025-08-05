@@ -149,8 +149,8 @@
                 <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
                 <td>{{ user.name}}</td>
                 <td>{{user.email}}</td>
-                <td>{{user.Excellence}}</td>
-                <td>{{user.role}}</td>
+                <td>{{user.excellence}}</td>
+<td>{{ user.user_role }}</td>
                 <td class="d-flex">
                   <!-- <a href="javascript:void(0);" class="btn btn-primary shadow btn-xs sharp mr-1"
                     data-target=".bd-example-modal-lg" data-toggle="modal" data-backdrop="false" (click)="onEdit(team)">
@@ -271,142 +271,174 @@
           <div class="row">
             <!-- Name -->
 
-            <div class="col-md-6 form-group">
-              <label for="fname" class="form-label">
-                First Name <span class="text-danger">*</span>
-              </label>
-              <input id="fname" class="form-control form-control-lg" type="text" formControlName="fname"
-                placeholder="First Name" [ngClass]="{
-                  'is-invalid':
-                    useForm.get('fname')?.touched &&
-                    useForm.get('fname')?.invalid
-                }" required />
-              <div class="text-danger" *ngIf="
-                  useForm.get('fname')?.invalid && useForm.get('fname')?.touched
-                ">
-                <span *ngIf="useForm.get('fname')?.errors?.['required']">First name is required.</span>
-              </div>
+          <div class="col-md-6 form-group">
+            <label for="fname">
+              First Name
+              <span class="text-danger" *ngIf="!isEditMode">*</span>
+            </label>
+          
+            <input id="fname" class="form-control form-control-lg" type="text" formControlName="fname" placeholder="First Name"
+              [ngClass]="{
+                'is-invalid':
+                  useForm.get('fname')?.touched &&
+                  useForm.get('fname')?.invalid
+              }" required />
+          
+            <!-- Show error message only if not in edit mode -->
+            <div class="text-danger" *ngIf="
+                !isEditMode &&
+                useForm.get('fname')?.invalid &&
+                useForm.get('fname')?.touched
+              ">
+              <span *ngIf="useForm.get('fname')?.errors?.['required']">
+                First name is required.
+              </span>
             </div>
+          </div>
+
 
             <!-- LAST NAME -->
-            <div class="col-md-6 form-group">
-              <!-- <label for="lname" class="form-label">Last Name</label> -->
-              <label for="fname" class="form-label">
-                Last Name <span class="text-danger">*</span>
-              </label>
-              <input id="lname" class="form-control form-control-lg" type="text" formControlName="lname"
-                placeholder="Last Name" [ngClass]="{
-                  'is-invalid':
-                    useForm.get('lname')?.touched &&
-                    useForm.get('lname')?.invalid
-                }" required />
-              <div class="text-danger" *ngIf="
-                  useForm.get('lname')?.invalid && useForm.get('lname')?.touched
-                ">
-                <span *ngIf="useForm.get('lname')?.errors?.['required']">Last name is required.</span>
-              </div>
+          <div class="col-md-6 form-group">
+            <label for="lname">
+              Last Name
+              <span class="text-danger" *ngIf="!isEditMode">*</span>
+            </label>
+          
+            <input id="lname" class="form-control form-control-lg" type="text" formControlName="lname" placeholder="Last Name"
+              [ngClass]="{
+                'is-invalid':
+                  useForm.get('lname')?.touched &&
+                  useForm.get('lname')?.invalid &&
+                  !isEditMode
+              }" [required]="!isEditMode" />
+          
+            <div class="text-danger" *ngIf="
+                useForm.get('lname')?.invalid &&
+                useForm.get('lname')?.touched &&
+                !isEditMode
+              ">
+              <span *ngIf="useForm.get('lname')?.errors?.['required']">
+                Last name is required.
+              </span>
             </div>
+          </div>
+
 
             <!-- ROLE -->
-            <div class="col-md-6 form-group">
-              <label for="role_id" class="form-label">
-                Role Name <span class="text-danger">*</span>
-              </label>
-
-              <select id="role_id" class="form-control form-control-lg" formControlName="role_id" [ngClass]="{
-      'is-invalid':
-        useForm.get('role_id')?.touched &&
-        useForm.get('role_id')?.invalid
-    }">
-                <option [ngValue]="null" disabled hidden>Select Role</option>
-                <option *ngFor="let role of roleList()" [value]="role.role_id">
-                  {{ role.role_name }}
-                </option>
-              </select>
-
-              <div class="text-danger" *ngIf="
-    useForm.get('role_id')?.touched &&
-    useForm.get('role_id')?.invalid
-  ">
-                <span *ngIf="useForm.get('role_id')?.errors?.['required']">
-                  Role name is required.
-                </span>
-              </div>
+          <div class="col-md-6 form-group">
+            <label for="role_id" class="form-label">
+              Role Name
+              <span class="text-danger" *ngIf="!isEditMode">*</span>
+            </label>
+          
+            <select id="role_id" class="form-control form-control-lg" formControlName="role_id" [ngClass]="{
+                'is-invalid':
+                  useForm.get('role_id')?.touched &&
+                  useForm.get('role_id')?.invalid &&
+                  !isEditMode
+              }">
+              <option [ngValue]="null" disabled hidden>Select Role</option>
+              <option *ngFor="let role of roleList()" [value]="role.role_id">
+                {{ role.role_name }}
+              </option>
+            </select>
+          
+            <div class="text-danger" *ngIf="
+                useForm.get('role_id')?.touched &&
+                useForm.get('role_id')?.invalid &&
+                !isEditMode
+              ">
+              <span *ngIf="useForm.get('role_id')?.errors?.['required']">
+                Role name is required.
+              </span>
             </div>
+          </div>
+
 
 
             <!-- Email -->
-            <div class="col-md-6 form-group">
-              <!-- <label for="email" class="form-label">E-mail</label> -->
-              <label for="fname" class="form-label">
-                Email <span class="text-danger">*</span>
-              </label>
-              <input id="email" type="email" class="form-control form-control-lg" formControlName="email"
-                placeholder="E-mail" [ngClass]="{
-                  'is-invalid':
-                    useForm.get('email')?.touched &&
-                    useForm.get('email')?.invalid
-                }" />
-              <div class="text-danger" *ngIf="
-                  useForm.get('email')?.invalid && useForm.get('email')?.touched
-                ">
-
-                <span *ngIf="useForm.get('email')?.errors?.['required']">Email is required.</span>
-                <span *ngIf="useForm.get('email')?.errors?.['email']">Please enter a valid email address.</span>
-              </div>
+          <div class="col-md-6 form-group">
+            <label for="email" class="form-label">
+              Email <span class="text-danger" *ngIf="!isEditMode">*</span>
+            </label>
+            <input id="email" type="email" class="form-control form-control-lg" formControlName="email" placeholder="E-mail"
+              [ngClass]="{
+                'is-invalid':
+                  !isEditMode &&
+                  useForm.get('email')?.touched &&
+                  useForm.get('email')?.invalid
+              }" />
+            <div class="text-danger" *ngIf="
+                !isEditMode &&
+                useForm.get('email')?.touched &&
+                useForm.get('email')?.invalid
+              ">
+              <span *ngIf="useForm.get('email')?.errors?.['required']">
+                Email is required.
+              </span>
+              <span *ngIf="useForm.get('email')?.errors?.['email']">
+                Please enter a valid email address.
+              </span>
             </div>
+          </div>
+
 
             <!-- TEAM -->
-            <div class="col-md-6 form-group">
-              <label for="team_name" class="form-label">
-                Team name <span class="text-danger">*</span>
-              </label>
-              <select id="team_name" class="form-control form-control-lg" formControlName="team_id"
-                (change)="onTeamChange()" placeholder="team name" [ngClass]="{
-      'is-invalid':
-        useForm.get('team_id')?.touched &&
-        useForm.get('team_id')?.invalid
-    }">
-                <option [ngValue]="null" disabled hidden>Select team name</option>
-                <option *ngFor="let team of teamList()" [value]="team.team_id">
-                  {{ team.team_name }}
-                </option>
-              </select>
-              <div class="text-danger" *ngIf="
-    useForm.get('team_id')?.touched &&   
-    useForm.get('team_id')?.invalid
-  ">
-                <span>Team name is required.</span>
-              </div>
-            </div>
+        <div class="col-md-6 form-group">
+          <label for="team_name" class="form-label">
+            Team name <span class="text-danger" *ngIf="!isEditMode">*</span>
+          </label>
+          <select id="team_name" class="form-control form-control-lg" formControlName="team_id" (change)="onTeamChange()"
+            placeholder="team name" [ngClass]="{
+              'is-invalid':
+                useForm.get('team_id')?.touched &&
+                useForm.get('team_id')?.invalid
+            }">
+            <option [ngValue]="null" disabled hidden>Select team name</option>
+            <option *ngFor="let team of teamList()" [value]="team.team_id">
+              {{ team.team_name }}
+            </option>
+          </select>
+        
+          <!-- Show validation message only in add mode -->
+          <div class="text-danger" *ngIf="
+              !isEditMode &&
+              useForm.get('team_id')?.touched &&
+              useForm.get('team_id')?.invalid
+            ">
+            <span>Team name is required.</span>
+          </div>
+        </div>
 
 
             <!-- Phone -->
-            <div class="col-md-6 form-group">
-              <!-- <label for="phone" class="form-label">Phone</label> -->
-              <label for="fname" class="form-label">
-                Phone <span class="text-danger">*</span>
-              </label>
-              <input id="phone" class="form-control form-control-lg" formControlName="phone" placeholder="Phone"
-                [ngClass]="{
-                  'is-invalid':
-                    useForm.get('phone')?.touched &&
-                    useForm.get('phone')?.invalid
-                }" maxlength="10" (keypress)="restrictToNumbers($event)" />
-              <div class="text-danger" *ngIf="
-                  useForm.get('phone')?.touched && useForm.get('phone')?.invalid
-                ">
-                <span *ngIf="useForm.get('phone')?.errors?.['required']">
-                  Phone is required.
-                </span>
-                <span *ngIf="useForm.get('phone')?.errors?.['maxlength']">
-                  Must not exceed 10 characters.
-                </span>
-                <span *ngIf="useForm.get('phone')?.errors?.['pattern']">
-                  Only numbers are allowed.
-                </span>
-              </div>
+          <div class="col-md-6 form-group">
+            <label for="phone" class="form-label">
+              Phone <span class="text-danger" *ngIf="!isEditMode">*</span>
+            </label>
+            <input id="phone" class="form-control form-control-lg" formControlName="phone" placeholder="Phone" [ngClass]="{
+                'is-invalid':
+                  !isEditMode &&
+                  useForm.get('phone')?.touched &&
+                  useForm.get('phone')?.invalid
+              }" maxlength="10" (keypress)="restrictToNumbers($event)" />
+            <div class="text-danger" *ngIf="
+                !isEditMode &&
+                useForm.get('phone')?.touched &&
+                useForm.get('phone')?.invalid
+              ">
+              <span *ngIf="useForm.get('phone')?.errors?.['required']">
+                Phone is required.
+              </span>
+              <span *ngIf="useForm.get('phone')?.errors?.['maxlength']">
+                Must not exceed 10 characters.
+              </span>
+              <span *ngIf="useForm.get('phone')?.errors?.['pattern']">
+                Only numbers are allowed.
+              </span>
             </div>
+          </div>
+
 
 
 
@@ -436,34 +468,39 @@
                 </div>
               </div> -->
             <!-- EXCELLENCE -->
-            <div class="col-md-6 form-group">
-              <label for="Excellence" class="form-label">
-                Excellence <span class="text-danger">*</span>
-              </label>
-              <input id="excellence" class="form-control form-control-lg" formControlName="excellence" type="text"
-                maxlength="6" placeholder="Excellence" [ngClass]="{
-                          'is-invalid': useForm.get('excellence')?.touched && useForm.get('excellence')?.invalid
-                        }" (keypress)="restrictToNumbers($event)" (input)="onExcellenceInput($event)" />
+        <div class="col-md-6 form-group">
+          <label for="excellence" class="form-label">
+            Excellence <span class="text-danger" *ngIf="!isEditMode">*</span>
+          </label>
+          <input id="excellence" type="text" maxlength="6" class="form-control form-control-lg" formControlName="excellence"
+            placeholder="Excellence" [ngClass]="{
+              'is-invalid':
+                useForm.get('excellence')?.touched &&
+                useForm.get('excellence')?.invalid
+            }" (keypress)="restrictToNumbers($event)" (input)="onExcellenceInput($event)" />
+        
+          <!-- Validation Errors -->
+          <div class="text-danger" *ngIf="
+              useForm.get('excellence')?.touched &&
+              useForm.get('excellence')?.invalid
+            ">
+            <span *ngIf="useForm.get('excellence')?.errors?.['required']">
+              Excellence is required.
+            </span>
+            <span *ngIf="useForm.get('excellence')?.errors?.['maxlength']">
+              Must not exceed 6 characters.
+            </span>
+            <span *ngIf="useForm.get('excellence')?.errors?.['pattern']">
+              Only numbers are allowed.
+            </span>
+          </div>
+        
+          <!-- Backend API Response Message -->
+          <div *ngIf="excellenceMsg" class="text-success mt-1">
+            {{ excellenceMsg }}
+          </div>
+        </div>
 
-              <!-- Validation Errors -->
-              <div class="text-danger" *ngIf="useForm.get('excellence')?.touched && useForm.get('excellence')?.invalid">
-                <span *ngIf="useForm.get('excellence')?.errors?.['required']">
-                  Excellence is required.
-                </span>
-                <span *ngIf="useForm.get('excellence')?.errors?.['maxlength']">
-                  Must not exceed 6 characters.
-                </span>
-
-                <span *ngIf="useForm.get('excellence')?.errors?.['pattern']">
-                  Only numbers are allowed.
-                </span>
-              </div>
-
-              <!-- Backend API Response -->
-              <div *ngIf="excellenceMsg" class="text-success mt-1">
-                {{ excellenceMsg }}
-              </div>
-            </div>
 
           </div>
         </form>
