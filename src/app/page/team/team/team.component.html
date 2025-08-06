@@ -260,29 +260,34 @@
 
         </div>
 
-        <div class="modal-body">
-          <form [formGroup]="useForm">
-            <div class="row">
-              <!-- Name -->
-              <div class="col-md-6 form-group">
-                <label for="team_name" class="form-label">
-                  Team Name <span class="text-danger">*</span>
-                </label>
-                <input id="team_name" class="form-control form-control-lg" type="text" formControlName="team_name"
-                  placeholder="Team Name" [ngClass]="{
-                  'is-invalid':
-                    useForm.get('team_name')?.touched &&
-                    useForm.get('team_name')?.invalid
-                }" required />
-                <div class="text-danger" *ngIf="
-                  useForm.get('team_name')?.invalid && useForm.get('team_name')?.touched
-                ">
-                  <span *ngIf="useForm.get('team_name')?.errors?.['required']">Team Name is required.</span>
-                </div>
+      <div class="modal-body">
+        <form [formGroup]="useForm">
+          <div class="row">
+            <!-- Name -->
+            <div class="col-md-6 form-group">
+              <label for="team_name" class="form-label">
+                Team Name <span class="text-danger" *ngIf="!isEditMode">*</span>
+              </label>
+              <input id="team_name" class="form-control form-control-lg" type="text" formControlName="team_name"
+                placeholder="Team Name" [ngClass]="{
+                       'is-invalid':
+                         !isEditMode &&
+                         useForm.get('team_name')?.touched &&
+                         useForm.get('team_name')?.invalid
+                     }" required />
+      
+              <!-- Validation Errors -->
+              <div class="text-danger" *ngIf="!isEditMode &&
+                          useForm.get('team_name')?.invalid &&
+                          useForm.get('team_name')?.touched">
+                <span *ngIf="useForm.get('team_name')?.errors?.['required']">
+                  Team Name is required.
+                </span>
               </div>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
+      </div>
 
         <!-- LAST NAME -->
         <!-- <div class="col-md-6 form-group">

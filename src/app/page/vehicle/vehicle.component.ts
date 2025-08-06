@@ -588,6 +588,19 @@ export class VehicleComponent implements OnInit {
       return;
     }
 
+    // ✅ Get start and end dates from the form
+    const startDate = new Date(this.useForm.value.demo_start_date);
+    const endDate = new Date(this.useForm.value.demo_end_date);
+
+    // ✅ Check if End Date is before Start Date
+    if (endDate < startDate) {
+      this.toastr.warning(
+        'End date cannot be before start date.',
+        'Error'
+      );
+      return;
+    }
+
     // ✅ Update vehicleObj from form values
     this.vehicleObj = {
       ...this.vehicleObj,
@@ -614,6 +627,7 @@ export class VehicleComponent implements OnInit {
       }
     );
   }
+
   // vehicleList(): Vehicle[] {
   //   return this.vehicles;
   // }

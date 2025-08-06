@@ -113,6 +113,75 @@ export class HeaderComponent implements OnInit {
   //   sessionStorage.removeItem('token');
   //   this.guestDetails = null;
   // }
+  confirmLogout() {
+    // Close modal manually if needed (Bootstrap 5 auto closes on button click)
+    this.logout(); // Call your existing logout logic
+  }
+  performLogout(): void {
+    const modalElement = document.getElementById('logoutModal');
+    if (modalElement) {
+      let modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+      if (!modal) {
+        modal = new (window as any).bootstrap.Modal(modalElement);
+      }
+      modal.hide();
+    }
+
+    // Show loading toast (optional)
+    this.showToast('Logging out...', 'info');
+
+    setTimeout(() => {
+      localStorage.removeItem('authToken');
+      sessionStorage.clear();
+
+      this.showToast('Successfully logged out!', 'success');
+
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 1000);
+    }, 1000);
+  }
+
+  private showToast(message: string, type: string): void {
+    // Remove existing toasts
+    const existingToasts = document.querySelectorAll('.custom-toast-container');
+    existingToasts.forEach((toast) => toast.remove());
+
+    const iconMap: { [key: string]: string } = {
+      info: '<i class="fas fa-spinner fa-spin"></i>',
+      success: '<i class="fas fa-check-circle"></i>',
+      error: '<i class="fas fa-times-circle"></i>',
+    };
+
+    const colorMap: { [key: string]: string } = {
+      info: 'bg-info',
+      success: 'bg-success',
+      error: 'bg-danger',
+    };
+
+    const toastHTML = `
+      <div class="custom-toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+        <div class="toast show align-items-center text-white ${colorMap[type]} border-0" role="alert">
+          <div class="d-flex">
+            <div class="toast-body">
+              ${iconMap[type]} ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="this.closest('.custom-toast-container').remove()"></button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', toastHTML);
+
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      const toastContainer = document.querySelector('.custom-toast-container');
+      if (toastContainer) {
+        toastContainer.remove();
+      }
+    }, 3000);
+  }
 
   logout(): void {
     console.log('Logging out...'); // Debug log

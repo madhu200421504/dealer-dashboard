@@ -171,3 +171,69 @@
     font-size: 20px !important;
   }
 }
+
+
+/* logut */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal:target {
+      display: block;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .close-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 8px 16px;
+      background-color: #ccc;
+      color: #000;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .logout-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 8px 16px;
+      background-color: #222fb9;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .dropdown-item {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #000;
+      text-decoration: none;
+    }
+
+    .dropdown-item:hover {
+      color: #222fb9;
+    }

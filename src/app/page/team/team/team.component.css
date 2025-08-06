@@ -158,6 +158,7 @@ input.form-control.form-control-lg.is-invalid {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
 #example5.table {
   border: none !important;
   border-collapse: collapse;

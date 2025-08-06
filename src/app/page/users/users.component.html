@@ -472,28 +472,30 @@
           <label for="excellence" class="form-label">
             Excellence <span class="text-danger" *ngIf="!isEditMode">*</span>
           </label>
-          <input id="excellence" type="text" maxlength="6" class="form-control form-control-lg" formControlName="excellence"
-            placeholder="Excellence" [ngClass]="{
-              'is-invalid':
-                useForm.get('excellence')?.touched &&
-                useForm.get('excellence')?.invalid
-            }" (keypress)="restrictToNumbers($event)" (input)="onExcellenceInput($event)" />
+        <input id="excellence" type="text" maxlength="6" class="form-control form-control-lg" formControlName="excellence"
+          placeholder="Excellence" [ngClass]="{
+                 'is-invalid':
+                   !isEditMode &&
+                   useForm.get('excellence')?.touched &&
+                   useForm.get('excellence')?.invalid
+               }" (keypress)="restrictToNumbers($event)" (input)="onExcellenceInput($event)" />
+
         
           <!-- Validation Errors -->
-          <div class="text-danger" *ngIf="
-              useForm.get('excellence')?.touched &&
-              useForm.get('excellence')?.invalid
-            ">
-            <span *ngIf="useForm.get('excellence')?.errors?.['required']">
-              Excellence is required.
-            </span>
-            <span *ngIf="useForm.get('excellence')?.errors?.['maxlength']">
-              Must not exceed 6 characters.
-            </span>
-            <span *ngIf="useForm.get('excellence')?.errors?.['pattern']">
-              Only numbers are allowed.
-            </span>
-          </div>
+        <!-- Validation Errors -->
+        <div class="text-danger"
+          *ngIf="!isEditMode && useForm.get('excellence')?.touched && useForm.get('excellence')?.invalid">
+          <span *ngIf="useForm.get('excellence')?.errors?.['required']">
+            Excellence is required.
+          </span>
+          <span *ngIf="useForm.get('excellence')?.errors?.['maxlength']">
+            Must not exceed 6 characters.
+          </span>
+          <span *ngIf="useForm.get('excellence')?.errors?.['pattern']">
+            Only numbers are allowed.
+          </span>
+        </div>
+
         
           <!-- Backend API Response Message -->
           <div *ngIf="excellenceMsg" class="text-success mt-1">

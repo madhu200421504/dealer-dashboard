@@ -128,6 +128,7 @@ export class DashboardComponent implements OnInit {
   } | null = null;
   errorMessage = '';
   currentSlide = 0;
+  filteredActivities: any[] = []; // ✅ Initialize as empty array
 
   maxValue = 100;
   kpiData: any = {};
@@ -352,6 +353,8 @@ export class DashboardComponent implements OnInit {
   maxDriveCount: number = 0;
   indexes: number[] = [];
   // defaultLimit = 10;
+  allActivities: any[] = []; // Holds all test drive activities (Upcoming, Completed, Overdue)
+
   // activeActivity: string = 'Upcoming'; // default
 
   uniqueInitials: string[] = []; // ✅ renamed to avoid clash
@@ -515,6 +518,12 @@ export class DashboardComponent implements OnInit {
     this.activeTestDriveStatus = status;
   }
 
+  onClick(status: string) {
+    this.activeTestDriveStatus = status;
+    this.filteredActivities = this.allActivities.filter(
+      (activity) => activity.status === status
+    );
+  }
   // getUserInitials(name: string): string {
   //   if (!name) return '';
 

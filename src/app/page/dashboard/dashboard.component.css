@@ -423,7 +423,27 @@ body {
     box-sizing: border-box;
   }
 } */
-
+ .table-hover-row {
+    background-color: transparent !important;
+    transition: background-color 0.2s ease;
+  }
+  
+  .table-hover-row:hover {
+    background-color: #f5f7fa !important;
+  }
+  
+  .table-hover-row:hover td {
+    background-color: #f5f7fa !important;
+  }
+  
+  .table-cell-styled {
+    background-color: transparent !important;
+    color: #000;
+    font-weight: 400;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.2s ease;
+  }
 /* claude */
 body {
   /* font-family: Arial, sans-serif; */
