@@ -923,7 +923,7 @@ export class DashboardComponent implements OnInit {
     }
 
     this.selectedDuration = '1M'; // default for right box
-    this.selectedFilter = 'MTD'; // default for chart
+    // this.selectedFilter = 'MTD'; // default for chart
 
     const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders({
