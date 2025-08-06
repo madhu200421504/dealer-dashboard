@@ -162,10 +162,11 @@ body {
 }
 
 .metric-value {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #0066cc;
+  font-size: 16px;
+  /* font-weight: bold; */
+  color: #126893;
   margin-bottom: 0.5rem;
+  font-weight:600;
 }
 
 .metric-label {
@@ -553,9 +554,11 @@ table td {
 }
 
 .metric-value {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 19px;
+  /* font-weight: bold; */
   color: #ffffff;
+  font-weight:600;
+
 }
 
 .header {
@@ -1044,10 +1047,12 @@ table.table-striped tbody tr {
 }
 
 .metric-value {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 19px;
+  /* font-weight: bold; */
   color: #ffffff;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
+  font-weight:600;
+
 }
 
 .metric-label {
@@ -2273,6 +2278,11 @@ table td {
     max-width: calc(5 * (80px + 16px)) !important;
   }
 }
+@media (min-width: 1289px) and (max-width: 1340px) {
+  .user-cards-wrapper {
+    max-width: calc(11 * (80px + 16px)) !important;
+  }
+}
 
 /* Webkit scrollbar styling */
 .user-cards-wrapper::-webkit-scrollbar {
@@ -2674,4 +2684,10 @@ table td {
 .pagination-container {
   position: relative;
   z-index: 10;
+}
+/* Add this CSS to make disabled buttons more obvious */
+.btn:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  background-color: #f8f9fa !important;
 }

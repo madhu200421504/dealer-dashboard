@@ -328,6 +328,10 @@ export class DashboardComponent implements OnInit {
   // showingLimit = 10;
   defaultLimit = 10;
   showingLimit = this.defaultLimit;
+
+  // currentPage = 1;
+  // itemsPerPage = 10; // or whatever you use
+  // totalItems = this.smData.length; // Should be the total count of your data
   // @Input() selectedUser: any;
   // @Input() selectedSmId: string;
   // filteredUsers: any[] = [];
@@ -353,6 +357,8 @@ export class DashboardComponent implements OnInit {
   maxDriveCount: number = 0;
   indexes: number[] = [];
   // defaultLimit = 10;
+  Math = Math; // 👈 this line is important
+
   allActivities: any[] = []; // Holds all test drive activities (Upcoming, Completed, Overdue)
 
   // activeActivity: string = 'Upcoming'; // default
@@ -745,6 +751,13 @@ export class DashboardComponent implements OnInit {
             retail: updatedSm.retail,
             ps_list: updatedSm.ps_list,
           };
+          // this.totalItems = this.smData.length;
+
+          // if (this.selectedTeamId === updatedSm.team_id) {
+          //   this.selectedUsersPerformance = updatedSm.ps_list || [];
+          //   this.totalItems = this.selectedUsersPerformance.length;
+          //   this.currentPageforCompare = 1; // Reset to first page
+          // }
 
           console.log('✅ Updated SM with all data:', this.smData[index]);
         }
@@ -756,6 +769,20 @@ export class DashboardComponent implements OnInit {
   }
   isUserInTable(userId: string): boolean {
     return this.selectedUsersPerformance.some((u) => u.userId === userId);
+  }
+  get totalItems(): number {
+    return this.smData?.length || 0;
+  }
+  goToPrevious() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  goToNext() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
   }
 
   // selectCompareUser(userId: string, smId: string): void {
@@ -1378,20 +1405,41 @@ export class DashboardComponent implements OnInit {
   //   return Math.ceil(this.selectedUsersPerformance.length / this.itemsPerPage);
   // }
 
-  get paginatedUsersPerformance() {
-    const startIndex =
-      (this.currentPageforCompare - 1) * this.itemsPerPageforCompare;
-    const endIndex = startIndex + this.itemsPerPageforCompare;
-    return this.selectedUsersPerformance.slice(startIndex, endIndex);
-  }
+  // get paginatedUsersPerformance() {
+  //   const startIndex =
+  //     (this.currentPageforCompare - 1) * this.itemsPerPageforCompare;
+  //   const endIndex = startIndex + this.itemsPerPageforCompare;
+  //   return this.selectedUsersPerformance.slice(startIndex, endIndex);
+  // }
+
+  // get totalPagesForCompare(): number {
+  //   return Math.ceil(
+  //     this.selectedUsersPerformance.length / this.itemsPerPageforCompare
+  //   );
+  // }
 
   get totalPagesForCompare(): number {
+    if (this.selectedUsersPerformance.length === 0) {
+      return 1; // Return 1 so that currentPageforCompare (1) === totalPagesForCompare (1)
+    }
     return Math.ceil(
       this.selectedUsersPerformance.length / this.itemsPerPageforCompare
     );
   }
 
+  // get visiblePagesForCompare(): number[] {
+  //   const pages: number[] = [];
+  //   for (let i = 1; i <= this.totalPagesForCompare; i++) {
+  //     pages.push(i);
+  //   }
+  //   return pages;
+  // }
   get visiblePagesForCompare(): number[] {
+    // Don't show any page numbers when there's no data
+    if (this.selectedUsersPerformance.length === 0) {
+      return [];
+    }
+
     const pages: number[] = [];
     for (let i = 1; i <= this.totalPagesForCompare; i++) {
       pages.push(i);
@@ -3670,6 +3718,7 @@ export class DashboardComponent implements OnInit {
   //   // Reset pagination (optional)
   //   this.currentPage = 1;
   // }
+
   fetchHierarchy() {
     const token = sessionStorage.getItem('token'); // 👈 get token from session storage
 
@@ -3747,6 +3796,11 @@ export class DashboardComponent implements OnInit {
   //   const endIndex = startIndex + this.itemsPerPage;
 
   // }
+  get paginatedUsersPerformance(): any[] {
+    const startIndex = (this.currentPageforCompare - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.selectedUsersPerformance.slice(startIndex, endIndex);
+  }
 
   getPaginatedTableData(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -3916,11 +3970,13 @@ export class DashboardComponent implements OnInit {
     netOrders: 10,
     retail: 8,
   };
+
   getProgressBarWidth(value: number, kpi: string): number {
     const maxValue = this.kpiMaxValues[kpi] || 1; // Get the max value for this KPI, default to 1 to prevent division by zero
     if (value === undefined || value === null || value <= 0) {
       return 0; // If value is not set or zero/negative, bar width is 0
     }
+
     // Calculate percentage based on max value
     const percentage = (value / maxValue) * 100;
     // Cap at 100% to ensure bars don't exceed their container
@@ -3944,6 +4000,57 @@ export class DashboardComponent implements OnInit {
   // TODAY ATIONS
   // get totalPages(): number {
   //   return Math.ceil(this.users.length / this.usersPerPage);
+  // }
+  // get totalPages(): number {
+  //   return Math.ceil(this.smData.length / this.pageSize);
+  // }
+
+  get pagesToShow(): (number | string)[] {
+    const pages = [];
+    const maxToShow = 5;
+    if (this.totalPages <= maxToShow) {
+      for (let i = 1; i <= this.totalPages; i++) pages.push(i);
+    } else {
+      if (this.currentPage <= 3) {
+        pages.push(1, 2, 3, '...', this.totalPages);
+      } else if (this.currentPage >= this.totalPages - 2) {
+        pages.push(
+          1,
+          '...',
+          this.totalPages - 2,
+          this.totalPages - 1,
+          this.totalPages
+        );
+      } else {
+        pages.push(1, '...', this.currentPage, '...', this.totalPages);
+      }
+    }
+    return pages;
+  }
+
+  goToPreviousPage() {
+    if (this.currentPage > 1) this.currentPage--;
+  }
+
+  goToNextPage() {
+    if (this.currentPage < this.totalPages) this.currentPage++;
+  }
+
+  goToPage(page: any) {
+    if (typeof page === 'number') this.currentPage = page;
+  }
+  get paginatedSmData(): any[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.smData.slice(startIndex, endIndex);
+  }
+
+  // goToPreviousPage() {
+  //   if (this.currentPage > 1) this.currentPage--;
+  // }
+
+  // goToNextPage() {
+  //   if (this.currentPage < this.totalPages) this.currentPage++;
   // }
 
   get paginatedUsers() {

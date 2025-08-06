@@ -759,6 +759,9 @@ export class TargetComponent implements OnInit {
   isTargetNameChanged(): boolean {
     return this.useForm.value.enquiries !== this.previousValue;
   }
+
+  // this code is fixed above dont chnage pleasse 
+  
   // getAllTarget() {
   //   this.masterSrv.getAllTarget().subscribe({
   //     next: (res: TargetResponse) => {

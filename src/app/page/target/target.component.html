@@ -133,9 +133,9 @@ container remove padding; -->
                                             [(ngModel)]="target.target.enquiries" (ngModelChange)="onTargetChange()"
                                             style="border-radius:12px;font-size:14px;height:40px" /> -->
 
-                                        <input type="number" class="form-control form-control-sm"
-                                            [(ngModel)]="target.target.enquiries" [max]="999999" [min]="0"
-                                            style="border-radius:12px;font-size:14px;height:40px" />
+                                        <input type="number" class="form-control form-control-sm" [(ngModel)]="target.target.enquiries" [max]="999999" [min]="0"
+                                            (input)="limitDigits($event)" style="border-radius:12px;font-size:14px;height:40px" />
+
 
                                     </td>
 

@@ -209,3 +209,6 @@ input[type="text"]::-webkit-search-cancel-button {
 .table-responsive {
   border: none !important;
 }
+table td, table th {
+  text-align: left !important;
+}

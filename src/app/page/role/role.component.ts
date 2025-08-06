@@ -42,6 +42,7 @@ export class RoleComponent implements OnInit {
   currentPage = 1;
   pages: number[] = [];
   totalPages = 1;
+  // roleList: any[] = [];
 
   filteredRoles: any[] = [];
   paginatedRoles: any[] = [];
@@ -55,13 +56,11 @@ export class RoleComponent implements OnInit {
     this.initializeForm();
   }
 
-  staticDealerList = [
-    { dealer_code: 'Admin' },
-    { dealer_code: 'SM' },
-    { dealer_code: 'PS' },
-    { dealer_code: 'GM' },
-    { dealer_code: 'DP' },
-  ];
+  // staticDealerList = [
+  //   { dealer_code: 'SM' },
+  //   { dealer_code: 'PS' },
+  //   { dealer_code: 'CEO' },
+  // ];
 
   ngOnInit(): void {
     console.log('ngOnInit triggered');

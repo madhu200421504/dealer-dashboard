@@ -131,11 +131,17 @@
           <table class="table display mb-4 dataTablesCard fs-14 w-100">
             <thead>
               <tr>
-                <th>Sr No</th>
+                <!-- <th>Sr No</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Excellence</th>
-                <th>Role</th>
+                <th>Role</th> -->
+                  <tr>
+                    <th class="text-start">Sr No</th>
+                    <th class="text-start">Name</th>
+                    <th class="text-start">Email</th>
+                    <th class="text-start">Excellence</th>
+                    <th class="text-start">Role</th>
               </tr>
             </thead>
         <tbody>
@@ -146,11 +152,16 @@
           </tr>
 
               <tr *ngFor="let user of paginatedUsers; let i = index">
-                <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+                <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
                 <td>{{ user.name}}</td>
                 <td>{{user.email}}</td>
                 <td>{{user.excellence}}</td>
-<td>{{ user.user_role }}</td>
+<td>{{ user.user_role }}</td> -->
+  <td class="text-start">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+  <td class="text-start">{{ user.name }}</td>
+  <td class="text-start">{{ user.email }}</td>
+  <td class="text-start">{{ user.excellence }}</td>
+  <td class="text-start">{{ user.user_role }}</td>
                 <td class="d-flex">
                   <!-- <a href="javascript:void(0);" class="btn btn-primary shadow btn-xs sharp mr-1"
                     data-target=".bd-example-modal-lg" data-toggle="modal" data-backdrop="false" (click)="onEdit(team)">

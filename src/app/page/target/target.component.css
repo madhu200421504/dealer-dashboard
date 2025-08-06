@@ -144,3 +144,6 @@ input[type="number"]::-ms-reveal {
 .table-responsive {
   border: none !important;
 }
+table td, table th {
+  text-align: left !important;
+}

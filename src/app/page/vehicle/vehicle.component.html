@@ -79,7 +79,7 @@
                   <th>YOM</th>
                   <th>Type</th>
                   <th>VIN</th>
-                  <th>Chasis number</th>
+                  <!-- <th>Chasis number</th> -->
                   <th>Demo start date</th>
                   <th>Demo end date</th>
                   <th>Action</th>
@@ -97,7 +97,7 @@
                   <td>{{ vehicle.YOM }}</td>
                   <td>{{ vehicle.type }}</td>
                   <td>{{ vehicle.VIN }}</td>
-                  <td>{{ vehicle.chasis_number }}</td>
+                  <!-- <td>{{ vehicle.chasis_number }}</td> -->
                   <td>{{ vehicle.demo_start_date }}</td>
                   <td>{{ vehicle.demo_end_date }}</td>
                   <td>
@@ -318,41 +318,32 @@
                   <span>Type is required.</span>
                 </div>
               </div>
-
-
-              <!-- MY CODE -->
-              <!-- <div class="col-md-6 form-group">
-                      <label for="chasis_number" class="form-label">Chasis Number</label>
-                      <input id="chasis_number" class="form-control form-control-lg" type="text"
-                        placeholder="Enter Chassis Number" formControlName="chasis_number"
-                        [ngClass]="{'is-invalid': useForm.get('chasis_number')?.touched && useForm.get('chasis_number')?.invalid}" />
-
-
-                    </div> -->
-
               <div class="col-md-6 form-group">
-                <label for="chasis_number" class="form-label" style="display: block; width: 100%; text-align: left;">
-                  Chasis Number <span class="text-danger" *ngIf="!isEditMode">*</span>
+                <label for="VIN" class="form-label" style="display: block; width: 100%; text-align: left;">
+                  VIN<span class="text-danger" *ngIf="!isEditMode">*</span>
                 </label>
-
-                <input id="chasis_number" class="form-control form-control-lg" type="text"
-                  placeholder="Enter Chassis Number" formControlName="chasis_number" [ngClass]="{
-                     'is-invalid':
-                       !isEditMode &&
-                       useForm.get('chasis_number')?.touched &&
-                       useForm.get('chasis_number')?.invalid
-                   }" />
-
-                <!-- Error Message -->
+              
+                <input id="demo_start_date" class="form-control form-control-lg" type="date" placeholder=" VIN"
+                  formControlName="VIN" style="width: 350px;" [ngClass]="{
+                                         'is-invalid':
+                                           !isEditMode &&
+                                           useForm.get('VIN')?.touched &&
+                                           useForm.get('VIN')?.invalid
+                                       }" />
+              
                 <div class="text-danger" *ngIf="!isEditMode &&
-                        useForm.get('chasis_number')?.touched &&
-                        useForm.get('chasis_number')?.invalid">
-                  <span *ngIf="useForm.get('chasis_number')?.errors?.['required']">
-                    Chasis number is required.
+                                            useForm.get('VIN')?.touched &&
+                                            useForm.get('VIN')?.invalid">
+                  <span *ngIf="useForm.get('VIN')?.errors?.['required']">
+                  VIN is required.
                   </span>
                 </div>
               </div>
 
+
+           
+
+             
 
 
 
@@ -379,28 +370,35 @@
                     </span>
                   </div>
                 </div>
-
-
-              </div>
-
-              <!-- <div class="col-md-6 form-group">
-                  <label for="demo_end_date" class="form-label"
-                    style="display: block; width: 100%; text-align: left;margin-left:-2px">
-                    End date <span class="text-danger">*</span>
+                <div class="col-md-6 form-group">
+                  <label for="demo_end_date" class="form-label" style="display: block; width: 100%; text-align: left;">
+                    End date <span class="text-danger" *ngIf="!isEditMode">*</span>
                   </label>
-
+                
                   <input id="demo_end_date" class="form-control form-control-lg" type="date" placeholder="end date"
-                    formControlName="demo_end_date" [ngClass]="{
-                                                  'is-invalid':
-                                                    useForm.get('demo_end_date')?.touched && useForm.get('demo_end_date')?.invalid
-                                                }" style="width:350px;" />
-
-                  <div class="text-danger"
-                    *ngIf="useForm.get('demo_end_date')?.touched && useForm.get('demo_end_date')?.invalid">
-                    <span>end date is required.</span>
+                    formControlName="demo_start_date" style="width: 350px;" [ngClass]="{
+                                           'is-invalid':
+                                             !isEditMode &&
+                                             useForm.get('demo_end_date')?.touched &&
+                                             useForm.get('demo_end_date')?.invalid
+                                         }" />
+                
+                  <div class="text-danger" *ngIf="!isEditMode &&
+                                              useForm.get('demo_end_date')?.touched &&
+                                              useForm.get('demo_end_date')?.invalid">
+                    <span *ngIf="useForm.get('demo_end_date')?.errors?.['required']">
+                      End date is required.
+                    </span>
                   </div>
+                </div>
 
-                </div> -->
+          </div>
+                      </div>
+
+
+
+              <!-- <div class="row">
+
               <div class="col-md-6 form-group" style="margin-left:17px;">
                 <label for="demo_end_date" class="form-label"
                   style="display: block; width: 100%; text-align: left; margin-left: 2px;">
@@ -438,7 +436,6 @@
                            useForm.get('VIN')?.invalid
                        }" />
 
-                <!-- Error Message -->
                 <div class="text-danger" *ngIf="!isEditMode &&
                             useForm.get('VIN')?.touched &&
                             useForm.get('VIN')?.invalid">
@@ -448,9 +445,11 @@
                 </div>
               </div>
 
-            </div>
-          </div>
+            </div> -->
 
+
+
+            
           <div class="modal-footer">
             <!-- Ensure Edit button appears only if vehicle_id is defined -->
             <ng-container

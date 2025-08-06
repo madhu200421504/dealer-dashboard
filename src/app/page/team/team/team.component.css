@@ -191,3 +191,6 @@ input.form-control.form-control-lg.is-invalid {
 .table-responsive {
   border: none !important;
 }
+table td, table th {
+  text-align: left !important;
+}

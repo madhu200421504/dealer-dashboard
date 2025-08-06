@@ -117,60 +117,70 @@
           </div>
         </div>
 
-        <table class="table" style="width: 100%; margin-top: 10px; background-color: transparent;">
-          <thead>
-            <tr style="background-color: transparent !important;">
-              <th
-                style="font-weight: 500; color:#000;font-family: 'Poppins', sans-serif;font-size:16px; background-color: transparent;">
-                Subject</th>
-              <th
-                style="font-weight: 500; color:#000;font-family: 'Poppins', sans-serif;font-size:16px; background-color: transparent;">
-                VIN</th>
-              <th
-                style="font-weight: 500; color:#000;font-family: 'Poppins', sans-serif;font-size:16px; background-color: transparent;">
-                PMI</th>
-              <th
-                style="font-weight: 500; color:#000;font-family: 'Poppins', sans-serif;font-size:16px; background-color: transparent;">
-                Assigned to</th>
-              <th
-                style="font-weight: 500; color:#000;font-family: 'Poppins', sans-serif;font-size:16px; background-color: transparent;">
-                Date</th>
-              <th
-                style="font-weight: 500; color:#000;font-family: 'Poppins', sans-serif;font-size:16px; background-color: transparent;">
-                Start time</th>
-              <th style="font-weight: 500; color:#000; background-color: transparent;">End time</th>
-            </tr>
-          </thead>
-          <tbody style="background-color: transparent;">
-            <tr *ngIf="getPaginatedTableData().length === 0" style="background-color: transparent !important;">
-              <td colspan="7" style="text-align: center; background-color: transparent !important;">No data found</td>
-            </tr>
+      <table class="table" style="width: 100%; margin-top: 10px; background-color: transparent;">
+        <thead>
+          <tr style="background-color: transparent !important;">
+            <th
+              style="font-weight: 500; color:#000; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 10px;">
+              Subject
+            </th>
+            <th
+              style="font-weight: 500; color:#000; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 10px;">
+              VIN
+            </th>
+            <th
+              style="font-weight: 500; color:#000; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 10px;">
+              PMI
+            </th>
+            <th
+              style="font-weight: 500; color:#000; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 10px;">
+              Assigned to
+            </th>
+            <th
+              style="font-weight: 500; color:#000; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 10px;">
+              Date
+            </th>
+            <th
+              style="font-weight: 500; color:#000; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 10px;">
+              Start time
+            </th>
+            <th
+              style="font-weight: 500; color:#000; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 10px;">
+              End time
+            </th>
+          </tr>
+        </thead>
+        <tbody style="background-color: transparent;">
+          <tr *ngIf="getPaginatedTableData().length === 0" style="background-color: transparent !important;">
+            <td colspan="7" style="text-align: center; background-color: transparent !important;">No data found</td>
+          </tr>
+      
+          <tr *ngFor="let testDrive of getPaginatedTableData()" class="table-hover-row">
+            <td class="table-cell-styled" style="text-align: left; padding: 10px;">
+              {{ testDrive.subject || 'N/A' }}
+            </td>
+            <td class="table-cell-styled" style="text-align: left; padding: 10px;">
+              {{ testDrive.VIN || 'N/A' }}
+            </td>
+            <td class="table-cell-styled" style="text-align: left; padding: 10px;">
+              {{ testDrive.PMI || 'N/A' }}
+            </td>
+            <td class="table-cell-styled" style="text-align: left; padding: 10px;">
+              {{ testDrive.assigned_to || 'N/A' }}
+            </td>
+            <td class="table-cell-styled" style="text-align: left; padding: 10px;">
+              {{ testDrive.start_date | date:'yyyy-MM-dd' }}
+            </td>
+            <td class="table-cell-styled" style="text-align: left; padding: 10px;">
+              {{ testDrive.start_time }}
+            </td>
+            <td class="table-cell-styled" style="text-align: left; padding: 10px;">
+              {{ testDrive.end_time }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-            <tr *ngFor="let testDrive of getPaginatedTableData()" class="table-hover-row">
-              <td class="table-cell-styled">
-                {{ testDrive.subject || 'N/A' }}
-              </td>
-              <td class="table-cell-styled">
-                {{ testDrive.VIN || 'N/A' }}
-              </td>
-              <td class="table-cell-styled">
-                {{ testDrive.PMI || 'N/A' }}
-              </td>
-              <td class="table-cell-styled">
-                {{ testDrive.assigned_to || 'N/A' }}
-              </td>
-              <td class="table-cell-styled">
-                {{ testDrive.start_date | date:'yyyy-MM-dd' }}
-              </td>
-              <td class="table-cell-styled">
-                {{ testDrive.start_time }}
-              </td>
-              <td class="table-cell-styled">
-                {{ testDrive.end_time }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
 
         <div class="pagination-controls"
           style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap;">
@@ -244,7 +254,8 @@
 
       <div class="main-content" style="margin-top:20px;">
         <ng-container *ngIf="!selectedUser">
-          <div *ngFor="let team of smData" class="team-wrapper" style="margin-bottom: 20px;">
+          <!-- <div *ngFor="let team of smData" class="team-wrapper" style="margin-bottom: 20px;"> -->
+          <div *ngFor="let team of paginatedSmData" class="team-wrapper" style="margin-bottom: 20px;">
 
 
             <div class="team-container" (click)="showUsers(team.team_id, team.sm_id)">
@@ -258,41 +269,43 @@
               <!-- <pre>{{ team.ps_list | json }}</pre> -->
 
               <div class="metrics-wrapper" style="font-family: 'Poppins', sans-serif;">
-                <div class="metric-card" style="background-color:#6FCBF9;color:#FFFFFF;">
+                <div class="metric-card" style="background-color:#C9E4DE;color:#126893;">
                   <i class="fas fa-car"></i>
                   <span>Enquiries</span>
-                  <span class="metric-value">{{ getSmDataByTeamId(team.team_id)?.enquiries || 0 }}</span>
+                  <span class="metric-value" style="color:#126893">{{ getSmDataByTeamId(team.team_id)?.enquiries || 0
+                    }}</span>
                 </div>
 
-                <div class="metric-card" style="background-color:#FF9CDE;color:#FFFFFF;">
+                <div class="metric-card" style="background-color:#FAEDCB;color:#8B6B1B;">
                   <i class="fas fa-file-alt"></i>
                   <span>Test Drive</span>
-                  <span class="metric-value">{{ getSmDataByTeamId(team.team_id)?.testDrives || 0 }}</span>
+                  <span class="metric-value" style="color:#8B6B1B">{{ getSmDataByTeamId(team.team_id)?.testDrives || 0
+                    }}</span>
                 </div>
 
-                <div class="metric-card" style="background-color:#BFDCFC;color:#FFFFFF;">
+                <div class="metric-card" style="background-color:#EBF4FF;color:#396391;">
                   <i class="fas fa-times-circle"></i>
                   <span>Orders</span>
-                  <span class="metric-value">{{ getSmDataByTeamId(team.team_id)?.orders || 0 }}</span>
+                  <span class="metric-value" style="color:#396391">{{ getSmDataByTeamId(team.team_id)?.orders || 0 }}</span>
                 </div>
 
-                <div class="metric-card" style="background-color:#9CED97;color:#FFFFFF;">
+                <div class="metric-card" style="background-color:#F8D9C4;color:#D2475C;">
                   <i class="fas fa-shopping-cart"></i>
                   <span>Cancellation</span>
-                  <span class="metric-value">{{ getSmDataByTeamId(team.team_id)?.cancellations || 0 }}</span>
+                  <span class="metric-value" style="color:#D2475C">{{ getSmDataByTeamId(team.team_id)?.cancellations || 0 }}</span>
                 </div>
 
-                <div class="metric-card" style="background-color:#C59CFF;color:#FFFFFF;">
+                <div class="metric-card" style="background-color:#F2C6DF;color:#C72DBE;">
                   <i class="fas fa-store"></i>
                   <span>Net Orders</span>
-                  <span class="metric-value">{{ getSmDataByTeamId(team.team_id)?.net_orders || 0 }}</span>
+                  <span class="metric-value" style="color:#C72DBE">{{ getSmDataByTeamId(team.team_id)?.net_orders || 0 }}</span>
                 </div>
 
-                <div class="metric-card" style="background-color:#d2c3e7	;color:#FFFFFF;">
+                <div class="metric-card" style="background-color:#DBCDF0	;color:#933B8E;">
                   <i class="fas fa-store"></i>
                   <span>Retail</span>
 
-                  <span class="metric-value">{{ getSmDataByTeamId(team.team_id)?.retail || 0 }}</span>
+                  <span class="metric-value" style="color:#933B8E">{{ getSmDataByTeamId(team.team_id)?.retail || 0 }}</span>
                 </div>
               </div>
 
@@ -324,6 +337,51 @@
           </div>
         </ng-container>
       </div>
+
+
+
+
+      <!-- Footer with summary and pagination -->
+    <div class="data-footer" style="
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      padding: 12px 20px;
+      border-radius: 6px;
+      margin-top: 20px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* ✅ added */
+    ">
+
+        <!-- Left: Showing text -->
+        <div>
+          Showing {{ (currentPage - 1) * itemsPerPage + 1 }}
+          to
+          {{ Math.min(currentPage * itemsPerPage, totalItems) }}
+          of
+          {{ totalItems }} entries
+        </div>
+      
+        <!-- Right: Pagination -->
+      <!-- Improved version with better disable logic -->
+      <div class="pagination-controls">
+        <button class="btn btn-sm btn-light" [disabled]="currentPage <= 1" (click)="goToPrevious()" style="border:1px solid #ccc">
+          Prev
+        </button>
+        <span style="margin: 0 8px;">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button class="btn btn-sm btn-light" [disabled]="currentPage >= totalPages || totalItems <= itemsPerPage"
+          (click)="goToNext()" style="border:1px solid #ccc">
+          Next
+        </button>
+      </div>
+      
+      </div>
+
+      <!-- Pagination Controls -->
+
+
 
 
       <br>
@@ -435,10 +493,11 @@
 
 
               <div *ngIf="dropdownOpen" (click)="$event.stopPropagation()"
-                style="position: absolute; top: 100%;  right: -10px !important; width: 150px; max-height: 250px; overflow-y: auto; background: white; border: 1px solid #ccc; z-index: 1000; border-radius: 8px;">
+                style="position: absolute; top: 100%; right: -10px !important; width: 200px; max-height: 250px; overflow-y: auto; background: white; border-radius: 15px; z-index: 1000; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
+
 
                 <div *ngFor="let user of users" (click)="selectUser(user.user_id)"
-                  style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #eee;">
+                  style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #eee;margin: 0 8px; /* 👈 reduces left/right width */">
 
                   <div [ngStyle]="{
   'width': '16px',
@@ -468,16 +527,15 @@
 
                   <!-- Initial Circle -->
                   <div [ngStyle]="{
-                        'min-width': '24px',
-                        'min-height': '24px',
+                        'min-width': '28px',
+                        'min-height': '28px',
                         'background-color': getColorForUser(user.name),
                         'color': 'white',
                         'border-radius': '50%',
                         'display': 'flex',
                         'align-items': 'center',
                         'justify-content': 'center',
-                        'font-size': '12px',
-                        'font-weight': 'bold'
+                        'font-size': '20px'
                       }">
                     {{ user.name?.charAt(0) || '?' }}
                   </div>
@@ -502,7 +560,7 @@
                   <div class="header-box1"><i class="fas fa-phone"></i> Enquiries</div>
                 </th>
                 <th>
-                  <div class="header-box2"><i class="fas fa-car"></i> Test Drive</div>
+                  <div class="header-box2"><i class="fas fa-car"></i>Unique Test Drives</div>
                 </th>
                 <th>
                   <div class="header-box3"><i class="fas fa-shopping-cart"></i> Orders</div>
@@ -796,34 +854,38 @@
       style="background: #ffffff; padding: 16px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-top: 20px;">
 
       <!-- Outer border and radius applied here -->
-      <div style="border: 2px solid #D4D4D8; border-radius: 12px; overflow: hidden;">
-        <table class="table" style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr>
-              <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Name</th>
-              <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Subject</th>
-              <th style="font-weight: 600; color:#0F3153;  padding: 8px;">PMI</th>
-              <!-- <th style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px;">Time</th> -->
-            </tr>
-          </thead>
+      <div style=" border-radius: 12px; overflow: hidden;">
+<table class="table" style="width: 100%; border-collapse: collapse;">
+  <thead>
+    <tr style="background-color: white;">
+      <th
+        style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;">
+        Name</th>
+      <th
+        style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;">
+        Subject</th>
+      <th style="font-weight: 600; color:#0F3153; padding: 8px; text-align: left; background-color: white;">PMI</th>
+    </tr>
+  </thead>
 
+  <tbody>
+    <tr *ngIf="getActiveTestDriveList().length === 0" style="background-color: white;">
+      <td colspan="3" style="text-align: center; padding: 12px; color: #6b7280; background-color: white;">
+        No {{ activeTestDriveStatus.toLowerCase() }} activities.
+      </td>
+    </tr>
 
-          <tbody>
-            <tr *ngIf="getActiveTestDriveList().length === 0">
-              <td colspan="3" style="text-align: center; padding: 12px; color: #6b7280;">
-                No {{ activeTestDriveStatus.toLowerCase() }} activities.
-              </td>
-            </tr>
-            <!-- Upcoming -->
-            <tr *ngFor="let item of getActiveTestDriveList()">
-              <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.name }}</td>
-              <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.subject }}</td>
-              <td style="border: 1px solid #E4E4E7; padding: 8px;">{{ item.PMI }}</td>
-            </tr>
+    <tr *ngFor="let item of getActiveTestDriveList()" style="background-color: white;">
+      <td style="border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;font-size:16px;font-weight:400;color:#000;">{{ item.name }}
+      </td>
+      <td style="border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;font-size:16px;font-weight:400;color:#000;">{{ item.subject }}
+      </td>
+      <td style="border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;font-size:16px;font-weight:400;color:#000;">{{ item.PMI }}
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-
-
-        </table>
       </div>
     </div>
 
@@ -1008,16 +1070,22 @@
           </div>
 
 
-          <div class="filter-wrapper">
-            <div class="filter-group">
-              <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'enquiries' }"
-                (click)="changeCategory('enquiries')">Enquiries</button>
-              <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'test-drives' }"
-                (click)="changeCategory('test-drives')">Test Drives</button>
-              <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'orders' }"
-                (click)="changeCategory('orders')">Orders</button>
-            </div>
-          </div>
+      <div class="filter-wrapper">
+        <div class="filter-group">
+          <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'enquiries' }"
+            (click)="changeCategory('enquiries')">
+            <i class="fas fa-user" style="margin-right: 5px;"></i> Enquiries
+          </button>
+          <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'test-drives' }"
+            (click)="changeCategory('test-drives')">
+            <i class="fas fa-car" style="margin-right: 5px;"></i> Test Drives
+          </button>
+          <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'orders' }"
+            (click)="changeCategory('orders')">
+            <i class="fas fa-file-alt" style="margin-right: 5px;"></i> Orders
+          </button>
+        </div>
+      </div>
 
           <!-- BELOW IS THE SECTION YOU ASKED FOR -->
           <!-- CARD SECTION -->
@@ -1155,7 +1223,7 @@
                         <span style="color: #32D16D; font-size: 24px;">
                           {{ selectedUser?.performance?.uniqueTestDrives }}
                         </span>
-                        <p style="margin: 0; font-size: 14px; color: #333;">unique test drives</p>
+                        <p style="margin: 0; font-size: 14px; color: #333;">Unique Test Drives</p>
                       </div>
 
                       <!-- <div class="card-box light-grey" style="display: flex; flex-direction: column; align-items: flex-start;">
@@ -1171,7 +1239,7 @@
                       <div class="card-box light-grey"
                         style="display: flex; flex-direction: column; align-items: flex-start;">
                         <p style="margin: 0; font-size: 14px; color: #333;">Give</p>
-                        <span style="color: #32D16D; font-size: 24px;">
+                        <span style="color: #1380FE; font-size: 24px;">
                           {{ selectedUser?.performance?.remainingTestDrives }}
                         </span>
                         <p style="margin: 0; font-size: 14px; color: #333;">more test drives to<br> achieve your target
