@@ -2934,7 +2934,6 @@ export class DashboardComponent implements OnInit {
   onFilterChange(filterType: string): void {
     this.selectedFilter = filterType;
 
-    // Fetch updated data for all SMs with the new filter
     this.smData.forEach((sm) => {
       this.fetchSMData(sm.sm_id, filterType);
     });
@@ -3037,6 +3036,7 @@ export class DashboardComponent implements OnInit {
     // Join all user IDs with comma, duplicates will stay if any
     return userIds.join(',');
   }
+
   calculateWidthPercent(value: number): number {
     const max = Math.max(this.enquiriesCount, this.enquiriesCountPs2, 1); // avoid divide by 0
     return (value / max) * 100;
@@ -3234,6 +3234,10 @@ export class DashboardComponent implements OnInit {
     if (this.selectedPs2UserId) {
       this.loadCompareMetrics(this.selectedPs2UserId, filter, true);
     }
+    // Reapply selectedUserId (dropdown user) after filter change
+    if (this.selectedUserId) {
+      this.loadCompareMetrics(this.selectedUserId, filter);
+    }
   }
 
   loadUsers() {
@@ -3294,6 +3298,7 @@ export class DashboardComponent implements OnInit {
         return [];
     }
   }
+
   getFilteredTestDrives() {
     switch (this.filterOption) {
       case 'today':
@@ -3399,9 +3404,7 @@ export class DashboardComponent implements OnInit {
       : '';
 
     // 👇 Append userIds to the API URL if any are selected
-    const url = selectedUserIds
-      ? `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${selectedUserIds}&type=${filter}`
-      : `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}`;
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}`;
 
     this.http.get<any>(url, { headers }).subscribe({
       next: (response) => {
@@ -3442,7 +3445,7 @@ export class DashboardComponent implements OnInit {
         };
 
         // ✅ Update table data used in UI
-        this.selectedUsersPerformance = this.dashboardMetrics.performance;
+        // this.selectedUsersPerformance = this.dashboardMetrics.performance;
       },
       error: (err) => {
         console.error('Dashboard data fetch error', err);
@@ -3774,6 +3777,7 @@ export class DashboardComponent implements OnInit {
 
   //   this.currentPage = 1;
   // }
+
   onFilterOptionChange(): void {
     if (this.filterOption === 'today') {
       this.filteredTableTestDrives = [...this.testDrivesToday];
