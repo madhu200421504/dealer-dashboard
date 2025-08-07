@@ -1,4 +1,5 @@
 import {
+<<<<<<< HEAD
   BaseIcon,
   ChevronRightIcon
 } from "./chunk-JM4VZORY.js";
@@ -13,11 +14,30 @@ import {
   UniqueComponentId
 } from "./chunk-LSQG3WLJ.js";
 import {
+=======
+>>>>>>> 26d69e78 (fucntionality solved)
   Router,
   RouterLink,
   RouterLinkActive,
   RouterModule
 } from "./chunk-JH7RAIWY.js";
+<<<<<<< HEAD
+=======
+import {
+  Tooltip,
+  TooltipModule
+} from "./chunk-5QDNSMVE.js";
+import {
+  BaseIcon,
+  ChevronRightIcon
+} from "./chunk-JM4VZORY.js";
+import "./chunk-BUGEQH7Q.js";
+import {
+  PrimeTemplate,
+  SharedModule,
+  UniqueComponentId
+} from "./chunk-LSQG3WLJ.js";
+>>>>>>> 26d69e78 (fucntionality solved)
 import "./chunk-YXWAPH6D.js";
 import "./chunk-OCCYK2DZ.js";
 import {
