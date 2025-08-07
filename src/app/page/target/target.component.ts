@@ -95,6 +95,7 @@ export class TargetComponent implements OnInit {
   // dtOptions: Config = {};
   isModalVisible = false;
   // isEditMode = false;
+wasPreviousClicked = false;
 
   previousValue: string = '';
   selectedRange: string = 'MTD'; // default selected
@@ -466,23 +467,33 @@ export class TargetComponent implements OnInit {
   }
 
   // setupPagination() {
-  //   const filtered = this.filteredTeam();
-  //   this.totalPages = Math.ceil(filtered.length / this.itemsPerPage);
-  //   this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  //   const totalItems = this.filteredTeam().length;
+  //   this.totalPages = Math.ceil(totalItems / this.itemsPerPage);
+
+  //   this.visiblePages = Array.from(
+  //     { length: this.totalPages },
+  //     (_, i) => i + 1
+  //   );
+
   //   this.paginateTeams();
   // }
+
   setupPagination() {
     const totalItems = this.filteredTeam().length;
     this.totalPages = Math.ceil(totalItems / this.itemsPerPage);
-
-    // Create page number array like [1, 2, 3, ..., totalPages]
-    this.visiblePages = Array.from(
-      { length: this.totalPages },
-      (_, i) => i + 1
-    );
-
-    // Update the visible paginated data
+    this.updateVisiblePages();
     this.paginateTeams();
+  }
+  updateVisiblePages() {
+    const groupSize = 3;
+    const startGroup =
+      Math.floor((this.currentPage - 1) / groupSize) * groupSize + 1;
+    const endGroup = Math.min(startGroup + groupSize - 1, this.totalPages);
+
+    this.visiblePages = [];
+    for (let i = startGroup; i <= endGroup; i++) {
+      this.visiblePages.push(i);
+    }
   }
 
   paginateTeams() {
@@ -491,19 +502,28 @@ export class TargetComponent implements OnInit {
     this.paginatedTarget.set(this.filteredTeam().slice(start, end));
   }
 
-  previousPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.paginateTeams();
-    }
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.updateVisiblePages();
+    this.paginateTeams();
   }
 
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+      this.updateVisiblePages();
       this.paginateTeams();
     }
   }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updateVisiblePages();
+      this.paginateTeams();
+    }
+  }
+
   hasAnyChanges(): boolean {
     return this.targetList().some(
       (entry) =>
@@ -513,10 +533,10 @@ export class TargetComponent implements OnInit {
     );
   }
 
-  goToPage(page: number) {
-    this.currentPage = page;
-    this.paginateTeams();
-  }
+  // goToPage(page: number) {
+  //   this.currentPage = page;
+  //   this.paginateTeams();
+  // }
 
   getShowingTo() {
     const to = this.currentPage * this.itemsPerPage;
@@ -760,8 +780,7 @@ export class TargetComponent implements OnInit {
     return this.useForm.value.enquiries !== this.previousValue;
   }
 
-  // this code is fixed above dont chnage pleasse 
-  
+  // this code is fixed above dont chnage pleasse
   // getAllTarget() {
   //   this.masterSrv.getAllTarget().subscribe({
   //     next: (res: TargetResponse) => {
