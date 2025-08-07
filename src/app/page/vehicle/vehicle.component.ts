@@ -119,7 +119,7 @@ export class VehicleComponent implements OnInit {
       type: new FormControl('', [Validators.required]),
       YOM: new FormControl('', [Validators.required]),
       // chasis_number: new FormControl('', [Validators.required]), // Ensure this is correct
-      chasis_number: new FormControl('', [Validators.required]),
+      // chasis_number: new FormControl('', [Validators.required]),
       demo_start_date: new FormControl('', [Validators.required]),
       demo_end_date: new FormControl('', [Validators.required]),
     });
@@ -195,7 +195,7 @@ export class VehicleComponent implements OnInit {
         demo_end_date: vehicle.demo_end_date
           ? this.formatDate(vehicle.demo_end_date)
           : '',
-        chasis_number: vehicle.chasis_number || '',
+        // chasis_number: vehicle.chasis_number || '',
       });
     } else {
       // ✅ Creating a new vehicle
@@ -594,10 +594,7 @@ export class VehicleComponent implements OnInit {
 
     // ✅ Check if End Date is before Start Date
     if (endDate < startDate) {
-      this.toastr.warning(
-        'End date cannot be before start date.',
-        'Error'
-      );
+      this.toastr.warning('End date cannot be before start date.', 'Error');
       return;
     }
 
@@ -1036,6 +1033,39 @@ export class VehicleComponent implements OnInit {
   //     alert('No Vehicle selected for deletion');
   //   }
   // }
+  // deleteVehicleId() {
+  //   const vehicle = this.selectedVehicleForDeletion;
+
+  //   if (vehicle && vehicle.vehicle_id) {
+  //     const vehicleId = vehicle.vehicle_id;
+
+  //     this.masterSrv.deleteVehicle(vehicleId).subscribe(
+  //       (res: VehicleResponse) => {
+  //         this.toastr.success('Vehicle deleted successfully', 'Success');
+
+  //         // ✅ Close the modal
+  //         this.isDeleteModalOpen = false;
+
+  //         // ✅ Update the signal
+  //         const updatedList = this.vehicleList().filter(
+  //           (v) => v.vehicle_id !== vehicleId
+  //         );
+  //         this.vehicleList.set(updatedList);
+
+  //         // ✅ Update filteredVehicles to reflect the updated list
+  //         this.filteredVehicles = [...updatedList];
+
+  //         // ✅ Recalculate pagination
+  //         this.paginateVehicles();
+  //       },
+  //       (error) => {
+  //         this.toastr.error('Server Error', 'Error');
+  //       }
+  //     );
+  //   } else {
+  //     alert('No Vehicle selected for deletion');
+  //   }
+  // }
   deleteVehicleId() {
     const vehicle = this.selectedVehicleForDeletion;
 
@@ -1060,6 +1090,9 @@ export class VehicleComponent implements OnInit {
 
           // ✅ Recalculate pagination
           this.paginateVehicles();
+
+          // ✅ Decrement the count signal
+          this.count.set(this.count() - 1);
         },
         (error) => {
           this.toastr.error('Server Error', 'Error');

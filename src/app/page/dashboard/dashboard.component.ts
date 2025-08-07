@@ -177,6 +177,7 @@ export class DashboardComponent implements OnInit {
   hourlyConnectedCalls: number[] = [];
   hourlyMissedCalls: number[] = [];
   // hourlyChartLabels: string[] = [];
+  callSummaryOrderEnquiry: any = {};
 
   testDrives: any[] = []; // <-- Declare testDrives here
   dashboardData: any = {
@@ -347,6 +348,11 @@ export class DashboardComponent implements OnInit {
   ps2Performance: { [userId: string]: any } = {};
   selectedTeamId: string | null = null;
   selectedTeam: string | null = null;
+  callSummaryCold: any;
+  hourlyChartLabelsCold: string[] = [];
+  hourlyAllColdCalls: number[] = [];
+  hourlyConnectedColdCalls: number[] = [];
+  hourlyMissedColdCalls: number[] = [];
 
   selectedUpcomingIndex: number = 0;
   // selectedOverdueIndex: number = 0;
@@ -516,10 +522,60 @@ export class DashboardComponent implements OnInit {
       : this.selectedUser?.summaryColdCalls;
   }
 
+  // onActivityClick(activity: string): void {
+  //   this.activeActivity = activity;
+  // }
+  // onActivityClick(activity: string): void {
+  //   this.activeActivity = activity;
+  //   this.updateCallSummaryOrder();
+  // }
   onActivityClick(activity: string): void {
     this.activeActivity = activity;
+
+    this.callSummaryOrder =
+      activity === 'cold' ? this.callSummaryCold : this.callSummaryOrderEnquiry;
+
+    this.updateCallSummaryOrder();
   }
 
+  updateCallSummaryOrder(): void {
+    const summary = this.callSummaryOrder || {};
+
+    const newSummary = {
+      all: {
+        calls: summary['All Calls']?.calls || 0,
+        duration: summary['All Calls']?.duration || '0h 0m 0s',
+        clients: summary['All Calls']?.uniqueClients || 0,
+      },
+      connected: {
+        calls: summary['Connected']?.calls || 0,
+        duration: summary['Connected']?.duration || '0h 0m 0s',
+        clients: summary['Connected']?.uniqueClients || 0,
+      },
+      missed: {
+        calls: summary['Missed']?.calls || 0,
+        duration: summary['Missed']?.duration || '0h 0m 0s',
+        clients: summary['Missed']?.uniqueClients || 0,
+      },
+      rejected: {
+        calls: summary['Rejected']?.calls || 0,
+        duration: summary['Rejected']?.duration || '0h 0m 0s',
+        clients: summary['Rejected']?.uniqueClients || 0,
+      },
+    };
+
+    if (this.activeActivity === 'cold') {
+      this.callSummaryCold = newSummary;
+      console.log('✅ Updated Cold Call Summary:', newSummary);
+    } else {
+      this.callSummaryOrderEnquiry = newSummary;
+      console.log('✅ Updated Enquiry Summary:', newSummary);
+    }
+  }
+
+  // get currentSummary() {
+  //   return this.activeActivity === 'ColdCalls' ? this.callSummaryCold : this.callSummaryOrder;
+  // }
   onTestDriveClick(status: string): void {
     this.activeTestDriveStatus = status;
   }
@@ -941,6 +997,122 @@ export class DashboardComponent implements OnInit {
   //     },
   //   });
   // }
+  // selectCompareUser(userId: string, smId: string): void {
+  //   console.log('📌 selectCompareUser called with:', { userId, smId });
+
+  //   if (!userId || !smId) {
+  //     console.warn('User ID or SM ID is missing', { userId, smId });
+  //     return;
+  //   }
+
+  //   this.selectedDuration = '1M'; // default for right box
+  //   // this.selectedFilter = 'MTD'; // default for chart
+
+  //   const token = sessionStorage.getItem('token');
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${this.selectedFilter}`;
+
+  //   this.http.get<any>(apiUrl, { headers }).subscribe({
+  //     next: (res) => {
+  //       if (res.status === 200 && res.data) {
+  //         const userData = res.data;
+
+  //         // ✅ Add this block here to extract stats from ps_list
+  //         let matchedUserStats: any = {};
+  //         for (const sm of userData.smData || []) {
+  //           const ps = sm.ps_list?.find((p: any) => p.ps_id === userId);
+  //           if (ps) {
+  //             matchedUserStats = ps;
+  //             break;
+  //           }
+  //         }
+
+  //         const summaryEnquiry = userData.selectedUser?.summaryEnquiry || {};
+  //         const enquirySummaryRaw = summaryEnquiry.summary || {};
+  //         const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
+
+  //         this.selectedUser = {
+  //           ps_id: userId,
+  //           fname: userData.selectedUser?.fname || '',
+  //           lname: userData.selectedUser?.lname || '',
+  //           upcomingTestDrives: userData.selectedUser?.upcomingTestDrives || [],
+  //           completedTestDrives:
+  //             userData.selectedUser?.completedTestDrives || [],
+  //           overdueTestDrives: userData.selectedUser?.overdueTestDrives || [],
+  //           summaryEnquiry,
+  //           summaryColdCalls: userData.selectedUser?.summaryColdCalls || {},
+
+  //           performance: userData.selectedUser?.performance || {},
+
+  //           // ✅ Add the metrics from matchedUserStats
+  //           enquiries: matchedUserStats?.enquiries || 0,
+  //           testDrives: matchedUserStats?.testDrives || 0,
+  //           orders: matchedUserStats?.orders || 0,
+  //           cancellation: matchedUserStats?.cancellation || 0,
+  //           net_orders: matchedUserStats?.net_orders || 0,
+  //           retail: matchedUserStats?.retail || 0,
+  //         };
+
+  //         this.compareSmData = userData.smData;
+
+  //         this.callSummaryOrder = {
+  //           all: {
+  //             calls: enquirySummaryRaw['All Calls']?.calls || 0,
+  //             duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['All Calls']?.uniqueClients || 0,
+  //           },
+  //           connected: {
+  //             calls: enquirySummaryRaw['Connected']?.calls || 0,
+  //             duration: enquirySummaryRaw['Connected']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['Connected']?.uniqueClients || 0,
+  //           },
+  //           missed: {
+  //             calls: enquirySummaryRaw['Missed']?.calls || 0,
+  //             duration: enquirySummaryRaw['Missed']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['Missed']?.uniqueClients || 0,
+  //           },
+  //           rejected: {
+  //             calls: enquirySummaryRaw['Rejected']?.calls || 0,
+  //             duration: enquirySummaryRaw['Rejected']?.duration || '0h 0m 0s',
+  //             clients: enquirySummaryRaw['Rejected']?.uniqueClients || 0,
+  //           },
+  //         };
+
+  //         this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
+  //         this.hourlyAllCalls = this.hourlyChartLabels.map(
+  //           (key) => hourlyAnalysisData[key]?.AllCalls?.calls || 0
+  //         );
+  //         this.hourlyConnectedCalls = this.hourlyChartLabels.map(
+  //           (key) => hourlyAnalysisData[key]?.Connected?.calls || 0
+  //         );
+  //         this.hourlyMissedCalls = this.hourlyChartLabels.map(
+  //           (key) => hourlyAnalysisData[key]?.missedCalls || 0
+  //         );
+
+  //         this.cdr.detectChanges();
+  //         this.renderHourlyChart();
+
+  //         console.log('✅ Selected User:', this.selectedUser);
+  //         console.log('📞 Call Summary Order:', this.callSummaryOrder);
+  //         console.log('📊 Chart Labels:', this.hourlyChartLabels);
+  //       } else {
+  //         console.warn('⚠️ Incomplete response:', res);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('❌ Error fetching selected user:', err);
+  //     },
+  //   });
+  // }
+  get callSummaryToDisplay() {
+    return this.selectedFilter === 'Cold Calls'
+      ? this.callSummaryCold
+      : this.callSummaryOrder;
+  }
+
   selectCompareUser(userId: string, smId: string): void {
     console.log('📌 selectCompareUser called with:', { userId, smId });
 
@@ -949,8 +1121,7 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    this.selectedDuration = '1M'; // default for right box
-    // this.selectedFilter = 'MTD'; // default for chart
+    this.selectedDuration = '1M';
 
     const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders({
@@ -964,7 +1135,7 @@ export class DashboardComponent implements OnInit {
         if (res.status === 200 && res.data) {
           const userData = res.data;
 
-          // ✅ Add this block here to extract stats from ps_list
+          // Match ps_id in smData.ps_list
           let matchedUserStats: any = {};
           for (const sm of userData.smData || []) {
             const ps = sm.ps_list?.find((p: any) => p.ps_id === userId);
@@ -978,6 +1149,11 @@ export class DashboardComponent implements OnInit {
           const enquirySummaryRaw = summaryEnquiry.summary || {};
           const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
 
+          const summaryColdCalls =
+            userData.selectedUser?.summaryColdCalls || {};
+          const coldCallSummaryRaw = summaryColdCalls.summary || {};
+          const coldHourlyAnalysis = summaryColdCalls.hourlyAnalysis || {};
+
           this.selectedUser = {
             ps_id: userId,
             fname: userData.selectedUser?.fname || '',
@@ -987,10 +1163,9 @@ export class DashboardComponent implements OnInit {
               userData.selectedUser?.completedTestDrives || [],
             overdueTestDrives: userData.selectedUser?.overdueTestDrives || [],
             summaryEnquiry,
-            summaryColdCalls: userData.selectedUser?.summaryColdCalls || {},
+            summaryColdCalls,
             performance: userData.selectedUser?.performance || {},
 
-            // ✅ Add the metrics from matchedUserStats
             enquiries: matchedUserStats?.enquiries || 0,
             testDrives: matchedUserStats?.testDrives || 0,
             orders: matchedUserStats?.orders || 0,
@@ -1001,7 +1176,36 @@ export class DashboardComponent implements OnInit {
 
           this.compareSmData = userData.smData;
 
-          this.callSummaryOrder = {
+          // 🔷 Cold Call Summary
+          this.callSummaryCold = {
+            all: {
+              calls: coldCallSummaryRaw['All Calls']?.calls || 0,
+              duration: coldCallSummaryRaw['All Calls']?.duration || '0h 0m 0s',
+              clients: coldCallSummaryRaw['All Calls']?.uniqueClients || 0,
+            },
+            connected: {
+              calls: coldCallSummaryRaw['Connected']?.calls || 0,
+              duration: coldCallSummaryRaw['Connected']?.duration || '0h 0m 0s',
+              clients: coldCallSummaryRaw['Connected']?.uniqueClients || 0,
+            },
+            missed: {
+              calls: coldCallSummaryRaw['Missed']?.calls || 0,
+              duration: coldCallSummaryRaw['Missed']?.duration || '0h 0m 0s',
+              clients: coldCallSummaryRaw['Missed']?.uniqueClients || 0,
+            },
+            rejected: {
+              calls: coldCallSummaryRaw['Rejected']?.calls || 0,
+              duration: coldCallSummaryRaw['Rejected']?.duration || '0h 0m 0s',
+              clients: coldCallSummaryRaw['Rejected']?.uniqueClients || 0,
+            },
+          };
+          console.log(
+            '✅ Assigned callSummaryColddddddddddddd:',
+            this.callSummaryCold
+          );
+
+          // 🔷 Enquiry Summary
+          this.callSummaryOrderEnquiry = {
             all: {
               calls: enquirySummaryRaw['All Calls']?.calls || 0,
               duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
@@ -1024,6 +1228,13 @@ export class DashboardComponent implements OnInit {
             },
           };
 
+          // ✅ MAIN FIX: Update the actual variable bound to the UI
+          this.callSummaryOrder =
+            this.activeActivity === 'cold'
+              ? this.callSummaryCold
+              : this.callSummaryOrderEnquiry;
+
+          // 🔷 Enquiry Hourly Chart
           this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
           this.hourlyAllCalls = this.hourlyChartLabels.map(
             (key) => hourlyAnalysisData[key]?.AllCalls?.calls || 0
@@ -1035,12 +1246,28 @@ export class DashboardComponent implements OnInit {
             (key) => hourlyAnalysisData[key]?.missedCalls || 0
           );
 
+          // 🔷 Cold Call Hourly Chart
+          this.hourlyChartLabelsCold = Object.keys(coldHourlyAnalysis);
+          this.hourlyAllColdCalls = this.hourlyChartLabelsCold.map(
+            (key) => coldHourlyAnalysis[key]?.AllCalls?.calls || 0
+          );
+          this.hourlyConnectedColdCalls = this.hourlyChartLabelsCold.map(
+            (key) => coldHourlyAnalysis[key]?.Connected?.calls || 0
+          );
+          this.hourlyMissedColdCalls = this.hourlyChartLabelsCold.map(
+            (key) => coldHourlyAnalysis[key]?.missedCalls || 0
+          );
+
           this.cdr.detectChanges();
           this.renderHourlyChart();
 
           console.log('✅ Selected User:', this.selectedUser);
-          console.log('📞 Call Summary Order:', this.callSummaryOrder);
-          console.log('📊 Chart Labels:', this.hourlyChartLabels);
+          console.log('📞 Enquiry Summary:', this.callSummaryOrderEnquiry);
+          console.log('📞 Cold Call Summary:', this.callSummaryCold);
+          console.log('📊 Enquiry Labels:', this.hourlyChartLabels);
+          console.log('📊 Cold Call Labels:', this.hourlyChartLabelsCold);
+
+          this.updateCallSummaryOrder(); // ✅ Ensure table re-renders if needed
         } else {
           console.warn('⚠️ Incomplete response:', res);
         }
@@ -2269,6 +2496,7 @@ export class DashboardComponent implements OnInit {
   //     },
   //   });
   // }
+
   fetchCallSummaryData(): void {
     const userId = this.selectedUser?.ps_id;
     const smId = this.selectedSmId;
@@ -2298,30 +2526,37 @@ export class DashboardComponent implements OnInit {
           const summaryEnquiry = userData.selectedUser?.summaryEnquiry || {};
           const summaryColdCalls =
             userData.selectedUser?.summaryColdCalls || {};
-          const enquirySummaryRaw = summaryEnquiry.summary || {};
-          const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
+          const isColdCall = this.activeActivity === 'ColdCalls';
+
+          const summaryRaw = isColdCall
+            ? summaryColdCalls.summary || {}
+            : summaryEnquiry.summary || {};
+          // const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
+const hourlyAnalysisData = isColdCall
+  ? summaryColdCalls.hourlyAnalysis || {}
+  : summaryEnquiry.hourlyAnalysis || {};
 
           // ✅ Only update call summary object
           this.callSummaryOrder = {
             all: {
-              calls: enquirySummaryRaw['All Calls']?.calls || 0,
-              duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
-              clients: enquirySummaryRaw['All Calls']?.uniqueClients || 0,
+              calls: summaryRaw['All Calls']?.calls || 0,
+              duration: summaryRaw['All Calls']?.duration || '0h 0m 0s',
+              clients: summaryRaw['All Calls']?.uniqueClients || 0,
             },
             connected: {
-              calls: enquirySummaryRaw['Connected']?.calls || 0,
-              duration: enquirySummaryRaw['Connected']?.duration || '0h 0m 0s',
-              clients: enquirySummaryRaw['Connected']?.uniqueClients || 0,
+              calls: summaryRaw['Connected']?.calls || 0,
+              duration: summaryRaw['Connected']?.duration || '0h 0m 0s',
+              clients: summaryRaw['Connected']?.uniqueClients || 0,
             },
             missed: {
-              calls: enquirySummaryRaw['Missed']?.calls || 0,
-              duration: enquirySummaryRaw['Missed']?.duration || '0h 0m 0s',
-              clients: enquirySummaryRaw['Missed']?.uniqueClients || 0,
+              calls: summaryRaw['Missed']?.calls || 0,
+              duration: summaryRaw['Missed']?.duration || '0h 0m 0s',
+              clients: summaryRaw['Missed']?.uniqueClients || 0,
             },
             rejected: {
-              calls: enquirySummaryRaw['Rejected']?.calls || 0,
-              duration: enquirySummaryRaw['Rejected']?.duration || '0h 0m 0s',
-              clients: enquirySummaryRaw['Rejected']?.uniqueClients || 0,
+              calls: summaryRaw['Rejected']?.calls || 0,
+              duration: summaryRaw['Rejected']?.duration || '0h 0m 0s',
+              clients: summaryRaw['Rejected']?.uniqueClients || 0,
             },
           };
 
@@ -2469,18 +2704,83 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  renderHourlyChart(): void {
-    const ctx = (
-      document.getElementById('hourlyChart') as HTMLCanvasElement
-    )?.getContext('2d');
-    if (!ctx) return;
+  // renderHourlyChart(): void {
+  //   const ctx = (
+  //     document.getElementById('hourlyChart') as HTMLCanvasElement
+  //   )?.getContext('2d');
+  //   if (!ctx) return;
 
-    // 🔥 Destroy previous instance to avoid overlaps
+  //   // 🔥 Destroy previous instance to avoid overlaps
+  //   if (this.hourlyChartInstance) {
+  //     this.hourlyChartInstance.destroy();
+  //   }
+
+  //   // ✅ Create and save new instance
+  //   this.hourlyChartInstance = new Chart(ctx, {
+  //     type: 'line',
+  //     data: {
+  //       labels: this.hourlyChartLabels,
+  //       datasets: [
+  //         {
+  //           label: 'All Calls',
+  //           data: this.hourlyAllCalls,
+  //           borderColor: '#3498db',
+  //           backgroundColor: 'rgba(52, 152, 219, 0.2)',
+  //           fill: true,
+  //           tension: 0.3,
+  //         },
+  //         {
+  //           label: 'Connected',
+  //           data: this.hourlyConnectedCalls,
+  //           borderColor: '#2ecc71',
+  //           backgroundColor: 'rgba(46, 204, 113, 0.2)',
+  //           fill: true,
+  //           tension: 0.3,
+  //         },
+  //         {
+  //           label: 'Missed',
+  //           data: this.hourlyMissedCalls,
+  //           borderColor: '#e74c3c',
+  //           backgroundColor: 'rgba(231, 76, 60, 0.2)',
+  //           fill: true,
+  //           tension: 0.3,
+  //         },
+  //       ],
+  //     },
+  //     options: {
+  //       responsive: true,
+  //       plugins: {
+  //         legend: { position: 'top' },
+  //       },
+  //       scales: {
+  //         y: {
+  //           beginAtZero: true,
+  //           title: { display: true, text: 'Number of Calls' },
+  //         },
+  //         x: {
+  //           title: { display: true, text: 'Time Block' },
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
+  renderHourlyChart(): void {
     if (this.hourlyChartInstance) {
       this.hourlyChartInstance.destroy();
     }
 
-    // ✅ Create and save new instance
+    const canvas = document.getElementById('hourlyChart') as HTMLCanvasElement;
+    if (!canvas) {
+      console.error('Canvas element not found');
+      return;
+    }
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.error('Canvas context not found');
+      return;
+    }
+
     this.hourlyChartInstance = new Chart(ctx, {
       type: 'line',
       data: {
@@ -2489,45 +2789,52 @@ export class DashboardComponent implements OnInit {
           {
             label: 'All Calls',
             data: this.hourlyAllCalls,
-            borderColor: '#3498db',
-            backgroundColor: 'rgba(52, 152, 219, 0.2)',
+            backgroundColor: 'rgba(0, 123, 255, 0.2)',
+            borderColor: 'rgba(0, 123, 255, 1)',
             fill: true,
-            tension: 0.3,
+            tension: 0.4,
           },
           {
-            label: 'Connected',
+            label: 'Connected Calls',
             data: this.hourlyConnectedCalls,
-            borderColor: '#2ecc71',
-            backgroundColor: 'rgba(46, 204, 113, 0.2)',
+            backgroundColor: 'rgba(40, 167, 69, 0.2)',
+            borderColor: 'rgba(40, 167, 69, 1)',
             fill: true,
-            tension: 0.3,
+            tension: 0.4,
           },
           {
-            label: 'Missed',
+            label: 'Missed Calls',
             data: this.hourlyMissedCalls,
-            borderColor: '#e74c3c',
-            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+            backgroundColor: 'rgba(220, 53, 69, 0.2)',
+            borderColor: 'rgba(220, 53, 69, 1)',
             fill: true,
-            tension: 0.3,
+            tension: 0.4,
           },
         ],
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'top' },
+          legend: {
+            labels: {
+              boxWidth: 10,
+              font: { size: 10 },
+            },
+          },
+          tooltip: {
+            enabled: true,
+            mode: 'index',
+            intersect: false,
+          },
         },
         scales: {
-          y: {
-            beginAtZero: true,
-            title: { display: true, text: 'Number of Calls' },
-          },
-          x: {
-            title: { display: true, text: 'Time Block' },
-          },
+          x: { stacked: false },
+          y: { stacked: false },
         },
       },
     });
+
   }
 
   fetchFilteredData(userId: string, filterType: string) {
@@ -3174,6 +3481,7 @@ export class DashboardComponent implements OnInit {
     // Load upcoming if needed
     this.upcomingTestDrives = this.selectedUser.upcomingTestDrives || [];
   }
+
   loadFilteredTestDrives(filter: 'today' | 'oneWeek') {
     if (!this.fullData || !this.selectedUser) {
       this.testDrives = [];

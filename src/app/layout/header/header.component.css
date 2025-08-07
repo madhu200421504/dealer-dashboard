@@ -237,3 +237,18 @@
     .dropdown-item:hover {
       color: #222fb9;
     }
+
+
+
+
+
+    /* Change icon and text color on hover */
+.dropdown-menu .dropdown-item:hover svg,
+.dropdown-menu .dropdown-item:hover span {
+  color: #222fb9 !important;
+}
+
+/* Optional: Add background color on hover */
+.dropdown-menu .dropdown-item:hover {
+  background-color: #f0f4ff; /* Light blue background (optional) */
+}

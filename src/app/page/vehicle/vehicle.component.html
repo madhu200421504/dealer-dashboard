@@ -323,7 +323,7 @@
                   VIN<span class="text-danger" *ngIf="!isEditMode">*</span>
                 </label>
               
-                <input id="demo_start_date" class="form-control form-control-lg" type="date" placeholder=" VIN"
+                <input id="demo_start_date" class="form-control form-control-lg" type="text" placeholder=" VIN"
                   formControlName="VIN" style="width: 350px;" [ngClass]="{
                                          'is-invalid':
                                            !isEditMode &&
@@ -371,12 +371,12 @@
                   </div>
                 </div>
                 <div class="col-md-6 form-group">
-                  <label for="demo_end_date" class="form-label" style="display: block; width: 100%; text-align: left;">
+                  <label for="demo_end_date" class="form-label" style="display: block; width: 100%; text-align: left;margin-left:5px;">
                     End date <span class="text-danger" *ngIf="!isEditMode">*</span>
                   </label>
                 
                   <input id="demo_end_date" class="form-control form-control-lg" type="date" placeholder="end date"
-                    formControlName="demo_start_date" style="width: 350px;" [ngClass]="{
+                    formControlName="demo_end_date" style="width: 350px;margin-left:5px;" [ngClass]="{
                                            'is-invalid':
                                              !isEditMode &&
                                              useForm.get('demo_end_date')?.touched &&

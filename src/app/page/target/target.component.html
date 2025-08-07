@@ -110,28 +110,21 @@ container remove padding; -->
 
                             </thead>
                             <tbody>
-                                <!-- <tr *ngIf=
-                                     "paginatedTarget().length === 0">
-                                                                        <td colspan="5" class="text-center">No target Found</td>
-                                                                    </tr> -->
+                               
                                 <tr *ngIf="paginatedTarget().length === 0">
                                     <td colspan="7" class="text-center">No target Found</td>
                                 </tr>
 
                                 <tr *ngFor="let target of paginatedTarget(); let i = index">
                                     <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
-                                    <!-- <td>{{ 'User ' + ((currentPage - 1) * itemsPerPage + i + 1) }}</td>
-                                    <td>{{ 'user' + ((currentPage - 1) * itemsPerPage + i + 1) + '@example.com' }}
-                                    </td> -->
+                                  
                                     <td>{{ target.user.name || (target.user.fname + ' ' + target.user.lname) }}</td>
                                     <td>{{ target.user.email }}</td>
 
 
                                     <td>
 
-                                        <!-- <input type="number" class="form-control form-control-sm"
-                                            [(ngModel)]="target.target.enquiries" (ngModelChange)="onTargetChange()"
-                                            style="border-radius:12px;font-size:14px;height:40px" /> -->
+                                       
 
                                         <input type="number" class="form-control form-control-sm" [(ngModel)]="target.target.enquiries" [max]="999999" [min]="0"
                                             (input)="limitDigits($event)" style="border-radius:12px;font-size:14px;height:40px" />
@@ -181,7 +174,6 @@ container remove padding; -->
 
                     <!-- Pagination -->
                     <div class="row mt-3 align-items-center" style="width:100%">
-                        <!-- Left: Entry count -->
                         <div class="col-md-6">
                             <div class="dataTables_info">
                                 <ng-container *ngIf="filteredTeam().length > 0; else noData">
@@ -199,33 +191,11 @@ container remove padding; -->
                                 </ng-template>
                             </div>
 
-                            <!-- <button class="btn btn-primary shadow btn-sm"
-                                [disabled]="!hasAnyChanges() || targetList().length === 0" (click)="onEditAll()">
-                                <i class="fa fa-pencil"></i> Edit
-                            </button> -->
+                           
                         </div>
 
 
-                        <!-- Right: Pagination controls -->
-                        <!-- <div class="col-md-6 d-flex justify-content-end " style="display:flex;">
-                <div class="dataTables_paginate paging_simple_numbers pagination-custom">
-                  <ul class="pagination">
-                    <li class="paginate_button page-item previous" [class.disabled]="currentPage === 1">
-                      <a class="page-link" (click)="previousPage()">Previous</a>
-                    </li>
-  
-                    <li class="paginate_button page-item" *ngFor="let page of pages"
-                      [class.active]="page === currentPage">
-                      <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
-                    </li>
-  
-                    <li class="paginate_button page-item next" [class.disabled]="currentPage === totalPages">
-                      <a class="page-link" (click)="nextPage()">Next</a>
-                    </li>
-                  </ul>
-                </div>
-
-              </div> -->
+                        
 
                         <div class="col-md-6">
                             <div class="dataTables_paginate paging_simple_numbers float-right">

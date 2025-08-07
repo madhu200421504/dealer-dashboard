@@ -87102,9 +87102,9 @@ code {
 }
 
 .pagination .page-item .page-link:hover {
-  background: #0276fe;
+  background: #222fb9;
   color: #fff;
-  border-color: #0276fe;
+  border-color: #222fb9;
 }
 
 .pagination .page-item.active .page-link {

@@ -147,3 +147,31 @@ input[type="number"]::-ms-reveal {
 table td, table th {
   text-align: left !important;
 }
+/* This will override the inline styles on hover/active */
+* Hover effect */
+.pagination .page-link:hover {
+  color: white;
+  background-color: #222fb9;
+  border-color: #222fb9;
+}
+
+/* Active page */
+.pagination .page-item.active .page-link {
+  color: white;
+  background-color: #222fb9;
+  border-color: #222fb9;
+}
+
+/* Optional: remove default focus ring */
+.pagination .page-link:focus {
+  box-shadow: none;
+}
+
+.btn-outline-primary:hover {
+  background-color: #222fb9;
+  color: white;
+}
+.btn-outline-primary {
+  border-color: #222fb9;
+  color: #222fb9;
+}
