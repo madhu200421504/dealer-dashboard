@@ -27,12 +27,14 @@
   color: inherit !important;
 }
 
+
+
 /* Optional: regular icon styling (unchanged) */
 .deznav .metismenu > li > a > i {
   font-size: 1.5rem;
   display: inline-block;
   vertical-align: middle;
-  padding: 0 1.5rem 0 0;
+  /* padding: 0 1.5rem 0 0; */
   position: absolute;
   left: 0;
   top: 0;

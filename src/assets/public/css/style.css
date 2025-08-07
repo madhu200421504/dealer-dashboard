@@ -17819,7 +17819,7 @@ html[dir="rtl"]
   font-size: 1.5rem;
   display: inline-block;
   vertical-align: middle;
-  padding: 0 1.5rem 0 0;
+  /* padding: 0 1.5rem 0 0; */
   position: relative;
   top: -6px;
   line-height: 1;
@@ -18644,7 +18644,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 
 @media only screen and (max-width: 1600px) {
   [data-sidebar-style="full"][data-layout="vertical"] .deznav .metismenu > li {
-    padding: 2px 15px;
+    padding: 2px 11px;
   }
 }
 
@@ -18654,11 +18654,13 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   > li
   > a {
   font-size: 14px;
-  padding: 20px 20px 20px 80px;
+  padding: 24px 24px 24px 80px;
   border-radius: 2rem;
   -webkit-transition: all 0.5s;
   -ms-transition: all 0.5s;
   transition: all 0.5s;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 @media only screen and (max-width: 1600px) {
@@ -18668,7 +18670,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
     > li
     > a {
     font-size: 14px;
-    padding: 14px 20px 14px 65px;
+    /* padding: 14px 20px 14px 65px; */
   }
 }
 

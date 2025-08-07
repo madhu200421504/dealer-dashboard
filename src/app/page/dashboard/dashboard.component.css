@@ -1506,11 +1506,13 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
 
   /* Container padding for phones */
   .container {
-    max-width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
     padding-left: 15px;
     padding-right: 15px;
     margin-left: auto;
     margin-right: auto;
+    overflow-x: hidden;
   }
 }
 
@@ -1734,13 +1736,12 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   gap: 12px; /* spacing between cards */
 }
 
-.user-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 8px;
-  width: 80px;
+.user-cards-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 8px;
 }
+
 
 .user-avatar {
   width: 50px;
@@ -1762,21 +1763,9 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   margin-top: 4px;
   color: #333;
 }
-.user-cards-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
 
-.user-card {
-  background-color: #ffffff; /* white background */
-  border-radius: 12px;
-  padding: 16px;
-  width: 100px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  text-align: center;
-  margin-bottom: 12px;
-}
+
+
 
 .user-avatar {
   width: 60px;
@@ -2230,8 +2219,9 @@ table td {
   overflow-x: auto;
   gap: 16px;
   padding-bottom: 10px;
-  max-width: calc(15 * (80px + 16px));
-  width: 100%;
+  /* max-width: calc(15 * (80px + 16px)); */
+  /* width: 100%; */
+  width: max-content;
   box-sizing: border-box;
   scrollbar-width: thin;
   scrollbar-color: #ccc transparent;
@@ -2261,12 +2251,12 @@ table td {
 /* Only apply smaller width between 1000–1190px screens */
 @media (min-width: 850px) and (max-width: 2000px) {
   .user-cards-wrapper {
-    max-width: calc(8 * (80px + 16px));
+    /* max-width: calc(8 * (80px + 16px)); */
   }
 }
 @media (min-width: 768px) and (max-width: 1080px) {
   .user-cards-wrapper {
-    max-width: calc(6 * (80px + 16px));
+    /* max-width: calc(6 * (80px + 16px)); */
   }
   .dashboard-container {
     padding: 20px;
@@ -2275,12 +2265,12 @@ table td {
 
 @media (min-width: 800px) and (max-width: 899px) {
   .user-cards-wrapper {
-    max-width: calc(5 * (80px + 16px)) !important;
+    /* max-width: calc(5 * (80px + 16px)) !important; */
   }
 }
 @media (min-width: 1289px) and (max-width: 1340px) {
   .user-cards-wrapper {
-    max-width: calc(11 * (80px + 16px)) !important;
+    /* max-width: calc(11 * (80px + 16px)) !important; */
   }
 }
 
@@ -2304,11 +2294,16 @@ table td {
 }
 
 .user-card {
-  flex: 0 0 auto; /* Prevent cards from shrinking */
-  min-width: 80px; /* Adjust based on your card design */
-  cursor: pointer;
-  /* transition: transform 0.2s ease; */
+  flex: 0 0 auto;          /* 🔑 Prevent shrinking or stretching */
+  width: 100px;            /* or whatever fixed width suits your design */
+  min-width: 100px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  text-align: center;
 }
+
 
 .user-card:hover {
   /* transform: translateY(-2px); */
