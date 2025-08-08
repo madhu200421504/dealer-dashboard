@@ -1584,7 +1584,7 @@ export class DashboardComponent implements OnInit {
         'https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard',
         { headers }
       )
-      .subscribe({
+      .subscribe({ 
         next: (res) => {
           console.log('API response:', res);
           this.allUsers = res.data?.user || [];
