@@ -3811,6 +3811,8 @@ var NgbAlert = class _NgbAlert {
         if (typeof ngI18nClosureMode !== "undefined" && ngI18nClosureMode) {
           const MSG_C__SMART_ASSIST_MAIN_NODE_MODULES__NG_BOOTSTRAP_NG_BOOTSTRAP_FESM2022_NG_BOOTSTRAP_MJS_0 = goog.getMsg("Close");
           i18n_0 = MSG_C__SMART_ASSIST_MAIN_NODE_MODULES__NG_BOOTSTRAP_NG_BOOTSTRAP_FESM2022_NG_BOOTSTRAP_MJS_0;
+          const MSG_C__SMART_ASSIST_MAIN_NODE_MODULES__NG_BOOTSTRAP_NG_BOOTSTRAP_FESM2022_NG_BOOTSTRAP_MJS_0 = goog.getMsg("Close");
+          i18n_0 = MSG_C__SMART_ASSIST_MAIN_NODE_MODULES__NG_BOOTSTRAP_NG_BOOTSTRAP_FESM2022_NG_BOOTSTRAP_MJS_0;
         } else {
           i18n_0 = $localize`:@@ngb.alert.close:Close`;
         }
