@@ -2532,9 +2532,9 @@ export class DashboardComponent implements OnInit {
             ? summaryColdCalls.summary || {}
             : summaryEnquiry.summary || {};
           // const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
-const hourlyAnalysisData = isColdCall
-  ? summaryColdCalls.hourlyAnalysis || {}
-  : summaryEnquiry.hourlyAnalysis || {};
+          const hourlyAnalysisData = isColdCall
+            ? summaryColdCalls.hourlyAnalysis || {}
+            : summaryEnquiry.hourlyAnalysis || {};
 
           // ✅ Only update call summary object
           this.callSummaryOrder = {
@@ -2834,7 +2834,6 @@ const hourlyAnalysisData = isColdCall
         },
       },
     });
-
   }
 
   fetchFilteredData(userId: string, filterType: string) {
@@ -3713,9 +3712,9 @@ const hourlyAnalysisData = isColdCall
 
     // 👇 Append userIds to the API URL if any are selected
     // const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}`;
-const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}${
-  selectedUserIds ? `&userIds=${selectedUserIds}` : ''
-}`;
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}${
+      selectedUserIds ? `&userIds=${selectedUserIds}` : ''
+    }`;
 
     this.http.get<any>(url, { headers }).subscribe({
       next: (response) => {

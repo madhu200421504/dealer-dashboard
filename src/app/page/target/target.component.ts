@@ -95,7 +95,7 @@ export class TargetComponent implements OnInit {
   // dtOptions: Config = {};
   isModalVisible = false;
   // isEditMode = false;
-wasPreviousClicked = false;
+  wasPreviousClicked = false;
 
   previousValue: string = '';
   selectedRange: string = 'MTD'; // default selected

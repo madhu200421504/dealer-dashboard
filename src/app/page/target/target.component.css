@@ -144,11 +144,12 @@ input[type="number"]::-ms-reveal {
 .table-responsive {
   border: none !important;
 }
-table td, table th {
+table td,
+table th {
   text-align: left !important;
 }
 /* This will override the inline styles on hover/active */
-* Hover effect */
+
 .pagination .page-link:hover {
   color: white;
   background-color: #222fb9;
