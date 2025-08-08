@@ -1272,7 +1272,7 @@ var SwalPortalDirective = class _SwalPortalDirective {
   });
 })();
 function provideDefaultSwal() {
-  return import("./sweetalert2.esm.all-DAAQI3HU.js");
+  return import("./sweetalert2.esm.all-XMDSFZMK.js");
 }
 var SweetAlert2Module = class _SweetAlert2Module {
   static forRoot(options = {}) {

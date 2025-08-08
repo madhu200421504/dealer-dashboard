@@ -3712,7 +3712,10 @@ const hourlyAnalysisData = isColdCall
       : '';
 
     // 👇 Append userIds to the API URL if any are selected
-    const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}`;
+    // const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}`;
+const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${filter}${
+  selectedUserIds ? `&userIds=${selectedUserIds}` : ''
+}`;
 
     this.http.get<any>(url, { headers }).subscribe({
       next: (response) => {
@@ -3753,7 +3756,7 @@ const hourlyAnalysisData = isColdCall
         };
 
         // ✅ Update table data used in UI
-        // this.selectedUsersPerformance = this.dashboardMetrics.performance;
+        this.selectedUsersPerformance = this.dashboardMetrics.performance;
       },
       error: (err) => {
         console.error('Dashboard data fetch error', err);
