@@ -257,7 +257,8 @@ section {
 body {
   margin: 0;
   font-family: "Roboto", sans-serif;
-  font-size: 0.875rem;
+  /* font-size: 0.875rem; */
+  font-size:1rem;
   font-weight: 400;
   line-height: 1.5;
   color: #7e7e7e;
@@ -5490,17 +5491,17 @@ input[type="button"].btn-block {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #0276fe;
-  background-color: #fff;
-  border: 1px solid #dee2e6;
+  color: #222fb9;
+  background-color: #222fb9;
+  border: 1px solid #222fb9;
 }
 
 .page-link:hover {
   z-index: 2;
   color: #161f78;
   text-decoration: none;
-  background-color: #e9ecef;
-  border-color: #dee2e6;
+  background-color: #222fb9;
+  border-color: #222fb9;
 }
 
 .page-link:focus {
@@ -11768,7 +11769,7 @@ body {
   height: 100%;
   position: relative;
   max-width: 100%;
-  font-size: 1rem;
+  /* font-size: 1rem; */
 }
 
 @media only screen and (max-width: 991px) {
@@ -11835,18 +11836,18 @@ a.active {
 
 .content-body .container-fluid {
   padding-top: 40px;
-  padding-right: 40px;
-  padding-left: 40px;
+  /* padding-right: 40px;
+  padding-left: 30px; */
 }
 
-#header2{
-  padding-top:50px;
+#header2 {
+  padding-top: 50px;
 }
 @media only screen and (max-width: 1600px) {
   .content-body .container-fluid {
     padding-top: 30px;
-    padding-right: 30px;
-    padding-left: 30px;
+    /* padding-right: 30px;
+    padding-left: 30px; */
   }
 }
 
@@ -12729,7 +12730,7 @@ a.active {
 }
 
 .hamburger .line {
-  background: #0276fe;
+  background: #222fb9;
   display: block;
   height: 3px;
   border-radius: 3px;
@@ -17818,9 +17819,9 @@ html[dir="rtl"]
   font-size: 1.5rem;
   display: inline-block;
   vertical-align: middle;
-  padding: 0 1.5rem 0 0;
+  /* padding: 0 1.5rem 0 0; */
   position: relative;
-  top: 0;
+  top: -6px;
   line-height: 1;
   width: 64px;
   height: 64px;
@@ -17909,7 +17910,7 @@ html[dir="rtl"]
 
 @media only screen and (max-width: 1600px) {
   .deznav .metismenu ul a {
-    font-size: 14px;
+    font-size: 20px;
     padding-left: 65px;
     padding-right: 15px;
   }
@@ -17926,7 +17927,7 @@ html[dir="rtl"]
 .deznav .metismenu ul a:focus,
 .deznav .metismenu ul a.mm-active {
   text-decoration: none;
-  color: #0276fe;
+  color: #222fb9;
 }
 
 .deznav .metismenu a {
@@ -18643,7 +18644,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 
 @media only screen and (max-width: 1600px) {
   [data-sidebar-style="full"][data-layout="vertical"] .deznav .metismenu > li {
-    padding: 2px 15px;
+    padding: 2px 11px;
   }
 }
 
@@ -18653,11 +18654,13 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   > li
   > a {
   font-size: 14px;
-  padding: 20px 20px 20px 80px;
+  padding: 24px 24px 24px 80px;
   border-radius: 2rem;
   -webkit-transition: all 0.5s;
   -ms-transition: all 0.5s;
   transition: all 0.5s;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 @media only screen and (max-width: 1600px) {
@@ -18667,7 +18670,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
     > li
     > a {
     font-size: 14px;
-    padding: 14px 20px 14px 65px;
+    /* padding: 14px 20px 14px 65px; */
   }
 }
 
@@ -18677,7 +18680,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   > li.mm-active
   > a {
   background: rgba(34, 47, 185, 0.1);
-  color: #0276fe;
+  color: #222fb9;
   box-shadow: 0 12px 15px 0 rgba(34, 47, 185, 0.13);
 }
 
@@ -18719,7 +18722,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .nav-control
   .hamburger
   .line {
-  background-color: #0276fe !important;
+  /* background-color: #0276fe !important; */
 }
 
 @media only screen and (max-width: 1400px) {
@@ -18911,7 +18914,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .metismenu
   > li {
   transition: all 0.4s ease-in-out;
-  padding: 0 25px;
+  /* padding: 0 25px; */
 }
 
 [data-sidebar-style="full"][data-layout="vertical"]
@@ -19085,7 +19088,6 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   margin-left: 7rem;
 }
 
-
 [direction="rtl"][data-sidebar-style="full"][data-layout="vertical"]
   .menu-toggle
   .content-body {
@@ -19154,7 +19156,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   }
 
   [data-sidebar-style="mini"] .nav-header .nav-control .hamburger .line {
-    background-color: #6e6e6e !important;
+    /* background-color: #6e6e6e !important; */
+    background-color: #222fb9 !important;
   }
 
   [data-sidebar-style="mini"] .nav-header .brand-title {
@@ -20132,7 +20135,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
     position: relative;
     padding: 0;
     background: #eeeffc;
-    color: #0276fe;
+    color: #222fb9;
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -20152,7 +20155,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   }
 
   [data-sidebar-style="compact"] .deznav .metismenu > li.mm-active > a i {
-    background: #0276fe;
+    background: #222fb9;
     color: #fff;
     box-shadow: 0 12px 15px 0 rgba(34, 47, 185, 0.13);
   }
@@ -21251,7 +21254,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-sidebar-style="overlay"] .nav-header .hamburger.is-active .line {
-  background-color: #0276fe;
+  background-color: #222fb9;
 }
 
 [data-sidebar-style="overlay"] .menu-toggle .nav-header {
@@ -22427,7 +22430,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_2"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_2"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -22534,7 +22537,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_3"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_3"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -22549,7 +22552,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .nav-control
   .hamburger
   .line {
-  background: #fff;
+  background: #222fb9;
 }
 
 [data-nav-headerbg="color_4"][data-theme-version="dark"] .nav-header,
@@ -22641,7 +22644,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_4"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_4"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -22656,7 +22659,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .nav-control
   .hamburger
   .line {
-  background: #fff;
+  background: #222fb9;
 }
 
 [data-nav-headerbg="color_5"][data-theme-version="dark"] .nav-header,
@@ -22748,7 +22751,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_5"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_5"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -22855,7 +22858,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_6"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_6"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -22962,7 +22965,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_7"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_7"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -22977,7 +22980,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .nav-control
   .hamburger
   .line {
-  background: #fff;
+  background: #222fb9;
 }
 
 [data-nav-headerbg="color_8"][data-theme-version="dark"] .nav-header,
@@ -23069,7 +23072,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_8"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_8"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -23176,7 +23179,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_9"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_9"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -23283,7 +23286,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_10"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_10"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -23390,7 +23393,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_11"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_11"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -23497,7 +23500,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_12"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_12"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -23604,7 +23607,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_13"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_13"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -23711,7 +23714,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-nav-headerbg="color_14"] .nav-header .hamburger .line {
-  background: #fff;
+  background-color: #222fb9 !important;
 }
 
 [data-nav-headerbg="color_14"][data-theme-version="dark"][data-sidebar-style="full"][data-layout="vertical"]
@@ -23848,7 +23851,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-headerbg="color_2"] .nav-header .hamburger .line {
-  background: #fff !important;
+  background-color: #222fb9 !important;
 }
 
 [data-headerbg="color_2"][data-theme-version="dark"] .header,
@@ -24187,7 +24190,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-headerbg="color_3"] .nav-header .hamburger .line {
-  background: #fff !important;
+  background-color: #222fb9 !important;
 }
 
 [data-headerbg="color_3"][data-theme-version="dark"] .header,
@@ -24526,7 +24529,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-headerbg="color_4"] .nav-header .hamburger .line {
-  background: #fff !important;
+  background-color: #222fb9 !important;
 }
 
 [data-headerbg="color_4"][data-theme-version="dark"] .header,
@@ -24865,7 +24868,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-headerbg="color_5"] .nav-header .hamburger .line {
-  background: #fff !important;
+  background-color: #222fb9 !important;
 }
 
 [data-headerbg="color_5"][data-theme-version="dark"] .header,
@@ -25204,7 +25207,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-headerbg="color_6"] .nav-header .hamburger .line {
-  background: #fff !important;
+  background-color: #222fb9 !important;
 }
 
 [data-headerbg="color_6"][data-theme-version="dark"] .header,
@@ -25543,7 +25546,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-headerbg="color_7"] .nav-header .hamburger .line {
-  background: #fff !important;
+  background-color: #222fb9 !important;
 }
 
 [data-headerbg="color_7"][data-theme-version="dark"] .header,
@@ -25882,7 +25885,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-headerbg="color_8"] .nav-header .hamburger .line {
-  background: #fff !important;
+  background-color: #222fb9 !important;
 }
 
 [data-headerbg="color_8"][data-theme-version="dark"] .header,
@@ -26221,7 +26224,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-headerbg="color_9"] .nav-header .hamburger .line {
-  background: #fff !important;
+  background-color: #222fb9 !important;
 }
 
 [data-headerbg="color_9"][data-theme-version="dark"] .header,
@@ -26560,7 +26563,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .hamburger
   .line,
 [data-headerbg="color_10"] .nav-header .hamburger .line {
-  background: #fff !important;
+  background-color: #222fb9 !important;
 }
 
 [data-headerbg="color_10"][data-theme-version="dark"] .header,
@@ -29939,7 +29942,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   li
   > ul,
 [data-sibebarbg="color_3"] .menu-toggle .deznav .metismenu li > ul {
-  background: #0276fe !important;
+  background: #222fb9 !important;
 }
 
 [data-sibebarbg="color_3"][data-theme-version="dark"]
@@ -47837,8 +47840,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_2"] .pagination .page-item.active .page-link {
-  background: #143b64;
-  border-color: #143b64;
+  background: #222fb9;
+  border-color: #222fb9;
 }
 
 [data-primary="color_2"] .pagination .page-item .page-link:hover {
@@ -47847,8 +47850,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_2"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -50066,23 +50069,23 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_3"] .pagination .page-item .page-link:hover {
-  background: #0276fe;
-  border-color: #0276fe;
+  background: #222fb9;
+  border-color: #222fb9;
 }
 
 [data-primary="color_3"] .pagination .page-item.active .page-link {
-  background: #0276fe;
-  border-color: #0276fe;
+  background: #222fb9;
+  border-color: #222fb9;
 }
 
 [data-primary="color_3"] .pagination .page-item .page-link:hover {
-  background: #0276fe;
-  border-color: #0276fe;
+  background: #222fb9;
+  border-color: #222fb9;
 }
 
 [data-primary="color_3"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -50116,8 +50119,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .pagination.no-bg.pagination-primary
   li:not(.page-indicator):not(.active):hover
   .page-link {
-  background: #0276fe;
-  border-color: #0276fe;
+  background: #222fb9;
+  border-color: #222fb9;
 }
 
 [data-primary="color_3"] .pagination-primary .page-item .page-link {
@@ -50138,8 +50141,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 
 [data-primary="color_3"] .pagination-primary .page-item:hover .page-link,
 [data-primary="color_3"] .pagination-primary .page-item.active .page-link {
-  background: #0276fe;
-  border-color: #0276fe;
+  background: #222fb9;
+  border-color: #222fb9;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
 
@@ -50454,7 +50457,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_3"] .bg-primary {
-  background-color: #0276fe !important;
+  /* background-color: #0276fe !important; */
 }
 
 [data-primary="color_3"] .text-primary {
@@ -52315,8 +52318,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_4"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -54549,8 +54552,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_5"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -56783,8 +56786,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_6"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -59017,8 +59020,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_7"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -61251,8 +61254,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_8"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -63485,8 +63488,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_9"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -65723,8 +65726,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_10"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -67967,8 +67970,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_11"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -70211,8 +70214,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_12"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -72455,8 +72458,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_13"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -74699,8 +74702,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_14"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -76943,8 +76946,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 }
 
 [data-primary="color_15"] .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -87055,8 +87058,8 @@ code {
 }
 
 .pagination .page-item.active .page-link {
-  background: #0276fe;
-  border-color: #0276fe;
+  background: #222fb9;
+  border-color: #222fb9;
   color: #fff;
 }
 
@@ -87099,14 +87102,14 @@ code {
 }
 
 .pagination .page-item .page-link:hover {
-  background: #0276fe;
+  background: #222fb9;
   color: #fff;
-  border-color: #0276fe;
+  border-color: #222fb9;
 }
 
 .pagination .page-item.active .page-link {
-  background-color: #0276fe;
-  border-color: #0276fe;
+  background-color: #222fb9;
+  border-color: #222fb9;
   color: #fff;
   box-shadow: 0 10px 20px 0px rgba(34, 47, 185, 0.2);
 }
@@ -96105,3 +96108,8 @@ html[dir="rtl"]
     margin-left: 347px;
   }
 } */
+/* styles.css or styles.scss */
+.toast-success {
+  background-color: #222fb9 !important;
+  color: white !important;
+}
