@@ -406,6 +406,10 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initializeFilteredUsers();
+
+    this.filteredTableUsers = [...this.selectedUsersPerformance]; // Initialize with all users
+
     this.filteredUsers = [...this.users];
 
     this.applyFilter('MTD');
@@ -850,30 +854,47 @@ export class DashboardComponent implements OnInit {
   //   const search = this.tableSearchTerm.trim().toLowerCase();
   //   if (!search) {
   //     this.filteredTableUsers = [...this.selectedUsersPerformance];
+  // //   } else {
+  // //     this.filteredTableUsers = this.selectedUsersPerformance.filter((user) =>
+  // //       user.name.toLowerCase().includes(search)
+  // //     );
+  // //   }
+  // //   this.currentPage = 1; // reset page
+  // //   this.updatePagination();
+  // // }
+  // filterTableUsers() {
+  //   const search = (this.tableSearchTerm || '').trim().toLowerCase();
+
+  //   if (!search) {
+  //     this.filteredTableUsers = [...this.selectedUsersPerformance];
   //   } else {
   //     this.filteredTableUsers = this.selectedUsersPerformance.filter((user) =>
   //       user.name.toLowerCase().includes(search)
   //     );
   //   }
-  //   this.currentPage = 1; // reset page
+
+  //   this.currentPageforCompare = 1; // reset to first page on new search
+  //   this.updatePagination();
+  //   // this.updatePaginatedUsers(); // apply slicing here to update view
+  // }
+  // initializeFilteredUsers() {
+  //   this.filteredTableUsers = [...this.selectedUsersPerformance];
   //   this.updatePagination();
   // }
+  filterTableUsers() {
+    const search = (this.tableSearchTerm || '').trim().toLowerCase();
 
-filterTableUsers() {
-  const search = (this.tableSearchTerm || '').trim().toLowerCase();
+    if (!search) {
+      this.filteredTableUsers = [...this.selectedUsersPerformance];
+    } else {
+      this.filteredTableUsers = this.selectedUsersPerformance.filter((user) =>
+        user.name.toLowerCase().includes(search)
+      );
+    }
 
-  if (!search) {
-    this.filteredTableUsers = [...this.selectedUsersPerformance];
-  } else {
-    this.filteredTableUsers = this.selectedUsersPerformance.filter(user =>
-      user.name.toLowerCase().includes(search)
-    );
+    this.currentPageforCompare = 1; // reset to first page on new search
+    this.updatePagination();
   }
-
-  this.currentPageforCompare = 1; // reset to first page on new search
-  this.updatePagination();
-  // this.updatePaginatedUsers(); // apply slicing here to update view
-}
 
   fetchSMData(smId: string, type: string = 'YTD'): void {
     const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?sm_id=${smId}&type=${type}`;
@@ -1653,12 +1674,23 @@ filterTableUsers() {
   //     this.filteredTableTestDrives.length / this.itemsPerPage
   //   );
   // }
+  // updatePagination(): void {
+  //   this.totalPages = Math.ceil(
+  //     this.filteredTableUsers.length / this.itemsPerPage
+  //   );
+  // }
+  // updatePagination(): void {
+  //   this.totalPages = Math.ceil(
+  //     this.filteredTableUsers.length / this.itemsPerPage
+  //   );
+  // }
   updatePagination(): void {
-    this.totalPages = Math.ceil(
-      this.filteredTableUsers.length / this.itemsPerPage
-    );
-  }
+    const dataLength = this.tableSearchTerm?.trim()
+      ? this.filteredTableUsers.length
+      : this.selectedUsersPerformance.length;
 
+    this.totalPages = Math.ceil(dataLength / this.itemsPerPage);
+  }
   filterByInitial(initial: string) {
     if (this.selectedInitial === initial) {
       // If clicking the same initial again, toggle off
@@ -4487,12 +4519,28 @@ filterTableUsers() {
   //   const endIndex = startIndex + this.itemsPerPage;
 
   // }
+  // get paginatedUsersPerformance(): any[] {
+  //   const startIndex = (this.currentPageforCompare - 1) * this.itemsPerPage;
+  //   const endIndex = startIndex + this.itemsPerPage;
+  //   return this.selectedUsersPerformance.slice(startIndex, endIndex);
+  // }
+  // get paginatedUsersPerformance(): any[] {
+  //   const startIndex = (this.currentPageforCompare - 1) * this.itemsPerPage;
+  //   const endIndex = startIndex + this.itemsPerPage;
+  //   return this.selectedUsersPerformance.slice(startIndex, endIndex); // Changed this line
+  // }
+
+  // Solution 1: Conditional approach in getter
   get paginatedUsersPerformance(): any[] {
     const startIndex = (this.currentPageforCompare - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    return this.selectedUsersPerformance.slice(startIndex, endIndex);
-  }
 
+    // Use filtered data if there's a search term, otherwise use original data
+    const dataToUse = this.tableSearchTerm?.trim()
+      ? this.filteredTableUsers
+      : this.selectedUsersPerformance;
+    return dataToUse.slice(startIndex, endIndex);
+  }
   getPaginatedTableData(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
@@ -4775,5 +4823,18 @@ filterTableUsers() {
         user.name.toLowerCase().includes(searchLower)
       );
     }
+  }
+  initializeFilteredUsers() {
+  this.filteredTableUsers = [...this.selectedUsersPerformance];
+  this.updatePagination();
+}
+  onUserSelectionChange() {
+    // Your existing user selection logic...
+
+    // After updating selectedUsersPerformance, reinitialize filtered users
+    this.initializeFilteredUsers();
+
+    // Clear search term to show all selected users
+    this.tableSearchTerm = '';
   }
 }
