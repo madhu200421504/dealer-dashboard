@@ -7,7 +7,9 @@
           <a href="javascript:void(0)" style="cursor: auto;color: #222fb9;">Utils</a>
         </li>
         <li class="breadcrumb-item active">
-          <a href="javascript:void(0)" style="cursor: auto; font-weight: 400 !important; color: #6e7d8b;font-size:1rem;font-family: 'poppins', sans-serif;">User Master</a>
+          <a href="javascript:void(0)"
+            style="cursor: auto; font-weight: 400 !important; color: #6e7d8b;font-size:1rem;font-family: 'poppins', sans-serif;">User
+            Master</a>
         </li>
       </ol>
     </div>
@@ -136,32 +138,32 @@
                 <th>Email</th>
                 <th>Excellence</th>
                 <th>Role</th> -->
-                  <tr>
-                    <th class="text-start">Sr No</th>
-                    <th class="text-start">Name</th>
-                    <th class="text-start">Email</th>
-                    <th class="text-start">Excellence</th>
-                    <th class="text-start">Role</th>
+              <tr>
+                <th class="text-start">Sr No</th>
+                <th class="text-start">Name</th>
+                <th class="text-start">Email</th>
+                <th class="text-start">Excellence</th>
+                <th class="text-start">Role</th>
               </tr>
             </thead>
-        <tbody>
-          <tr *ngIf="paginatedUsers.length === 0">
-            <td colspan="5" class="text-center">
-              <p>No Users Found</p>
-            </td>
-          </tr>
+            <tbody>
+              <tr *ngIf="paginatedUsers.length === 0">
+                <td colspan="5" class="text-center">
+                  <p>No Users Found</p>
+                </td>
+              </tr>
 
-              <tr *ngFor="let user of paginatedUsers; let i = index">
+<tr *ngFor="let user of paginatedUsers; let i = index" (click)="goToUserDashboard(user)">
                 <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
                 <td>{{ user.name}}</td>
                 <td>{{user.email}}</td>
                 <td>{{user.excellence}}</td>
 <td>{{ user.user_role }}</td> -->
-  <td class="text-start">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
-  <td class="text-start">{{ user.name }}</td>
-  <td class="text-start">{{ user.email }}</td>
-  <td class="text-start">{{ user.excellence }}</td>
-  <td class="text-start">{{ user.user_role }}</td>
+                <td class="text-start">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+                <td class="text-start">{{ user.name }}</td>
+                <td class="text-start">{{ user.email }}</td>
+                <td class="text-start">{{ user.excellence }}</td>
+                <td class="text-start">{{ user.user_role }}</td>
                 <td class="d-flex">
                   <!-- <a href="javascript:void(0);" class="btn btn-primary shadow btn-xs sharp mr-1"
                     data-target=".bd-example-modal-lg" data-toggle="modal" data-backdrop="false" (click)="onEdit(team)">
@@ -260,201 +262,202 @@
       </div>
     </div>
   </div>
-<!-- Add/Edit User Modal -->
-<div *ngIf="isModalOpen" class="modal d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5); z-index: 1050;">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" style="top: 6%;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-center w-100" style="font-size:18px;">
-          {{ userObj.user_id ? "Edit User" : "Add New User" }}
-        </h5>
-        <!-- <button type="button" class="close" data-dismiss="modal">
+  <!-- Add/Edit User Modal -->
+  <div *ngIf="isModalOpen" class="modal d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5); z-index: 1050;">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" style="top: 6%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center w-100" style="font-size:18px;">
+            {{ userObj.user_id ? "Edit User" : "Add New User" }}
+          </h5>
+          <!-- <button type="button" class="close" data-dismiss="modal">
             <span class="x">&times;</span>
           </button> -->
-        <button type="button" class="close" (click)="closeModal()">
-          <span class="x">&times;</span>
-        </button>
+          <button type="button" class="close" (click)="closeModal()">
+            <span class="x">&times;</span>
+          </button>
 
-      </div>
+        </div>
 
-      <div class="modal-body">
-        <form [formGroup]="useForm">
-          <div class="row">
-            <!-- Name -->
+        <div class="modal-body">
+          <form [formGroup]="useForm">
+            <div class="row">
+              <!-- Name -->
 
-          <div class="col-md-6 form-group">
-            <label for="fname">
-              First Name
-              <span class="text-danger" *ngIf="!isEditMode">*</span>
-            </label>
-          
-            <input id="fname" class="form-control form-control-lg" type="text" formControlName="fname" placeholder="First Name"
-              [ngClass]="{
+              <div class="col-md-6 form-group">
+                <label for="fname">
+                  First Name
+                  <span class="text-danger" *ngIf="!isEditMode">*</span>
+                </label>
+
+                <input id="fname" class="form-control form-control-lg" type="text" formControlName="fname"
+                  placeholder="First Name" [ngClass]="{
                 'is-invalid':
                   useForm.get('fname')?.touched &&
                   useForm.get('fname')?.invalid
               }" required />
-          
-            <!-- Show error message only if not in edit mode -->
-            <div class="text-danger" *ngIf="
+
+                <!-- Show error message only if not in edit mode -->
+                <div class="text-danger" *ngIf="
                 !isEditMode &&
                 useForm.get('fname')?.invalid &&
                 useForm.get('fname')?.touched
               ">
-              <span *ngIf="useForm.get('fname')?.errors?.['required']">
-                First name is required.
-              </span>
-            </div>
-          </div>
+                  <span *ngIf="useForm.get('fname')?.errors?.['required']">
+                    First name is required.
+                  </span>
+                </div>
+              </div>
 
 
-            <!-- LAST NAME -->
-          <div class="col-md-6 form-group">
-            <label for="lname">
-              Last Name
-              <span class="text-danger" *ngIf="!isEditMode">*</span>
-            </label>
-          
-            <input id="lname" class="form-control form-control-lg" type="text" formControlName="lname" placeholder="Last Name"
-              [ngClass]="{
+              <!-- LAST NAME -->
+              <div class="col-md-6 form-group">
+                <label for="lname">
+                  Last Name
+                  <span class="text-danger" *ngIf="!isEditMode">*</span>
+                </label>
+
+                <input id="lname" class="form-control form-control-lg" type="text" formControlName="lname"
+                  placeholder="Last Name" [ngClass]="{
                 'is-invalid':
                   useForm.get('lname')?.touched &&
                   useForm.get('lname')?.invalid &&
                   !isEditMode
               }" [required]="!isEditMode" />
-          
-            <div class="text-danger" *ngIf="
+
+                <div class="text-danger" *ngIf="
                 useForm.get('lname')?.invalid &&
                 useForm.get('lname')?.touched &&
                 !isEditMode
               ">
-              <span *ngIf="useForm.get('lname')?.errors?.['required']">
-                Last name is required.
-              </span>
-            </div>
-          </div>
+                  <span *ngIf="useForm.get('lname')?.errors?.['required']">
+                    Last name is required.
+                  </span>
+                </div>
+              </div>
 
 
-            <!-- ROLE -->
-          <div class="col-md-6 form-group">
-            <label for="role_id" class="form-label">
-              Role Name
-              <span class="text-danger" *ngIf="!isEditMode">*</span>
-            </label>
-          
-            <select id="role_id" class="form-control form-control-lg" formControlName="role_id" [ngClass]="{
+              <!-- ROLE -->
+              <div class="col-md-6 form-group">
+                <label for="role_id" class="form-label">
+                  Role Name
+                  <span class="text-danger" *ngIf="!isEditMode">*</span>
+                </label>
+
+                <select id="role_id" class="form-control form-control-lg" formControlName="role_id" [ngClass]="{
                 'is-invalid':
                   useForm.get('role_id')?.touched &&
                   useForm.get('role_id')?.invalid &&
                   !isEditMode
               }">
-              <option [ngValue]="null" disabled hidden>Select Role</option>
-              <option *ngFor="let role of roleList()" [value]="role.role_id">
-                {{ role.role_name }}
-              </option>
-            </select>
-          
-            <div class="text-danger" *ngIf="
+                  <option [ngValue]="null" disabled hidden>Select Role</option>
+                  <option *ngFor="let role of roleList()" [value]="role.role_id">
+                    {{ role.role_name }}
+                  </option>
+                </select>
+
+                <div class="text-danger" *ngIf="
                 useForm.get('role_id')?.touched &&
                 useForm.get('role_id')?.invalid &&
                 !isEditMode
               ">
-              <span *ngIf="useForm.get('role_id')?.errors?.['required']">
-                Role name is required.
-              </span>
-            </div>
-          </div>
+                  <span *ngIf="useForm.get('role_id')?.errors?.['required']">
+                    Role name is required.
+                  </span>
+                </div>
+              </div>
 
 
 
-            <!-- Email -->
-          <div class="col-md-6 form-group">
-            <label for="email" class="form-label">
-              Email <span class="text-danger" *ngIf="!isEditMode">*</span>
-            </label>
-            <input id="email" type="email" class="form-control form-control-lg" formControlName="email" placeholder="E-mail"
-              [ngClass]="{
+              <!-- Email -->
+              <div class="col-md-6 form-group">
+                <label for="email" class="form-label">
+                  Email <span class="text-danger" *ngIf="!isEditMode">*</span>
+                </label>
+                <input id="email" type="email" class="form-control form-control-lg" formControlName="email"
+                  placeholder="E-mail" [ngClass]="{
                 'is-invalid':
                   !isEditMode &&
                   useForm.get('email')?.touched &&
                   useForm.get('email')?.invalid
               }" />
-            <div class="text-danger" *ngIf="
+                <div class="text-danger" *ngIf="
                 !isEditMode &&
                 useForm.get('email')?.touched &&
                 useForm.get('email')?.invalid
               ">
-              <span *ngIf="useForm.get('email')?.errors?.['required']">
-                Email is required.
-              </span>
-              <span *ngIf="useForm.get('email')?.errors?.['email']">
-                Please enter a valid email address.
-              </span>
-            </div>
-          </div>
+                  <span *ngIf="useForm.get('email')?.errors?.['required']">
+                    Email is required.
+                  </span>
+                  <span *ngIf="useForm.get('email')?.errors?.['email']">
+                    Please enter a valid email address.
+                  </span>
+                </div>
+              </div>
 
 
-            <!-- TEAM -->
-        <div class="col-md-6 form-group">
-          <label for="team_name" class="form-label">
-            Team name <span class="text-danger" *ngIf="!isEditMode">*</span>
-          </label>
-          <select id="team_name" class="form-control form-control-lg" formControlName="team_id" (change)="onTeamChange()"
-            placeholder="team name" [ngClass]="{
+              <!-- TEAM -->
+              <div class="col-md-6 form-group">
+                <label for="team_name" class="form-label">
+                  Team name <span class="text-danger" *ngIf="!isEditMode">*</span>
+                </label>
+                <select id="team_name" class="form-control form-control-lg" formControlName="team_id"
+                  (change)="onTeamChange()" placeholder="team name" [ngClass]="{
               'is-invalid':
                 useForm.get('team_id')?.touched &&
                 useForm.get('team_id')?.invalid
             }">
-            <option [ngValue]="null" disabled hidden>Select team name</option>
-            <option *ngFor="let team of teamList()" [value]="team.team_id">
-              {{ team.team_name }}
-            </option>
-          </select>
-        
-          <!-- Show validation message only in add mode -->
-          <div class="text-danger" *ngIf="
+                  <option [ngValue]="null" disabled hidden>Select team name</option>
+                  <option *ngFor="let team of teamList()" [value]="team.team_id">
+                    {{ team.team_name }}
+                  </option>
+                </select>
+
+                <!-- Show validation message only in add mode -->
+                <div class="text-danger" *ngIf="
               !isEditMode &&
               useForm.get('team_id')?.touched &&
               useForm.get('team_id')?.invalid
             ">
-            <span>Team name is required.</span>
-          </div>
-        </div>
+                  <span>Team name is required.</span>
+                </div>
+              </div>
 
 
-            <!-- Phone -->
-          <div class="col-md-6 form-group">
-            <label for="phone" class="form-label">
-              Phone <span class="text-danger" *ngIf="!isEditMode">*</span>
-            </label>
-            <input id="phone" class="form-control form-control-lg" formControlName="phone" placeholder="Phone" [ngClass]="{
+              <!-- Phone -->
+              <div class="col-md-6 form-group">
+                <label for="phone" class="form-label">
+                  Phone <span class="text-danger" *ngIf="!isEditMode">*</span>
+                </label>
+                <input id="phone" class="form-control form-control-lg" formControlName="phone" placeholder="Phone"
+                  [ngClass]="{
                 'is-invalid':
                   !isEditMode &&
                   useForm.get('phone')?.touched &&
                   useForm.get('phone')?.invalid
               }" maxlength="10" (keypress)="restrictToNumbers($event)" />
-            <div class="text-danger" *ngIf="
+                <div class="text-danger" *ngIf="
                 !isEditMode &&
                 useForm.get('phone')?.touched &&
                 useForm.get('phone')?.invalid
               ">
-              <span *ngIf="useForm.get('phone')?.errors?.['required']">
-                Phone is required.
-              </span>
-              <span *ngIf="useForm.get('phone')?.errors?.['maxlength']">
-                Must not exceed 10 characters.
-              </span>
-              <span *ngIf="useForm.get('phone')?.errors?.['pattern']">
-                Only numbers are allowed.
-              </span>
-            </div>
-          </div>
+                  <span *ngIf="useForm.get('phone')?.errors?.['required']">
+                    Phone is required.
+                  </span>
+                  <span *ngIf="useForm.get('phone')?.errors?.['maxlength']">
+                    Must not exceed 10 characters.
+                  </span>
+                  <span *ngIf="useForm.get('phone')?.errors?.['pattern']">
+                    Only numbers are allowed.
+                  </span>
+                </div>
+              </div>
 
 
 
 
-            <!-- EXCELLENCE -->
-            <!-- <div class="col-md-6 form-group">
+              <!-- EXCELLENCE -->
+              <!-- <div class="col-md-6 form-group">
                 <label for="Excellence" class="form-label">
                   Excellence <span class="text-danger">*</span>
                 </label>
@@ -478,92 +481,93 @@
                   </span>
                 </div>
               </div> -->
-            <!-- EXCELLENCE -->
-        <div class="col-md-6 form-group">
-          <label for="excellence" class="form-label">
-            Excellence <span class="text-danger" *ngIf="!isEditMode">*</span>
-          </label>
-        <input id="excellence" type="text" maxlength="6" class="form-control form-control-lg" formControlName="excellence"
-          placeholder="Excellence" [ngClass]="{
+              <!-- EXCELLENCE -->
+              <div class="col-md-6 form-group">
+                <label for="excellence" class="form-label">
+                  Excellence <span class="text-danger" *ngIf="!isEditMode">*</span>
+                </label>
+                <input id="excellence" type="text" maxlength="6" class="form-control form-control-lg"
+                  formControlName="excellence" placeholder="Excellence" [ngClass]="{
                  'is-invalid':
                    !isEditMode &&
                    useForm.get('excellence')?.touched &&
                    useForm.get('excellence')?.invalid
                }" (keypress)="restrictToNumbers($event)" (input)="onExcellenceInput($event)" />
 
-        
-          <!-- Validation Errors -->
-        <!-- Validation Errors -->
-        <div class="text-danger"
-          *ngIf="!isEditMode && useForm.get('excellence')?.touched && useForm.get('excellence')?.invalid">
-          <span *ngIf="useForm.get('excellence')?.errors?.['required']">
-            Excellence is required.
-          </span>
-          <span *ngIf="useForm.get('excellence')?.errors?.['maxlength']">
-            Must not exceed 6 characters.
-          </span>
-          <span *ngIf="useForm.get('excellence')?.errors?.['pattern']">
-            Only numbers are allowed.
-          </span>
+
+                <!-- Validation Errors -->
+                <!-- Validation Errors -->
+                <div class="text-danger"
+                  *ngIf="!isEditMode && useForm.get('excellence')?.touched && useForm.get('excellence')?.invalid">
+                  <span *ngIf="useForm.get('excellence')?.errors?.['required']">
+                    Excellence is required.
+                  </span>
+                  <span *ngIf="useForm.get('excellence')?.errors?.['maxlength']">
+                    Must not exceed 6 characters.
+                  </span>
+                  <span *ngIf="useForm.get('excellence')?.errors?.['pattern']">
+                    Only numbers are allowed.
+                  </span>
+                </div>
+
+
+                <!-- Backend API Response Message -->
+                <div *ngIf="excellenceMsg" class="text-success mt-1">
+                  {{ excellenceMsg }}
+                </div>
+              </div>
+
+
+            </div>
+          </form>
         </div>
 
-        
-          <!-- Backend API Response Message -->
-          <div *ngIf="excellenceMsg" class="text-success mt-1">
-            {{ excellenceMsg }}
-          </div>
-        </div>
-
-
-          </div>
-        </form>
-      </div>
-
-      <div class="modal-footer">
-        <ng-container *ngIf="userObj?.user_id; else saveButton">
-          <!-- <button type="button" class="btn " data-dismiss="modal" (click)="onUpdate()"
+        <div class="modal-footer">
+          <ng-container *ngIf="userObj?.user_id; else saveButton">
+            <!-- <button type="button" class="btn " data-dismiss="modal" (click)="onUpdate()"
               [disabled]="!isUserNameChanged()" style="border-color: #222fb9;">
               Edit
             </button> -->
-          <button type="button" class="btn" data-dismiss="modal" (click)="onUpdate()" [disabled]="!isUserNameChanged()"
-            [ngClass]="{
+            <button type="button" class="btn" data-dismiss="modal" (click)="onUpdate()"
+              [disabled]="!isUserNameChanged()" [ngClass]="{
         'btn-outline-primary': !isUserNameChanged(),
         'btn-edit-enabled': isUserNameChanged()
       }">
-            Edit
+              Edit
+            </button>
+
+
+          </ng-container>
+          <button type="button" id="clsoebtn" class="btn btn-outline-danger" data-dismiss="modal"
+            (click)="closeModal()">
+            Close
           </button>
-
-
-        </ng-container>
-        <button type="button" id="clsoebtn" class="btn btn-outline-danger" data-dismiss="modal" (click)="closeModal()">
-          Close
-        </button>
-        <ng-template #saveButton>
-          <!-- <button type="button" class="btn " (click)="onSave()"
+          <ng-template #saveButton>
+            <!-- <button type="button" class="btn " (click)="onSave()"
               [attr.data-dismiss]="useForm.valid ? 'modal' : null" style="border-color:#222fb9">
               Save
             </button> -->
-          <button type="button" class="btn btn-outline-primary" (click)="onSave()"
-            [attr.data-dismiss]="useForm.valid ? 'modal' : null">
-            Save
-          </button>
+            <button type="button" class="btn btn-outline-primary" (click)="onSave()"
+              [attr.data-dismiss]="useForm.valid ? 'modal' : null">
+              Save
+            </button>
 
 
-        </ng-template>
-        <!-- <ng-template #saveButton>
+          </ng-template>
+          <!-- <ng-template #saveButton>
             <button type="button" class="btn btn-outline-primary" (click)="onSaveAndClose()">
               save </button>
           </ng-template> -->
 
-      </div>
+        </div>
 
+      </div>
     </div>
   </div>
-</div>
 
 
-<!-- jQuery (must come before Bootstrap) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- jQuery (must come before Bootstrap) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Bootstrap Bundle (includes Popper) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap Bundle (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>

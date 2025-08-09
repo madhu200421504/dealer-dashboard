@@ -507,11 +507,18 @@
               <br>
               <p style="background:none">Select Dealers to compare their KPIs</p>
             </h2>
+              <!-- <input
+      type="text"
+      placeholder="Search PS..."
+      [(ngModel)]="searchTerm"
+      (input)="filterUsers()"
+      style="padding: 8px 12px; border-radius: 20px; border: 1px solid #ccc; width: 200px;"
+    /> -->
 
           <div style="position: relative; display: inline-block;" #dropdown>
             <div (click)="toggleDropdown()"
               style="padding: 10px; border: none; border-radius: 20px; background-color: #EBEDF0; cursor: pointer; display: flex; align-items: center;">
-              {{ getUserName(selectedUserId) || 'Select Ps' }}
+              {{ getUserName(selectedUserId) || 'Select PS => Select user to compare' }}
               <span [ngStyle]="{
                   'margin-left': '8px',
                   'display': 'inline-block',
@@ -523,7 +530,7 @@
             </div>
           
             <div *ngIf="dropdownOpen" (click)="$event.stopPropagation()"
-              style="position: absolute; top: 100%; right: -10px; width: 200px; max-height: 250px; overflow-y: auto; background: white; border-radius: 15px; z-index: 1000; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
+              style="position: absolute; top: 100%; right: -10px; width: 340px; max-height: 250px; overflow-y: auto; background: white; border-radius: 15px; z-index: 1000; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
           
               <div *ngFor="let user of users" (click)="selectUser(user.user_id)"
                 style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #eee; margin: 0 8px;">

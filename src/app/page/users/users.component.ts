@@ -37,6 +37,7 @@ import { error } from 'node:console';
 import { HttpHeaders } from '@angular/common/http';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 declare var $: any;
 
@@ -104,7 +105,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private aleartsrv: AleartSrvService,
     private cdr: ChangeDetectorRef,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {
     this.initializeForm();
   }
@@ -1189,6 +1191,75 @@ export class UsersComponent implements OnInit {
     }, 100);
   }
 
+  goToUserDashboard(user: any) {
+    const userId = user.ps_id || user.user_id;
+    const sm_id = user.sm_id || 'default_sm_id'; // or get actual sm_id if available
+
+    if (!userId) {
+      console.error('User ID missing');
+      return;
+    }
+
+    console.log('Navigating to dashboard with user:', user);
+    console.log(`User ID: ${userId}, SM ID: ${sm_id}`);
+
+    // Navigate to dashboard with user ID and sm_id as query params
+    this.router
+      .navigate(['/dashboard'], {
+        queryParams: { user_id: userId, sm_id, type: 'MTD' },
+      })
+      .then(() => {
+        console.log('Navigation to dashboard successful');
+      })
+      .catch((err) => {
+        console.error('Navigation error:', err);
+      });
+  }
+
+  fetchUserData(userId: string, smId: string, type: string = 'MTD') {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      console.error('Token not found');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    const url = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${type}`;
+
+    this.http.get(url, { headers }).subscribe({
+      next: (response: any) => {
+        console.log('API response:', response);
+        this.processUsersFromResponse(response);
+      },
+      error: (err) => {
+        console.error('Error fetching user data:', err);
+      },
+    });
+  }
+  processUsersFromResponse(response: any) {
+    if (!response?.data?.smData) {
+      console.warn('No smData found in response');
+      return;
+    }
+
+    const users = [];
+
+    for (const sm of response.data.smData) {
+      if (!sm.ps_list) continue;
+
+      for (const ps of sm.ps_list) {
+        users.push({
+          user_id: ps.ps_id,
+          user_name: `${ps.ps_fname} ${ps.ps_lname}`,
+          sm_id: sm.sm_id,
+          sm_name: sm.sm_name,
+        });
+      }
+    }
+  }
   // Check if the name field has been changed
 
   // Check if the name field has been changed
