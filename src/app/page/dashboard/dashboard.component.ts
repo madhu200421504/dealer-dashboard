@@ -48,6 +48,7 @@ import { Subscription } from 'rxjs';
 // import { ToastrService } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 import { ViewChild } from '@angular/core';
+import { UserSelectionService } from '../../service/user-selection.service';
 
 // Register all chart components
 Chart.register(...registerables);
@@ -145,6 +146,7 @@ export class DashboardComponent implements OnInit {
   users: User[] = [];
   // selectedUser: (SelectedUser & { name: string }) | null = null; // Extend SelectedUser with name
   selectedUser: any = null;
+  private subscription: any;
   smId: any; // 👈 Add this line
   isUserSelected = false;
 
@@ -403,7 +405,8 @@ export class DashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef, // 👈 Add this
     private sidebarService: SidebarService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private userSelectionService: UserSelectionService,
   ) {}
 
   ngOnInit(): void {
@@ -533,6 +536,10 @@ export class DashboardComponent implements OnInit {
   ngOnDestroy() {
     if (this.sidebarSub) {
       this.sidebarSub.unsubscribe();
+    }
+
+     if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
   get firstRowUsers() {
@@ -1568,7 +1575,9 @@ export class DashboardComponent implements OnInit {
 
   backToDashboard() {
     this.selectedUser = null;
+    this.userSelectionService.clearSelectedUser();
   }
+  
   getUserInitials(name: string): string {
     if (!name) return '';
     return name.trim().charAt(0).toUpperCase();

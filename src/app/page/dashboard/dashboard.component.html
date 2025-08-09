@@ -1,6 +1,6 @@
 <ng-container *ngIf="!selectedUser">
 
-  <div class="dashboard-container" id="header2">
+  <div *ngIf="!selectedUser" class="dashboard-container" id="header2">
 
     <div class="header2" [ngClass]="{ 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen }">
       <div class="nav-button-group" style="margin-left:10px;">

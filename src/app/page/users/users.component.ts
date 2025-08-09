@@ -38,6 +38,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { UserSelectionService } from '../../service/user-selection.service';
 
 declare var $: any;
 
@@ -102,16 +103,22 @@ export class UsersComponent implements OnInit {
   isDeleteModalOpen = false;
 
   columns: any[] = [];
+  selectedUser: any;
+  
   constructor(
     private aleartsrv: AleartSrvService,
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+     private userSelectionService: UserSelectionService,
   ) {
     this.initializeForm();
   }
 
   ngOnInit() {
+    // this.subscription = this.userSelectionService.selectedUser$.subscribe(user => {
+    //   this.selectedUser = user;
+    // });
     this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
     this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
     this.updateVisiblePages();
@@ -1191,29 +1198,37 @@ export class UsersComponent implements OnInit {
     }, 100);
   }
 
-  goToUserDashboard(user: any) {
-    const userId = user.ps_id || user.user_id;
-    const sm_id = user.sm_id || 'default_sm_id'; // or get actual sm_id if available
+ // users.component.ts
+goToUserDashboard(user: any) {
+  const userId = user.ps_id || user.user_id;
+  const sm_id = user.sm_id || 'default_sm_id';
+  
+  if (!userId) {
+    console.error('User ID missing');
+    return;
+  }
+  
+  // Set the selected user in the service
+  this.userSelectionService.setSelectedUser({
+    ...user,
+    user_id: userId,
+    sm_id: sm_id,
+    type: 'MTD'
+  });
 
-    if (!userId) {
-      console.error('User ID missing');
-      return;
+  // Navigate with a flag indicating we're coming from user list
+  this.router.navigate(['/Admin/dashboard'], {
+    queryParams: { 
+      user_id: userId, 
+      sm_id, 
+      type: 'MTD',
+      from_user_list: 'true' // Add this flag
     }
+  });
+}
 
-    console.log('Navigating to dashboard with user:', user);
-    console.log(`User ID: ${userId}, SM ID: ${sm_id}`);
-
-    // Navigate to dashboard with user ID and sm_id as query params
-    this.router
-      .navigate(['/dashboard'], {
-        queryParams: { user_id: userId, sm_id, type: 'MTD' },
-      })
-      .then(() => {
-        console.log('Navigation to dashboard successful');
-      })
-      .catch((err) => {
-        console.error('Navigation error:', err);
-      });
+ngOnDestroy() {
+   
   }
 
   fetchUserData(userId: string, smId: string, type: string = 'MTD') {
