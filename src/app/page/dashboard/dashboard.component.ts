@@ -48,6 +48,7 @@ import { Subscription } from 'rxjs';
 // import { ToastrService } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 import { ViewChild } from '@angular/core';
+import { UserSelectionService } from '../../service/user-selection.service';
 
 // Register all chart components
 Chart.register(...registerables);
@@ -145,6 +146,7 @@ export class DashboardComponent implements OnInit {
   users: User[] = [];
   // selectedUser: (SelectedUser & { name: string }) | null = null; // Extend SelectedUser with name
   selectedUser: any = null;
+  private subscription: any;
   smId: any; // 👈 Add this line
 
   selectedUserData: TestDrive[] = [];
@@ -400,10 +402,28 @@ export class DashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef, // 👈 Add this
     private sidebarService: SidebarService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private userSelectionService: UserSelectionService,
   ) {}
 
   ngOnInit(): void {
+    // Check if there are query parameters indicating user selection
+  this.route.queryParams.subscribe(params => {
+    if (params['user_id'] && params['from_user_list']) {
+      // Coming from user-all with user selection - keep the user data
+      // The service should already have the user data
+    } else {
+      // Direct navigation to dashboard - clear any user selection
+      this.userSelectionService.clearSelectedUser();
+    }
+  });
+
+  // Subscribe to selected user changes
+  this.subscription = this.userSelectionService.selectedUser$.subscribe(user => {
+    this.selectedUser = user;
+  });
+
+
     this.applyFilter('MTD');
     this.onFilterClick('MTD'); // ⬅️ This will simulate clicking the MTD button on load
 
@@ -519,6 +539,10 @@ export class DashboardComponent implements OnInit {
   ngOnDestroy() {
     if (this.sidebarSub) {
       this.sidebarSub.unsubscribe();
+    }
+
+     if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
   get firstRowUsers() {
@@ -1547,7 +1571,9 @@ export class DashboardComponent implements OnInit {
 
   backToDashboard() {
     this.selectedUser = null;
+    this.userSelectionService.clearSelectedUser();
   }
+  
   getUserInitials(name: string): string {
     if (!name) return '';
     return name.trim().charAt(0).toUpperCase();
