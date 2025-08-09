@@ -1,4 +1,4 @@
-<div *ngIf="!selectedUser" class="container-fluid">
+<!-- <div *ngIf="!selectedUser" class="container-fluid"> -->
   <!-- <div class="content-body"> -->
   <div class="content-section active">
     <div class="page-titles">
@@ -153,7 +153,9 @@
                 </td>
               </tr>
 
-<tr *ngFor="let user of paginatedUsers; let i = index" (click)="goToUserDashboard(user)">
+<tr *ngFor="let user of paginatedUsers; let i = index" >
+  <!-- (click)="goToUserDashboard(user) -->
+   <!-- VERY IMP CODE ABOVE TO REFER SERVICE  -->
                 <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
                 <td>{{ user.name}}</td>
                 <td>{{user.email}}</td>
@@ -245,7 +247,7 @@
         </div>
       </div>
     </div>
-  </div>
+  <!-- </div> -->
 
   <div *ngIf="isDeleteModalOpen" class="modal d-block" tabindex="-1"
     style="background: rgba(0, 0, 0, 0.5); z-index: 1050;">

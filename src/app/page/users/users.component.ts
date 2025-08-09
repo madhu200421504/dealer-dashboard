@@ -110,7 +110,7 @@ export class UsersComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
     private router: Router,
-     private userSelectionService: UserSelectionService,
+    //  private userSelectionService: UserSelectionService,
   ) {
     this.initializeForm();
   }
@@ -1199,33 +1199,31 @@ export class UsersComponent implements OnInit {
   }
 
  // users.component.ts
-goToUserDashboard(user: any) {
-  const userId = user.ps_id || user.user_id;
-  const sm_id = user.sm_id || 'default_sm_id';
+// goToUserDashboard(user: any) {
+//   const userId = user.ps_id || user.user_id;
+//   const sm_id = user.sm_id || 'default_sm_id';
   
-  if (!userId) {
-    console.error('User ID missing');
-    return;
-  }
+//   if (!userId) {
+//     console.error('User ID missing');
+//     return;
+//   }
   
-  // Set the selected user in the service
-  this.userSelectionService.setSelectedUser({
-    ...user,
-    user_id: userId,
-    sm_id: sm_id,
-    type: 'MTD'
-  });
+//   this.userSelectionService.setSelectedUser({
+//     ...user,
+//     user_id: userId,
+//     sm_id: sm_id,
+//     type: 'MTD'
+//   });
 
-  // Navigate with a flag indicating we're coming from user list
-  this.router.navigate(['/Admin/dashboard'], {
-    queryParams: { 
-      user_id: userId, 
-      sm_id, 
-      type: 'MTD',
-      from_user_list: 'true' // Add this flag
-    }
-  });
-}
+//   this.router.navigate(['/Admin/dashboard'], {
+//     queryParams: { 
+//       user_id: userId, 
+//       sm_id, 
+//       type: 'MTD',
+//       from_user_list: 'true' 
+//     }
+//   });
+// }
 
 ngOnDestroy() {
    

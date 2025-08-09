@@ -512,10 +512,10 @@
   style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
 
                 <!-- Search input for filtering TABLE (on left of dropdown) -->
-              <div style="display: flex; justify-content: flex; ">
+              <!-- <div style="display: flex; justify-content: flex; ">
                 <input type="text" [(ngModel)]="tableSearchTerm" (input)="filterTableUsers()" placeholder="Search in table..."
                   style="padding: 8px 12px; border-radius: 20px; border: 1px solid #ccc; width: 200px;" />
-              </div>
+              </div> -->
 
                   
             <div style="position: relative; display: inline-block;" #dropdown>
@@ -638,17 +638,16 @@
             </thead>
 
             <tbody>
-              <tr *ngIf="paginatedUsersPerformance.length === 0 && usersSelected">
-                <td colspan="7" style="text-align: center; padding: 20px; font-style: italic; color: #888;">
-                  No users found matching your search.
-                </td>
-              </tr>
-              
-              <tr *ngIf="!usersSelected">
+            <!-- <tr *ngIf="paginatedUsersPerformance.length === 0 && isUserSelected">
+              <td colspan="7" style="text-align: center; padding: 20px; font-style: italic; color: #888;">
+                No users found matching your search.
+              </td>
+            </tr> -->
+              <!-- <tr *ngIf="!usersSelected">
                 <td colspan="7" style="text-align: center; padding: 20px; font-style: italic; color: #888;">
                    Select users to compare.
                 </td>
-              </tr>
+              </tr> -->
 
               <!-- <tr *ngFor="let user of comparePaginatedUsers" style="background-color: #F8F8FA !important;"> -->
               <tr *ngFor="let user of paginatedUsersPerformance" style="background-color: #F8F8FA !important;">

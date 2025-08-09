@@ -48,7 +48,6 @@ import { Subscription } from 'rxjs';
 // import { ToastrService } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 import { ViewChild } from '@angular/core';
-import { UserSelectionService } from '../../service/user-selection.service';
 
 // Register all chart components
 Chart.register(...registerables);
@@ -146,9 +145,7 @@ export class DashboardComponent implements OnInit {
   users: User[] = [];
   // selectedUser: (SelectedUser & { name: string }) | null = null; // Extend SelectedUser with name
   selectedUser: any = null;
-  private subscription: any;
   smId: any; // 👈 Add this line
-  isUserSelected = false;
 
   selectedUserData: TestDrive[] = [];
   todayTestDrives: TodayTestDrive[] = [];
@@ -192,7 +189,7 @@ export class DashboardComponent implements OnInit {
     tableTestDrives_today: [],
     tableTestDrives_oneweek: [],
   };
-  // isUserSelected = false;
+  isUserSelected = false;
   // ps1Total = 0;
   private hourlyChartInstance: Chart | null = null;
   // visiblePagesForCompare: number[] = [];
@@ -405,20 +402,10 @@ export class DashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef, // 👈 Add this
     private sidebarService: SidebarService,
-    private toastr: ToastrService,
-    private userSelectionService: UserSelectionService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-     localStorage.removeItem('selectedUserIds');
-     localStorage.removeItem('selectedUsersPerformance');
-
-     // Reset variables
-     this.selectedUserIds = [];
-     this.selectedUsersPerformance = [];
-
-     // Fetch fresh user list or data as needed
-     this.fetchAllUsers();
     this.filteredUsers = [...this.users];
 
     this.applyFilter('MTD');
@@ -536,10 +523,6 @@ export class DashboardComponent implements OnInit {
   ngOnDestroy() {
     if (this.sidebarSub) {
       this.sidebarSub.unsubscribe();
-    }
-
-     if (this.subscription) {
-      this.subscription.unsubscribe();
     }
   }
   get firstRowUsers() {
@@ -863,6 +846,34 @@ export class DashboardComponent implements OnInit {
   //     },
   //   });
   // }
+  // filterTableUsers() {
+  //   const search = this.tableSearchTerm.trim().toLowerCase();
+  //   if (!search) {
+  //     this.filteredTableUsers = [...this.selectedUsersPerformance];
+  //   } else {
+  //     this.filteredTableUsers = this.selectedUsersPerformance.filter((user) =>
+  //       user.name.toLowerCase().includes(search)
+  //     );
+  //   }
+  //   this.currentPage = 1; // reset page
+  //   this.updatePagination();
+  // }
+
+filterTableUsers() {
+  const search = (this.tableSearchTerm || '').trim().toLowerCase();
+
+  if (!search) {
+    this.filteredTableUsers = [...this.selectedUsersPerformance];
+  } else {
+    this.filteredTableUsers = this.selectedUsersPerformance.filter(user =>
+      user.name.toLowerCase().includes(search)
+    );
+  }
+
+  this.currentPageforCompare = 1; // reset to first page on new search
+  this.updatePagination();
+  // this.updatePaginatedUsers(); // apply slicing here to update view
+}
 
   fetchSMData(smId: string, type: string = 'YTD'): void {
     const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?sm_id=${smId}&type=${type}`;
@@ -1511,10 +1522,6 @@ export class DashboardComponent implements OnInit {
   //     this.selectedUserIds.push(userIdStr);
   //   }
   // }
-  get usersSelected(): boolean {
-  return this.selectedUserIds && this.selectedUserIds.length > 0;
-}
-
 
   onUserSelect(userId: number): void {
     const userIdStr = userId.toString();
@@ -1532,7 +1539,6 @@ export class DashboardComponent implements OnInit {
     } else {
       console.warn('User not found in allUsers for ID:', userIdStr);
     }
-    
   }
 
   getColorForUser(name: string): string {
@@ -1575,9 +1581,7 @@ export class DashboardComponent implements OnInit {
 
   backToDashboard() {
     this.selectedUser = null;
-    this.userSelectionService.clearSelectedUser();
   }
-  
   getUserInitials(name: string): string {
     if (!name) return '';
     return name.trim().charAt(0).toUpperCase();
@@ -1644,9 +1648,14 @@ export class DashboardComponent implements OnInit {
   //   this.applyTableFilters();
   // }
 
+  // updatePagination(): void {
+  //   this.totalPages = Math.ceil(
+  //     this.filteredTableTestDrives.length / this.itemsPerPage
+  //   );
+  // }
   updatePagination(): void {
     this.totalPages = Math.ceil(
-      this.filteredTableTestDrives.length / this.itemsPerPage
+      this.filteredTableUsers.length / this.itemsPerPage
     );
   }
 
@@ -1842,11 +1851,11 @@ export class DashboardComponent implements OnInit {
     return pages;
   }
 
-  // changeComparePage(page: number): void {
-  //   if (page >= 1 && page <= this.totalPagesForCompare) {
-  //     this.currentPageforCompare = page;
-  //   }
-  // }
+  changeComparePage(page: number): void {
+    if (page >= 1 && page <= this.totalPagesForCompare) {
+      this.currentPageforCompare = page;
+    }
+  }
   // get totalPagesForCompare(): number {
   //   return Math.ceil(this.selectedUsersPerformance.length / 10);
   // }
@@ -4478,11 +4487,11 @@ export class DashboardComponent implements OnInit {
   //   const endIndex = startIndex + this.itemsPerPage;
 
   // }
-  // get paginatedUsersPerformance(): any[] {
-  //   const startIndex = (this.currentPageforCompare - 1) * this.itemsPerPage;
-  //   const endIndex = startIndex + this.itemsPerPage;
-  //   return this.selectedUsersPerformance.slice(startIndex, endIndex);
-  // }
+  get paginatedUsersPerformance(): any[] {
+    const startIndex = (this.currentPageforCompare - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.selectedUsersPerformance.slice(startIndex, endIndex);
+  }
 
   getPaginatedTableData(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -4766,40 +4775,5 @@ export class DashboardComponent implements OnInit {
         user.name.toLowerCase().includes(searchLower)
       );
     }
-  }
-  filterTableUsers() {
-    const search = this.tableSearchTerm.trim().toLowerCase();
-
-    if (!search) {
-      this.filteredTableUsers = [...this.selectedUsersPerformance];
-    } else {
-      this.filteredTableUsers = this.selectedUsersPerformance.filter((user) =>
-        user.name.toLowerCase().includes(search)
-      );
-    }
-    this.currentPageforCompare = 1; // Reset page
-    this.updatePagination();
-  }
-
-  // Update pagination buttons and total pages:
-  // updatePagination() {
-  //   this.totalPagesForCompare = Math.ceil(this.filteredTableUsers.length / this.itemsPerPage);
-
-  //   // Build array of page numbers for buttons, etc.
-  //   this.visiblePagesForCompare = Array.from(
-  //     { length: this.totalPagesForCompare },
-  //     (_, i) => i + 1
-  //   );
-  // }
-  get paginatedUsersPerformance(): any[] {
-    const startIndex = (this.currentPageforCompare - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    return this.filteredTableUsers.slice(startIndex, endIndex);
-  }
-
-  // Call this on page change button click:
-  changeComparePage(page: number) {
-    if (page < 1 || page > this.totalPagesForCompare) return;
-    this.currentPageforCompare = page;
   }
 }
