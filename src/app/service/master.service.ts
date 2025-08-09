@@ -51,7 +51,7 @@ export class MasterService {
 
   private getAuthHeaders(): HttpHeaders {
     const token = this.storageService.getItem('token');
-    console.log('Retrieved Token:', token); // Debugging
+    // console.log('Retrieved Token:', token); // Debugging
     return new HttpHeaders()
       .set('authorization', `Bearer ${token}`)
       .set('accept', 'application/json');
