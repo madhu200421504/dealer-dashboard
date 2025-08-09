@@ -3,7 +3,7 @@
   background: rgba(255, 255, 255, 0.2) !important;
   color: #fff !important;
   border-radius: 30px;
-  display: flex;
+  /* display: flex; */
   align-items: center;
   gap: 8px;
   transition: none !important;
@@ -29,20 +29,12 @@
 
 
 
+
+
 /* Optional: regular icon styling (unchanged) */
 .deznav .metismenu > li > a > i {
   font-size: 1.5rem;
-  display: inline-block;
-  vertical-align: middle;
-  /* padding: 0 1.5rem 0 0; */
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 64px;
-  height: 64px;
-  line-height: 64px;
-  text-align: center;
-  border-radius: 64px;
+ 
 }
 
 
