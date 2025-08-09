@@ -36,14 +36,20 @@
     </div>
   </div> -->
   <!-- Hamburger Menu Toggle -->
-  <div class="nav-control" (click)="onToggleClick()">
+  <!-- <div class="nav-control" (click)="onToggleClick()">
     <div class="hamburger">
       <span class="line"></span>
       <span class="line"></span>
       <span class="line"></span>
     </div>
+  </div> -->
+<div class="nav-control" (click)="onToggleClick()">
+  <div class="hamburger" [class.arrow]="!isSidebarOpen">
+    <span class="line"></span>
+    <span class="line"></span>
+    <span class="line"></span>
   </div>
-
+</div>
 </div>
 <!--**********************************
     Nav header end

@@ -1267,7 +1267,7 @@ var SwalPortalDirective = class _SwalPortalDirective {
   });
 })();
 function provideDefaultSwal() {
-  return import("./sweetalert2.esm.all-QUHDGAHI.js");
+  return import("./sweetalert2.esm.all-RVW26V4J.js");
 }
 var SweetAlert2Module = class _SweetAlert2Module {
   static forRoot(options = {}) {

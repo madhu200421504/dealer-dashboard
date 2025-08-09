@@ -507,77 +507,111 @@
               <br>
               <p style="background:none">Select Dealers to compare their KPIs</p>
             </h2>
-              <!-- <input
-      type="text"
-      placeholder="Search PS..."
-      [(ngModel)]="searchTerm"
-      (input)="filterUsers()"
-      style="padding: 8px 12px; border-radius: 20px; border: 1px solid #ccc; width: 200px;"
-    /> -->
 
-          <div style="position: relative; display: inline-block;" #dropdown>
-            <div (click)="toggleDropdown()"
-              style="padding: 10px; border: none; border-radius: 20px; background-color: #EBEDF0; cursor: pointer; display: flex; align-items: center;">
-              {{ getUserName(selectedUserId) || 'Select PS => Select user to compare' }}
-              <span [ngStyle]="{
-                  'margin-left': '8px',
-                  'display': 'inline-block',
-                  'transition': 'transform 0.2s ease',
-                  'transform': dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'
-                }">
-                &#x25BC;
-              </span>
-            </div>
-          
-            <div *ngIf="dropdownOpen" (click)="$event.stopPropagation()"
-              style="position: absolute; top: 100%; right: -10px; width: 340px; max-height: 250px; overflow-y: auto; background: white; border-radius: 15px; z-index: 1000; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
-          
-              <div *ngFor="let user of users" (click)="selectUser(user.user_id)"
-                style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #eee; margin: 0 8px;">
-          
-                <!-- Outer circle -->
-                <div [ngStyle]="{
-                  'width': '16px',
-                  'height': '16px',
-                  'border-radius': '50%',
-                  'border': '2px solid ' + getColorForUser(user.name),
-                  'display': 'flex',
-                  'align-items': 'center',
-                  'justify-content': 'center',
-                  'flex-shrink': '0'
-                }">
+<div
+  style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+
+                <!-- Search input for filtering TABLE (on left of dropdown) -->
+              <div style="display: flex; justify-content: flex; ">
+                <input type="text" [(ngModel)]="tableSearchTerm" (input)="filterTableUsers()" placeholder="Search in table..."
+                  style="padding: 8px 12px; border-radius: 20px; border: 1px solid #ccc; width: 200px;" />
+              </div>
+
+                  
+            <div style="position: relative; display: inline-block;" #dropdown>
+              <!-- <div (click)="dropdownOpen = !dropdownOpen" -->
+              <div (click)="toggleDropdown()"
+                style="padding: 12px; border: none; border-radius: 20px; background-color: #EBEDF0; cursor: pointer;font-size:18px;">
+                {{ getUserName(selectedUserId) || 'Select a user to compare' }}
+<span style="margin-left: 8px;">
+  {{ dropdownOpen ? '\u25B2' : '\u25BC' }}
+</span>
+              </div>
+            
+
+
+              <!-- <div *ngIf="dropdownOpen" (click)="$event.stopPropagation()"
+                style="position: absolute; top: 100%; right: -10px !important; width: 400px; max-height: 250px; overflow-y: auto; background: white; border-radius: 15px; z-index: 1000; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);"> -->
+
+<div
+  [class.open]="dropdownOpen"
+  (click)="$event.stopPropagation()"
+  style="
+    position: absolute;
+    top: 100%;
+    right: -10px !important;
+    width: 350px;
+    max-height: 250px;
+    overflow-y: auto;
+    background: white;
+    border-radius: 15px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  "
+  [style.opacity]="dropdownOpen ? '1' : '0'"
+  [style.visibility]="dropdownOpen ? 'visible' : 'hidden'"
+  [style.transform]="dropdownOpen ? 'translateY(0)' : 'translateY(-10px)'"
+>
+                <div *ngFor="let user of users" (click)="selectUser(user.user_id)"
+                  style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #eee;margin: 0 8px; /* 👈 reduces left/right width */">
+
                   <div [ngStyle]="{
-                    'width': '8px',
-                    'height': '8px',
-                    'border-radius': '50%',
-                    'background-color': isUserInTable(user.user_id) ? getColorForUser(user.name) : 'transparent',
-                    'border': !isUserInTable(user.user_id) ? '1px solid ' + getColorForUser(user.name) : 'none'
-                  }"></div>
-                </div>
-          
-                <!-- Initial Circle -->
-                <div [ngStyle]="{
-                  'min-width': '28px',
-                  'min-height': '28px',
-                  'background-color': getColorForUser(user.name),
-                  'color': 'white',
-                  'border-radius': '50%',
-                  'display': 'flex',
-                  'align-items': 'center',
-                  'justify-content': 'center',
-                  'font-size': '20px'
-                }">
-                  {{ user.name.charAt(0) || '?' }}
-                </div>
-          
-                <!-- User Name -->
-                <div style="word-break: break-word; white-space: normal; line-height: 1.2;">
-                  {{ formatUserName(user.name) }}
+  'width': '16px',
+  'height': '16px',
+  'border-radius': '50%',
+  'border': '2px solid ' + getColorForUser(user.name),
+  'display': 'flex',
+  'align-items': 'center',
+  'justify-content': 'center',
+  'flex-shrink': '0'
+}">
+                    <div [ngStyle]="{
+    'width': '8px',
+    'height': '8px',
+    'border-radius': '50%',
+   'background-color': isUserInTable(user.user_id) 
+  ? getColorForUser(user.name) 
+  : 'transparent',
+'border': !isUserInTable(user.user_id) 
+  ? '1px solid ' + getColorForUser(user.name) 
+  : 'none'
+
+  }"></div>
+                  </div>
+
+
+
+                  <!-- Initial Circle -->
+                  <div [ngStyle]="{
+                        'min-width': '28px',
+                        'min-height': '28px',
+                        'background-color': getColorForUser(user.name),
+                        'color': 'white',
+                        'border-radius': '50%',
+                        'display': 'flex',
+                        'align-items': 'center',
+                        'justify-content': 'center',
+                        'font-size': '20px'
+                      }">
+                    {{ user.name.charAt(0) || '?' }}
+                  </div>
+
+                  <!-- User Name -->
+                  <div style="word-break: break-word; white-space: normal; line-height: 1.2;">
+                    {{ formatUserName(user.name) }}
+                  </div>
                 </div>
               </div>
             </div>
+
+
           </div>
           </div>
+
           <table>
             <thead>
               <tr>
@@ -604,6 +638,18 @@
             </thead>
 
             <tbody>
+              <tr *ngIf="paginatedUsersPerformance.length === 0 && usersSelected">
+                <td colspan="7" style="text-align: center; padding: 20px; font-style: italic; color: #888;">
+                  No users found matching your search.
+                </td>
+              </tr>
+              
+              <tr *ngIf="!usersSelected">
+                <td colspan="7" style="text-align: center; padding: 20px; font-style: italic; color: #888;">
+                   Select users to compare.
+                </td>
+              </tr>
+
               <!-- <tr *ngFor="let user of comparePaginatedUsers" style="background-color: #F8F8FA !important;"> -->
               <tr *ngFor="let user of paginatedUsersPerformance" style="background-color: #F8F8FA !important;">
 

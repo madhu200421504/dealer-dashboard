@@ -32,7 +32,9 @@ import { UserService } from '../../service/user.service';
 export class HeaderComponent implements OnInit {
   @Output() sidebarToggle = new EventEmitter<void>();
   guestDetails: any;
-  isSidebarOpen: boolean = true; // or false
+  isSidebarOpen: boolean = false; // ✅ Initialize with default value
+
+  // isSidebarOpen = true; // ✅ Make sure this matches your sidebar's initial state
   // pageTitle: string = 'Dashboard';
   currentHeading: string = 'Dashboard';
   userName: string = '';
@@ -63,6 +65,9 @@ export class HeaderComponent implements OnInit {
   //     .subscribe(() => this.updateTitle());
   // }
   ngOnInit() {
+    // ✅ Get initial state from service
+     this.isSidebarOpen = this.sidebarService.currentState;
+     console.log('Initial sidebar state:', this.isSidebarOpen);
     this.context.onSideBarClick$.subscribe(({ pageTitle }) => {
       console.log('Current Heading Updated:', pageTitle);
       this.currentHeading = pageTitle;
@@ -92,10 +97,19 @@ export class HeaderComponent implements OnInit {
   selectSection(section: string): void {
     this.selectedSection = section;
   }
+  // onToggleClick() {
+  //   console.log('Hamburger clicked'); // 👈 test log
+  //   // this.sidebarToggle.emit();
+  //   this.sidebarService.toggleSidebar();
+  // }
+
   onToggleClick() {
-    console.log('Hamburger clicked'); // 👈 test log
-    // this.sidebarToggle.emit();
+    console.log('Before toggle:', this.isSidebarOpen);
     this.sidebarService.toggleSidebar();
+    // ✅ Get updated state from service
+    this.isSidebarOpen = this.sidebarService.currentState;
+    console.log('After toggle:', this.isSidebarOpen);
+    this.cdr.detectChanges();
   }
 
   private updateTitle(): void {

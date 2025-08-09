@@ -324,4 +324,5 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isActive(key: string): boolean {
     return this.activeMenu === key;
   }
+  
 }
