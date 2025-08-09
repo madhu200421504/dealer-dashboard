@@ -2358,6 +2358,9 @@ export class DashboardComponent implements OnInit {
   //   console.log('✅ Filter Set:', this.selectedFilter);
   //   this.fetchSelectedUserData();
   // }
+
+  isSummaryLoading: boolean = false;
+  
   onDurationSelect(duration: string): void {
     this.selectedDuration = duration;
 

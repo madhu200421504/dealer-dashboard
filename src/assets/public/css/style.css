@@ -17821,7 +17821,7 @@ html[dir="rtl"]
   vertical-align: middle;
   /* padding: 0 1.5rem 0 0; */
   position: relative;
-  top: -6px;
+  top: 0;
   line-height: 1;
   width: 64px;
   height: 64px;
@@ -31361,6 +31361,13 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 [data-sibebarbg="color_4"] .deznav .metismenu > li > a i,
 [data-sibebarbg="color_4"] .deznav .metismenu > li > a svg {
   color: rgba(255, 255, 255, 0.7) !important;
+}
+
+@media only screen and (max-width: 1600px) {
+    [data-sidebar-style=full][data-layout=vertical] .deznav .metismenu > li > a {
+        font-size: 14px;
+        padding: 14px 20px 14px 65px;
+    }
 }
 
 [data-sibebarbg="color_4"][data-theme-version="dark"]

@@ -118,87 +118,88 @@
         </div>
 
         <!-- <table class="table" style="width: 100%; margin-top: 10px; background-color: transparent;"> -->
-    <table class="table"
-      style="width: 100%; margin-top: 10px; background-color: transparent; table-layout: fixed; border-collapse: collapse;">
-      <colgroup>
-        <col style="width: 14.28%;"> <!-- Subject -->
-        <col style="width: 14.28%;"> <!-- VIN -->
-        <col style="width: 14.28%;"> <!-- PMI -->
-        <col style="width: 14.28%;"> <!-- Assigned to -->
-        <col style="width: 14.28%;"> <!-- Date -->
-        <col style="width: 14.28%;"> <!-- Start time -->
-        <col style="width: 14.32%;"> <!-- End time (slightly larger to total 100%) -->
-      </colgroup>
-      <thead>
-        <tr style="background-color: transparent !important;">
-          <th
-            style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px;">
-            Subject
-          </th>
-          <th
-            style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
-            VIN
-          </th>
-          <th
-            style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
-            PMI
-          </th>
-          <th
-            style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
-            Assigned to
-          </th>
-          <th
-            style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
-            Date
-          </th>
-          <th
-            style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
-            Start time
-          </th>
-          <th
-            style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
-            End time
-          </th>
-        </tr>
-      </thead>
-      <tbody style="background-color: transparent;">
-        <tr *ngIf="getPaginatedTableData().length === 0" style="background-color: transparent !important;">
-          <td colspan="7" style="text-align: center; background-color: transparent !important; padding: 8px 6px;">No data
-            found</td>
-        </tr>
-    
-        <tr *ngFor="let testDrive of getPaginatedTableData()" class="table-hover-row">
-          <td class="table-cell-styled"
-            style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            {{ testDrive.subject || 'N/A' }}
-          </td>
-          <td class="table-cell-styled"
-            style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            {{ testDrive.VIN || 'N/A' }}
-          </td>
-          <td class="table-cell-styled"
-            style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            {{ testDrive.PMI || 'N/A' }}
-          </td>
-          <td class="table-cell-styled"
-            style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            {{ testDrive.assigned_to || 'N/A' }}
-          </td>
-          <td class="table-cell-styled"
-            style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            {{ testDrive.start_date | date:'yyyy-MM-dd' }}
-          </td>
-          <td class="table-cell-styled"
-            style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            {{ testDrive.start_time }}
-          </td>
-          <td class="table-cell-styled"
-            style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            {{ testDrive.end_time }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <table class="table"
+          style="width: 100%; margin-top: 10px; background-color: transparent; table-layout: fixed; border-collapse: collapse;">
+          <colgroup>
+            <col style="width: 14.28%;"> <!-- Subject -->
+            <col style="width: 14.28%;"> <!-- VIN -->
+            <col style="width: 14.28%;"> <!-- PMI -->
+            <col style="width: 14.28%;"> <!-- Assigned to -->
+            <col style="width: 14.28%;"> <!-- Date -->
+            <col style="width: 14.28%;"> <!-- Start time -->
+            <col style="width: 14.32%;"> <!-- End time (slightly larger to total 100%) -->
+          </colgroup>
+          <thead>
+            <tr style="background-color: transparent !important;">
+              <th
+                style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px;">
+                Subject
+              </th>
+              <th
+                style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
+                VIN
+              </th>
+              <th
+                style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
+                PMI
+              </th>
+              <th
+                style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
+                Assigned to
+              </th>
+              <th
+                style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
+                Date
+              </th>
+              <th
+                style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
+                Start time
+              </th>
+              <th
+                style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
+                End time
+              </th>
+            </tr>
+          </thead>
+          <tbody style="background-color: transparent;">
+            <tr *ngIf="getPaginatedTableData().length === 0" style="background-color: transparent !important;">
+              <td colspan="7" style="text-align: center; background-color: transparent !important; padding: 8px 6px;">No
+                data
+                found</td>
+            </tr>
+
+            <tr *ngFor="let testDrive of getPaginatedTableData()" class="table-hover-row">
+              <td class="table-cell-styled"
+                style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ testDrive.subject || 'N/A' }}
+              </td>
+              <td class="table-cell-styled"
+                style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ testDrive.VIN || 'N/A' }}
+              </td>
+              <td class="table-cell-styled"
+                style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ testDrive.PMI || 'N/A' }}
+              </td>
+              <td class="table-cell-styled"
+                style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ testDrive.assigned_to || 'N/A' }}
+              </td>
+              <td class="table-cell-styled"
+                style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ testDrive.start_date | date:'yyyy-MM-dd' }}
+              </td>
+              <td class="table-cell-styled"
+                style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ testDrive.start_time }}
+              </td>
+              <td class="table-cell-styled"
+                style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ testDrive.end_time }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
 
         <div class="pagination-controls"
@@ -687,7 +688,7 @@
                     style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
                     Rank</th>
                 </tr>
-                
+
                 <tr>
 
 
@@ -697,7 +698,7 @@
                   <th
                     style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
                     All India</th>
-                    
+
                   <th
                     style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
                     All India</th>
@@ -856,10 +857,10 @@
       <span class="badge badge-overdue">Overdue</span>
     </div>
   </div> -->
-<div style="margin-bottom: 20px;">
-  <h3 style="font-weight: 600;">Activities</h3>
-  <div style="display: flex; gap: 12px; margin-top: 10px;">
-    <button class="filter-button" style="
+  <div style="margin-bottom: 20px;">
+    <h3 style="font-weight: 600;">Activities</h3>
+    <div style="display: flex; gap: 12px; margin-top: 10px;">
+      <button class="filter-button" style="
         padding: 8px 16px; 
         font-size: 0.875rem;
         border: none;
@@ -874,10 +875,10 @@
         'background-color': activeTestDriveStatus === 'Upcoming' ? '#dcfce7' : '#f3f4f6',
         'color': activeTestDriveStatus === 'Upcoming' ? '#16a34a' : '#6b7280'
       }" (click)="onClick('Upcoming')">
-      Upcoming
-    </button>
+        Upcoming
+      </button>
 
-    <button class="filter-button" style="
+      <button class="filter-button" style="
         padding: 8px 16px; 
         font-size: 0.875rem;
         border: none;
@@ -892,10 +893,10 @@
         'background-color': activeTestDriveStatus === 'Completed' ? '#fef3c7' : '#f3f4f6',
         'color': activeTestDriveStatus === 'Completed' ? '#d97706' : '#6b7280'
       }" (click)="onClick('Completed')">
-      Completed
-    </button>
+        Completed
+      </button>
 
-    <button class="filter-button" style="
+      <button class="filter-button" style="
         padding: 8px 16px; 
         font-size: 0.875rem;
         border: none;
@@ -910,71 +911,71 @@
         'background-color': activeTestDriveStatus === 'Overdue' ? '#fecaca' : '#f3f4f6',
         'color': activeTestDriveStatus === 'Overdue' ? '#dc2626' : '#6b7280'
       }" (click)="onClick('Overdue')">
-      Overdue
-    </button>
-  </div>
-</div>
-
-    <!-- ✅ Use ! to avoid 'possibly undefined' error -->
-
-
-
-    <!-- Styled Table -->
-    <div
-      style="background: #ffffff; padding: 16px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-top: 20px;">
-
-      <!-- Outer border and radius applied here -->
-      <div style=" border-radius: 12px; overflow: hidden;">
-        <table class="table" style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr style="background-color: white;">
-              <th
-                style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;">
-                Name</th>
-              <th
-                style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;">
-                Subject</th>
-              <th style="font-weight: 600; color:#0F3153; padding: 8px; text-align: left; background-color: white;">PMI
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr *ngIf="getActiveTestDriveList().length === 0" style="background-color: white;">
-              <td colspan="3" style="text-align: center; padding: 12px; color: #6b7280; background-color: white;">
-                No {{ activeTestDriveStatus.toLowerCase() }} activities.
-              </td>
-            </tr>
-
-            <tr *ngFor="let item of getActiveTestDriveList()" style="background-color: white;">
-              <td
-                style="border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;font-size:16px;font-weight:400;color:#000;">
-                {{ item.name }}
-              </td>
-              <td
-                style="border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;font-size:16px;font-weight:400;color:#000;">
-                {{ item.subject }}
-              </td>
-              <td
-                style="border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;font-size:16px;font-weight:400;color:#000;">
-                {{ item.PMI }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-      </div>
+        Overdue
+      </button>
     </div>
+  </div>
+
+  <!-- ✅ Use ! to avoid 'possibly undefined' error -->
+
+
+
+  <!-- Styled Table -->
+  <div
+    style="background: #ffffff; padding: 16px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-top: 20px;">
+
+    <!-- Outer border and radius applied here -->
+    <div style=" border-radius: 12px; overflow: hidden;">
+      <table class="table" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: white;">
+            <th
+              style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;">
+              Name</th>
+            <th
+              style="font-weight: 600; color:#0F3153; border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;">
+              Subject</th>
+            <th style="font-weight: 600; color:#0F3153; padding: 8px; text-align: left; background-color: white;">PMI
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngIf="getActiveTestDriveList().length === 0" style="background-color: white;">
+            <td colspan="3" style="text-align: center; padding: 12px; color: #6b7280; background-color: white;">
+              No {{ activeTestDriveStatus.toLowerCase() }} activities.
+            </td>
+          </tr>
+
+          <tr *ngFor="let item of getActiveTestDriveList()" style="background-color: white;">
+            <td
+              style="border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;font-size:16px;font-weight:400;color:#000;">
+              {{ item.name }}
+            </td>
+            <td
+              style="border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;font-size:16px;font-weight:400;color:#000;">
+              {{ item.subject }}
+            </td>
+            <td
+              style="border: 1px solid #E4E4E7; padding: 8px; text-align: left; background-color: white;font-size:16px;font-weight:400;color:#000;">
+              {{ item.PMI }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
 
 
 
 
-    <div style="margin-top: 30px;">
-      <h3 style="font-weight: 600;">Call Analysis</h3>
+  <div style="margin-top: 30px;">
+    <h3 style="font-weight: 600;">Call Analysis</h3>
 
-<div style="margin-bottom: 20px;">
-  <div style="display: flex; gap: 12px; margin-top: 10px;">
-    <button class="filter-button" style="
+    <div style="margin-bottom: 20px;">
+      <div style="display: flex; gap: 12px; margin-top: 10px;">
+        <button class="filter-button" style="
         padding: 8px 16px; 
         font-size: 0.875rem;
         border: none;
@@ -988,10 +989,10 @@
         'background-color': activeActivity === 'Enquiry' ? '#ddd6fe' : '#f3f4f6',
         'color': activeActivity === 'Enquiry' ? '#7c3aed' : '#6b7280'
       }" (click)="onActivityClick('Enquiry')">
-      Enquiry
-    </button>
+          Enquiry
+        </button>
 
-    <button class="filter-button" style="
+        <button class="filter-button" style="
         padding: 8px 16px; 
         font-size: 0.875rem;
         border: none;
@@ -1005,326 +1006,326 @@
         'background-color': activeActivity === 'ColdCalls' ? '#bfdbfe' : '#f3f4f6',
         'color': activeActivity === 'ColdCalls' ? '#2563eb' : '#6b7280'
       }" (click)="onActivityClick('ColdCalls')">
-      Cold Calls
-    </button>
-  </div>
-</div>
+          Cold Calls
+        </button>
+      </div>
+    </div>
 
 
-      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-        <!-- Left Box -->
-        <div
-          style="background: white; flex: 1; min-width: 280px; padding: 16px; border-radius: 12px; box-shadow: 0 0 6px rgba(0,0,0,0.1);">
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+      <!-- Left Box -->
+      <div
+        style="background: white; flex: 1; min-width: 280px; padding: 16px; border-radius: 12px; box-shadow: 0 0 6px rgba(0,0,0,0.1);">
 
 
-          <div style="margin-bottom: 20px;">
-            <h3 style="font-weight: 600;">Duration</h3>
-            <div style="display: flex; gap: 12px; margin-top: 10px;">
-              <button class="filter-button" style="padding: 6px 12px; font-size: 0.8rem;"
-                [class.active]="selectedDuration === '1D'" (click)="onDurationSelect('1D')">1D</button>
+        <div style="margin-bottom: 20px;">
+          <h3 style="font-weight: 600;">Duration</h3>
+          <div style="display: flex; gap: 12px; margin-top: 10px;">
+            <button class="filter-button" style="padding: 6px 12px; font-size: 0.8rem;"
+              [class.active]="selectedDuration === '1D'" (click)="onDurationSelect('1D')">1D</button>
 
-              <button class="filter-button" style="padding: 6px 12px; font-size: 0.8rem;"
-                [class.active]="selectedDuration === '1W'" (click)="onDurationSelect('1W')">1W</button>
+            <button class="filter-button" style="padding: 6px 12px; font-size: 0.8rem;"
+              [class.active]="selectedDuration === '1W'" (click)="onDurationSelect('1W')">1W</button>
 
-              <button class="filter-button" style="padding: 6px 12px; font-size: 0.8rem;"
-                [class.active]="selectedDuration === '1M'" (click)="onDurationSelect('1M')">1M</button>
+            <button class="filter-button" style="padding: 6px 12px; font-size: 0.8rem;"
+              [class.active]="selectedDuration === '1M'" (click)="onDurationSelect('1M')">1M</button>
 
-              <button class="filter-button" style="padding: 6px 12px; font-size: 0.8rem;"
-                [class.active]="selectedDuration === '1Q'" (click)="onDurationSelect('1Q')">1Q</button>
+            <button class="filter-button" style="padding: 6px 12px; font-size: 0.8rem;"
+              [class.active]="selectedDuration === '1Q'" (click)="onDurationSelect('1Q')">1Q</button>
 
-              <button class="filter-button" style="padding: 6px 12px; font-size: 0.8rem;"
-                [class.active]="selectedDuration === '1Y'" (click)="onDurationSelect('1Y')">1Y</button>
-            </div>
-          </div>
-
-
-
-          <!-- Count row: left, center, right -->
-          <!-- Count row: left, center, right -->
-          <div style="margin-top: 50px; display: flex; justify-content: space-between;">
-            <!-- Left -->
-            <div style="flex: 1; text-align: left;">
-              <div style="font-size: 24px; font-weight: bold;margin-left:40px;;">
-                {{ currentSummary?.totalConnected }}
-              </div>
-              <div style="font-size: 12px; color: #666;">Total Connected</div>
-            </div>
-
-            <!-- Center -->
-            <div style="flex: 1; text-align: center;">
-              <div style="font-size: 24px; font-weight: bold;">
-                {{ currentSummary?.conversationTime }}
-              </div>
-              <div style="font-size: 12px; color: #666;">Conversation Time</div>
-            </div>
-
-            <!-- Right -->
-            <div style="flex: 1; text-align: right;">
-              <div style="font-size: 24px; font-weight: bold;margin-right:40px;">
-                {{ currentSummary?.notConnected }}
-              </div>
-              <div style="font-size: 12px; color: #666;">Not Connected</div>
-            </div>
+            <button class="filter-button" style="padding: 6px 12px; font-size: 0.8rem;"
+              [class.active]="selectedDuration === '1Y'" (click)="onDurationSelect('1Y')">1Y</button>
           </div>
         </div>
-        <!-- Right Box -->
-        <div
-          style="background: white; flex: 1; min-width: 280px; padding: 16px; border-radius: 12px; box-shadow: 0 0 6px rgba(0,0,0,0.1);">
-          <table class="custom-table" style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-            <thead>
-              <tr>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd;"></th>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Calls</th>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Duration</th>
-                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Unique Clients</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom: 1px solid #ddd; background:none !important ;">
-                <td style="padding: 10px;">
-                  <div style="display: flex; align-items: center;">
-                    <i class="fas fa-phone-alt" style="margin-right: 8px; color: #3498db;"></i> All Calls
-                  </div>
-                </td>
-                <!-- <td style="padding: 10px;">{{ callSummaryOrder?.all?.calls || 0 }}</td>
+
+
+
+        <!-- Count row: left, center, right -->
+        <!-- Count row: left, center, right -->
+        <div style="margin-top: 50px; display: flex; justify-content: space-between;">
+          <!-- Left -->
+          <div style="flex: 1; text-align: left;">
+            <div style="font-size: 24px; font-weight: bold;margin-left:40px;;">
+              {{ currentSummary?.totalConnected }}
+            </div>
+            <div style="font-size: 12px; color: #666;">Total Connected</div>
+          </div>
+
+          <!-- Center -->
+          <div style="flex: 1; text-align: center;">
+            <div style="font-size: 24px; font-weight: bold;">
+              {{ currentSummary?.conversationTime }}
+            </div>
+            <div style="font-size: 12px; color: #666;">Conversation Time</div>
+          </div>
+
+          <!-- Right -->
+          <div style="flex: 1; text-align: right;">
+            <div style="font-size: 24px; font-weight: bold;margin-right:40px;">
+              {{ currentSummary?.notConnected }}
+            </div>
+            <div style="font-size: 12px; color: #666;">Not Connected</div>
+          </div>
+        </div>
+      </div>
+      <!-- Right Box -->
+      <div
+        style="background: white; flex: 1; min-width: 280px; padding: 16px; border-radius: 12px; box-shadow: 0 0 6px rgba(0,0,0,0.1);">
+        <table class="custom-table" style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+          <thead>
+            <tr>
+              <th style="padding: 10px; border-bottom: 1px solid #ddd;"></th>
+              <th style="padding: 10px; border-bottom: 1px solid #ddd;">Calls</th>
+              <th style="padding: 10px; border-bottom: 1px solid #ddd;">Duration</th>
+              <th style="padding: 10px; border-bottom: 1px solid #ddd;">Unique Clients</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #ddd; background:none !important ;">
+              <td style="padding: 10px;">
+                <div style="display: flex; align-items: center;">
+                  <i class="fas fa-phone-alt" style="margin-right: 8px; color: #3498db;"></i> All Calls
+                </div>
+              </td>
+              <!-- <td style="padding: 10px;">{{ callSummaryOrder?.all?.calls || 0 }}</td>
                 <td style="padding: 10px;">{{ callSummaryOrder?.all?.duration || 0 }}</td>
                 <td style="padding: 10px;">{{ callSummaryOrder?.all?.clients || 0 }}</td> -->
-                <td>{{callSummaryOrder.all.calls}}</td>
-                <td>{{callSummaryOrder.all.duration}}</td>
-                <td>{{callSummaryOrder.all.clients}}</td>
-              </tr>
+              <td>{{callSummaryOrder.all.calls}}</td>
+              <td>{{callSummaryOrder.all.duration}}</td>
+              <td>{{callSummaryOrder.all.clients}}</td>
+            </tr>
 
-              <tr style="border-bottom: 1px solid #ddd; background: white;">
-                <td style="padding: 10px;">
-                  <div style="display: flex; align-items: center;">
-                    <i class="fas fa-check-circle" style="margin-right: 8px; color: #2ecc71;"></i> Connected
-                  </div>
-                </td>
-                <td style="padding: 10px;">{{ callSummaryOrder?.connected?.calls || 0 }}</td>
-                <td style="padding: 10px;">{{ callSummaryOrder?.connected?.duration || 0 }}</td>
-                <td style="padding: 10px;">{{ callSummaryOrder?.connected?.clients || 0 }}</td>
-              </tr>
+            <tr style="border-bottom: 1px solid #ddd; background: white;">
+              <td style="padding: 10px;">
+                <div style="display: flex; align-items: center;">
+                  <i class="fas fa-check-circle" style="margin-right: 8px; color: #2ecc71;"></i> Connected
+                </div>
+              </td>
+              <td style="padding: 10px;">{{ callSummaryOrder?.connected?.calls || 0 }}</td>
+              <td style="padding: 10px;">{{ callSummaryOrder?.connected?.duration || 0 }}</td>
+              <td style="padding: 10px;">{{ callSummaryOrder?.connected?.clients || 0 }}</td>
+            </tr>
 
-              <tr style="border-bottom: 1px solid #ddd; background: white;">
-                <td style="padding: 10px;">
-                  <div style="display: flex; align-items: center;">
-                    <i class="fas fa-times-circle" style="margin-right: 8px; color: #e74c3c;"></i> Missed
-                  </div>
-                </td>
-                <td style="padding: 10px;">{{ callSummaryOrder?.missed?.calls || 0 }}</td>
-                <td style="padding: 10px;">{{ callSummaryOrder?.missed?.duration || 0 }}</td>
-                <td style="padding: 10px;">{{ callSummaryOrder?.missed?.clients || 0 }}</td>
-              </tr>
+            <tr style="border-bottom: 1px solid #ddd; background: white;">
+              <td style="padding: 10px;">
+                <div style="display: flex; align-items: center;">
+                  <i class="fas fa-times-circle" style="margin-right: 8px; color: #e74c3c;"></i> Missed
+                </div>
+              </td>
+              <td style="padding: 10px;">{{ callSummaryOrder?.missed?.calls || 0 }}</td>
+              <td style="padding: 10px;">{{ callSummaryOrder?.missed?.duration || 0 }}</td>
+              <td style="padding: 10px;">{{ callSummaryOrder?.missed?.clients || 0 }}</td>
+            </tr>
 
-              <tr style="background: white;">
-                <td style="padding: 10px;">
-                  <div style="display: flex; align-items: center;">
-                    <i class="fas fa-ban" style="margin-right: 8px; color: #9e9e9e;"></i> Rejected
-                  </div>
-                </td>
-                <td style="padding: 10px;">{{ callSummaryOrder?.rejected?.calls || 0 }}</td>
-                <td style="padding: 10px;">{{ callSummaryOrder?.rejected?.duration || 0 }}</td>
-                <td style="padding: 10px;">{{ callSummaryOrder?.rejected?.clients || 0 }}</td>
-              </tr>
-            </tbody>
-          </table>
-
-        </div>
-
+            <tr style="background: white;">
+              <td style="padding: 10px;">
+                <div style="display: flex; align-items: center;">
+                  <i class="fas fa-ban" style="margin-right: 8px; color: #9e9e9e;"></i> Rejected
+                </div>
+              </td>
+              <td style="padding: 10px;">{{ callSummaryOrder?.rejected?.calls || 0 }}</td>
+              <td style="padding: 10px;">{{ callSummaryOrder?.rejected?.duration || 0 }}</td>
+              <td style="padding: 10px;">{{ callSummaryOrder?.rejected?.clients || 0 }}</td>
+            </tr>
+          </tbody>
+        </table>
 
       </div>
 
 
+    </div>
 
 
 
-      <div style="display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
-        <div class="card-box"
-          style="background: white; flex: 1; min-width: 500px; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
 
-          <div *ngIf="hourlyChartLabels.length > 0; else noChartData">
-            <div style="display: flex; justify-content: flex-start;">
-              <h3 style="margin-bottom: 20px; font-weight: bold;">Hourly Analysis</h3>
-            </div>
-            <div style="height: 500px; width: 100%;">
-              <canvas id="hourlyChart" style="height: 100% !important; width: 100% !important;"></canvas>
-            </div>
+
+    <div style="display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+      <div class="card-box"
+        style="background: white; flex: 1; min-width: 500px; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+
+        <div *ngIf="hourlyChartLabels.length > 0; else noChartData">
+          <div style="display: flex; justify-content: flex-start;">
+            <h3 style="margin-bottom: 20px; font-weight: bold;">Hourly Analysis</h3>
           </div>
-
-          <ng-template #noChartData>
-            <div style="text-align: center; padding: 20px; color: gray;">
-              No hourly analysis data available for the selected filter.
-            </div>
-          </ng-template>
+          <div style="height: 500px; width: 100%;">
+            <canvas id="hourlyChart" style="height: 100% !important; width: 100% !important;"></canvas>
+          </div>
         </div>
 
-        <!-- Second Card: Side Box -->
+        <ng-template #noChartData>
+          <div style="text-align: center; padding: 20px; color: gray;">
+            No hourly analysis data available for the selected filter.
+          </div>
+        </ng-template>
+      </div>
 
-        <div class="card-box"
-          style="background: white; flex: 1; min-width: 300px; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+      <!-- Second Card: Side Box -->
 
-          <div style="display: flex; justify-content: flex-start;">
-            <h3 style="font-weight: bold; margin-bottom: 15px;">Performance</h3>
+      <div class="card-box"
+        style="background: white; flex: 1; min-width: 300px; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+
+        <div style="display: flex; justify-content: flex-start;">
+          <h3 style="font-weight: bold; margin-bottom: 15px;">Performance</h3>
+        </div>
+
+
+        <div class="filter-wrapper">
+          <div class="filter-group">
+            <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'enquiries' }"
+              (click)="changeCategory('enquiries')">
+              <i class="fas fa-user" style="margin-right: 5px;"></i> Enquiries
+            </button>
+            <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'test-drives' }"
+              (click)="changeCategory('test-drives')">
+              <i class="fas fa-car" style="margin-right: 5px;"></i> Test Drives
+            </button>
+            <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'orders' }"
+              (click)="changeCategory('orders')">
+              <i class="fas fa-file-alt" style="margin-right: 5px;"></i> Orders
+            </button>
+          </div>
+        </div>
+
+        <!-- BELOW IS THE SECTION YOU ASKED FOR -->
+        <!-- CARD SECTION -->
+        <div class="card-section">
+
+          <!-- Toggle Buttons -->
+          <div class="top-row">
+            <div class="toggle-group">
+              <button class="toggle-btn" [ngClass]="{ 'active': activePeriod === 'MTD' }"
+                (click)="changePeriod('MTD')">MTD</button>
+              <button class="toggle-btn" [ngClass]="{ 'active': activePeriod === 'QTD' }"
+                (click)="changePeriod('QTD')">QTD</button>
+              <button class="toggle-btn" [ngClass]="{ 'active': activePeriod === 'YTD' }"
+                (click)="changePeriod('YTD')">YTD</button>
+            </div>
+
+            <div class="enquiry-bank" *ngIf="activeCategory === 'enquiries'">
+              <span>Enquiry bank</span>
+              <strong>{{ selectedUser?.performance?.enquiryBank }}</strong>
+            </div>
           </div>
 
+          <!-- === ENQUIRIES === -->
+          <div class="slider-container" *ngIf="activeCategory === 'enquiries'">
+            <div class="slides" [ngStyle]="{ transform: 'translateX(-' + (currentSlide * 100) + '%)' }">
 
-          <div class="filter-wrapper">
-            <div class="filter-group">
-              <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'enquiries' }"
-                (click)="changeCategory('enquiries')">
-                <i class="fas fa-user" style="margin-right: 5px;"></i> Enquiries
-              </button>
-              <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'test-drives' }"
-                (click)="changeCategory('test-drives')">
-                <i class="fas fa-car" style="margin-right: 5px;"></i> Test Drives
-              </button>
-              <button class="filter-btn" [ngClass]="{ 'active-btn': activeCategory === 'orders' }"
-                (click)="changeCategory('orders')">
-                <i class="fas fa-file-alt" style="margin-right: 5px;"></i> Orders
-              </button>
+              <!-- Slide 1 -->
+              <div class="slide" style="display: flex; gap: 16px; height: 100%;">
+                <!-- Left side - Two boxes stacked vertically -->
+                <div style="display: flex; flex-direction: column; gap: 16px; flex: 1;">
+                  <div class="card-box light-grey" style="flex: 1; display: flex; align-items: center; gap: 12px;">
+                    <h4 style="color: #32D16D; margin: 0;">{{ selectedUser?.performance?.newEnquiries }}</h4>
+                    <p style="margin: 0;">Enquiries you have</p>
+                  </div>
+                  <div class="card-box light-grey" style="flex: 1; display: flex; align-items: center; gap: 12px;">
+                    <h4 style="color: #EF1212; margin: 0;">{{ selectedUser?.performance?.lostEnquiries }}</h4>
+                    <p style="margin: 0;">Enquiries lost</p>
+                  </div>
+                </div>
+
+                <!-- Right side - You must pursue box -->
+                <div class="card-box light-blue full"
+                  style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+
+                  <p style="text-align: left;">
+                    You must pursue<br><br>
+                    <span style="color: #1380FE;font-size:24px;">
+                      {{ selectedUser?.performance?.enquiriesToAchieveTarget }}
+                    </span><br><br>
+                    more enquiries to achieve your target
+                  </p>
+
+                  <!-- <div class="plus-btn">+</div> -->
+                </div>
+
+              </div>
+              <!-- Slide 2 -->
+              <div class="slide">
+                <div class="row-layout">
+                  <div class="left-column">
+                    <div class="card-box light-grey dual-metric">
+                      <div class="metrics">
+                        <div class="metric">
+                          <h4 style="color:#e74c3c">2</h4>
+                          <p>Follow ups done by you per lost enquiry</p>
+                        </div>
+                        <div class="metric">
+                          <h4 style="color:#27ae60">4</h4>
+                          <p>Follow ups recommended per lost enquiry</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="card-box light-grey dual-metric">
+                      <div class="metrics">
+                        <div class="metric">
+                          <h4 style="color:#e74c3c">5</h4>
+                          <p>Follow ups done by you per lost digital enquiry</p>
+                        </div>
+                        <div class="metric">
+                          <h4 style="color:#27ae60">3</h4>
+                          <p>Follow ups recommended per lost digital enquiry</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="left-column">
+                    <div class="card-box light-grey dual-metric">
+                      <div class="metrics">
+                        <div class="metric"
+                          style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
+                          <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; text-align: left;">
+                            Average days to convert enquiry to order
+                          </p>
+                          <span style="color: purple; font-size: 20px;margin-top:20px;">2 Days</span>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                    <div class="card-box light-grey dual-metric">
+                      <div class="metrics">
+                        <div class="metric">
+                          <h4 style="color: purple; ">5</h4>
+                          <p>Average Follow ups done for order conversion</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dots">
+              <span class="dot" [class.active]="currentSlide === 0" (click)="goToSlide(0)"></span>
+              <span class="dot" [class.active]="currentSlide === 1" (click)="goToSlide(1)"></span>
             </div>
           </div>
 
-          <!-- BELOW IS THE SECTION YOU ASKED FOR -->
-          <!-- CARD SECTION -->
-          <div class="card-section">
+          <!-- === TEST DRIVES === -->
+          <div class="slider-container" *ngIf="activeCategory === 'test-drives'">
+            <div class="slides" [ngStyle]="{ transform: 'translateX(-' + (currentSlide * 100) + '%)' }">
 
-            <!-- Toggle Buttons -->
-            <div class="top-row">
-              <div class="toggle-group">
-                <button class="toggle-btn" [ngClass]="{ 'active': activePeriod === 'MTD' }"
-                  (click)="changePeriod('MTD')">MTD</button>
-                <button class="toggle-btn" [ngClass]="{ 'active': activePeriod === 'QTD' }"
-                  (click)="changePeriod('QTD')">QTD</button>
-                <button class="toggle-btn" [ngClass]="{ 'active': activePeriod === 'YTD' }"
-                  (click)="changePeriod('YTD')">YTD</button>
-              </div>
+              <!-- SLIDE 1 -->
+              <div class="slide">
+                <div class="test-drive-layout" style="display: flex; gap: 16px;">
 
-              <div class="enquiry-bank" *ngIf="activeCategory === 'enquiries'">
-                <span>Enquiry bank</span>
-                <strong>{{ selectedUser?.performance?.enquiryBank }}</strong>
-              </div>
-            </div>
-
-            <!-- === ENQUIRIES === -->
-            <div class="slider-container" *ngIf="activeCategory === 'enquiries'">
-              <div class="slides" [ngStyle]="{ transform: 'translateX(-' + (currentSlide * 100) + '%)' }">
-
-                <!-- Slide 1 -->
-                <div class="slide" style="display: flex; gap: 16px; height: 100%;">
-                  <!-- Left side - Two boxes stacked vertically -->
-                  <div style="display: flex; flex-direction: column; gap: 16px; flex: 1;">
-                    <div class="card-box light-grey" style="flex: 1; display: flex; align-items: center; gap: 12px;">
-                      <h4 style="color: #32D16D; margin: 0;">{{ selectedUser?.performance?.newEnquiries }}</h4>
-                      <p style="margin: 0;">Enquiries you have</p>
-                    </div>
-                    <div class="card-box light-grey" style="flex: 1; display: flex; align-items: center; gap: 12px;">
-                      <h4 style="color: #EF1212; margin: 0;">{{ selectedUser?.performance?.lostEnquiries }}</h4>
-                      <p style="margin: 0;">Enquiries lost</p>
-                    </div>
-                  </div>
-
-                  <!-- Right side - You must pursue box -->
-                  <div class="card-box light-blue full"
-                    style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-
-                    <p style="text-align: left;">
-                      You must pursue<br><br>
-                      <span style="color: #1380FE;font-size:24px;">
-                        {{ selectedUser?.performance?.enquiriesToAchieveTarget }}
-                      </span><br><br>
-                      more enquiries to achieve your target
-                    </p>
-
-                    <!-- <div class="plus-btn">+</div> -->
-                  </div>
-
-                </div>
-                <!-- Slide 2 -->
-                <div class="slide">
-                  <div class="row-layout">
-                    <div class="left-column">
-                      <div class="card-box light-grey dual-metric">
-                        <div class="metrics">
-                          <div class="metric">
-                            <h4 style="color:#e74c3c">2</h4>
-                            <p>Follow ups done by you per lost enquiry</p>
-                          </div>
-                          <div class="metric">
-                            <h4 style="color:#27ae60">4</h4>
-                            <p>Follow ups recommended per lost enquiry</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="card-box light-grey dual-metric">
-                        <div class="metrics">
-                          <div class="metric">
-                            <h4 style="color:#e74c3c">5</h4>
-                            <p>Follow ups done by you per lost digital enquiry</p>
-                          </div>
-                          <div class="metric">
-                            <h4 style="color:#27ae60">3</h4>
-                            <p>Follow ups recommended per lost digital enquiry</p>
-                          </div>
-                        </div>
-                      </div>
+                  <!-- Left: Two stacked boxes -->
+                  <div class="left-column" style="flex: 1; display: flex; flex-direction: column; gap: 16px;">
+                    <div class="card-box light-grey"
+                      style="display: flex; flex-direction: column; align-items: flex-start;">
+                      <p style="margin: 0; font-size: 14px; color: #333;">You have given</p>
+                      <span style="color: #32D16D; font-size: 24px;">
+                        {{ selectedUser?.performance?.uniqueTestDrives }}
+                      </span>
+                      <p style="margin: 0; font-size: 14px; color: #333;">Unique Test Drives</p>
                     </div>
 
-                    <div class="left-column">
-                      <div class="card-box light-grey dual-metric">
-                        <div class="metrics">
-                          <div class="metric"
-                            style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
-                            <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; text-align: left;">
-                              Average days to convert enquiry to order
-                            </p>
-                            <span style="color: purple; font-size: 20px;margin-top:20px;">2 Days</span>
-                          </div>
-                        </div>
-                      </div>
-
-
-
-                      <div class="card-box light-grey dual-metric">
-                        <div class="metrics">
-                          <div class="metric">
-                            <h4 style="color: purple; ">5</h4>
-                            <p>Average Follow ups done for order conversion</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="dots">
-                <span class="dot" [class.active]="currentSlide === 0" (click)="goToSlide(0)"></span>
-                <span class="dot" [class.active]="currentSlide === 1" (click)="goToSlide(1)"></span>
-              </div>
-            </div>
-
-            <!-- === TEST DRIVES === -->
-            <div class="slider-container" *ngIf="activeCategory === 'test-drives'">
-              <div class="slides" [ngStyle]="{ transform: 'translateX(-' + (currentSlide * 100) + '%)' }">
-
-                <!-- SLIDE 1 -->
-                <div class="slide">
-                  <div class="test-drive-layout" style="display: flex; gap: 16px;">
-
-                    <!-- Left: Two stacked boxes -->
-                    <div class="left-column" style="flex: 1; display: flex; flex-direction: column; gap: 16px;">
-                      <div class="card-box light-grey"
-                        style="display: flex; flex-direction: column; align-items: flex-start;">
-                        <p style="margin: 0; font-size: 14px; color: #333;">You have given</p>
-                        <span style="color: #32D16D; font-size: 24px;">
-                          {{ selectedUser?.performance?.uniqueTestDrives }}
-                        </span>
-                        <p style="margin: 0; font-size: 14px; color: #333;">Unique Test Drives</p>
-                      </div>
-
-                      <!-- <div class="card-box light-grey" style="display: flex; flex-direction: column; align-items: flex-start;">
+                    <!-- <div class="card-box light-grey" style="display: flex; flex-direction: column; align-items: flex-start;">
   <p style="margin: 0; font-size: 14px; color: #333;">
     Give
     <span style="color: #EF1212; font-weight: bold;">
@@ -1334,21 +1335,21 @@
     test drives to achieve your target
   </p>
 </div> -->
-                      <div class="card-box light-grey"
-                        style="display: flex; flex-direction: column; align-items: flex-start;">
-                        <p style="margin: 0; font-size: 14px; color: #333;">Give</p>
-                        <span style="color: #1380FE; font-size: 24px;">
-                          {{ selectedUser?.performance?.remainingTestDrives }}
-                        </span>
-                        <p style="margin: 0; font-size: 14px; color: #333;">more test drives to<br> achieve your target
-                        </p>
-                      </div>
-
+                    <div class="card-box light-grey"
+                      style="display: flex; flex-direction: column; align-items: flex-start;">
+                      <p style="margin: 0; font-size: 14px; color: #333;">Give</p>
+                      <span style="color: #1380FE; font-size: 24px;">
+                        {{ selectedUser?.performance?.remainingTestDrives }}
+                      </span>
+                      <p style="margin: 0; font-size: 14px; color: #333;">more test drives to<br> achieve your target
+                      </p>
                     </div>
 
-                    <!-- Right: Single tall card -->
-                    <div class="right-column" style="flex: 1;">
-                      <!-- <div class="card-box light-blue"
+                  </div>
+
+                  <!-- Right: Single tall card -->
+                  <div class="right-column" style="flex: 1;">
+                    <!-- <div class="card-box light-blue"
                 style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: flex-start;">
             
                 <p style="margin: 0; font-size: 14px; color: #333;">
@@ -1361,137 +1362,136 @@
                   to convert a test drive into an order
                 </p>
               </div> -->
-                      <div class="card-box light-blue"
-                        style="height: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; padding-top: 16px;">
+                    <div class="card-box light-blue"
+                      style="height: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; padding-top: 16px;">
 
-                        <p style="margin: 0; font-size: 14px; color: #333;">
-                          On an average, you take
-                        </p><br>
+                      <p style="margin: 0; font-size: 14px; color: #333;">
+                        On an average, you take
+                      </p><br>
 
-                        <p style="margin: 8px 0 0 0; font-size: 24px; color: #1380FE; font-weight: 600;">
-                          {{ selectedUser?.performance?.TestDrivesAvg }} days
-                        </p><br>
+                      <p style="margin: 8px 0 0 0; font-size: 24px; color: #1380FE; font-weight: 600;">
+                        {{ selectedUser?.performance?.TestDrivesAvg }} days
+                      </p><br>
 
-                        <p style="margin: 0; font-size: 14px; color: #333;">
-                          to convert a test drive into an order
-                        </p>
+                      <p style="margin: 0; font-size: 14px; color: #333;">
+                        to convert a test drive into an order
+                      </p>
 
+                    </div>
+                  </div>
+
+
+
+                </div>
+              </div>
+
+              <!-- SLIDE 2 -->
+              <div class="slide" style="display: flex; justify-content: space-between; gap: 16px;">
+                <!-- Left Card -->
+                <div class="card-box"
+                  style="background: #eaf6ff; flex: 1; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: flex-start; min-height: fit-content;">
+                  <p style="font-weight: 500; color: #333; margin-bottom: 8px;">
+                    Enquiry to Unique Test Drive ratio
+                  </p>
+                  <h4 style="color: #007bff; font-size: 24px; margin-top:40px;;">
+                    {{ selectedUser?.performance?.enquiryToUniqueTestdriveRatio || 0 | number:'1.2-2' }}%
+                  </h4>
+                </div>
+
+                <!-- Right Card -->
+                <div class="card-box"
+                  style="background: #eaf6ff; flex: 1; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: flex-start; min-height: fit-content;">
+                  <p style="font-weight: 500; color: #333; margin-bottom: 8px;">
+                    Enquiry to Test Drive ratio
+                  </p>
+                  <h4 style="color: #007bff; font-size: 24px; margin-top:40px;">
+                    {{ selectedUser?.performance?.testDriveRatio || 0 | number:'1.2-2' }}%
+                  </h4>
+                </div>
+              </div>
+
+
+            </div>
+
+            <!-- DOTS -->
+            <div class="dots" style="margin-top: 12px;">
+              <span class="dot" [class.active]="currentSlide === 0" (click)="goToSlide(0)"></span>
+              <span class="dot" [class.active]="currentSlide === 1" (click)="goToSlide(1)"></span>
+            </div>
+          </div>
+
+
+
+          <!-- === ORDERS === -->
+          <div class="slider-container" *ngIf="activeCategory === 'orders'">
+            <div class="slides" style="transform: translateX(0%)">
+              <div class="slide">
+                <div class="row-layout" style="display: flex; gap: 16px;">
+                  <!-- Left Column -->
+                  <div class="left-column" style="flex: 1; display: flex; flex-direction: column; gap: 16px;">
+                    <!-- Follow-ups per lost enquiry -->
+                    <div class="card-box light-grey dual-metric">
+                      <div class="metrics">
+                        <div class="metric">
+                          <h4 style="color:#e74c3c;font-size:24px;">
+                            {{ selectedUser?.performance?.orders || 0 }}
+                          </h4>
+                          <p>is your target</p>
+                        </div>
+                        <div class="metric">
+                          <h4 style="color:#27ae60;font-size:24px;">
+                            {{ selectedUser?.performance?.orderTarget || 0 }}
+                          </h4>
+                          <p>Orders are with you</p>
+                        </div>
                       </div>
                     </div>
 
-
-
-                  </div>
-                </div>
-
-                <!-- SLIDE 2 -->
-                <div class="slide" style="display: flex; justify-content: space-between; gap: 16px;">
-                  <!-- Left Card -->
-                  <div class="card-box"
-                    style="background: #eaf6ff; flex: 1; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: flex-start; min-height: fit-content;">
-                    <p style="font-weight: 500; color: #333; margin-bottom: 8px;">
-                      Enquiry to Unique Test Drive ratio
-                    </p>
-                    <h4 style="color: #007bff; font-size: 24px; margin-top:40px;;">
-                      {{ selectedUser?.performance?.enquiryToUniqueTestdriveRatio || 0 | number:'1.2-2' }}%
-                    </h4>
-                  </div>
-
-                  <!-- Right Card -->
-                  <div class="card-box"
-                    style="background: #eaf6ff; flex: 1; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: flex-start; min-height: fit-content;">
-                    <p style="font-weight: 500; color: #333; margin-bottom: 8px;">
-                      Enquiry to Test Drive ratio
-                    </p>
-                    <h4 style="color: #007bff; font-size: 24px; margin-top:40px;">
-                      {{ selectedUser?.performance?.testDriveRatio || 0 | number:'1.2-2' }}%
-                    </h4>
-                  </div>
-                </div>
-
-
-              </div>
-
-              <!-- DOTS -->
-              <div class="dots" style="margin-top: 12px;">
-                <span class="dot" [class.active]="currentSlide === 0" (click)="goToSlide(0)"></span>
-                <span class="dot" [class.active]="currentSlide === 1" (click)="goToSlide(1)"></span>
-              </div>
-            </div>
-
-
-
-            <!-- === ORDERS === -->
-            <div class="slider-container" *ngIf="activeCategory === 'orders'">
-              <div class="slides" style="transform: translateX(0%)">
-                <div class="slide">
-                  <div class="row-layout" style="display: flex; gap: 16px;">
-                    <!-- Left Column -->
-                    <div class="left-column" style="flex: 1; display: flex; flex-direction: column; gap: 16px;">
-                      <!-- Follow-ups per lost enquiry -->
-                      <div class="card-box light-grey dual-metric">
-                        <div class="metrics">
-                          <div class="metric">
-                            <h4 style="color:#e74c3c;font-size:24px;">
-                              {{ selectedUser?.performance?.orders || 0 }}
-                            </h4>
-                            <p>is your target</p>
-                          </div>
-                          <div class="metric">
-                            <h4 style="color:#27ae60;font-size:24px;">
-                              {{ selectedUser?.performance?.orderTarget || 0 }}
-                            </h4>
-                            <p>Orders are with you</p>
-                          </div>
+                    <!-- Follow-ups per lost digital enquiry -->
+                    <div class="card-box light-grey dual-metric">
+                      <div class="metrics">
+                        <div class="metric">
+                          <h4 style="color:#e74c3c;font-size:24px;">
+                            {{ selectedUser?.performance?.contributionToDealershipmsg || 0 }}%
+                          </h4>
+                          <p>Your contribution to dealership order cancellations</p>
                         </div>
-                      </div>
-
-                      <!-- Follow-ups per lost digital enquiry -->
-                      <div class="card-box light-grey dual-metric">
-                        <div class="metrics">
-                          <div class="metric">
-                            <h4 style="color:#e74c3c;font-size:24px;">
-                              {{ selectedUser?.performance?.contributionToDealershipmsg || 0 }}%
-                            </h4>
-                            <p>Your contribution to dealership order cancellations</p>
-                          </div>
-                          <!-- <div class="metric">
+                        <!-- <div class="metric">
                   <h4 style="color:#27ae60">
                     {{ selectedUser?.performance?.recommendedFollowupsPerLostDigitalEnquiry || 0 }}
                   </h4>
                   <p>Recommended per lost digital enquiry</p>
                 </div> -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Right Column -->
+                  <div class="left-column" style="flex: 1; display: flex; flex-direction: column; gap: 16px;">
+                    <!-- Avg. days to convert enquiry to order -->
+                    <div class="card-box light-grey dual-metric">
+                      <div class="metrics">
+                        <div class="metric">
+                          <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                            <p style="margin: 0; font-size: 14px; color: #333;">
+                              Unique Test Drive to retail ratio
+                            </p>
+                            <span style="color: #e74c3c; font-size: 24px; font-weight: 600; margin-top: 8px;">
+                              {{ selectedUser?.performance?.TestDriveToRetail || 0 }}%
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <!-- Right Column -->
-                    <div class="left-column" style="flex: 1; display: flex; flex-direction: column; gap: 16px;">
-                      <!-- Avg. days to convert enquiry to order -->
-                      <div class="card-box light-grey dual-metric">
-                        <div class="metrics">
-                          <div class="metric">
-                            <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                              <p style="margin: 0; font-size: 14px; color: #333;">
-                                Unique Test Drive to retail ratio
-                              </p>
-                              <span style="color: #e74c3c; font-size: 24px; font-weight: 600; margin-top: 8px;">
-                                {{ selectedUser?.performance?.TestDriveToRetail || 0 }}%
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Test Drive to Retail ratio -->
-                      <div class="card-box light-grey dual-metric">
-                        <div class="metrics">
-                          <div class="metric">
-                            <h4 style="color:#e74c3c;font-size:24px;">
-                              {{ selectedUser?.performance?.digitalEnquiryToOrderRatio || 0 }}%
-                            </h4>
-                            <p>Digital enquiry to New Order ratio</p>
-                          </div>
+                    <!-- Test Drive to Retail ratio -->
+                    <div class="card-box light-grey dual-metric">
+                      <div class="metrics">
+                        <div class="metric">
+                          <h4 style="color:#e74c3c;font-size:24px;">
+                            {{ selectedUser?.performance?.digitalEnquiryToOrderRatio || 0 }}%
+                          </h4>
+                          <p>Digital enquiry to New Order ratio</p>
                         </div>
                       </div>
                     </div>
@@ -1499,6 +1499,7 @@
                 </div>
               </div>
             </div>
-
-
           </div>
+
+
+        </div>
