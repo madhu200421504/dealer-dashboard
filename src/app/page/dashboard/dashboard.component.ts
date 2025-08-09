@@ -5,6 +5,8 @@ import {
   signal,
   WritableSignal,
   ChangeDetectorRef,
+  HostListener,
+  ElementRef,
 } from '@angular/core';
 import { SimpleChanges, OnChanges } from '@angular/core';
 
@@ -45,6 +47,7 @@ import { SidebarService } from '../../service/sidebar.service';
 import { Subscription } from 'rxjs';
 // import { ToastrService } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
+import {  ViewChild } from '@angular/core';
 
 // Register all chart components
 Chart.register(...registerables);
@@ -129,6 +132,7 @@ export class DashboardComponent implements OnInit {
   errorMessage = '';
   currentSlide = 0;
   filteredActivities: any[] = []; // ✅ Initialize as empty array
+  activeFilterTopCards = 'MTD'; // for top cards
 
   maxValue = 100;
   kpiData: any = {};
@@ -141,6 +145,7 @@ export class DashboardComponent implements OnInit {
   users: User[] = [];
   // selectedUser: (SelectedUser & { name: string }) | null = null; // Extend SelectedUser with name
   selectedUser: any = null;
+  smId: any; // 👈 Add this line
 
   selectedUserData: TestDrive[] = [];
   todayTestDrives: TodayTestDrive[] = [];
@@ -199,6 +204,7 @@ export class DashboardComponent implements OnInit {
   enquiriesCountPs2 = 0;
   testDrivesCountPs2 = 0;
   newOrdersCountPs2 = 0;
+  userId: string = ''; // or undefined if you're setting it later
 
   ps1Total = 0;
   ps2Total = 0;
@@ -364,10 +370,13 @@ export class DashboardComponent implements OnInit {
   indexes: number[] = [];
   // defaultLimit = 10;
   Math = Math; // 👈 this line is important
-
+  // In your class properties, define them first
+  lastSelectedUserId: string | null = null;
+  lastSelectedSmId: string | null = null;
   allActivities: any[] = []; // Holds all test drive activities (Upcoming, Completed, Overdue)
 
   // activeActivity: string = 'Upcoming'; // default
+  @ViewChild('dropdown', { static: false }) dropdownRef!: ElementRef;
 
   uniqueInitials: string[] = []; // ✅ renamed to avoid clash
   avatarColors: string[] = [
@@ -395,6 +404,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.applyFilter('MTD');
     this.onFilterClick('MTD'); // ⬅️ This will simulate clicking the MTD button on load
 
     this.selectedDuration = '1M';
@@ -492,9 +502,20 @@ export class DashboardComponent implements OnInit {
       this.onDurationSelect('1M');
     }
   }
+
   // ngOnDestroy() {
   //   this.sidebarSub.unsubscribe();
   // }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const clickedInside = this.dropdownRef?.nativeElement.contains(
+      event.target
+    );
+    if (!clickedInside) {
+      this.dropdownOpen = false;
+    }
+  }
+
   ngOnDestroy() {
     if (this.sidebarSub) {
       this.sidebarSub.unsubscribe();
@@ -503,9 +524,11 @@ export class DashboardComponent implements OnInit {
   get firstRowUsers() {
     return this.filteredUsers.slice(0, 10); // assuming 1st row is first 10 users
   }
+
   onUserClickForCompare(user: any) {
     this.clickedUser = user;
   }
+
   selectSection(section: 'home' | 'analysis'): void {
     this.selectedSection = section;
   }
@@ -529,13 +552,19 @@ export class DashboardComponent implements OnInit {
   //   this.activeActivity = activity;
   //   this.updateCallSummaryOrder();
   // }
+  // onActivityClick(activity: string): void {
+  //   this.activeActivity = activity;
+
+  //   this.callSummaryOrder =
+  //     activity === 'cold' ? this.callSummaryCold : this.callSummaryOrderEnquiry;
+
+  //   this.updateCallSummaryOrder();
+  // }
   onActivityClick(activity: string): void {
     this.activeActivity = activity;
 
-    this.callSummaryOrder =
-      activity === 'cold' ? this.callSummaryCold : this.callSummaryOrderEnquiry;
-
-    this.updateCallSummaryOrder();
+    // Trigger fresh fetch instead of using cached summaries
+    this.fetchCallSummaryData();
   }
 
   updateCallSummaryOrder(): void {
@@ -572,6 +601,42 @@ export class DashboardComponent implements OnInit {
       console.log('✅ Updated Enquiry Summary:', newSummary);
     }
   }
+
+  // fetchtopData() {
+  //   const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${this.userId}&sm_id=${this.smId}&type=${this.activeFilter}`;
+  //   const token = sessionStorage.getItem('token');
+  //   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+  //   this.http.get<any>(apiUrl, { headers }).subscribe({
+  //     next: (res) => {
+  //       const userData = res.data;
+
+  //       // Find ps data by userId
+  //       let matchedUserStats: any = {};
+  //       for (const sm of userData.smData || []) {
+  //         const ps = sm.ps_list?.find((p: any) => p.ps_id === this.userId);
+  //         if (ps) {
+  //           matchedUserStats = ps;
+  //           break;
+  //         }
+  //       }
+
+  //       this.selectedUser = {
+  //         fname: userData.selectedUser?.fname || '',
+  //         lname: userData.selectedUser?.lname || '',
+  //         enquiries: matchedUserStats.enquiries || 0,
+  //         testDrives: matchedUserStats.testDrives || 0,
+  //         orders: matchedUserStats.orders || 0,
+  //         cancellation: matchedUserStats.cancellation || 0,
+  //         net_orders: matchedUserStats.net_orders || 0,
+  //         retail: matchedUserStats.retail || 0,
+  //       };
+  //     },
+  //     error: (err) => {
+  //       console.error('❌ Error in fetchtopData:', err);
+  //     }
+  //   });
+  // }
 
   // get currentSummary() {
   //   return this.activeActivity === 'ColdCalls' ? this.callSummaryCold : this.callSummaryOrder;
@@ -659,6 +724,7 @@ export class DashboardComponent implements OnInit {
   //     this.fetchSMData(smId);
   //   }
   // }
+
   showUsers(teamId: string, smId: string): void {
     if (this.selectedTeamId === teamId) {
       // Collapse if already selected
@@ -823,9 +889,9 @@ export class DashboardComponent implements OnInit {
       },
     });
   }
-  isUserInTable(userId: string): boolean {
-    return this.selectedUsersPerformance.some((u) => u.userId === userId);
-  }
+  // isUserInTable(userId: string): boolean {
+  //   return this.selectedUsersPerformance.some((u) => u.userId === userId);
+  // }
   get totalItems(): number {
     return this.smData?.length || 0;
   }
@@ -1115,6 +1181,8 @@ export class DashboardComponent implements OnInit {
 
   selectCompareUser(userId: string, smId: string): void {
     console.log('📌 selectCompareUser called with:', { userId, smId });
+    this.lastSelectedUserId = userId;
+    this.lastSelectedSmId = smId;
 
     if (!userId || !smId) {
       console.warn('User ID or SM ID is missing', { userId, smId });
@@ -1278,6 +1346,16 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  onTopCardFilterClick(filter: 'MTD' | 'QTD' | 'YTD') {
+    this.selectedFilter = filter;
+
+    if (this.lastSelectedUserId && this.lastSelectedSmId) {
+      // Just reload top cards for same PS with new filter
+      this.selectCompareUser(this.lastSelectedUserId, this.lastSelectedSmId);
+    } else {
+      console.warn('No PS selected yet to apply filter on.');
+    }
+  }
   getTeamTotal(psList: any[], key: string): number {
     if (!psList || psList.length === 0) return 0;
 
@@ -1289,6 +1367,66 @@ export class DashboardComponent implements OnInit {
       return total + value;
     }, 0);
   }
+  applyFilter(filter: 'MTD' | 'QTD' | 'YTD') {
+    this.activeFilter = filter;
+
+    const userId =
+      this.selectedUserId ||
+      this.lastSelectedUserId ||
+      this.selectedUser?.ps_id ||
+      null;
+
+    const smId =
+      this.selectedSmId ||
+      this.lastSelectedSmId ||
+      this.selectedUser?.sm_id ||
+      null;
+
+    console.log('applyFilter called', { filter, userId, smId });
+
+    if (!userId || !smId) {
+      console.warn('No PS/SM IDs available yet — cannot fetch top data');
+      return;
+    }
+
+    this.fetchTopCards();
+  }
+
+  fetchTopCards(): void {
+    const smId = this.selectedSmId;
+    const userId = this.selectedUser?.ps_id;
+
+    if (!userId || !smId) return;
+
+    const token = sessionStorage.getItem('token');
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+
+    const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${this.activeFilterTopCards}`;
+
+    this.http.get<any>(apiUrl, { headers }).subscribe({
+      next: (res) => {
+        if (res.status === 200 && res.data) {
+          const matchedUserStats = res.data.smData
+            ?.flatMap((sm: any) => sm.ps_list || [])
+            ?.find((p: any) => p.ps_id === userId);
+
+          if (matchedUserStats) {
+            this.selectedUser = {
+              ...this.selectedUser,
+              enquiries: matchedUserStats.enquiries,
+              testDrives: matchedUserStats.testDrives,
+              orders: matchedUserStats.orders,
+              cancellation: matchedUserStats.cancellation,
+              net_orders: matchedUserStats.net_orders,
+              retail: matchedUserStats.retail,
+            };
+          }
+        }
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
   // getUserTotal(user: any, key: string): number {
   //   if (!user) return 0;
   //   return this.getTeamTotal([user], key); // Reuse getTeamTotal logic
@@ -1584,7 +1722,7 @@ export class DashboardComponent implements OnInit {
         'https://uat.smartassistapp.in/api/dealer/dealer/home/dashboard',
         { headers }
       )
-      .subscribe({ 
+      .subscribe({
         next: (res) => {
           console.log('API response:', res);
           this.allUsers = res.data?.user || [];
@@ -2044,41 +2182,99 @@ export class DashboardComponent implements OnInit {
   //       });
   //   }
   // }
+  isUserInTable(userId: string): boolean {
+    return this.selectedUserIds.includes(userId);
+  }
+
+  // selectUser(userId: string): void {
+  //   const index = this.selectedUserIds.indexOf(userId);
+
+  //   if (index > -1) {
+  //     this.selectedUserIds.splice(index, 1);
+  //   } else {
+  //     this.selectedUserIds.push(userId);
+  //   }
+
+  //   localStorage.setItem(
+  //     'selectedUserIds',
+  //     JSON.stringify(this.selectedUserIds)
+  //   );
+
+  //   const alreadyFetched = this.selectedUsersPerformance.some(
+  //     (u) => u.userId === userId
+  //   );
+
+  //   if (!alreadyFetched && this.activeFilter) {
+  //     this.fetchUserPerformance(userId, this.activeFilter)
+  //       .then(() => {
+  //         localStorage.setItem(
+  //           'selectedUsersPerformance',
+  //           JSON.stringify(this.selectedUsersPerformance)
+  //         );
+
+  //         // ✅ Call duration select after user is set
+  //         this.selectedDuration = '1M';
+  //         this.onDurationSelect(this.selectedDuration);
+  //       })
+  //       .catch((err) => {
+  //         console.error('Error fetching user performance:', err);
+  //       });
+  //   }
+  // }
   selectUser(userId: string): void {
     const index = this.selectedUserIds.indexOf(userId);
 
     if (index > -1) {
+      // ✅ Deselect
       this.selectedUserIds.splice(index, 1);
+
+      // ✅ Remove user data from selectedUsersPerformance
+      this.selectedUsersPerformance = this.selectedUsersPerformance.filter(
+        (u) => u.userId !== userId
+      );
     } else {
+      // ✅ Select user
       this.selectedUserIds.push(userId);
+
+      const alreadyFetched = this.selectedUsersPerformance.some(
+        (u) => u.userId === userId
+      );
+
+      if (!alreadyFetched && this.activeFilter) {
+        this.fetchUserPerformance(userId, this.activeFilter)
+          .then((userData) => {
+            // Add to selectedUsersPerformance
+            this.selectedUsersPerformance.push();
+
+            localStorage.setItem(
+              'selectedUsersPerformance',
+              JSON.stringify(this.selectedUsersPerformance)
+            );
+
+            this.selectedDuration = '1M';
+            this.onDurationSelect(this.selectedDuration);
+          })
+          .catch((err) => {
+            console.error('Error fetching user performance:', err);
+          });
+      } else {
+        // Already fetched → get from local
+        const userData = this.selectedUsersPerformance.find(
+          (u) => u.userId === userId
+        );
+        if (userData) {
+          // Do nothing (already in list)
+        }
+      }
     }
 
+    // ✅ Save selected IDs
     localStorage.setItem(
       'selectedUserIds',
       JSON.stringify(this.selectedUserIds)
     );
-
-    const alreadyFetched = this.selectedUsersPerformance.some(
-      (u) => u.userId === userId
-    );
-
-    if (!alreadyFetched && this.activeFilter) {
-      this.fetchUserPerformance(userId, this.activeFilter)
-        .then(() => {
-          localStorage.setItem(
-            'selectedUsersPerformance',
-            JSON.stringify(this.selectedUsersPerformance)
-          );
-
-          // ✅ Call duration select after user is set
-          this.selectedDuration = '1M';
-          this.onDurationSelect(this.selectedDuration);
-        })
-        .catch((err) => {
-          console.error('Error fetching user performance:', err);
-        });
-    }
   }
+
   fetchUserPerformance(userId: string, filterType: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const url = `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?userIds=${userId}&type=${filterType}`;
@@ -2540,7 +2736,29 @@ export class DashboardComponent implements OnInit {
             : summaryEnquiry.hourlyAnalysis || {};
 
           // ✅ Only update call summary object
-          this.callSummaryOrder = {
+          // this.callSummaryOrder = {
+          //   all: {
+          //     calls: summaryRaw['All Calls']?.calls || 0,
+          //     duration: summaryRaw['All Calls']?.duration || '0h 0m 0s',
+          //     clients: summaryRaw['All Calls']?.uniqueClients || 0,
+          //   },
+          //   connected: {
+          //     calls: summaryRaw['Connected']?.calls || 0,
+          //     duration: summaryRaw['Connected']?.duration || '0h 0m 0s',
+          //     clients: summaryRaw['Connected']?.uniqueClients || 0,
+          //   },
+          //   missed: {
+          //     calls: summaryRaw['Missed']?.calls || 0,
+          //     duration: summaryRaw['Missed']?.duration || '0h 0m 0s',
+          //     clients: summaryRaw['Missed']?.uniqueClients || 0,
+          //   },
+          //   rejected: {
+          //     calls: summaryRaw['Rejected']?.calls || 0,
+          //     duration: summaryRaw['Rejected']?.duration || '0h 0m 0s',
+          //     clients: summaryRaw['Rejected']?.uniqueClients || 0,
+          //   },
+          // };
+          const updatedCallSummary = {
             all: {
               calls: summaryRaw['All Calls']?.calls || 0,
               duration: summaryRaw['All Calls']?.duration || '0h 0m 0s',
@@ -2563,6 +2781,9 @@ export class DashboardComponent implements OnInit {
             },
           };
 
+          // ✅ Force change detection by reassigning new object reference
+          this.callSummaryOrder = { ...updatedCallSummary };
+
           // ✅ Merge updated summaries only — don't touch performance
           this.selectedUser = {
             ...this.selectedUser,
@@ -2581,8 +2802,11 @@ export class DashboardComponent implements OnInit {
             (key) => hourlyAnalysisData[key]?.Connected?.calls || 0
           );
 
+          // this.hourlyMissedCalls = this.hourlyChartLabels.map(
+          //   (key) => hourlyAnalysisData[key]?.missedCalls || 0
+          // );
           this.hourlyMissedCalls = this.hourlyChartLabels.map(
-            (key) => hourlyAnalysisData[key]?.missedCalls || 0
+            (key) => hourlyAnalysisData[key]?.Missed?.calls || 0
           );
 
           this.cdr.detectChanges();
@@ -3548,6 +3772,22 @@ export class DashboardComponent implements OnInit {
     if (this.selectedUserId) {
       this.loadCompareMetrics(this.selectedUserId, filter);
     }
+
+    // if (
+    //   this.selectedUser &&
+    //   this.selectedUser.ps_id &&
+    //   this.selectedUser.sm_id
+    // ) {
+    //   this.fetchtopData(
+    //     this.selectedUser.ps_id,
+    //     this.selectedUser.sm_id,
+    //     filter
+    //   );
+    // }
+
+    //  if (this.selectedUserId || this.userId) {
+    //     this.fetchtopData();
+    //   }
   }
 
   loadUsers() {
@@ -3594,6 +3834,11 @@ export class DashboardComponent implements OnInit {
         },
       });
   }
+  applyFilterTopCards(filterType: string) {
+    this.activeFilterTopCards = filterType; // store selected filter for top cards
+    this.fetchTopCards(); // Only fetch top cards
+  }
+
   getActiveTestDriveList(): any[] {
     if (!this.selectedUser) return [];
 
@@ -3697,6 +3942,7 @@ export class DashboardComponent implements OnInit {
   //       this.roles = data;
   //     });
   // }
+
   loadDashboardMetrics(filter: 'MTD' | 'QTD' | 'YTD') {
     const token = sessionStorage.getItem('token');
     if (!token) {

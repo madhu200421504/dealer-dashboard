@@ -508,75 +508,69 @@
               <p style="background:none">Select Dealers to compare their KPIs</p>
             </h2>
 
-            <div style="position: relative; display: inline-block;">
-              <!-- <div (click)="dropdownOpen = !dropdownOpen" -->
-              <div (click)="toggleDropdown()"
-                style="padding: 10px; border: none; border-radius: 20px; background-color: #EBEDF0; cursor: pointer;">
-                {{ getUserName(selectedUserId) || 'Select Ps' }}
-                <span style="margin-left: 8px;">&#x25BC;</span>
-              </div>
-
-
-              <div *ngIf="dropdownOpen" (click)="$event.stopPropagation()"
-                style="position: absolute; top: 100%; right: -10px !important; width: 200px; max-height: 250px; overflow-y: auto; background: white; border-radius: 15px; z-index: 1000; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
-
-
-                <div *ngFor="let user of users" (click)="selectUser(user.user_id)"
-                  style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #eee;margin: 0 8px; /* 👈 reduces left/right width */">
-
+          <div style="position: relative; display: inline-block;" #dropdown>
+            <div (click)="toggleDropdown()"
+              style="padding: 10px; border: none; border-radius: 20px; background-color: #EBEDF0; cursor: pointer; display: flex; align-items: center;">
+              {{ getUserName(selectedUserId) || 'Select Ps' }}
+              <span [ngStyle]="{
+                  'margin-left': '8px',
+                  'display': 'inline-block',
+                  'transition': 'transform 0.2s ease',
+                  'transform': dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                }">
+                &#x25BC;
+              </span>
+            </div>
+          
+            <div *ngIf="dropdownOpen" (click)="$event.stopPropagation()"
+              style="position: absolute; top: 100%; right: -10px; width: 200px; max-height: 250px; overflow-y: auto; background: white; border-radius: 15px; z-index: 1000; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
+          
+              <div *ngFor="let user of users" (click)="selectUser(user.user_id)"
+                style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #eee; margin: 0 8px;">
+          
+                <!-- Outer circle -->
+                <div [ngStyle]="{
+                  'width': '16px',
+                  'height': '16px',
+                  'border-radius': '50%',
+                  'border': '2px solid ' + getColorForUser(user.name),
+                  'display': 'flex',
+                  'align-items': 'center',
+                  'justify-content': 'center',
+                  'flex-shrink': '0'
+                }">
                   <div [ngStyle]="{
-  'width': '16px',
-  'height': '16px',
-  'border-radius': '50%',
-  'border': '2px solid ' + getColorForUser(user.name),
-  'display': 'flex',
-  'align-items': 'center',
-  'justify-content': 'center',
-  'flex-shrink': '0'
-}">
-                    <div [ngStyle]="{
-    'width': '8px',
-    'height': '8px',
-    'border-radius': '50%',
-   'background-color': isUserInTable(user.user_id) 
-  ? getColorForUser(user.name) 
-  : 'transparent',
-'border': !isUserInTable(user.user_id) 
-  ? '1px solid ' + getColorForUser(user.name) 
-  : 'none'
-
-  }"></div>
-                  </div>
-
-
-
-                  <!-- Initial Circle -->
-                  <div [ngStyle]="{
-                        'min-width': '28px',
-                        'min-height': '28px',
-                        'background-color': getColorForUser(user.name),
-                        'color': 'white',
-                        'border-radius': '50%',
-                        'display': 'flex',
-                        'align-items': 'center',
-                        'justify-content': 'center',
-                        'font-size': '20px'
-                      }">
-                    {{ user.name.charAt(0) || '?' }}
-                  </div>
-
-                  <!-- User Name -->
-                  <div style="word-break: break-word; white-space: normal; line-height: 1.2;">
-                    {{ formatUserName(user.name) }}
-                  </div>
+                    'width': '8px',
+                    'height': '8px',
+                    'border-radius': '50%',
+                    'background-color': isUserInTable(user.user_id) ? getColorForUser(user.name) : 'transparent',
+                    'border': !isUserInTable(user.user_id) ? '1px solid ' + getColorForUser(user.name) : 'none'
+                  }"></div>
+                </div>
+          
+                <!-- Initial Circle -->
+                <div [ngStyle]="{
+                  'min-width': '28px',
+                  'min-height': '28px',
+                  'background-color': getColorForUser(user.name),
+                  'color': 'white',
+                  'border-radius': '50%',
+                  'display': 'flex',
+                  'align-items': 'center',
+                  'justify-content': 'center',
+                  'font-size': '20px'
+                }">
+                  {{ user.name.charAt(0) || '?' }}
+                </div>
+          
+                <!-- User Name -->
+                <div style="word-break: break-word; white-space: normal; line-height: 1.2;">
+                  {{ formatUserName(user.name) }}
                 </div>
               </div>
             </div>
-
-
           </div>
-
-
+          </div>
           <table>
             <thead>
               <tr>
@@ -795,14 +789,32 @@
 
 <!-- MTD FILTER DIV  -->
 <!-- <pre>{{ selectedUser | json }}</pre> -->
-
 <div *ngIf="selectedUser" class="user-details" style="padding: 20px;">
   <button class="back-button" (click)="backToDashboard()">←</button>
-  <h2 style="font-weight: 600; font-size: 24px; margin-bottom: 10px;">
-    {{ selectedUser.fname }} {{ selectedUser.lname }}
-  </h2>
 
+  <!-- Name and Filter on Same Line -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2 style="font-weight: 600; font-size: 24px; margin: 0;">
+      {{ selectedUser.fname }} {{ selectedUser.lname }}
+    </h2>
 
+    <div class="time-filters"
+      style="display: flex; gap: 6px; margin-top: 20px; background-color: white; border-radius: 20px; padding: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+      <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;" [class.active]="activeFilter === 'MTD'"
+        (click)="applyFilter('MTD')">
+        MTD
+      </button>
+      <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;" [class.active]="activeFilter === 'QTD'"
+        (click)="applyFilter('QTD')">
+        QTD
+      </button>
+      <button class="filter-button" style="padding: 4px 8px; font-size: 0.8rem;" [class.active]="activeFilter === 'YTD'"
+        (click)="applyFilter('YTD')">
+        YTD
+      </button>
+    </div>
+
+  </div>
 
 
   <div class="dashboard-container" *ngIf="selectedUser">

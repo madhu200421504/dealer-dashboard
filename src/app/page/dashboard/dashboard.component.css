@@ -93,6 +93,9 @@ body {
   background-color: blue;
   color: white;
 }
+.user-card {
+  cursor: pointer; /* 👈 This shows the finger icon on hover */
+}
 
 .dashboard-content {
   /* padding: 1rem; */
