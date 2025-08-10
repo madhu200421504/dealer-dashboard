@@ -146,11 +146,18 @@ export class DashboardComponent implements OnInit {
   // selectedUser: (SelectedUser & { name: string }) | null = null; // Extend SelectedUser with name
   selectedUser: any = null;
   smId: any; // 👈 Add this line
+  dropdownSearchTerm = ''; // Search term for dropdown
 
   selectedUserData: TestDrive[] = [];
   todayTestDrives: TodayTestDrive[] = [];
   // ps1Total = 0;
   // ps2Total = 0;
+  private startX = 0;
+  private currentX = 0;
+  private isDragging = false;
+  private startTime = 0;
+  private minSwipeDistance = 50;
+  private maxSwipeTime = 500;
   clickedUser: any = null;
   callSummaryOrder: any = {}; // or proper type if you know it
   selectedDurationFilter: string = 'MTD'; // for duration box
@@ -175,6 +182,7 @@ export class DashboardComponent implements OnInit {
   // selectedFilter: string = 'enquiries';
   categoryName: string = 'enquiries'; // default category
   selectedPerformanceFilter: string = 'MTD'; // for performance cards
+  totalSlides = 2;
 
   smData: any[] = []; // 👈 declare the property to avoid the error
   // hourlyChartLabels: string[] = [];
@@ -191,6 +199,12 @@ export class DashboardComponent implements OnInit {
   };
   isUserSelected = false;
   // ps1Total = 0;
+  // ADD THESE NEW PROPERTIES FOR TRACKPAD SUPPORT
+  private scrollTimeout: any;
+  private scrollDeltaX = 0;
+  private isScrolling = false;
+  private scrollThreshold = 100; // Adjust sensitivity
+  private scrollDebounceTime = 150; // ms
   private hourlyChartInstance: Chart | null = null;
   // visiblePagesForCompare: number[] = [];
 
@@ -1327,26 +1341,53 @@ export class DashboardComponent implements OnInit {
           );
 
           // 🔷 Enquiry Summary
+          // this.callSummaryOrderEnquiry = {
+          //   all: {
+          //     calls: enquirySummaryRaw['All Calls']?.calls || 0,
+          //     duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
+          //     clients: enquirySummaryRaw['All Calls']?.uniqueClients || 0,
+          //   },
+          //   connected: {
+          //     calls: enquirySummaryRaw['Connected']?.calls || 0,
+          //     duration: enquirySummaryRaw['Connected']?.duration || '0h 0m 0s',
+          //     clients: enquirySummaryRaw['Connected']?.uniqueClients || 0,
+          //   },
+          //   missed: {
+          //     calls: enquirySummaryRaw['Missed']?.calls || 0,
+          //     duration: enquirySummaryRaw['Missed']?.duration || '0h 0m 0s',
+          //     clients: enquirySummaryRaw['Missed']?.uniqueClients || 0,
+          //   },
+          //   rejected: {
+          //     calls: enquirySummaryRaw['Rejected']?.calls || 0,
+          //     duration: enquirySummaryRaw['Rejected']?.duration || '0h 0m 0s',
+          //     clients: enquirySummaryRaw['Rejected']?.uniqueClients || 0,
+          //   },
+          // };
           this.callSummaryOrderEnquiry = {
             all: {
-              calls: enquirySummaryRaw['All Calls']?.calls || 0,
-              duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
-              clients: enquirySummaryRaw['All Calls']?.uniqueClients || 0,
+              calls: enquirySummaryRaw['All Calls']?.calls ?? 0,
+              duration: enquirySummaryRaw['All Calls']?.duration ?? '0h 0m 0s',
+              clients: enquirySummaryRaw['All Calls']?.uniqueClients ?? 0,
             },
             connected: {
-              calls: enquirySummaryRaw['Connected']?.calls || 0,
-              duration: enquirySummaryRaw['Connected']?.duration || '0h 0m 0s',
-              clients: enquirySummaryRaw['Connected']?.uniqueClients || 0,
+              calls: enquirySummaryRaw['Connected']?.calls ?? 0,
+              duration: enquirySummaryRaw['Connected']?.duration ?? '0h 0m 0s',
+              clients: enquirySummaryRaw['Connected']?.uniqueClients ?? 0,
             },
             missed: {
-              calls: enquirySummaryRaw['Missed']?.calls || 0,
-              duration: enquirySummaryRaw['Missed']?.duration || '0h 0m 0s',
-              clients: enquirySummaryRaw['Missed']?.uniqueClients || 0,
+              calls:
+                enquirySummaryRaw['Missed']?.calls ??
+                Object.values(hourlyAnalysisData).reduce(
+                  (sum: number, h: any) => sum + (h?.missedCalls || 0),
+                  0
+                ),
+              duration: enquirySummaryRaw['Missed']?.duration ?? '0h 0m 0s',
+              clients: enquirySummaryRaw['Missed']?.uniqueClients ?? 0,
             },
             rejected: {
-              calls: enquirySummaryRaw['Rejected']?.calls || 0,
-              duration: enquirySummaryRaw['Rejected']?.duration || '0h 0m 0s',
-              clients: enquirySummaryRaw['Rejected']?.uniqueClients || 0,
+              calls: enquirySummaryRaw['Rejected']?.calls ?? 0,
+              duration: enquirySummaryRaw['Rejected']?.duration ?? '0h 0m 0s',
+              clients: enquirySummaryRaw['Rejected']?.uniqueClients ?? 0,
             },
           };
 
@@ -1495,12 +1536,25 @@ export class DashboardComponent implements OnInit {
   //     this.fetchAllUsers();
   //   }
   // }
+  // toggleDropdown() {
+  //   if (this.users.length === 0) {
+  //     this.isLoadingUsers = true;
+  //     this.fetchAllUsers();
+  //   } else {
+  //     this.dropdownOpen = !this.dropdownOpen;
+  //   }
+  // }
   toggleDropdown() {
     if (this.users.length === 0) {
       this.isLoadingUsers = true;
       this.fetchAllUsers();
     } else {
       this.dropdownOpen = !this.dropdownOpen;
+      // Reset search and show all users when opening
+      if (this.dropdownOpen) {
+        this.searchTerm = '';
+        this.filteredUsers = [...this.users];
+      }
     }
   }
   getColor(index: number): { background: string; text: string } {
@@ -2418,11 +2472,45 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // fetchAllUsers(type: 'MTD' | 'QTD' | 'YTD' = 'MTD'): void {
+  //   const token = sessionStorage.getItem('token');
+
+  //   if (!token) {
+  //     console.warn('⚠️ No token found in sessionStorage.');
+  //     return;
+  //   }
+
+  //   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+  //   this.http
+  //     .get<DashboardResponse>(
+  //       `https://uat.smartassistapp.in/api/dealer/dealer/updatedAnalysis/dashboard?type=${type}`,
+  //       { headers }
+  //     )
+  //     .subscribe({
+  //       next: (res) => {
+  //         console.log('✅ API fetchAllUsers response:', res);
+  //         if (res?.data?.users?.rows?.length) {
+  //           this.users = [...res.data.users.rows]; // ✅ Now you get the actual user list
+  //           // this.dropdownOpen = true;
+  //           console.log('👥 Loaded users:', this.users);
+  //         } else {
+  //           console.warn('⚠️ No users found in API response.');
+  //           this.users = [];
+  //         }
+  //       },
+  //       error: (err) => {
+  //         console.error('❌ Error fetching users:', err);
+  //         this.users = []; // Clear users on error
+  //       },
+  //     });
+  // }
   fetchAllUsers(type: 'MTD' | 'QTD' | 'YTD' = 'MTD'): void {
     const token = sessionStorage.getItem('token');
 
     if (!token) {
       console.warn('⚠️ No token found in sessionStorage.');
+      this.isLoadingUsers = false;
       return;
     }
 
@@ -2436,18 +2524,25 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log('✅ API fetchAllUsers response:', res);
+          this.isLoadingUsers = false;
+
           if (res?.data?.users?.rows?.length) {
-            this.users = [...res.data.users.rows]; // ✅ Now you get the actual user list
-            // this.dropdownOpen = true;
+            this.users = [...res.data.users.rows];
+            this.filteredUsers = [...this.users]; // Show all users initially
+            this.dropdownOpen = true;
             console.log('👥 Loaded users:', this.users);
           } else {
             console.warn('⚠️ No users found in API response.');
             this.users = [];
+            this.filteredUsers = [];
+            this.dropdownOpen = false;
           }
         },
         error: (err) => {
           console.error('❌ Error fetching users:', err);
-          this.users = []; // Clear users on error
+          this.users = [];
+          this.filteredUsers = [];
+          this.isLoadingUsers = false;
         },
       });
   }
@@ -2764,6 +2859,132 @@ export class DashboardComponent implements OnInit {
   //   });
   // }
 
+  // fetchCallSummaryData(): void {
+  //   const userId = this.selectedUser?.ps_id;
+  //   const smId = this.selectedSmId;
+
+  //   if (!userId || !smId) {
+  //     console.warn('User ID or SM ID missing for call summary fetch', {
+  //       userId,
+  //       smId,
+  //     });
+  //     return;
+  //   }
+
+  //   const token = sessionStorage.getItem('token');
+  //   const filterType = this.selectedFilter || 'MTD';
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${filterType}`;
+
+  //   this.http.get<any>(apiUrl, { headers }).subscribe({
+  //     next: (res) => {
+  //       if (res.status === 200 && res.data) {
+  //         const userData = res.data;
+
+  //         const summaryEnquiry = userData.selectedUser?.summaryEnquiry || {};
+  //         const summaryColdCalls =
+  //           userData.selectedUser?.summaryColdCalls || {};
+  //         const isColdCall = this.activeActivity === 'ColdCalls';
+
+  //         const summaryRaw = isColdCall
+  //           ? summaryColdCalls.summary || {}
+  //           : summaryEnquiry.summary || {};
+  //         // const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
+  //         const hourlyAnalysisData = isColdCall
+  //           ? summaryColdCalls.hourlyAnalysis || {}
+  //           : summaryEnquiry.hourlyAnalysis || {};
+
+  //         // ✅ Only update call summary object
+  //         // this.callSummaryOrder = {
+  //         //   all: {
+  //         //     calls: summaryRaw['All Calls']?.calls || 0,
+  //         //     duration: summaryRaw['All Calls']?.duration || '0h 0m 0s',
+  //         //     clients: summaryRaw['All Calls']?.uniqueClients || 0,
+  //         //   },
+  //         //   connected: {
+  //         //     calls: summaryRaw['Connected']?.calls || 0,
+  //         //     duration: summaryRaw['Connected']?.duration || '0h 0m 0s',
+  //         //     clients: summaryRaw['Connected']?.uniqueClients || 0,
+  //         //   },
+  //         //   missed: {
+  //         //     calls: summaryRaw['Missed']?.calls || 0,
+  //         //     duration: summaryRaw['Missed']?.duration || '0h 0m 0s',
+  //         //     clients: summaryRaw['Missed']?.uniqueClients || 0,
+  //         //   },
+  //         //   rejected: {
+  //         //     calls: summaryRaw['Rejected']?.calls || 0,
+  //         //     duration: summaryRaw['Rejected']?.duration || '0h 0m 0s',
+  //         //     clients: summaryRaw['Rejected']?.uniqueClients || 0,
+  //         //   },
+  //         // };
+  //         const updatedCallSummary = {
+  //           all: {
+  //             calls: summaryRaw['All Calls']?.calls || 0,
+  //             duration: summaryRaw['All Calls']?.duration || '0h 0m 0s',
+  //             clients: summaryRaw['All Calls']?.uniqueClients || 0,
+  //           },
+  //           connected: {
+  //             calls: summaryRaw['Connected']?.calls || 0,
+  //             duration: summaryRaw['Connected']?.duration || '0h 0m 0s',
+  //             clients: summaryRaw['Connected']?.uniqueClients || 0,
+  //           },
+  //           missed: {
+  //             calls: summaryRaw['Missed']?.calls || 0,
+  //             duration: summaryRaw['Missed']?.duration || '0h 0m 0s',
+  //             clients: summaryRaw['Missed']?.uniqueClients || 0,
+  //           },
+  //           rejected: {
+  //             calls: summaryRaw['Rejected']?.calls || 0,
+  //             duration: summaryRaw['Rejected']?.duration || '0h 0m 0s',
+  //             clients: summaryRaw['Rejected']?.uniqueClients || 0,
+  //           },
+  //         };
+
+  //         // ✅ Force change detection by reassigning new object reference
+  //         this.callSummaryOrder = { ...updatedCallSummary };
+
+  //         // ✅ Merge updated summaries only — don't touch performance
+  //         this.selectedUser = {
+  //           ...this.selectedUser,
+  //           summaryEnquiry,
+  //           summaryColdCalls,
+  //         };
+
+  //         // Update hourly chart data
+  //         this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
+
+  //         this.hourlyAllCalls = this.hourlyChartLabels.map(
+  //           (key) => hourlyAnalysisData[key]?.AllCalls?.calls || 0
+  //         );
+
+  //         this.hourlyConnectedCalls = this.hourlyChartLabels.map(
+  //           (key) => hourlyAnalysisData[key]?.Connected?.calls || 0
+  //         );
+
+  //         // this.hourlyMissedCalls = this.hourlyChartLabels.map(
+  //         //   (key) => hourlyAnalysisData[key]?.missedCalls || 0
+  //         // );
+  //         this.hourlyMissedCalls = this.hourlyChartLabels.map(
+  //           (key) => hourlyAnalysisData[key]?.Missed?.calls || 0
+  //         );
+
+  //         this.cdr.detectChanges();
+  //         this.renderHourlyChart();
+
+  //         console.log('✅ Call Summary Updated:', this.callSummaryOrder);
+  //       } else {
+  //         console.warn('⚠️ Incomplete call summary response:', res);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('❌ Error fetching call summary data:', err);
+  //     },
+  //   });
+  // }
   fetchCallSummaryData(): void {
     const userId = this.selectedUser?.ps_id;
     const smId = this.selectedSmId;
@@ -2798,34 +3019,12 @@ export class DashboardComponent implements OnInit {
           const summaryRaw = isColdCall
             ? summaryColdCalls.summary || {}
             : summaryEnquiry.summary || {};
-          // const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
+
           const hourlyAnalysisData = isColdCall
             ? summaryColdCalls.hourlyAnalysis || {}
             : summaryEnquiry.hourlyAnalysis || {};
 
-          // ✅ Only update call summary object
-          // this.callSummaryOrder = {
-          //   all: {
-          //     calls: summaryRaw['All Calls']?.calls || 0,
-          //     duration: summaryRaw['All Calls']?.duration || '0h 0m 0s',
-          //     clients: summaryRaw['All Calls']?.uniqueClients || 0,
-          //   },
-          //   connected: {
-          //     calls: summaryRaw['Connected']?.calls || 0,
-          //     duration: summaryRaw['Connected']?.duration || '0h 0m 0s',
-          //     clients: summaryRaw['Connected']?.uniqueClients || 0,
-          //   },
-          //   missed: {
-          //     calls: summaryRaw['Missed']?.calls || 0,
-          //     duration: summaryRaw['Missed']?.duration || '0h 0m 0s',
-          //     clients: summaryRaw['Missed']?.uniqueClients || 0,
-          //   },
-          //   rejected: {
-          //     calls: summaryRaw['Rejected']?.calls || 0,
-          //     duration: summaryRaw['Rejected']?.duration || '0h 0m 0s',
-          //     clients: summaryRaw['Rejected']?.uniqueClients || 0,
-          //   },
-          // };
+          // ✅ Call summary object
           const updatedCallSummary = {
             all: {
               calls: summaryRaw['All Calls']?.calls || 0,
@@ -2849,17 +3048,17 @@ export class DashboardComponent implements OnInit {
             },
           };
 
-          // ✅ Force change detection by reassigning new object reference
+          // ✅ Force change detection
           this.callSummaryOrder = { ...updatedCallSummary };
 
-          // ✅ Merge updated summaries only — don't touch performance
+          // ✅ Merge updated summaries only
           this.selectedUser = {
             ...this.selectedUser,
             summaryEnquiry,
             summaryColdCalls,
           };
 
-          // Update hourly chart data
+          // ✅ Update hourly chart data
           this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
 
           this.hourlyAllCalls = this.hourlyChartLabels.map(
@@ -2870,12 +3069,12 @@ export class DashboardComponent implements OnInit {
             (key) => hourlyAnalysisData[key]?.Connected?.calls || 0
           );
 
-          // this.hourlyMissedCalls = this.hourlyChartLabels.map(
-          //   (key) => hourlyAnalysisData[key]?.missedCalls || 0
-          // );
-          this.hourlyMissedCalls = this.hourlyChartLabels.map(
-            (key) => hourlyAnalysisData[key]?.Missed?.calls || 0
-          );
+          // ✅ FIX: handle both `missedCalls` number and `Missed.calls` object
+          this.hourlyMissedCalls = this.hourlyChartLabels.map((key) => {
+            const missedObj = hourlyAnalysisData[key]?.Missed?.calls;
+            const missedNum = hourlyAnalysisData[key]?.missedCalls;
+            return missedObj ?? missedNum ?? 0; // nullish coalescing so 0 is preserved
+          });
 
           this.cdr.detectChanges();
           this.renderHourlyChart();
@@ -3059,6 +3258,78 @@ export class DashboardComponent implements OnInit {
   //     },
   //   });
   // }
+  // renderHourlyChart(): void {
+  //   if (this.hourlyChartInstance) {
+  //     this.hourlyChartInstance.destroy();
+  //   }
+
+  //   const canvas = document.getElementById('hourlyChart') as HTMLCanvasElement;
+  //   if (!canvas) {
+  //     console.error('Canvas element not found');
+  //     return;
+  //   }
+
+  //   const ctx = canvas.getContext('2d');
+  //   if (!ctx) {
+  //     console.error('Canvas context not found');
+  //     return;
+  //   }
+
+  //   this.hourlyChartInstance = new Chart(ctx, {
+  //     type: 'line',
+  //     data: {
+  //       labels: this.hourlyChartLabels,
+  //       datasets: [
+  //         {
+  //           label: 'All Calls',
+  //           data: this.hourlyAllCalls,
+  //           backgroundColor: 'rgba(0, 123, 255, 0.2)',
+  //           borderColor: 'rgba(0, 123, 255, 1)',
+  //           fill: true,
+  //           tension: 0.4,
+  //         },
+  //         {
+  //           label: 'Connected Calls',
+  //           data: this.hourlyConnectedCalls,
+  //           backgroundColor: 'rgba(40, 167, 69, 0.2)',
+  //           borderColor: 'rgba(40, 167, 69, 1)',
+  //           fill: true,
+  //           tension: 0.4,
+  //         },
+  //         {
+  //           label: 'Missed Calls',
+  //           data: this.hourlyMissedCalls,
+  //           backgroundColor: 'rgba(220, 53, 69, 0.2)',
+  //           borderColor: 'rgba(220, 53, 69, 1)',
+  //           fill: true,
+  //           tension: 0.4,
+  //         },
+  //       ],
+  //     },
+  //     options: {
+  //       responsive: true,
+  //       maintainAspectRatio: false,
+  //       plugins: {
+  //         legend: {
+  //           labels: {
+  //             boxWidth: 10,
+  //             font: { size: 10 },
+  //           },
+  //         },
+  //         tooltip: {
+  //           enabled: true,
+  //           mode: 'index',
+  //           intersect: false,
+  //         },
+  //       },
+  //       scales: {
+  //         x: { stacked: false },
+  //         y: { stacked: false },
+  //       },
+  //     },
+  //   });
+  // }
+
   renderHourlyChart(): void {
     if (this.hourlyChartInstance) {
       this.hourlyChartInstance.destroy();
@@ -3121,6 +3392,18 @@ export class DashboardComponent implements OnInit {
             enabled: true,
             mode: 'index',
             intersect: false,
+            callbacks: {
+              label: (context) => {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label += context.parsed.y;
+                }
+                return label;
+              },
+            },
           },
         },
         scales: {
@@ -4647,6 +4930,165 @@ export class DashboardComponent implements OnInit {
 
   //   this.fetchSelectedUserData(); // 🔥 This is the only thing you need
   // }
+  private startDrag(clientX: number): void {
+    this.startX = clientX;
+    this.currentX = clientX;
+    this.isDragging = true;
+    this.startTime = Date.now();
+  }
+
+  private endDrag(clientX: number): void {
+    if (!this.isDragging) return;
+
+    const endTime = Date.now();
+    const timeDiff = endTime - this.startTime;
+    const distance = clientX - this.startX;
+    const absDistance = Math.abs(distance);
+
+    // Check if it's a valid swipe
+    if (absDistance > this.minSwipeDistance && timeDiff < this.maxSwipeTime) {
+      if (distance > 0) {
+        // Swipe right - go to previous slide
+        this.previousSlide();
+      } else {
+        // Swipe left - go to next slide
+        this.nextSlide();
+      }
+    }
+
+    this.isDragging = false;
+  }
+  nextSlide(): void {
+    if (this.currentSlide < this.totalSlides - 1) {
+      this.currentSlide++;
+    }
+  }
+
+  previousSlide(): void {
+    if (this.currentSlide > 0) {
+      this.currentSlide--;
+    }
+  }
+
+  // goToSlide(index: number): void {
+  //   this.currentSlide = index;
+  // }
+
+  onWheel(event: WheelEvent): void {
+    // Prevent default scroll behavior
+    event.preventDefault();
+
+    // Only handle horizontal scrolling or when shift+scroll
+    if (Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.shiftKey) {
+      this.handleHorizontalScroll(event.deltaX);
+    } else if (Math.abs(event.deltaY) > 0) {
+      // Convert vertical scroll to horizontal when not shift+scroll
+      this.handleHorizontalScroll(event.deltaY);
+    }
+  }
+
+  private handleHorizontalScroll(deltaX: number): void {
+    if (!this.isScrolling) {
+      this.isScrolling = true;
+      this.scrollDeltaX = 0;
+    }
+
+    this.scrollDeltaX += deltaX;
+
+    // Clear previous timeout
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout);
+    }
+
+    // Set new timeout
+    this.scrollTimeout = setTimeout(() => {
+      this.processScrollGesture();
+    }, this.scrollDebounceTime);
+  }
+
+  private processScrollGesture(): void {
+    const absScrollDelta = Math.abs(this.scrollDeltaX);
+
+    if (absScrollDelta > this.scrollThreshold) {
+      if (this.scrollDeltaX > 0) {
+        // Scroll right - go to next slide
+        this.nextSlide();
+      } else {
+        // Scroll left - go to previous slide
+        this.previousSlide();
+      }
+    }
+
+    // Reset scroll tracking
+    this.isScrolling = false;
+    this.scrollDeltaX = 0;
+  }
+
+  // Your existing methods (nextSlide, previousSlide, etc.)...
+  // nextSlide(): void {
+  //   if (this.currentSlide < this.totalSlides - 1) {
+  //     this.currentSlide++;
+  //   }
+  // }
+
+  // previousSlide(): void {
+  //   if (this.currentSlide > 0) {
+  //     this.currentSlide--;
+  //   }
+  // }
+
+  // goToSlide(index: number): void {
+  //   this.currentSlide = index;
+  // }
+
+  // Clean up timeout on component destroy
+  // ngOnDestroy(): void {
+  //   if (this.scrollTimeout) 
+  //     clearTimeout(this.scrollTimeout);
+  //   }
+  // }
+
+  onMouseDown(event: MouseEvent): void {
+    this.startDrag(event.clientX);
+    event.preventDefault();
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (this.isDragging) {
+      this.currentX = event.clientX;
+      event.preventDefault();
+    }
+  }
+
+  onMouseUp(event: MouseEvent): void {
+    if (this.isDragging) {
+      this.endDrag(event.clientX);
+    }
+  }
+
+  onMouseLeave(event: MouseEvent): void {
+    if (this.isDragging) {
+      this.endDrag(event.clientX);
+    }
+  }
+
+  // Touch Events
+  onTouchStart(event: TouchEvent): void {
+    this.startDrag(event.touches[0].clientX);
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    if (this.isDragging) {
+      this.currentX = event.touches[0].clientX;
+      event.preventDefault();
+    }
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    if (this.isDragging) {
+      this.endDrag(event.changedTouches[0].clientX);
+    }
+  }
 
   changePeriod(period: string): void {
     this.activePeriod = period;
@@ -4825,9 +5267,9 @@ export class DashboardComponent implements OnInit {
     }
   }
   initializeFilteredUsers() {
-  this.filteredTableUsers = [...this.selectedUsersPerformance];
-  this.updatePagination();
-}
+    this.filteredTableUsers = [...this.selectedUsersPerformance];
+    this.updatePagination();
+  }
   onUserSelectionChange() {
     // Your existing user selection logic...
 
@@ -4836,5 +5278,33 @@ export class DashboardComponent implements OnInit {
 
     // Clear search term to show all selected users
     this.tableSearchTerm = '';
+  }
+
+  filterDropdownUsers(): void {
+    // CHANGE: Use dropdownSearchTerm instead of tableSearchTerm
+    const searchTerm = this.dropdownSearchTerm.toLowerCase().trim();
+
+    if (!searchTerm) {
+      // If search is empty, show all users
+      this.filteredUsers = [...this.users];
+    } else {
+      // Filter users based on search term
+      this.filteredUsers = this.users.filter((user) =>
+        user.name.toLowerCase().includes(searchTerm)
+      );
+    }
+  }
+
+  highlightSearchTerm(text: string): string {
+    if (!this.dropdownSearchTerm.trim()) {
+      return text;
+    }
+
+    const searchTerm = this.dropdownSearchTerm.trim();
+    const regex = new RegExp(`(${searchTerm})`, 'gi');
+    return text.replace(
+      regex,
+      '<mark style="background-color: #fff3cd; padding: 1px 2px; border-radius: 2px;">$1</mark>'
+    );
   }
 }

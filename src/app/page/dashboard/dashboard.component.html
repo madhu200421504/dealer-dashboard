@@ -508,160 +508,154 @@
               <p style="background:none">Select Dealers to compare their KPIs</p>
             </h2>
 
-<div
-  style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+            <div
+              style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
 
-                <!-- Search input for filtering TABLE (on left of dropdown) -->
-              <div style="display: flex; justify-content: flex; ">
-                <input type="text" [(ngModel)]="tableSearchTerm" (input)="filterTableUsers()" placeholder="Search in table..."
+              <!-- Search input for filtering TABLE (on left of dropdown) -->
+              <!-- <div style="display: flex; justify-content: flex; ">
+                <input type="text" [(ngModel)]="tableSearchTerm" (input)="filterTableUsers()"
+                  placeholder="Search in table..."
                   style="padding: 8px 12px; border-radius: 20px; border: 1px solid #ccc; width: 200px;" />
-              </div>
-
-                  
-            <div style="position: relative; display: inline-block;" #dropdown>
-              <!-- <div (click)="dropdownOpen = !dropdownOpen" -->
-              <div (click)="toggleDropdown()"
-                style="padding: 12px; border: none; border-radius: 20px; background-color: #EBEDF0; cursor: pointer;font-size:18px;">
-                {{ getUserName(selectedUserId) || 'Select a user to compare' }}
-<span style="margin-left: 8px;">
-  {{ dropdownOpen ? '\u25B2' : '\u25BC' }}
-</span>
-              </div>
-            
+              </div> -->
+              <!-- <div style="display: flex; justify-content: flex;">
+                <input type="text" [(ngModel)]="tableSearchTerm" (input)="filterDropdownUsers()"
+                  placeholder="Search users in dropdown..."
+                  style="padding: 8px 12px; border-radius: 20px; border: 1px solid #ccc; width: 200px;" />
+              </div> -->
 
 
-              <!-- <div *ngIf="dropdownOpen" (click)="$event.stopPropagation()"
-                style="position: absolute; top: 100%; right: -10px !important; width: 400px; max-height: 250px; overflow-y: auto; background: white; border-radius: 15px; z-index: 1000; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);"> -->
+              <div style="position: relative; display: block;" #dropdown>
+                <div (click)="toggleDropdown()"
+                  style="padding: 12px; border: none; border-radius: 20px; background-color: #EBEDF0; cursor: pointer;font-size:17px;width:350px !important;">
+                  {{ getUserName(selectedUserId) || 'Select a user to compare' }}
+                  <span style="margin-left: 8px;">
+                    {{ dropdownOpen ? '\u25B2' : '\u25BC' }}
+                  </span>
+                </div>
 
-<div
-  [class.open]="dropdownOpen"
-  (click)="$event.stopPropagation()"
-  style="
-    position: absolute;
-    top: 100%;
-    right: -10px !important;
-    width: 350px;
-    max-height: 250px;
-    overflow-y: auto;
-    background: white;
-    border-radius: 15px;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  "
-  [style.opacity]="dropdownOpen ? '1' : '0'"
-  [style.visibility]="dropdownOpen ? 'visible' : 'hidden'"
-  [style.transform]="dropdownOpen ? 'translateY(0)' : 'translateY(-10px)'"
->
-                <div *ngFor="let user of users" (click)="selectUser(user.user_id)"
-                  style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #eee;margin: 0 8px; /* 👈 reduces left/right width */">
+                <div [class.open]="dropdownOpen" (click)="$event.stopPropagation()"
+                  style="position: absolute; top: 100%; right: -10px !important; width: 350px; max-height: 300px; background: white; border-radius: 15px; z-index: 1000; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease;"
+                  [style.opacity]="dropdownOpen ? '1' : '0'" [style.visibility]="dropdownOpen ? 'visible' : 'hidden'"
+                  [style.transform]="dropdownOpen ? 'translateY(0)' : 'translateY(-10px)'">
 
-                  <div [ngStyle]="{
-  'width': '16px',
-  'height': '16px',
-  'border-radius': '50%',
-  'border': '2px solid ' + getColorForUser(user.name),
-  'display': 'flex',
-  'align-items': 'center',
-  'justify-content': 'center',
-  'flex-shrink': '0'
-}">
-                    <div [ngStyle]="{
-    'width': '8px',
-    'height': '8px',
-    'border-radius': '50%',
-   'background-color': isUserInTable(user.user_id) 
-  ? getColorForUser(user.name) 
-  : 'transparent',
-'border': !isUserInTable(user.user_id) 
-  ? '1px solid ' + getColorForUser(user.name) 
-  : 'none'
-
-  }"></div>
+                  <!-- Search Input Inside Dropdown -->
+                  <div
+                    style="padding: 12px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: white; border-radius: 15px 15px 0 0;">
+                    <input type="text" [(ngModel)]="dropdownSearchTerm" (input)="filterDropdownUsers()"
+                      placeholder="Search users..." #searchInput
+                      style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; outline: none; font-size: 14px; box-sizing: border-box;"
+                      (click)="$event.stopPropagation()">
                   </div>
 
+                  <!-- Users List with Scroll -->
+                  <div style="max-height: 200px; overflow-y: auto;">
+                    <div *ngFor="let user of filteredUsers" (click)="selectUser(user.user_id)"
+                      style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #eee; margin: 0 8px; transition: background-color 0.2s;"
+                      onmouseover="this.style.backgroundColor='#f8f9fa'"
+                      onmouseout="this.style.backgroundColor='transparent'">
 
+                      <div [ngStyle]="{
+          'width': '16px',
+          'height': '16px',
+          'border-radius': '50%',
+          'border': '2px solid ' + getColorForUser(user.name),
+          'display': 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+          'flex-shrink': '0'
+        }">
+                        <div [ngStyle]="{
+            'width': '8px',
+            'height': '8px',
+            'border-radius': '50%',
+            'background-color': isUserInTable(user.user_id) ? getColorForUser(user.name) : 'transparent',
+            'border': !isUserInTable(user.user_id) ? '1px solid ' + getColorForUser(user.name) : 'none'
+          }"></div>
+                      </div>
 
-                  <!-- Initial Circle -->
-                  <div [ngStyle]="{
-                        'min-width': '28px',
-                        'min-height': '28px',
-                        'background-color': getColorForUser(user.name),
-                        'color': 'white',
-                        'border-radius': '50%',
-                        'display': 'flex',
-                        'align-items': 'center',
-                        'justify-content': 'center',
-                        'font-size': '20px'
-                      }">
-                    {{ user.name.charAt(0) || '?' }}
-                  </div>
+                      <!-- Initial Circle -->
+                      <div [ngStyle]="{
+          'min-width': '28px',
+          'min-height': '28px',
+          'background-color': getColorForUser(user.name),
+          'color': 'white',
+          'border-radius': '50%',
+          'display': 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+          'font-size': '20px'
+        }">
+                        {{ user.name.charAt(0) || '?' }}
+                      </div>
 
-                  <!-- User Name -->
-                  <div style="word-break: break-word; white-space: normal; line-height: 1.2;">
-                    {{ formatUserName(user.name) }}
+                      <!-- User Name with Search Highlighting -->
+                      <div style="word-break: break-word; white-space: normal; line-height: 1.2;"
+                        [innerHTML]="highlightSearchTerm(formatUserName(user.name))">
+                      </div>
+                    </div>
+
+                    <!-- No Results Message -->
+                    <div *ngIf="filteredUsers.length === 0 && dropdownSearchTerm"
+                      style="padding: 20px; text-align: center; color: #666; font-style: italic;">
+                      No users found matching "{{ dropdownSearchTerm }}"
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
-
-          </div>
           </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th style="color:#000000; font-size:24px; text-align: left; padding-left: 12px;">Comparison</th>
-                <th>
-                  <div class="header-box1"><i class="fas fa-phone"></i> Enquiries</div>
-                </th>
-                <th>
-                  <div class="header-box2"><i class="fas fa-car"></i>Unique Test Drives</div>
-                </th>
-                <th>
-                  <div class="header-box3"><i class="fas fa-shopping-cart"></i> Orders</div>
-                </th>
-                <th>
-                  <div class="header-box4"><i class="fas fa-times-circle"></i> Cancellations</div>
-                </th>
-                <th>
-                  <div class="header-box5"><i class="fas fa-file-invoice-dollar"></i> Net Orders</div>
-                </th>
-                <th>
-                  <div class="header-box6"><i class="fas fa-handshake"></i> Retail</div>
-                </th>
-              </tr>
-            </thead>
 
-            <tbody>
-            <!-- <tr *ngIf="paginatedUsersPerformance.length === 0 && isUserSelected">
+            <table>
+              <thead>
+                <tr>
+                  <th style="color:#000000; font-size:24px; text-align: left; padding-left: 12px;">Comparison</th>
+                  <th>
+                    <div class="header-box1"><i class="fas fa-phone"></i> Enquiries</div>
+                  </th>
+                  <th>
+                    <div class="header-box2"><i class="fas fa-car"></i>Unique Test Drives</div>
+                  </th>
+                  <th>
+                    <div class="header-box3"><i class="fas fa-shopping-cart"></i> Orders</div>
+                  </th>
+                  <th>
+                    <div class="header-box4"><i class="fas fa-times-circle"></i> Cancellations</div>
+                  </th>
+                  <th>
+                    <div class="header-box5"><i class="fas fa-file-invoice-dollar"></i> Net Orders</div>
+                  </th>
+                  <th>
+                    <div class="header-box6"><i class="fas fa-handshake"></i> Retail</div>
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <!-- <tr *ngIf="paginatedUsersPerformance.length === 0 && isUserSelected">
               <td colspan="7" style="text-align: center; padding: 20px; font-style: italic; color: #888;">
                 No users found matching your search.
               </td>
             </tr> -->
-              <!-- <tr *ngIf="!usersSelected">
+                <!-- <tr *ngIf="!usersSelected">
                 <td colspan="7" style="text-align: center; padding: 20px; font-style: italic; color: #888;">
                    Select users to compare.
                 </td>
               </tr> -->
 
-              <!-- <tr *ngFor="let user of comparePaginatedUsers" style="background-color: #F8F8FA !important;"> -->
-              <tr *ngFor="let user of paginatedUsersPerformance" style="background-color: #F8F8FA !important;">
+                <!-- <tr *ngFor="let user of comparePaginatedUsers" style="background-color: #F8F8FA !important;"> -->
+                <tr *ngFor="let user of paginatedUsersPerformance" style="background-color: #F8F8FA !important;">
 
-                <td style="text-align: left;">
-                  <div style="display: flex; align-items: center;">
-                    <div style="
+                  <td style="text-align: left;">
+                    <div style="display: flex; align-items: center;">
+                      <div style="
                     display: flex;
                     align-items: center;
                     gap: 8px;
                     background-color: white;
                     border-radius: 20px;
                     padding: 4px 10px;">
-                      <div style="
+                        <div style="
                       width: 32px;
                       height: 32px;
                       border-radius: 50%;
@@ -671,166 +665,168 @@
                       font-weight: bold;
                       color: #fff;
                       font-size: 14px;" [style.background-color]="getColorForUser(user.name)">
-                        {{ user.name.charAt(0) }}
+                          {{ user.name.charAt(0) }}
+                        </div>
+                        <span style="font-weight: 500; color: #333;">{{ user.name }}</span>
                       </div>
-                      <span style="font-weight: 500; color: #333;">{{ user.name }}</span>
                     </div>
-                  </div>
-                </td>
-                <td>{{ user.enquiries }}</td>
-                <td>{{ user.testDrives }}</td>
-                <td>{{ user.newOrders }}</td>
-                <td>{{ user.cancellations }}</td>
-                <td>{{ user.netOrders }}</td>
-                <td>{{ user.retail }}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- ✅ Pagination Buttons -->
-          <div class="pagination-container" style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
-            <button (click)="changeComparePage(currentPageforCompare - 1)" [disabled]="currentPageforCompare === 1">
-              Previous
-            </button>
-
-            <ng-container *ngFor="let page of visiblePagesForCompare">
-              <button (click)="changeComparePage(page)" [ngClass]="{ 'active-page': currentPageforCompare === page }">
-                {{ page }}
-              </button>
-            </ng-container>
-
-            <button (click)="changeComparePage(currentPageforCompare + 1)"
-              [disabled]="currentPageforCompare === totalPagesForCompare">
-              Next
-            </button>
-          </div>
-
-
-
-
-        </div>
-
-
-        <div class="performance-panel">
-          <!-- <h2 class="panel-title" style="font-size:25px;color:#313131;;font-family:Montserrat;font-weight:600">
-            Performance
-            Analysis</h2> -->
-          <h2 class="panel-title">
-            Performance
-            Analysis <br>
-            <!-- <p style="background:none">Select Dealers to compare their KPIs</p> -->
-          </h2>
-          <div class="panel-content">
-
-            <table class="highlight-alt-rows" border="1" cellpadding="8" cellspacing="0"
-              style="width:100%; border-collapse: collapse; text-align: center; margin-top: 190px;padding:100px;height:500px">
-              <thead>
-                <tr>
-                  <th rowspan="2" style="width: 20%;"></th>
-                  <th colspan="2"
-                    style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
-                    Performance</th>
-                  <th colspan="2"
-                    style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
-                    Rank</th>
-                </tr>
-
-                <tr>
-
-
-                  <th
-                    style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
-                    Dealership</th>
-                  <th
-                    style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
-                    All India</th>
-
-                  <th
-                    style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
-                    All India</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td
-                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
-                    Enquiries</td>
-                  <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.enquiries }}</td>
-                  <td style="color: 000000;font-size:1.125rem;font-weight:500">{{
-                    dashboardMetrics.allIndiaBestPerformace.enquiriesCount
-                    }}
                   </td>
-                  <td style="color: 000000;font-size:18px;">{{ dashboardMetrics.allIndiaRank.enquiriesRank }}</td>
-                </tr>
-                <tr>
-                  <td
-                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
-                    Test Drive</td>
-                  <td style="color: 000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.testDrives }}</td>
-                  <td style="color: 000000;font-size:1.125rem;font-weight:500">{{
-                    dashboardMetrics.allIndiaBestPerformace.testDrivesCount
-                    }}</td>
-                  <td style="color: 000000;font-size:1.125rem;">{{ dashboardMetrics.allIndiaRank.testDrivesRank }}</td>
-                </tr>
-                <tr>
-                  <td
-                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
-                    New Orders</td>
-                  <td style="color: 000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.newOrders }}</td>
-                  <td style="color: 000000;font-size:1.125rem;font-weight:500">{{
-                    dashboardMetrics.allIndiaBestPerformace.newOrdersCount
-                    }}
-                  </td>
-                  <td style="color: #000000;font-weight:500">{{ dashboardMetrics.allIndiaRank.newOrdersRank }}</td>
-                </tr>
-                <tr>
-                  <td
-                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;;">
-                    Cancellations</td>
-                  <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.cancellations }}
-                  </td>
-                  <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
-                    dashboardMetrics.allIndiaBestPerformace.cancellationsCount }}</td>
-                  <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
-                    dashboardMetrics.allIndiaRank.cancellationsRank }}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
-                    Net Orders</td>
-                  <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.netOrders }}</td>
-                  <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
-                    dashboardMetrics.allIndiaBestPerformace.netOrdersCount
-                    }}
-                  </td>
-                  <td style="color: #000000;font-weight:500">{{ dashboardMetrics.allIndiaRank.netOrdersRank }}</td>
-                </tr>
-                <tr>
-                  <td
-                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
-                    Retail</td>
-                  <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.retail }}</td>
-                  <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
-                    dashboardMetrics.allIndiaBestPerformace.retailCount
-                    }}
-                  </td>
-                  <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
-                    dashboardMetrics.allIndiaRank.retailRank }}</td>
+                  <td>{{ user.enquiries }}</td>
+                  <td>{{ user.testDrives }}</td>
+                  <td>{{ user.newOrders }}</td>
+                  <td>{{ user.cancellations }}</td>
+                  <td>{{ user.netOrders }}</td>
+                  <td>{{ user.retail }}</td>
                 </tr>
               </tbody>
             </table>
 
+            <!-- ✅ Pagination Buttons -->
+            <div class="pagination-container"
+              style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
+              <button (click)="changeComparePage(currentPageforCompare - 1)" [disabled]="currentPageforCompare === 1">
+                Previous
+              </button>
+
+              <ng-container *ngFor="let page of visiblePagesForCompare">
+                <button (click)="changeComparePage(page)" [ngClass]="{ 'active-page': currentPageforCompare === page }">
+                  {{ page }}
+                </button>
+              </ng-container>
+
+              <button (click)="changeComparePage(currentPageforCompare + 1)"
+                [disabled]="currentPageforCompare === totalPagesForCompare">
+                Next
+              </button>
+            </div>
+
+
+
+
           </div>
+
+
+          <div class="performance-panel">
+            <!-- <h2 class="panel-title" style="font-size:25px;color:#313131;;font-family:Montserrat;font-weight:600">
+            Performance
+            Analysis</h2> -->
+            <h2 class="panel-title">
+              Performance
+              Analysis <br>
+              <!-- <p style="background:none">Select Dealers to compare their KPIs</p> -->
+            </h2>
+            <div class="panel-content">
+
+              <table class="highlight-alt-rows" border="1" cellpadding="8" cellspacing="0"
+                style="width:100%; border-collapse: collapse; text-align: center; margin-top: 190px;padding:100px;height:500px">
+                <thead>
+                  <tr>
+                    <th rowspan="2" style="width: 20%;"></th>
+                    <th colspan="2"
+                      style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
+                      Performance</th>
+                    <th colspan="2"
+                      style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
+                      Rank</th>
+                  </tr>
+
+                  <tr>
+
+
+                    <th
+                      style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
+                      Dealership</th>
+                    <th
+                      style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
+                      All India</th>
+
+                    <th
+                      style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
+                      All India</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td
+                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
+                      Enquiries</td>
+                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.enquiries }}</td>
+                    <td style="color: 000000;font-size:1.125rem;font-weight:500">{{
+                      dashboardMetrics.allIndiaBestPerformace.enquiriesCount
+                      }}
+                    </td>
+                    <td style="color: 000000;font-size:18px;">{{ dashboardMetrics.allIndiaRank.enquiriesRank }}</td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
+                      Test Drive</td>
+                    <td style="color: 000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.testDrives }}</td>
+                    <td style="color: 000000;font-size:1.125rem;font-weight:500">{{
+                      dashboardMetrics.allIndiaBestPerformace.testDrivesCount
+                      }}</td>
+                    <td style="color: 000000;font-size:1.125rem;">{{ dashboardMetrics.allIndiaRank.testDrivesRank }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
+                      New Orders</td>
+                    <td style="color: 000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.newOrders }}</td>
+                    <td style="color: 000000;font-size:1.125rem;font-weight:500">{{
+                      dashboardMetrics.allIndiaBestPerformace.newOrdersCount
+                      }}
+                    </td>
+                    <td style="color: #000000;font-weight:500">{{ dashboardMetrics.allIndiaRank.newOrdersRank }}</td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;;">
+                      Cancellations</td>
+                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.cancellations }}
+                    </td>
+                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
+                      dashboardMetrics.allIndiaBestPerformace.cancellationsCount }}</td>
+                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
+                      dashboardMetrics.allIndiaRank.cancellationsRank }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
+                      Net Orders</td>
+                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.netOrders }}</td>
+                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
+                      dashboardMetrics.allIndiaBestPerformace.netOrdersCount
+                      }}
+                    </td>
+                    <td style="color: #000000;font-weight:500">{{ dashboardMetrics.allIndiaRank.netOrdersRank }}</td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
+                      Retail</td>
+                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.retail }}</td>
+                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
+                      dashboardMetrics.allIndiaBestPerformace.retailCount
+                      }}
+                    </td>
+                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
+                      dashboardMetrics.allIndiaRank.retailRank }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+
         </div>
 
+
+
+
       </div>
-
-
-
-
     </div>
-  </div>
 </ng-container>
 <!-- <div *ngIf="selectedUser" class="user-details">
   <button (click)="backToDashboard()">← Back</button>
@@ -1193,7 +1189,7 @@
             </tr>
           </tbody>
         </table>
-
+en
       </div>
 
 
@@ -1272,8 +1268,15 @@
           </div>
 
           <!-- === ENQUIRIES === -->
-          <div class="slider-container" *ngIf="activeCategory === 'enquiries'">
-            <div class="slides" [ngStyle]="{ transform: 'translateX(-' + (currentSlide * 100) + '%)' }">
+          <!-- <div class="slider-container" *ngIf="activeCategory === 'enquiries'">
+            <div class="slides" [ngStyle]="{ transform: 'translateX(-' + (currentSlide * 100) + '%)' }"> -->
+          <div class="slider-container" *ngIf="activeCategory === 'enquiries'" (mousedown)="onMouseDown($event)"
+            (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp($event)" (mouseleave)="onMouseLeave($event)"
+            (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd($event)"
+            (wheel)="onWheel($event)" style="cursor: grab; user-select: none;">
+
+            <div class="slides" [ngStyle]="{ transform: 'translateX(-' + (currentSlide * 100) + '%)' }"
+              style="transition: transform 0.3s ease-out;">
 
               <!-- Slide 1 -->
               <div class="slide" style="display: flex; gap: 16px; height: 100%;">
@@ -1311,12 +1314,21 @@
                   <div class="left-column">
                     <div class="card-box light-grey dual-metric">
                       <div class="metrics">
-                        <div class="metric">
+                        <!-- <div class="metric">
                           <h4 style="color:#e74c3c">2</h4>
                           <p>Follow ups done by you per lost enquiry</p>
+                        </div> -->
+                        <div class="metric" style="text-align: left;">
+                          <!-- <h4 style="color:#e74c3c">2</h4> -->
+                          <span style="color: #e74c3c;font-size:24px;">
+
+                            {{ selectedUser?.performance?.followupsPerLostEnquiry }}
+                          </span>
+
+                          <p style="margin:12px;">Follow ups done by you per lost enquiry</p>
                         </div>
-                        <div class="metric">
-                          <h4 style="color:#27ae60">4</h4>
+                        <div class="metric" style="text-align: left;">
+                          <h4 style="color:#27ae60">5</h4>
                           <p>Follow ups recommended per lost enquiry</p>
                         </div>
                       </div>
@@ -1324,12 +1336,17 @@
 
                     <div class="card-box light-grey dual-metric">
                       <div class="metrics">
-                        <div class="metric">
-                          <h4 style="color:#e74c3c">5</h4>
-                          <p>Follow ups done by you per lost digital enquiry</p>
+                        <div class="metric" style="text-align: left;">
+                          <!-- <h4 style="color:#e74c3c">5</h4> -->
+                          <span style="color: #e74c3c;font-size:24px;">
+
+                            {{ selectedUser?.performance?.followupsPerLostDigitalEnquiry }}
+                          </span>
+
+                          <p style="margin:12px;">Follow ups done by you per lost digital enquiry</p>
                         </div>
-                        <div class="metric">
-                          <h4 style="color:#27ae60">3</h4>
+                        <div class="metric" style="text-align: left;">
+                          <h4 style="color:#27ae60">5</h4>
                           <p>Follow ups recommended per lost digital enquiry</p>
                         </div>
                       </div>
@@ -1341,10 +1358,14 @@
                       <div class="metrics">
                         <div class="metric"
                           style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
-                          <p style="margin: 0; font-size: 14px; font-weight: 500; color: #333; text-align: left;">
+                          <p style="margin: 0; font-size: 14px; font-weight: 500; text-align: left;">
                             Average days to convert enquiry to order
                           </p>
-                          <span style="color: purple; font-size: 20px;margin-top:20px;">2 Days</span>
+                          <!-- <span style="color: purple; font-size: 20px;margin-top:20px;">2 Days</span> -->
+                              <span style="color: purple;font-size:24px;">
+                              
+                                {{ selectedUser?.performance?.avgEnquiry }}
+                              </span>
                         </div>
                       </div>
                     </div>
@@ -1353,9 +1374,16 @@
 
                     <div class="card-box light-grey dual-metric">
                       <div class="metrics">
-                        <div class="metric">
+                        <!-- <div class="metric" style="text-align: left;">
                           <h4 style="color: purple; ">5</h4>
                           <p>Average Follow ups done for order conversion</p>
+                        </div> -->
+                        <div class="metric"
+                          style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
+                          <p style="margin: 0; font-size: 14px; font-weight: 500;text-align: left;">
+                            Average Follow ups done for order conversion
+                          </p>
+                          <span style="color: purple; font-size: 20px;margin-top:20px;">2</span>
                         </div>
                       </div>
                     </div>
@@ -1371,7 +1399,11 @@
           </div>
 
           <!-- === TEST DRIVES === -->
-          <div class="slider-container" *ngIf="activeCategory === 'test-drives'">
+          <!-- <div class="slider-container" *ngIf="activeCategory === 'test-drives'"> -->
+          <div class="slider-container" *ngIf="activeCategory === 'test-drives'" (mousedown)="onMouseDown($event)"
+            (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp($event)" (mouseleave)="onMouseLeave($event)"
+            (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" (touchend)="onTouchEnd($event)"
+            (wheel)="onWheel($event)" style="cursor: grab; user-select: none;">
             <div class="slides" [ngStyle]="{ transform: 'translateX(-' + (currentSlide * 100) + '%)' }">
 
               <!-- SLIDE 1 -->
@@ -1514,11 +1546,11 @@
                     <!-- Follow-ups per lost digital enquiry -->
                     <div class="card-box light-grey dual-metric">
                       <div class="metrics">
-                        <div class="metric">
+                        <div class="metric" style="text-align: left;">
                           <h4 style="color:#e74c3c;font-size:24px;">
                             {{ selectedUser?.performance?.contributionToDealershipmsg || 0 }}%
                           </h4>
-                          <p>Your contribution to dealership order cancellations</p>
+                          <p style="margin-left:10px;">Your contribution to dealership order cancellations</p>
                         </div>
                         <!-- <div class="metric">
                   <h4 style="color:#27ae60">
@@ -1537,7 +1569,7 @@
                       <div class="metrics">
                         <div class="metric">
                           <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                            <p style="margin: 0; font-size: 14px; color: #333;">
+                            <p style="margin: 0; font-size: 14px;">
                               Unique Test Drive to retail ratio
                             </p>
                             <span style="color: #e74c3c; font-size: 24px; font-weight: 600; margin-top: 8px;">
@@ -1551,11 +1583,21 @@
                     <!-- Test Drive to Retail ratio -->
                     <div class="card-box light-grey dual-metric">
                       <div class="metrics">
-                        <div class="metric">
+                        <!-- <div class="metric">
                           <h4 style="color:#e74c3c;font-size:24px;">
                             {{ selectedUser?.performance?.digitalEnquiryToOrderRatio || 0 }}%
                           </h4>
                           <p>Digital enquiry to New Order ratio</p>
+                        </div> -->
+                        <div class="metric">
+                          <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                            <p style="margin: 0; font-size: 14px;;">
+                              Digital enquiry to New Order ratio
+                            </p>
+                            <span style="color: #e74c3c; font-size: 24px; font-weight: 600; margin-top: 8px;">
+                              {{ selectedUser?.performance?.digitalEnquiryToOrderRatio || 0 }}%
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
