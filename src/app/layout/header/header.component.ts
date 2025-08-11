@@ -39,6 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentHeading: string = 'Dashboard';
   userName: string = '';
   selectedSection: string = 'home';
+  toggleInProgress = false;
 
   constructor(
     private router: Router,
@@ -111,10 +112,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.selectedSection = section;
   }
 
-  onToggleClick(): void {
-    console.log('🔍 Before toggle:', this.isSidebarOpen);
+  // onToggleClick(): void {
+  //   console.log('🔍 Before toggle:', this.isSidebarOpen);
+  //   this.sidebarService.toggleSidebar();
+  //   // The subscription in ngOnInit() will update isSidebarOpen automatically
+  // }
+  onToggleClick() {
+    if (this.toggleInProgress) return;
+    this.toggleInProgress = true;
+
     this.sidebarService.toggleSidebar();
-    // The subscription in ngOnInit() will update isSidebarOpen automatically
+
+    setTimeout(() => {
+      this.toggleInProgress = false;
+    }, 300); // match CSS transition duration
   }
 
   private updateTitle(): void {
