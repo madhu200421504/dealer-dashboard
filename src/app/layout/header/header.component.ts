@@ -7,6 +7,7 @@ import {
   ChangeDetectorRef,
   Output,
   EventEmitter,
+  OnDestroy,
 } from '@angular/core';
 import {
   ActivatedRoute,
@@ -15,8 +16,7 @@ import {
   RouterLink,
 } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Token } from '@angular/compiler';
-import { filter, map } from 'rxjs';
+import { filter, map, Subject, takeUntil } from 'rxjs';
 import { ContextService } from '../../service/context.service';
 import { SidebarService } from '../../service/sidebar.service';
 import { UserService } from '../../service/user.service';
@@ -26,16 +26,16 @@ import { UserService } from '../../service/user.service';
   standalone: true,
   imports: [RouterLink, CommonModule],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'], // corrected `styleUrl` to `styleUrls`
+  styleUrls: ['./header.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   @Output() sidebarToggle = new EventEmitter<void>();
-  guestDetails: any;
-  isSidebarOpen: boolean = false; // ✅ Initialize with default value
 
-  // isSidebarOpen = true; // ✅ Make sure this matches your sidebar's initial state
-  // pageTitle: string = 'Dashboard';
+  private destroy$ = new Subject<void>();
+
+  guestDetails: any;
+  isSidebarOpen: boolean = false;
   currentHeading: string = 'Dashboard';
   userName: string = '';
   selectedSection: string = 'home';
@@ -47,156 +47,95 @@ export class HeaderComponent implements OnInit {
     private context: ContextService,
     private cdr: ChangeDetectorRef,
     private sidebarService: SidebarService,
-    private userService: UserService // ✅ Inject UserService
-  ) { }
+    private userService: UserService
+  ) {}
 
-  // ngOnInit() {
-  //   this.context.onSideBarClick$.subscribe(({ pageTitle }) => {
-  //     console.log('Current Heading Updated:', pageTitle);
-  //     this.currentHeading = pageTitle;
-  //     this.cdr.markForCheck();
-  //   });
-
-  //   this.updateTitle();
-
-  //   // header name
-  //   this.router.events
-  //     .pipe(filter((event) => event instanceof NavigationEnd))
-  //     .subscribe(() => this.updateTitle());
-  // }
-  // ngOnInit() {
-  //   // ✅ Get initial state from service
-  //   this.isSidebarOpen = this.sidebarService.currentState;
-  //   console.log('Initial sidebar state:', this.isSidebarOpen);
-  //   this.context.onSideBarClick$.subscribe(({ pageTitle }) => {
-  //     console.log('Current Heading Updated:', pageTitle);
-  //     this.currentHeading = pageTitle;
-  //     this.cdr.markForCheck();
-  //   });
-
-  //   this.updateTitle();
-
-  //   this.router.events
-  //     .pipe(filter((event) => event instanceof NavigationEnd))
-  //     .subscribe(() => this.updateTitle());
-
-  //   // ✅ Fix: access 'dealer_name' from res.data
-  //   this.userService.getProfile().subscribe({
-  //     next: (res) => {
-  //       this.userName = res.data?.dealer_name || '';
-  //       console.log('Assigned userName:', this.userName);
-  //       this.cdr.detectChanges(); // ✅ This is crucial
-  //     },
-  //     error: (err) => {
-  //       console.error('Failed to fetch profile', err);
-  //       this.userName = '';
-  //       this.cdr.detectChanges();
-  //     },
-  //   });
-  // }
   ngOnInit() {
-    // ✅ Subscribe to sidebar state so it updates automatically
-    this.sidebarService.isOpen$.subscribe((isOpen) => {
-      this.isSidebarOpen = isOpen;
-      console.log('Sidebar state changed:', isOpen);
-      this.cdr.markForCheck(); // ensures Angular updates the template
-    });
+    // Subscribe to sidebar state changes
+    this.sidebarService.isOpen$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isOpen) => {
+        this.isSidebarOpen = isOpen;
+        console.log('Sidebar state changed:', isOpen);
+        this.cdr.detectChanges(); // <-- Add this line here
+      });
 
-    this.context.onSideBarClick$.subscribe(({ pageTitle }) => {
-      console.log('Current Heading Updated:', pageTitle);
-      this.currentHeading = pageTitle;
-      this.cdr.markForCheck();
-      
-    });
+    // Subscribe to heading changes
+    this.context.onSideBarClick$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ pageTitle }) => {
+        console.log('Current Heading Updated:', pageTitle);
+        this.currentHeading = pageTitle;
+        this.cdr.detectChanges(); // <-- Add this line here
+      });
 
-    this.updateTitle();
-
+    // Listen to router events for title updates
     this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
       .subscribe(() => this.updateTitle());
 
-    // ✅ Fetch profile
-    this.userService.getProfile().subscribe({
-      next: (res) => {
-        this.userName = res.data?.dealer_name || '';
-        console.log('Assigned userName:', this.userName);
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Failed to fetch profile', err);
-        this.userName = '';
-        this.cdr.detectChanges();
-      },
-    });
+    // Initial title update
+    this.updateTitle();
+
+    // Fetch user profile
+    this.loadUserProfile();
   }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadUserProfile(): void {
+    this.userService
+      .getProfile()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          this.userName = res.data?.dealer_name || '';
+          console.log('Assigned userName:', this.userName);
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.error('Failed to fetch profile', err);
+          this.userName = '';
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
   selectSection(section: string): void {
     this.selectedSection = section;
   }
-  
 
-  // onToggleClick() {
-  //   console.log('Before toggle:', this.isSidebarOpen);
-  //   this.sidebarService.toggleSidebar();
-  //   // ✅ Get updated state from service
-  //   this.isSidebarOpen = this.sidebarService.currentState;
-  //   console.log('After toggle:', this.isSidebarOpen);
-  //   this.cdr.detectChanges();
-  // }
-  // onToggleClick() {
-  //   console.log('🔍 Before toggle:', this.isSidebarOpen);
-  //   console.log('🔍 Arrow class will be applied:', !this.isSidebarOpen);
-
-  //   this.sidebarService.toggleSidebar();
-  //   this.isSidebarOpen = this.sidebarService.currentState;
-
-  //   console.log('🔍 After toggle:', this.isSidebarOpen);
-  //   console.log('🔍 Arrow class is now applied:', !this.isSidebarOpen);
-
-  //   this.cdr.detectChanges();
-  // }
-  onToggleClick() {
+  onToggleClick(): void {
     console.log('🔍 Before toggle:', this.isSidebarOpen);
-    console.log('🔍 Arrow class will be applied:', !this.isSidebarOpen);
-
     this.sidebarService.toggleSidebar();
-  console.log(
-    '🔍 After toggle (will update via subscription):',
-    this.isSidebarOpen
-  );
-
     // The subscription in ngOnInit() will update isSidebarOpen automatically
   }
 
   private updateTitle(): void {
     const route = this.getDeepestChild(this.activatedRoute);
-    // this.pageTitle = route.snapshot.data['title'] || 'Dashboard';
+    // You can set title logic here if needed
   }
 
   private getDeepestChild(route: ActivatedRoute): ActivatedRoute {
     return route.firstChild ? this.getDeepestChild(route.firstChild) : route;
   }
 
-  // logout() {
-  //   // if (isPlatformBrowser(this.platformId)) {
-  //   // }
-  //   sessionStorage.removeItem('token');
-  //   this.guestDetails = null;
-  // }
-  confirmLogout() {
-    // Close modal manually if needed (Bootstrap 5 auto closes on button click)
-    this.logout(); // Call your existing logout logic
+  confirmLogout(): void {
+    this.logout();
   }
+
   performLogout(): void {
     const modalElement = document.getElementById('logoutModal');
     if (modalElement) {
-      let modal = (window as any).bootstrap.Modal.getInstance(modalElement);
-      if (!modal) {
-        modal = new (window as any).bootstrap.Modal(modalElement);
-      }
-      modal.hide();
+      modalElement.style.display = 'none';
     }
 
-    // Show loading toast (optional)
     this.showToast('Logging out...', 'info');
 
     setTimeout(() => {
@@ -253,11 +192,11 @@ export class HeaderComponent implements OnInit {
   }
 
   logout(): void {
-    console.log('Logging out...'); // Debug log
+    console.log('Logging out...');
 
     sessionStorage.removeItem('token');
     this.guestDetails = null;
 
-    this.router.navigate(['/']); // Navigate to home or login after logout
+    this.router.navigate(['/login']);
   }
 }

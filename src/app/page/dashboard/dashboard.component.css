@@ -169,7 +169,7 @@ body {
   /* font-weight: bold; */
   color: #126893;
   margin-bottom: 0.5rem;
-  font-weight:600;
+  font-weight: 600;
 }
 
 .metric-label {
@@ -427,27 +427,27 @@ body {
     box-sizing: border-box;
   }
 } */
- .table-hover-row {
-    background-color: transparent !important;
-    transition: background-color 0.2s ease;
-  }
-  
-  .table-hover-row:hover {
-    background-color: #f5f7fa !important;
-  }
-  
-  .table-hover-row:hover td {
-    background-color: #f5f7fa !important;
-  }
-  
-  .table-cell-styled {
-    background-color: transparent !important;
-    color: #000;
-    font-weight: 400;
-    font-size: 16px;
-    font-family: 'Poppins', sans-serif;
-    transition: background-color 0.2s ease;
-  }
+.table-hover-row {
+  background-color: transparent !important;
+  transition: background-color 0.2s ease;
+}
+
+.table-hover-row:hover {
+  background-color: #f5f7fa !important;
+}
+
+.table-hover-row:hover td {
+  background-color: #f5f7fa !important;
+}
+
+.table-cell-styled {
+  background-color: transparent !important;
+  color: #000;
+  font-weight: 400;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+  transition: background-color 0.2s ease;
+}
 /* claude */
 body {
   /* font-family: Arial, sans-serif; */
@@ -560,8 +560,7 @@ table td {
   font-size: 19px;
   /* font-weight: bold; */
   color: #ffffff;
-  font-weight:600;
-
+  font-weight: 600;
 }
 
 .header {
@@ -1054,8 +1053,7 @@ table.table-striped tbody tr {
   /* font-weight: bold; */
   color: #ffffff;
   margin-bottom: 2px;
-  font-weight:600;
-
+  font-weight: 600;
 }
 
 .metric-label {
@@ -1636,8 +1634,6 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   }
 }
 
-
-
 .active-filter-upcoming {
   background: linear-gradient(#222fb9);
   color: white;
@@ -1745,7 +1741,6 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   padding-bottom: 8px;
 }
 
-
 .user-avatar {
   width: 50px;
   height: 50px;
@@ -1766,9 +1761,6 @@ div[style*="overflow-y: auto"]::-webkit-scrollbar-button {
   margin-top: 4px;
   color: #333;
 }
-
-
-
 
 .user-avatar {
   width: 60px;
@@ -2297,16 +2289,15 @@ table td {
 }
 
 .user-card {
-  flex: 0 0 auto;          /* 🔑 Prevent shrinking or stretching */
+  flex: 0 0 auto; /* 🔑 Prevent shrinking or stretching */
   /* width: 100px;            or whatever fixed width suits your design */
   min-width: 100px;
   background: #fff;
   padding: 10px;
   border-radius: 8px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
-
 
 .user-card:hover {
   /* transform: translateY(-2px); */
@@ -2379,8 +2370,6 @@ table td {
   }
 }
 
-
-
 /* 
 .filter-wrapper {
   width: fit-content;
@@ -2395,7 +2384,7 @@ table td {
   padding: 5px;
   border-radius: 8px;
   margin-top: 10px;
-  margin-left:15px;
+  margin-left: 15px;
 
   /* Add this */
   display: flex;
@@ -2416,7 +2405,6 @@ table td {
   cursor: pointer;
   transition: background 0.3s, color 0.3s;
   white-space: nowrap;
-  
 }
 
 /* .filter-btn:hover {
@@ -2448,7 +2436,7 @@ table td {
 .toggle-group {
   display: flex;
   gap: 8px;
-  margin-left:13px;
+  margin-left: 13px;
 }
 
 .toggle-btn {
@@ -2517,7 +2505,6 @@ table td {
   padding-right: 40px;
 }
 
-
 /*  */
 .slider-container {
   overflow: hidden;
@@ -2563,11 +2550,11 @@ table td {
 }
 
 .light-grey {
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
 }
 
 .light-blue {
-  background-color: #E3F2FD;
+  background-color: #e3f2fd;
   position: relative;
 }
 
@@ -2579,7 +2566,7 @@ table td {
   position: absolute;
   top: 10px;
   right: 15px;
-  background: #1E88E5;
+  background: #1e88e5;
   color: white;
   border-radius: 50%;
   width: 24px;
@@ -2606,7 +2593,7 @@ table td {
 }
 
 .dot.active {
-  background-color: #1E88E5;
+  background-color: #1e88e5;
 }
 .row-layout {
   display: flex;
@@ -2656,9 +2643,9 @@ table td {
 .green-text {
   color: #27ae60; /* soft green */
 }
- .custom-table tr {
-    background: white !important;
-  }
+.custom-table tr {
+  background: white !important;
+}
 @media (min-width: 1366px) {
   .metrics-wrapper {
     flex-wrap: nowrap !important;
@@ -2673,7 +2660,6 @@ table td {
 .custom-table tbody tr {
   background-color: white !important;
 }
-
 
 /*  */
 .metric-value2 {
@@ -2695,12 +2681,12 @@ table td {
 }
 
 .custom-line::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 0;
   top: -20px; /* Adjust this to move line up/down */
   height: calc(100% + 30px);
   width: 2px;
-  background-color: #007AFF;
+  background-color: #007aff;
   z-index: 10;
 }
