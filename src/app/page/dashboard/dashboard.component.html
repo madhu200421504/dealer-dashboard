@@ -606,56 +606,56 @@
           </div>
 
 
-            <table>
-              <thead>
-                <tr>
-                  <th style="color:#000000; font-size:24px; text-align: left; padding-left: 12px;">Comparison</th>
-                  <th>
-                    <div class="header-box1"><i class="fas fa-phone"></i> Enquiries</div>
-                  </th>
-                  <th>
-                    <div class="header-box2"><i class="fas fa-car"></i>Unique Test Drives</div>
-                  </th>
-                  <th>
-                    <div class="header-box3"><i class="fas fa-shopping-cart"></i> Orders</div>
-                  </th>
-                  <th>
-                    <div class="header-box4"><i class="fas fa-times-circle"></i> Cancellations</div>
-                  </th>
-                  <th>
-                    <div class="header-box5"><i class="fas fa-file-invoice-dollar"></i> Net Orders</div>
-                  </th>
-                  <th>
-                    <div class="header-box6"><i class="fas fa-handshake"></i> Retail</div>
-                  </th>
-                </tr>
-              </thead>
+          <table>
+            <thead>
+              <tr>
+                <th style="color:#000000; font-size:24px; text-align: left; padding-left: 12px;">Comparison</th>
+                <th>
+                  <div class="header-box1"><i class="fas fa-phone"></i> Enquiries</div>
+                </th>
+                <th>
+                  <div class="header-box2"><i class="fas fa-car"></i>Unique Test Drives</div>
+                </th>
+                <th>
+                  <div class="header-box3"><i class="fas fa-shopping-cart"></i> Orders</div>
+                </th>
+                <th>
+                  <div class="header-box4"><i class="fas fa-times-circle"></i> Cancellations</div>
+                </th>
+                <th>
+                  <div class="header-box5"><i class="fas fa-file-invoice-dollar"></i> Net Orders</div>
+                </th>
+                <th>
+                  <div class="header-box6"><i class="fas fa-handshake"></i> Retail</div>
+                </th>
+              </tr>
+            </thead>
 
-              <tbody>
-                <!-- <tr *ngIf="paginatedUsersPerformance.length === 0 && isUserSelected">
+            <tbody>
+              <!-- <tr *ngIf="paginatedUsersPerformance.length === 0 && isUserSelected">
               <td colspan="7" style="text-align: center; padding: 20px; font-style: italic; color: #888;">
                 No users found matching your search.
               </td>
             </tr> -->
-                <!-- <tr *ngIf="!usersSelected">
+              <!-- <tr *ngIf="!usersSelected">
                 <td colspan="7" style="text-align: center; padding: 20px; font-style: italic; color: #888;">
                    Select users to compare.
                 </td>
               </tr> -->
 
-                <!-- <tr *ngFor="let user of comparePaginatedUsers" style="background-color: #F8F8FA !important;"> -->
-                <tr *ngFor="let user of paginatedUsersPerformance" style="background-color: #F8F8FA !important;">
+              <!-- <tr *ngFor="let user of comparePaginatedUsers" style="background-color: #F8F8FA !important;"> -->
+              <tr *ngFor="let user of paginatedUsersPerformance" style="background-color: #F8F8FA !important;">
 
-                  <td style="text-align: left;">
-                    <div style="display: flex; align-items: center;">
-                      <div style="
+                <td style="text-align: left;">
+                  <div style="display: flex; align-items: center;">
+                    <div style="
                     display: flex;
                     align-items: center;
                     gap: 8px;
                     background-color: white;
                     border-radius: 20px;
                     padding: 4px 10px;">
-                        <div style="
+                      <div style="
                       width: 32px;
                       height: 32px;
                       border-radius: 50%;
@@ -665,168 +665,175 @@
                       font-weight: bold;
                       color: #fff;
                       font-size: 14px;" [style.background-color]="getColorForUser(user.name)">
-                          {{ user.name.charAt(0) }}
-                        </div>
-                        <span style="font-weight: 500; color: #333;">{{ user.name }}</span>
+                        {{ user.name.charAt(0) }}
                       </div>
+                      <span style="font-weight: 500; color: #333;">{{ user.name }}</span>
                     </div>
-                  </td>
-                  <td>{{ user.enquiries }}</td>
-                  <td>{{ user.testDrives }}</td>
-                  <td>{{ user.newOrders }}</td>
-                  <td>{{ user.cancellations }}</td>
-                  <td>{{ user.netOrders }}</td>
-                  <td>{{ user.retail }}</td>
-                </tr>
-              </tbody>
-            </table>
+                  </div>
+                </td>
+                <td>{{ user.enquiries }}</td>
+                <td>{{ user.testDrives }}</td>
+                <td>{{ user.newOrders }}</td>
+                <td>{{ user.cancellations }}</td>
+                <td>{{ user.netOrders }}</td>
+                <td>{{ user.retail }}</td>
+              </tr>
+            </tbody>
+          </table>
 
-            <!-- ✅ Pagination Buttons -->
-            <div class="pagination-container"
-              style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
-              <button (click)="changeComparePage(currentPageforCompare - 1)" [disabled]="currentPageforCompare === 1">
-                Previous
+          <!-- ✅ Pagination Buttons -->
+          <div class="pagination-container" style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
+            <button (click)="changeComparePage(currentPageforCompare - 1)" [disabled]="currentPageforCompare === 1">
+              Previous
+            </button>
+
+            <ng-container *ngFor="let page of visiblePagesForCompare">
+              <button (click)="changeComparePage(page)" [ngClass]="{ 'active-page': currentPageforCompare === page }">
+                {{ page }}
               </button>
+            </ng-container>
 
-              <ng-container *ngFor="let page of visiblePagesForCompare">
-                <button (click)="changeComparePage(page)" [ngClass]="{ 'active-page': currentPageforCompare === page }">
-                  {{ page }}
-                </button>
-              </ng-container>
-
-              <button (click)="changeComparePage(currentPageforCompare + 1)"
-                [disabled]="currentPageforCompare === totalPagesForCompare">
-                Next
-              </button>
-            </div>
-
-
-
-
+            <button (click)="changeComparePage(currentPageforCompare + 1)"
+              [disabled]="currentPageforCompare === totalPagesForCompare">
+              Next
+            </button>
           </div>
 
 
-          <div class="performance-panel">
-            <!-- <h2 class="panel-title" style="font-size:25px;color:#313131;;font-family:Montserrat;font-weight:600">
-            Performance
-            Analysis</h2> -->
-            <h2 class="panel-title">
-              Performance
-              Analysis <br>
-              <!-- <p style="background:none">Select Dealers to compare their KPIs</p> -->
-            </h2>
-            <div class="panel-content">
 
-              <table class="highlight-alt-rows" border="1" cellpadding="8" cellspacing="0"
-                style="width:100%; border-collapse: collapse; text-align: center; margin-top: 190px;padding:100px;height:500px">
-                <thead>
-                  <tr>
-                    <th rowspan="2" style="width: 20%;"></th>
-                    <th colspan="2"
-                      style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
-                      Performance</th>
-                    <th colspan="2"
-                      style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
-                      Rank</th>
-                  </tr>
-
-                  <tr>
-
-
-                    <th
-                      style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
-                      Dealership</th>
-                    <th
-                      style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
-                      All India</th>
-
-                    <th
-                      style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif;">
-                      All India</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td
-                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
-                      Enquiries</td>
-                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.enquiries }}</td>
-                    <td style="color: 000000;font-size:1.125rem;font-weight:500">{{
-                      dashboardMetrics.allIndiaBestPerformace.enquiriesCount
-                      }}
-                    </td>
-                    <td style="color: 000000;font-size:18px;">{{ dashboardMetrics.allIndiaRank.enquiriesRank }}</td>
-                  </tr>
-                  <tr>
-                    <td
-                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
-                      Test Drive</td>
-                    <td style="color: 000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.testDrives }}</td>
-                    <td style="color: 000000;font-size:1.125rem;font-weight:500">{{
-                      dashboardMetrics.allIndiaBestPerformace.testDrivesCount
-                      }}</td>
-                    <td style="color: 000000;font-size:1.125rem;">{{ dashboardMetrics.allIndiaRank.testDrivesRank }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
-                      New Orders</td>
-                    <td style="color: 000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.newOrders }}</td>
-                    <td style="color: 000000;font-size:1.125rem;font-weight:500">{{
-                      dashboardMetrics.allIndiaBestPerformace.newOrdersCount
-                      }}
-                    </td>
-                    <td style="color: #000000;font-weight:500">{{ dashboardMetrics.allIndiaRank.newOrdersRank }}</td>
-                  </tr>
-                  <tr>
-                    <td
-                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;;">
-                      Cancellations</td>
-                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.cancellations }}
-                    </td>
-                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
-                      dashboardMetrics.allIndiaBestPerformace.cancellationsCount }}</td>
-                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
-                      dashboardMetrics.allIndiaRank.cancellationsRank }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
-                      Net Orders</td>
-                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.netOrders }}</td>
-                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
-                      dashboardMetrics.allIndiaBestPerformace.netOrdersCount
-                      }}
-                    </td>
-                    <td style="color: #000000;font-weight:500">{{ dashboardMetrics.allIndiaRank.netOrdersRank }}</td>
-                  </tr>
-                  <tr>
-                    <td
-                      style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400;">
-                      Retail</td>
-                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{ dashboardMetrics.retail }}</td>
-                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
-                      dashboardMetrics.allIndiaBestPerformace.retailCount
-                      }}
-                    </td>
-                    <td style="color: #000000;font-size:1.125rem;font-weight:500">{{
-                      dashboardMetrics.allIndiaRank.retailRank }}</td>
-                  </tr>
-                </tbody>
-              </table>
-
-            </div>
-          </div>
 
         </div>
 
 
+        <div class="performance-panel">
+          <h2 class="panel-title">
+            Performance
+            Analysis <br>
+          </h2>
+          <div class="panel-content">
 
+            <table class="highlight-alt-rows" border="1" cellpadding="8" cellspacing="0"
+              style="width:100%; border-collapse: collapse; text-align: center; margin-top: 190px;padding:100px;height:500px">
+              <thead>
+                <!-- First header row with main headers -->
+                <tr>
+                  <th rowspan="2" style="width: 20%; border: 1px solid #ddd;"></th>
+                  <th
+                    style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif; border: 1px solid #ddd; text-align: center;">
+                    Performance</th>
+                  <th
+                    style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif; border: 1px solid #ddd; text-align: center;">
+                    <!-- Leave empty or put a label -->
+                  </th>
+                  <th rowspan="2"
+                    style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif; border: 1px solid #ddd;border-right: 3px solid #007bff; text-align: center;">
+                    Rank<br>
+                    <span style="color: #313131; margin-top: 10px; display: inline-block;">All India</span>
+                  </th>
+                </tr>
+
+                <!-- Second header row with sub-headers -->
+                <tr>
+                  <th
+                    style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif; border: 1px solid #ddd;">
+                    Dealership</th>
+                  <th class="custom-line"
+                    style="padding:10px;color:#313131;font-weight:500;font-size:18px;font-family: 'Poppins', sans-serif; border: 1px solid #ddd;">
+                    All India</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400; border: 1px solid #ddd;">
+                    Enquiries</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.enquiries }}</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaBestPerformace.enquiriesCount
+                    }}
+                  </td>
+                  <td style="color: #000000;font-size:18px; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaRank.enquiriesRank }}</td>
+                </tr>
+                <tr>
+                  <td
+                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400; border: 1px solid #ddd;">
+                    Test Drive</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.testDrives }}</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaBestPerformace.testDrivesCount
+                    }}</td>
+                  <td style="color: #000000;font-size:1.125rem; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaRank.testDrivesRank }}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400; border: 1px solid #ddd;">
+                    New Orders</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.newOrders }}</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaBestPerformace.newOrdersCount
+                    }}
+                  </td>
+                  <td style="color: #000000;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaRank.newOrdersRank }}</td>
+                </tr>
+                <tr>
+                  <td
+                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400; border: 1px solid #ddd;">
+                    Cancellations</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.cancellations }}
+                  </td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaBestPerformace.cancellationsCount }}</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaRank.cancellationsRank }}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400; border: 1px solid #ddd;">
+                    Net Orders</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.netOrders }}</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaBestPerformace.netOrdersCount
+                    }}
+                  </td>
+                  <td style="color: #000000;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaRank.netOrdersRank }}</td>
+                </tr>
+                <tr>
+                  <td
+                    style="text-align: left; padding:12px; color:#000;font-family: 'Poppins', sans-serif;font-size:18px;font-weight: 400; border: 1px solid #ddd;">
+                    Retail</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.retail }}</td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaBestPerformace.retailCount
+                    }}
+                  </td>
+                  <td style="color: #000000;font-size:1.125rem;font-weight:500; border: 1px solid #ddd;">{{
+                    dashboardMetrics.allIndiaRank.retailRank }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
 
       </div>
+
+
+
+
     </div>
+  </div>
 </ng-container>
 <!-- <div *ngIf="selectedUser" class="user-details">
   <button (click)="backToDashboard()">← Back</button>
@@ -1189,7 +1196,7 @@
             </tr>
           </tbody>
         </table>
-en
+
       </div>
 
 
@@ -1362,10 +1369,10 @@ en
                             Average days to convert enquiry to order
                           </p>
                           <!-- <span style="color: purple; font-size: 20px;margin-top:20px;">2 Days</span> -->
-                              <span style="color: purple;font-size:24px;">
-                              
-                                {{ selectedUser?.performance?.avgEnquiry }}
-                              </span>
+                          <span style="color: purple;font-size:24px;">
+
+                            {{ selectedUser?.performance?.avgEnquiry }}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1383,7 +1390,7 @@ en
                           <p style="margin: 0; font-size: 14px; font-weight: 500;text-align: left;">
                             Average Follow ups done for order conversion
                           </p>
-                          <span style="color: purple; font-size: 20px;margin-top:20px;">2</span>
+                          <span style="color: purple; font-size: 20px;margin-top:20px;">0</span>
                         </div>
                       </div>
                     </div>

@@ -104,13 +104,12 @@ export class UsersComponent implements OnInit {
 
   columns: any[] = [];
   selectedUser: any;
-  
+
   constructor(
     private aleartsrv: AleartSrvService,
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
-    private router: Router,
-    //  private userSelectionService: UserSelectionService,
+    private router: Router //  private userSelectionService: UserSelectionService,
   ) {
     this.initializeForm();
   }
@@ -304,34 +303,34 @@ export class UsersComponent implements OnInit {
       },
     });
   }
-  onExcellenceInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = input?.value || '';
+  // onExcellenceInput(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   const value = input?.value || '';
 
-    this.excellenceMsg = '';
+  //   this.excellenceMsg = '';
 
-    if (value.length === 6 && this.useForm.get('excellence')?.valid) {
-      const url = `https://uat.smartassistapp.in/api/dealer/existing-user-check?excellence=${value}`;
+  //   if (value.length === 6 && this.useForm.get('excellence')?.valid) {
+  //     const url = `https://uat.smartassistapp.in/api/dealer/existing-user-check?excellence=${value}`;
 
-      const token = sessionStorage.getItem('token'); // Replace 'token' if your key is different
-      if (!token) {
-        this.excellenceMsg = 'No token available. Please login again.';
-        return;
-      }
+  //     const token = sessionStorage.getItem('token'); // Replace 'token' if your key is different
+  //     if (!token) {
+  //       this.excellenceMsg = 'No token available. Please login again.';
+  //       return;
+  //     }
 
-      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  //     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-      this.http.get<any>(url, { headers }).subscribe({
-        next: (res) => {
-          if (res?.message) this.excellenceMsg = res.message;
-        },
-        error: (err) => {
-          console.error('API error', err);
-          this.excellenceMsg = err?.error?.message || 'Something went wrong.';
-        },
-      });
-    }
-  }
+  //     this.http.get<any>(url, { headers }).subscribe({
+  //       next: (res) => {
+  //         if (res?.message) this.excellenceMsg = res.message;
+  //       },
+  //       error: (err) => {
+  //         console.error('API error', err);
+  //         this.excellenceMsg = err?.error?.message || 'Something went wrong.';
+  //       },
+  //     });
+  //   }
+  // }
 
   //   loadRole() {
   //     this.masterSrv.getAllRole().subscribe({
@@ -351,6 +350,37 @@ export class UsersComponent implements OnInit {
   //       },
   //     });
   //   }
+  onExcellenceInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input?.value || '';
+
+    // Clear message immediately if not 6 digits
+    if (value.length !== 6) {
+      this.excellenceMsg = '';
+      return;
+    }
+
+    if (this.useForm.get('excellence')?.valid) {
+      const url = `https://uat.smartassistapp.in/api/dealer/existing-user-check?excellence=${value}`;
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        this.excellenceMsg = 'No token available. Please login again.';
+        return;
+      }
+
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+      this.http.get<any>(url, { headers }).subscribe({
+        next: (res) => {
+          if (res?.message) this.excellenceMsg = res.message;
+        },
+        error: (err) => {
+          console.error('API error', err);
+          this.excellenceMsg = err?.error?.message || 'Something went wrong.';
+        },
+      });
+    }
+  }
 
   loadRole() {
     this.masterSrv.getAllRole().subscribe({
@@ -613,8 +643,9 @@ export class UsersComponent implements OnInit {
     // Show the modal
     this.isModalOpen = true;
 
-    // Reset form (this clears validation)
+    // Reset form and message
     this.useForm.reset();
+    this.excellenceMsg = ''; // ✅ Clear the green message
 
     // Determine edit mode
     this.isEditMode = !!user;
@@ -1198,36 +1229,34 @@ export class UsersComponent implements OnInit {
     }, 100);
   }
 
- // users.component.ts
-// goToUserDashboard(user: any) {
-//   const userId = user.ps_id || user.user_id;
-//   const sm_id = user.sm_id || 'default_sm_id';
-  
-//   if (!userId) {
-//     console.error('User ID missing');
-//     return;
-//   }
-  
-//   this.userSelectionService.setSelectedUser({
-//     ...user,
-//     user_id: userId,
-//     sm_id: sm_id,
-//     type: 'MTD'
-//   });
+  // users.component.ts
+  // goToUserDashboard(user: any) {
+  //   const userId = user.ps_id || user.user_id;
+  //   const sm_id = user.sm_id || 'default_sm_id';
 
-//   this.router.navigate(['/Admin/dashboard'], {
-//     queryParams: { 
-//       user_id: userId, 
-//       sm_id, 
-//       type: 'MTD',
-//       from_user_list: 'true' 
-//     }
-//   });
-// }
+  //   if (!userId) {
+  //     console.error('User ID missing');
+  //     return;
+  //   }
 
-ngOnDestroy() {
-   
-  }
+  //   this.userSelectionService.setSelectedUser({
+  //     ...user,
+  //     user_id: userId,
+  //     sm_id: sm_id,
+  //     type: 'MTD'
+  //   });
+
+  //   this.router.navigate(['/Admin/dashboard'], {
+  //     queryParams: {
+  //       user_id: userId,
+  //       sm_id,
+  //       type: 'MTD',
+  //       from_user_list: 'true'
+  //     }
+  //   });
+  // }
+
+  ngOnDestroy() {}
 
   fetchUserData(userId: string, smId: string, type: string = 'MTD') {
     const token = sessionStorage.getItem('token');

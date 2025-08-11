@@ -420,6 +420,21 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+  //   this.route.queryParams.subscribe(params => {
+  //   if (params['user_id'] && params['from_user_list']) {
+  //     // Coming from user-all with user selection - keep the user data
+  //     // The service should already have the user data
+  //   } else {
+  //     // Direct navigation to dashboard - clear any user selection
+  //     this.userSelectionService.clearSelectedUser();
+  //   }
+  // });
+
+  // // Subscribe to selected user changes
+  // this.subscription = this.userSelectionService.selectedUser$.subscribe(user => {
+  //   this.selectedUser = user;
+  // });
+
     this.initializeFilteredUsers();
 
     this.filteredTableUsers = [...this.selectedUsersPerformance]; // Initialize with all users

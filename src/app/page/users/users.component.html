@@ -1,5 +1,5 @@
 <!-- <div *ngIf="!selectedUser" class="container-fluid"> -->
-  <!-- <div class="content-body"> -->
+  <div class="content-body">
   <div class="content-section active">
     <div class="page-titles">
       <ol class="breadcrumb">
@@ -514,9 +514,13 @@
 
 
                 <!-- Backend API Response Message -->
-                <div *ngIf="excellenceMsg" class="text-success mt-1">
+                <!-- <div *ngIf="excellenceMsg" class="text-success mt-1">
+                  {{ excellenceMsg }}
+                </div> -->
+                <div *ngIf="useForm.get('excellence')?.value && excellenceMsg" class="text-success mt-1">
                   {{ excellenceMsg }}
                 </div>
+
               </div>
 
 

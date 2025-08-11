@@ -262,7 +262,7 @@
 }
 
 /* Show arrow when sidebar is CLOSED */
-.hamburger.arrow .line:nth-child(1) {
+/* .hamburger.arrow .line:nth-child(1) {
   transform: rotate(45deg) translate(8px, 8px);
 }
 
@@ -272,4 +272,4 @@
 
 .hamburger.arrow .line:nth-child(3) {
   transform: rotate(-45deg) translate(8px, -8px);
-}
+} */

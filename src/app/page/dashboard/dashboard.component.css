@@ -2298,7 +2298,7 @@ table td {
 
 .user-card {
   flex: 0 0 auto;          /* 🔑 Prevent shrinking or stretching */
-  width: 100px;            /* or whatever fixed width suits your design */
+  /* width: 100px;            or whatever fixed width suits your design */
   min-width: 100px;
   background: #fff;
   padding: 10px;
@@ -2688,4 +2688,19 @@ table td {
   opacity: 0.5 !important;
   cursor: not-allowed !important;
   background-color: #f8f9fa !important;
+}
+.custom-line {
+  position: relative;
+  border-right: none !important;
+}
+
+.custom-line::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -20px; /* Adjust this to move line up/down */
+  height: calc(100% + 30px);
+  width: 2px;
+  background-color: #007AFF;
+  z-index: 10;
 }

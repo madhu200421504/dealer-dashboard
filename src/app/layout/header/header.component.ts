@@ -64,10 +64,44 @@ export class HeaderComponent implements OnInit {
   //     .pipe(filter((event) => event instanceof NavigationEnd))
   //     .subscribe(() => this.updateTitle());
   // }
+  // ngOnInit() {
+  //   // ✅ Get initial state from service
+  //   this.isSidebarOpen = this.sidebarService.currentState;
+  //   console.log('Initial sidebar state:', this.isSidebarOpen);
+  //   this.context.onSideBarClick$.subscribe(({ pageTitle }) => {
+  //     console.log('Current Heading Updated:', pageTitle);
+  //     this.currentHeading = pageTitle;
+  //     this.cdr.markForCheck();
+  //   });
+
+  //   this.updateTitle();
+
+  //   this.router.events
+  //     .pipe(filter((event) => event instanceof NavigationEnd))
+  //     .subscribe(() => this.updateTitle());
+
+  //   // ✅ Fix: access 'dealer_name' from res.data
+  //   this.userService.getProfile().subscribe({
+  //     next: (res) => {
+  //       this.userName = res.data?.dealer_name || '';
+  //       console.log('Assigned userName:', this.userName);
+  //       this.cdr.detectChanges(); // ✅ This is crucial
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to fetch profile', err);
+  //       this.userName = '';
+  //       this.cdr.detectChanges();
+  //     },
+  //   });
+  // }
   ngOnInit() {
-    // ✅ Get initial state from service
-     this.isSidebarOpen = this.sidebarService.currentState;
-     console.log('Initial sidebar state:', this.isSidebarOpen);
+    // ✅ Subscribe to sidebar state so it updates automatically
+    this.sidebarService.isOpen$.subscribe((isOpen) => {
+      this.isSidebarOpen = isOpen;
+      console.log('Sidebar state changed:', isOpen);
+      this.cdr.markForCheck(); // ensures Angular updates the template
+    });
+
     this.context.onSideBarClick$.subscribe(({ pageTitle }) => {
       console.log('Current Heading Updated:', pageTitle);
       this.currentHeading = pageTitle;
@@ -80,12 +114,12 @@ export class HeaderComponent implements OnInit {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => this.updateTitle());
 
-    // ✅ Fix: access 'dealer_name' from res.data
+    // ✅ Fetch profile
     this.userService.getProfile().subscribe({
       next: (res) => {
         this.userName = res.data?.dealer_name || '';
         console.log('Assigned userName:', this.userName);
-        this.cdr.detectChanges(); // ✅ This is crucial
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Failed to fetch profile', err);
@@ -103,13 +137,37 @@ export class HeaderComponent implements OnInit {
   //   this.sidebarService.toggleSidebar();
   // }
 
+  // onToggleClick() {
+  //   console.log('Before toggle:', this.isSidebarOpen);
+  //   this.sidebarService.toggleSidebar();
+  //   // ✅ Get updated state from service
+  //   this.isSidebarOpen = this.sidebarService.currentState;
+  //   console.log('After toggle:', this.isSidebarOpen);
+  //   this.cdr.detectChanges();
+  // }
+  // onToggleClick() {
+  //   console.log('🔍 Before toggle:', this.isSidebarOpen);
+  //   console.log('🔍 Arrow class will be applied:', !this.isSidebarOpen);
+
+  //   this.sidebarService.toggleSidebar();
+  //   this.isSidebarOpen = this.sidebarService.currentState;
+
+  //   console.log('🔍 After toggle:', this.isSidebarOpen);
+  //   console.log('🔍 Arrow class is now applied:', !this.isSidebarOpen);
+
+  //   this.cdr.detectChanges();
+  // }
   onToggleClick() {
-    console.log('Before toggle:', this.isSidebarOpen);
+    console.log('🔍 Before toggle:', this.isSidebarOpen);
+    console.log('🔍 Arrow class will be applied:', !this.isSidebarOpen);
+
     this.sidebarService.toggleSidebar();
-    // ✅ Get updated state from service
-    this.isSidebarOpen = this.sidebarService.currentState;
-    console.log('After toggle:', this.isSidebarOpen);
-    this.cdr.detectChanges();
+  console.log(
+    '🔍 After toggle (will update via subscription):',
+    this.isSidebarOpen
+  );
+
+    // The subscription in ngOnInit() will update isSidebarOpen automatically
   }
 
   private updateTitle(): void {
