@@ -96078,11 +96078,11 @@ html[dir="rtl"]
   }
 
   .nav-header {
-    height: 8.5rem;
+    /* height: 8.5rem; */
   }
 
   [data-sidebar-position="fixed"][data-layout="vertical"] .nav-header {
-    padding-top: 1rem;
+    /* padding-top: 1rem; */
   }
 
   .nav-control[_ngcontent-ng-c1382468177] {
