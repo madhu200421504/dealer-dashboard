@@ -48,7 +48,7 @@ export class HeaderComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private sidebarService: SidebarService,
     private userService: UserService // ✅ Inject UserService
-  ) {}
+  ) { }
 
   // ngOnInit() {
   //   this.context.onSideBarClick$.subscribe(({ pageTitle }) => {
@@ -106,6 +106,7 @@ export class HeaderComponent implements OnInit {
       console.log('Current Heading Updated:', pageTitle);
       this.currentHeading = pageTitle;
       this.cdr.markForCheck();
+      
     });
 
     this.updateTitle();
@@ -131,11 +132,7 @@ export class HeaderComponent implements OnInit {
   selectSection(section: string): void {
     this.selectedSection = section;
   }
-  // onToggleClick() {
-  //   console.log('Hamburger clicked'); // 👈 test log
-  //   // this.sidebarToggle.emit();
-  //   this.sidebarService.toggleSidebar();
-  // }
+  
 
   // onToggleClick() {
   //   console.log('Before toggle:', this.isSidebarOpen);

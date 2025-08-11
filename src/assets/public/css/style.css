@@ -18654,7 +18654,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   > li
   > a {
   font-size: 14px;
-  padding: 24px 24px 24px 80px;
+  padding: 23px 20px 20px 80px;
   border-radius: 2rem;
   -webkit-transition: all 0.5s;
   -ms-transition: all 0.5s;
@@ -18914,7 +18914,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   .metismenu
   > li {
   transition: all 0.4s ease-in-out;
-  /* padding: 0 25px; */
+  padding: 0 25px;
 }
 
 [data-sidebar-style="full"][data-layout="vertical"]
@@ -31366,7 +31366,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 @media only screen and (max-width: 1600px) {
     [data-sidebar-style=full][data-layout=vertical] .deznav .metismenu > li > a {
         font-size: 14px;
-        padding: 14px 20px 14px 65px;
+        padding: 15px 20px 14px 65px;
     }
 }
 
