@@ -274,6 +274,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
       route: '/Admin/target',
       icon: 'fas fa-bullseye', // 🎯 Bullseye target
     },
+    {
+      key: 'support',
+      label: 'Customer Support',
+      route: '/Admin/support',
+      icon: 'fas fa-headset',
+    },
   ];
 
   constructor(
@@ -324,5 +330,4 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isActive(key: string): boolean {
     return this.activeMenu === key;
   }
-  
 }

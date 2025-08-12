@@ -420,21 +420,6 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-  //   this.route.queryParams.subscribe(params => {
-  //   if (params['user_id'] && params['from_user_list']) {
-  //     // Coming from user-all with user selection - keep the user data
-  //     // The service should already have the user data
-  //   } else {
-  //     // Direct navigation to dashboard - clear any user selection
-  //     this.userSelectionService.clearSelectedUser();
-  //   }
-  // });
-
-  // // Subscribe to selected user changes
-  // this.subscription = this.userSelectionService.selectedUser$.subscribe(user => {
-  //   this.selectedUser = user;
-  // });
-
     this.initializeFilteredUsers();
 
     this.filteredTableUsers = [...this.selectedUsersPerformance]; // Initialize with all users
@@ -1356,53 +1341,26 @@ export class DashboardComponent implements OnInit {
           );
 
           // 🔷 Enquiry Summary
-          // this.callSummaryOrderEnquiry = {
-          //   all: {
-          //     calls: enquirySummaryRaw['All Calls']?.calls || 0,
-          //     duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
-          //     clients: enquirySummaryRaw['All Calls']?.uniqueClients || 0,
-          //   },
-          //   connected: {
-          //     calls: enquirySummaryRaw['Connected']?.calls || 0,
-          //     duration: enquirySummaryRaw['Connected']?.duration || '0h 0m 0s',
-          //     clients: enquirySummaryRaw['Connected']?.uniqueClients || 0,
-          //   },
-          //   missed: {
-          //     calls: enquirySummaryRaw['Missed']?.calls || 0,
-          //     duration: enquirySummaryRaw['Missed']?.duration || '0h 0m 0s',
-          //     clients: enquirySummaryRaw['Missed']?.uniqueClients || 0,
-          //   },
-          //   rejected: {
-          //     calls: enquirySummaryRaw['Rejected']?.calls || 0,
-          //     duration: enquirySummaryRaw['Rejected']?.duration || '0h 0m 0s',
-          //     clients: enquirySummaryRaw['Rejected']?.uniqueClients || 0,
-          //   },
-          // };
           this.callSummaryOrderEnquiry = {
             all: {
-              calls: enquirySummaryRaw['All Calls']?.calls ?? 0,
-              duration: enquirySummaryRaw['All Calls']?.duration ?? '0h 0m 0s',
-              clients: enquirySummaryRaw['All Calls']?.uniqueClients ?? 0,
+              calls: enquirySummaryRaw['All Calls']?.calls || 0,
+              duration: enquirySummaryRaw['All Calls']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['All Calls']?.uniqueClients || 0,
             },
             connected: {
-              calls: enquirySummaryRaw['Connected']?.calls ?? 0,
-              duration: enquirySummaryRaw['Connected']?.duration ?? '0h 0m 0s',
-              clients: enquirySummaryRaw['Connected']?.uniqueClients ?? 0,
+              calls: enquirySummaryRaw['Connected']?.calls || 0,
+              duration: enquirySummaryRaw['Connected']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Connected']?.uniqueClients || 0,
             },
             missed: {
-              calls:
-                enquirySummaryRaw['Missed']?.calls ??
-                Object.values(hourlyAnalysisData).reduce(
-                  (sum: number, h: any) => sum + (h?.missedCalls || 0),
-                  0
-                ),
-              duration: enquirySummaryRaw['Missed']?.duration ?? '0h 0m 0s',
-              clients: enquirySummaryRaw['Missed']?.uniqueClients ?? 0,
+              calls: enquirySummaryRaw['Missed']?.calls || 0,
+              duration: enquirySummaryRaw['Missed']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Missed']?.uniqueClients || 0,
             },
             rejected: {
-              calls: enquirySummaryRaw['Rejected']?.calls ?? 0,
-              duration: enquirySummaryRaw['Rejected']?.duration ?? '0h 0m 0s',
-              clients: enquirySummaryRaw['Rejected']?.uniqueClients ?? 0,
+              calls: enquirySummaryRaw['Rejected']?.calls || 0,
+              duration: enquirySummaryRaw['Rejected']?.duration || '0h 0m 0s',
+              clients: enquirySummaryRaw['Rejected']?.uniqueClients || 0,
             },
           };
 
@@ -2874,132 +2832,6 @@ export class DashboardComponent implements OnInit {
   //   });
   // }
 
-  // fetchCallSummaryData(): void {
-  //   const userId = this.selectedUser?.ps_id;
-  //   const smId = this.selectedSmId;
-
-  //   if (!userId || !smId) {
-  //     console.warn('User ID or SM ID missing for call summary fetch', {
-  //       userId,
-  //       smId,
-  //     });
-  //     return;
-  //   }
-
-  //   const token = sessionStorage.getItem('token');
-  //   const filterType = this.selectedFilter || 'MTD';
-
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${token}`,
-  //   });
-
-  //   const apiUrl = `https://uat.smartassistapp.in/api/dealer/dealer/home-dashboard/new?user_id=${userId}&sm_id=${smId}&type=${filterType}`;
-
-  //   this.http.get<any>(apiUrl, { headers }).subscribe({
-  //     next: (res) => {
-  //       if (res.status === 200 && res.data) {
-  //         const userData = res.data;
-
-  //         const summaryEnquiry = userData.selectedUser?.summaryEnquiry || {};
-  //         const summaryColdCalls =
-  //           userData.selectedUser?.summaryColdCalls || {};
-  //         const isColdCall = this.activeActivity === 'ColdCalls';
-
-  //         const summaryRaw = isColdCall
-  //           ? summaryColdCalls.summary || {}
-  //           : summaryEnquiry.summary || {};
-  //         // const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
-  //         const hourlyAnalysisData = isColdCall
-  //           ? summaryColdCalls.hourlyAnalysis || {}
-  //           : summaryEnquiry.hourlyAnalysis || {};
-
-  //         // ✅ Only update call summary object
-  //         // this.callSummaryOrder = {
-  //         //   all: {
-  //         //     calls: summaryRaw['All Calls']?.calls || 0,
-  //         //     duration: summaryRaw['All Calls']?.duration || '0h 0m 0s',
-  //         //     clients: summaryRaw['All Calls']?.uniqueClients || 0,
-  //         //   },
-  //         //   connected: {
-  //         //     calls: summaryRaw['Connected']?.calls || 0,
-  //         //     duration: summaryRaw['Connected']?.duration || '0h 0m 0s',
-  //         //     clients: summaryRaw['Connected']?.uniqueClients || 0,
-  //         //   },
-  //         //   missed: {
-  //         //     calls: summaryRaw['Missed']?.calls || 0,
-  //         //     duration: summaryRaw['Missed']?.duration || '0h 0m 0s',
-  //         //     clients: summaryRaw['Missed']?.uniqueClients || 0,
-  //         //   },
-  //         //   rejected: {
-  //         //     calls: summaryRaw['Rejected']?.calls || 0,
-  //         //     duration: summaryRaw['Rejected']?.duration || '0h 0m 0s',
-  //         //     clients: summaryRaw['Rejected']?.uniqueClients || 0,
-  //         //   },
-  //         // };
-  //         const updatedCallSummary = {
-  //           all: {
-  //             calls: summaryRaw['All Calls']?.calls || 0,
-  //             duration: summaryRaw['All Calls']?.duration || '0h 0m 0s',
-  //             clients: summaryRaw['All Calls']?.uniqueClients || 0,
-  //           },
-  //           connected: {
-  //             calls: summaryRaw['Connected']?.calls || 0,
-  //             duration: summaryRaw['Connected']?.duration || '0h 0m 0s',
-  //             clients: summaryRaw['Connected']?.uniqueClients || 0,
-  //           },
-  //           missed: {
-  //             calls: summaryRaw['Missed']?.calls || 0,
-  //             duration: summaryRaw['Missed']?.duration || '0h 0m 0s',
-  //             clients: summaryRaw['Missed']?.uniqueClients || 0,
-  //           },
-  //           rejected: {
-  //             calls: summaryRaw['Rejected']?.calls || 0,
-  //             duration: summaryRaw['Rejected']?.duration || '0h 0m 0s',
-  //             clients: summaryRaw['Rejected']?.uniqueClients || 0,
-  //           },
-  //         };
-
-  //         // ✅ Force change detection by reassigning new object reference
-  //         this.callSummaryOrder = { ...updatedCallSummary };
-
-  //         // ✅ Merge updated summaries only — don't touch performance
-  //         this.selectedUser = {
-  //           ...this.selectedUser,
-  //           summaryEnquiry,
-  //           summaryColdCalls,
-  //         };
-
-  //         // Update hourly chart data
-  //         this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
-
-  //         this.hourlyAllCalls = this.hourlyChartLabels.map(
-  //           (key) => hourlyAnalysisData[key]?.AllCalls?.calls || 0
-  //         );
-
-  //         this.hourlyConnectedCalls = this.hourlyChartLabels.map(
-  //           (key) => hourlyAnalysisData[key]?.Connected?.calls || 0
-  //         );
-
-  //         // this.hourlyMissedCalls = this.hourlyChartLabels.map(
-  //         //   (key) => hourlyAnalysisData[key]?.missedCalls || 0
-  //         // );
-  //         this.hourlyMissedCalls = this.hourlyChartLabels.map(
-  //           (key) => hourlyAnalysisData[key]?.Missed?.calls || 0
-  //         );
-
-  //         this.cdr.detectChanges();
-  //         this.renderHourlyChart();
-
-  //         console.log('✅ Call Summary Updated:', this.callSummaryOrder);
-  //       } else {
-  //         console.warn('⚠️ Incomplete call summary response:', res);
-  //       }
-  //     },
-  //     error: (err) => {
-  //       console.error('❌ Error fetching call summary data:', err);
-  //     },
-  //   });
-  // }
   fetchCallSummaryData(): void {
     const userId = this.selectedUser?.ps_id;
     const smId = this.selectedSmId;
@@ -3034,12 +2866,34 @@ export class DashboardComponent implements OnInit {
           const summaryRaw = isColdCall
             ? summaryColdCalls.summary || {}
             : summaryEnquiry.summary || {};
-
+          // const hourlyAnalysisData = summaryEnquiry.hourlyAnalysis || {};
           const hourlyAnalysisData = isColdCall
             ? summaryColdCalls.hourlyAnalysis || {}
             : summaryEnquiry.hourlyAnalysis || {};
 
-          // ✅ Call summary object
+          // ✅ Only update call summary object
+          // this.callSummaryOrder = {
+          //   all: {
+          //     calls: summaryRaw['All Calls']?.calls || 0,
+          //     duration: summaryRaw['All Calls']?.duration || '0h 0m 0s',
+          //     clients: summaryRaw['All Calls']?.uniqueClients || 0,
+          //   },
+          //   connected: {
+          //     calls: summaryRaw['Connected']?.calls || 0,
+          //     duration: summaryRaw['Connected']?.duration || '0h 0m 0s',
+          //     clients: summaryRaw['Connected']?.uniqueClients || 0,
+          //   },
+          //   missed: {
+          //     calls: summaryRaw['Missed']?.calls || 0,
+          //     duration: summaryRaw['Missed']?.duration || '0h 0m 0s',
+          //     clients: summaryRaw['Missed']?.uniqueClients || 0,
+          //   },
+          //   rejected: {
+          //     calls: summaryRaw['Rejected']?.calls || 0,
+          //     duration: summaryRaw['Rejected']?.duration || '0h 0m 0s',
+          //     clients: summaryRaw['Rejected']?.uniqueClients || 0,
+          //   },
+          // };
           const updatedCallSummary = {
             all: {
               calls: summaryRaw['All Calls']?.calls || 0,
@@ -3063,17 +2917,17 @@ export class DashboardComponent implements OnInit {
             },
           };
 
-          // ✅ Force change detection
+          // ✅ Force change detection by reassigning new object reference
           this.callSummaryOrder = { ...updatedCallSummary };
 
-          // ✅ Merge updated summaries only
+          // ✅ Merge updated summaries only — don't touch performance
           this.selectedUser = {
             ...this.selectedUser,
             summaryEnquiry,
             summaryColdCalls,
           };
 
-          // ✅ Update hourly chart data
+          // Update hourly chart data
           this.hourlyChartLabels = Object.keys(hourlyAnalysisData);
 
           this.hourlyAllCalls = this.hourlyChartLabels.map(
@@ -3084,12 +2938,12 @@ export class DashboardComponent implements OnInit {
             (key) => hourlyAnalysisData[key]?.Connected?.calls || 0
           );
 
-          // ✅ FIX: handle both `missedCalls` number and `Missed.calls` object
-          this.hourlyMissedCalls = this.hourlyChartLabels.map((key) => {
-            const missedObj = hourlyAnalysisData[key]?.Missed?.calls;
-            const missedNum = hourlyAnalysisData[key]?.missedCalls;
-            return missedObj ?? missedNum ?? 0; // nullish coalescing so 0 is preserved
-          });
+          // this.hourlyMissedCalls = this.hourlyChartLabels.map(
+          //   (key) => hourlyAnalysisData[key]?.missedCalls || 0
+          // );
+          this.hourlyMissedCalls = this.hourlyChartLabels.map(
+            (key) => hourlyAnalysisData[key]?.Missed?.calls || 0
+          );
 
           this.cdr.detectChanges();
           this.renderHourlyChart();
@@ -5058,7 +4912,7 @@ export class DashboardComponent implements OnInit {
 
   // Clean up timeout on component destroy
   // ngOnDestroy(): void {
-  //   if (this.scrollTimeout) 
+  //   if (this.scrollTimeout) {
   //     clearTimeout(this.scrollTimeout);
   //   }
   // }

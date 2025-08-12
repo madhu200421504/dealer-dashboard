@@ -26,6 +26,7 @@ import { DatatableComponent } from './page/datatable/datatable.component';
 import { TeamComponent } from './page/team/team/team.component';
 import { TargetComponent } from './page/target/target.component';
 import { VerifyEmailComponent } from './page/verify-email/verify-email.component';
+import { SupportComponent } from './support/support.component';
 
 // export const routes: Routes = [
 //   { path: '', component: Login1Component, pathMatch: 'full' },
@@ -176,6 +177,12 @@ export const routes: Routes = [
         path: 'target',
         component: TargetComponent,
         data: { title: 'target' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'support',
+        component: SupportComponent,
+        data: { title: 'support' },
         canActivate: [AuthGuard],
       },
 
