@@ -66,6 +66,7 @@ export class UsersComponent implements OnInit {
   totalDealer = signal<number>(0);
   // teamData: Team[] = [];
   isModalOpen = false;
+  private subscription: any;
 
   teamList = signal<Teams[]>([]);
   totalteam = signal<number>(0);
@@ -109,15 +110,18 @@ export class UsersComponent implements OnInit {
     private aleartsrv: AleartSrvService,
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
-    private router: Router //  private userSelectionService: UserSelectionService,
+    private router: Router, //  private userSelectionService: UserSelectionService,
+    private userSelectionService: UserSelectionService
   ) {
     this.initializeForm();
   }
 
   ngOnInit() {
-    // this.subscription = this.userSelectionService.selectedUser$.subscribe(user => {
-    //   this.selectedUser = user;
-    // });
+    // this.subscription = this.userSelectionService.selectedUser$.subscribe(
+    //   (user) => {
+    //     this.selectedUser = user;
+    //   }
+    // );
     this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
     this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
     this.updateVisiblePages();
@@ -1229,7 +1233,7 @@ export class UsersComponent implements OnInit {
     }, 100);
   }
 
-  // users.component.ts
+  // // users.component.ts
   // goToUserDashboard(user: any) {
   //   const userId = user.ps_id || user.user_id;
   //   const sm_id = user.sm_id || 'default_sm_id';
@@ -1243,7 +1247,7 @@ export class UsersComponent implements OnInit {
   //     ...user,
   //     user_id: userId,
   //     sm_id: sm_id,
-  //     type: 'MTD'
+  //     type: 'MTD',
   //   });
 
   //   this.router.navigate(['/Admin/dashboard'], {
@@ -1251,8 +1255,8 @@ export class UsersComponent implements OnInit {
   //       user_id: userId,
   //       sm_id,
   //       type: 'MTD',
-  //       from_user_list: 'true'
-  //     }
+  //       from_user_list: 'true',
+  //     },
   //   });
   // }
 

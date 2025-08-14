@@ -2690,3 +2690,27 @@ table td {
   background-color: #007aff;
   z-index: 10;
 }
+
+/* Wrapper styles */
+.show-more-wrapper {
+  text-align: center;
+  margin-top: 16px;
+  position: relative;  /* for z-index to work */
+  z-index: 1000;       /* bring above dropdown/backdrop */
+}
+
+/* Button styles */
+.show-more-btn {
+  pointer-events: auto;  /* ensures button is clickable */
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #222fb9;
+  color: #fff;
+  cursor: pointer;
+}
+
+.show-more-btn:hover {
+  background-color: #222fb9;
+}

@@ -10,7 +10,8 @@ container remove padding; -->
                     <a href="javascript:void(0)" style="cursor: auto;color:#222fb9">Utils</a>
                 </li>
                 <li class="breadcrumb-item active">
-                    <a href="javascript:void(0)" style="cursor: auto; font-weight: 400 !important; color: #6e7d8b;font-size:1rem;font-family: 'poppins', sans-serif;">
+                    <a href="javascript:void(0)"
+                        style="cursor: auto; font-weight: 400 !important; color: #6e7d8b;font-size:1rem;font-family: 'poppins', sans-serif;">
                         Target</a>
                 </li>
             </ol>
@@ -102,7 +103,7 @@ container remove padding; -->
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Enquiries</th>
-                                    <th>Test Drives</th>
+                                    <th>Unique Test Drives</th>
                                     <th>Orders</th>
                                     <!-- <th>Action</th> -->
 
@@ -110,24 +111,26 @@ container remove padding; -->
 
                             </thead>
                             <tbody>
-                               
+
                                 <tr *ngIf="paginatedTarget().length === 0">
                                     <td colspan="7" class="text-center">No target Found</td>
                                 </tr>
 
                                 <tr *ngFor="let target of paginatedTarget(); let i = index">
                                     <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
-                                  
+
                                     <td>{{ target.user.name || (target.user.fname + ' ' + target.user.lname) }}</td>
                                     <td>{{ target.user.email }}</td>
 
 
                                     <td>
 
-                                       
 
-                                        <input type="number" class="form-control form-control-sm" [(ngModel)]="target.target.enquiries" [max]="999999" [min]="0"
-                                            (input)="limitDigits($event)" style="border-radius:12px;font-size:14px;height:40px" />
+
+                                        <input type="number" class="form-control form-control-sm"
+                                            [(ngModel)]="target.target.enquiries" [max]="999999" [min]="0"
+                                            (input)="limitDigits($event)"
+                                            style="border-radius:12px;font-size:14px;height:40px" />
 
 
                                     </td>
@@ -191,11 +194,11 @@ container remove padding; -->
                                 </ng-template>
                             </div>
 
-                           
+
                         </div>
 
 
-                        
+
 
                         <div class="col-md-6">
                             <div class="dataTables_paginate paging_simple_numbers float-right">

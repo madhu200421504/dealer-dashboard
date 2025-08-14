@@ -511,17 +511,7 @@
             <div
               style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
 
-              <!-- Search input for filtering TABLE (on left of dropdown) -->
-              <!-- <div style="display: flex; justify-content: flex; ">
-                <input type="text" [(ngModel)]="tableSearchTerm" (input)="filterTableUsers()"
-                  placeholder="Search in table..."
-                  style="padding: 8px 12px; border-radius: 20px; border: 1px solid #ccc; width: 200px;" />
-              </div> -->
-              <!-- <div style="display: flex; justify-content: flex;">
-                <input type="text" [(ngModel)]="tableSearchTerm" (input)="filterDropdownUsers()"
-                  placeholder="Search users in dropdown..."
-                  style="padding: 8px 12px; border-radius: 20px; border: 1px solid #ccc; width: 200px;" />
-              </div> -->
+
 
 
               <div style="position: relative; display: block;" #dropdown>
@@ -546,9 +536,31 @@
                       style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; outline: none; font-size: 14px; box-sizing: border-box;"
                       (click)="$event.stopPropagation()">
                   </div>
+                  <!-- ✅ Select All Option -->
+                  <!-- <div (click)="selectAllUsers()"
+                    style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #eee; margin: 0 8px; font-weight: bold;"
+                    onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='transparent'">
+                    <span style="font-size: 14px;">✅ Select All</span>
+                  </div> -->
+                  <!-- Select All checkbox -->
+                  <div
+                    style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; cursor: pointer;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <input type="checkbox"
+                        [checked]="selectedUserIds.length === filteredUsers.length && filteredUsers.length > 0"
+                        (change)="selectAllUsers($event)" />
+                      <strong>Select All</strong>
+                    </div>
+                    <span style="color: #666; font-size: 13px;">
+                      {{ filteredUsers.length }} users
+                    </span>
+                  </div>
+
+
+
 
                   <!-- Users List with Scroll -->
-                  <div style="max-height: 200px; overflow-y: auto;">
+                  <div style="max-height: 200px; overflow-y: auto;overflow-x: scroll;width:100%">
                     <div *ngFor="let user of filteredUsers" (click)="selectUser(user.user_id)"
                       style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #eee; margin: 0 8px; transition: background-color 0.2s;"
                       onmouseover="this.style.backgroundColor='#f8f9fa'"
@@ -632,19 +644,11 @@
             </thead>
 
             <tbody>
-              <!-- <tr *ngIf="paginatedUsersPerformance.length === 0 && isUserSelected">
-              <td colspan="7" style="text-align: center; padding: 20px; font-style: italic; color: #888;">
-                No users found matching your search.
-              </td>
-            </tr> -->
-              <!-- <tr *ngIf="!usersSelected">
-                <td colspan="7" style="text-align: center; padding: 20px; font-style: italic; color: #888;">
-                   Select users to compare.
-                </td>
-              </tr> -->
 
               <!-- <tr *ngFor="let user of comparePaginatedUsers" style="background-color: #F8F8FA !important;"> -->
-              <tr *ngFor="let user of paginatedUsersPerformance" style="background-color: #F8F8FA !important;">
+              <!-- <tr *ngFor="let user of selectedUsersPerformance" style="background-color: #F8F8FA !important;"> -->
+              <!-- <tr *ngFor="let user of selectedUsersPerformance | slice:0:itemsToShow" style="background-color: #F8F8FA !important;"> -->
+              <tr *ngFor="let user of selectedUsersPerformance | slice:0:itemsToShow">
 
                 <td style="text-align: left;">
                   <div style="display: flex; align-items: center;">
@@ -681,8 +685,14 @@
             </tbody>
           </table>
 
+<div class="show-more-wrapper">
+  <button class="show-more-btn" *ngIf="itemsToShow < selectedUsersPerformance.length" (click)="showMoreItems()">
+    Show More
+  </button>
+</div>
+
           <!-- ✅ Pagination Buttons -->
-          <div class="pagination-container" style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
+          <!-- <div class="pagination-container" style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
             <button (click)="changeComparePage(currentPageforCompare - 1)" [disabled]="currentPageforCompare === 1">
               Previous
             </button>
@@ -697,7 +707,7 @@
               [disabled]="currentPageforCompare === totalPagesForCompare">
               Next
             </button>
-          </div>
+          </div> -->
 
 
 
