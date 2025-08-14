@@ -521,6 +521,8 @@
                   <span style="margin-left: 8px;">
                     {{ dropdownOpen ? '\u25B2' : '\u25BC' }}
                   </span>
+
+                  
                 </div>
 
                 <div [class.open]="dropdownOpen" (click)="$event.stopPropagation()"
@@ -546,10 +548,30 @@
                   <div
                     style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; cursor: pointer;">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                      <input type="checkbox"
+                      <!-- <input type="checkbox"
                         [checked]="selectedUserIds.length === filteredUsers.length && filteredUsers.length > 0"
                         (change)="selectAllUsers($event)" />
                       <strong>Select All</strong>
+                            <span style="font-size: 12px; margin-left: 4px; cursor: pointer;" (click)="toggleSortDropdown($event)">
+                              {{ sortOrder === 'asc' ? '⬆' : '⬇' }}
+                            </span> -->
+                              <input type="checkbox" [checked]="selectedUserIds.length === filteredUsers.length && filteredUsers.length > 0"
+                                (click)="selectAllUsers($event)" />
+                              <strong>Select All</strong>
+                              
+                              <!-- Arrow for sorting -->
+                          <!-- Bigger arrow -->
+                          <span style="font-size: 18px; /* bigger font size */
+                                   margin-left: 6px; 
+                                   cursor: pointer; 
+                                   display: flex; 
+                                   align-items: center; 
+                                   justify-content: center;
+                                   width: 24px; /* width for better click area */
+                                   height: 24px;"  (click)="toggleSortOrder($event)">
+                            {{ sortOrder === 'asc' ? '⬆' : '⬇' }}
+                          </span>
+
                     </div>
                     <span style="color: #666; font-size: 13px;">
                       {{ filteredUsers.length }} users

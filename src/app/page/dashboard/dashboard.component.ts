@@ -349,6 +349,7 @@ export class DashboardComponent implements OnInit {
   allUsers: any[] = [];
   activeCategory: string = 'enquiries';
   activePeriod: string = 'MTD';
+  sortOrder: 'asc' | 'desc' = 'asc'; // default ascending
 
   displayedUsers: any[] = [];
   initialsList: string[] = [];
@@ -1590,7 +1591,22 @@ export class DashboardComponent implements OnInit {
   //     }
   //   }
   // }
-  // THIS CODE IS WITH ASCENDING DESCING ORDER
+  // THIS CODE IS WITH ASCENDING  ORDER
+  // toggleDropdown() {
+  //   if (this.users.length === 0) {
+  //     this.isLoadingUsers = true;
+  //     this.fetchAllUsers();
+  //   } else {
+  //     this.dropdownOpen = !this.dropdownOpen;
+  //     if (this.dropdownOpen) {
+  //       this.searchTerm = '';
+  //       // Always sort when resetting the list
+  //       this.filteredUsers = [...this.users].sort((a, b) =>
+  //         a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+  //       );
+  //     }
+  //   }
+  // }
   toggleDropdown() {
     if (this.users.length === 0) {
       this.isLoadingUsers = true;
@@ -1599,12 +1615,23 @@ export class DashboardComponent implements OnInit {
       this.dropdownOpen = !this.dropdownOpen;
       if (this.dropdownOpen) {
         this.searchTerm = '';
-        // Always sort when resetting the list
-        this.filteredUsers = [...this.users].sort((a, b) =>
-          a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
-        );
+        this.sortUsers();
       }
     }
+  }
+
+  sortUsers() {
+    this.filteredUsers = [...this.users].sort((a, b) => {
+      return this.sortOrder === 'asc'
+        ? a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+        : b.name.localeCompare(a.name, undefined, { sensitivity: 'base' });
+    });
+  }
+
+  toggleSortOrder(event: Event) {
+    event.stopPropagation(); // prevent dropdown from closing
+    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    this.sortUsers();
   }
 
   getColor(index: number): { background: string; text: string } {
