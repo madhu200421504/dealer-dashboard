@@ -91,6 +91,7 @@ interface PsUser {
   net_orders: number;
   retail: number;
 }
+type SortableFields = Exclude<keyof UserPerformance, 'name' | 'userId'>;
 
 @Component({
   selector: 'app-dashboard',
@@ -130,6 +131,7 @@ export class DashboardComponent implements OnInit {
     netOrders: number;
     retail: number;
   } | null = null;
+
   errorMessage = '';
   currentSlide = 0;
   filteredActivities: any[] = []; // ✅ Initialize as empty array
@@ -359,6 +361,9 @@ export class DashboardComponent implements OnInit {
   defaultLimit = 10;
   showingLimit = this.defaultLimit;
   filteredTableUsers: UserPerformance[] = [];
+  originalUsersPerformance: UserPerformance[] = [];
+  // sortField: SortableFields | null = null;
+  sortOrdercompare: 'desc' | 'normal' = 'normal';
 
   // currentPage = 1;
   // itemsPerPage = 10; // or whatever you use
@@ -369,6 +374,7 @@ export class DashboardComponent implements OnInit {
 
   // selectedUser: any = null;
   // displayedUsers: any[] = [];
+
   data: any; // <-- Add this line
   // selectedFilter: string = 'MTD'; // 👈 Default selected
   activeActivity: string = 'Enquiry'; // for Enquiry/Cold Calls
@@ -398,6 +404,7 @@ export class DashboardComponent implements OnInit {
   lastSelectedUserId: string | null = null;
   lastSelectedSmId: string | null = null;
   allActivities: any[] = []; // Holds all test drive activities (Upcoming, Completed, Overdue)
+sortField: string | null = null;
 
   // activeActivity: string = 'Upcoming'; // default
   @ViewChild('dropdown', { static: false }) dropdownRef!: ElementRef;
@@ -642,6 +649,41 @@ export class DashboardComponent implements OnInit {
 
   //   this.updateCallSummaryOrder();
   // }
+  // toggleSort(field: string): void {
+  //   if (this.sortField === field && this.sortOrdercompare === 'desc') {
+  //     // second click → reset to original order
+  //     this.selectedUsersPerformance = [...this.originalUsersPerformance];
+  //     this.sortField = null;
+  //     this.sortOrdercompare = 'normal';
+  //   } else {
+  //     // first click → sort descending (highest on top)
+  //     this.selectedUsersPerformance = [...this.selectedUsersPerformance].sort(
+  //       (a, b) => b[field] - a[field]
+  //     );
+  //     this.sortField = field;
+  //     this.sortOrdercompare = 'desc';
+  //   }
+  // }
+  toggleSort(field: keyof UserPerformance): void {
+  if (this.sortField === field && this.sortOrdercompare === 'desc') {
+    // Second click → restore original order
+    this.selectedUsersPerformance = [...this.originalUsersPerformance];
+    this.sortField = null;
+    this.sortOrdercompare = 'normal';
+  } else {
+    // First click → sort descending
+    // Save original order first (only if not already saved)
+    if (!this.sortField) {
+      this.originalUsersPerformance = this.selectedUsersPerformance.map(u => ({ ...u }));
+    }
+
+    this.selectedUsersPerformance = [...this.selectedUsersPerformance].sort(
+      (a, b) => (b[field] as number) - (a[field] as number)
+    );
+    this.sortField = field;
+    this.sortOrdercompare = 'desc';
+  }
+}
   onActivityClick(activity: string): void {
     this.activeActivity = activity;
 
@@ -2424,6 +2466,7 @@ export class DashboardComponent implements OnInit {
   //       });
   //   }
   // }
+  // OLD CODE PROPER WORKING 
   selectUser(userId: string): void {
     const index = this.selectedUserIds.indexOf(userId);
 
@@ -4132,6 +4175,7 @@ export class DashboardComponent implements OnInit {
 
   //   console.log('🟡 Filter changed to:', filterType);
   // }
+  // OLD CODE WORKIMG PROEPRLY
   onFilterChange(filterType: string): void {
     this.selectedFilter = filterType;
 
