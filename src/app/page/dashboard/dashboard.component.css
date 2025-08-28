@@ -2099,7 +2099,7 @@ tr td:last-child {
   font-family: "Poppins", sans-serif;
 }
 table th {
-  font-weight: 600;
+  font-weight: 500;
   color: #1f2937;
 }
 
@@ -2713,4 +2713,9 @@ table td {
 
 .show-more-btn:hover {
   background-color: #222fb9;
+}
+.active-sm {
+  /* background-color: #e6f0ff !important; light blue */
+  color: #007bff !important;            /* blue text */
+  font-weight: 600;
 }

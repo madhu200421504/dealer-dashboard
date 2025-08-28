@@ -128,6 +128,8 @@
             <col style="width: 14.28%;"> <!-- Date -->
             <col style="width: 14.28%;"> <!-- Start time -->
             <col style="width: 14.32%;"> <!-- End time (slightly larger to total 100%) -->
+                        <col style="width: 14.32%;"> <!-- End time (slightly larger to total 100%) -->
+
           </colgroup>
           <thead>
             <tr style="background-color: transparent !important;">
@@ -159,11 +161,15 @@
                 style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
                 End time
               </th>
+              <th
+                style="font-weight: 500; color:#0F3153; font-family: 'Poppins', sans-serif; font-size:16px; background-color: transparent; text-align: left; padding: 8px 6px; white-space: nowrap;font-size:18px">
+                Location
+              </th>
             </tr>
           </thead>
           <tbody style="background-color: transparent;">
             <tr *ngIf="getPaginatedTableData().length === 0" style="background-color: transparent !important;">
-              <td colspan="7" style="text-align: center; background-color: transparent !important; padding: 8px 6px;">No
+              <td colspan="8" style="text-align: center; background-color: transparent !important; padding: 8px 6px;">No
                 data
                 found</td>
             </tr>
@@ -196,6 +202,10 @@
               <td class="table-cell-styled"
                 style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                 {{ testDrive.end_time }}
+              </td>
+              <td class="table-cell-styled"
+                style="text-align: left; padding: 8px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ testDrive.location }}
               </td>
             </tr>
           </tbody>
@@ -272,9 +282,8 @@
 
       </div>
 
-      <div class="main-content" style="margin-top:20px;">
+      <!-- <div class="main-content" style="margin-top:20px;">
         <ng-container *ngIf="!selectedUser">
-          <!-- <div *ngFor="let team of smData" class="team-wrapper" style="margin-bottom: 20px;"> -->
           <div *ngFor="let team of paginatedSmData" class="team-wrapper" style="margin-bottom: 20px;">
 
 
@@ -285,8 +294,7 @@
               </div>
 
 
-              <!-- Metrics - This remains unchanged -->
-              <!-- <pre>{{ team.ps_list | json }}</pre> -->
+              
 
               <div class="metrics-wrapper" style="font-family: 'Poppins', sans-serif;">
                 <div class="metric-card" style="background-color:#C9E4DE;color:#126893;">
@@ -337,7 +345,6 @@
 
             </div>
 
-            <!-- Users List (below team box) - Updated with scroll functionality -->
             <div *ngIf="selectedTeamId === team.team_id" class="user-row" style="margin-top: 10px;">
               <div class="user-cards-wrapper">
 
@@ -360,9 +367,76 @@
 
           </div>
         </ng-container>
-      </div>
+      </div> -->
 
 
+
+<div class="main-content" style="margin-top:20px; background:#fff; padding:15px; border-radius:8px;">
+  <ng-container *ngIf="!selectedUser">
+
+    <table class="data-table" style="width:100%; border-spacing:0px 10px">
+      <thead>
+        <tr style="background:#f9f9f9; text-align:left;">
+          <th style="padding:10px;text-align: left;">SM  Name</th>
+          <th style="padding:10px;">Enquiries</th>
+          <th style="padding:10px;">Test Drive</th>
+          <th style="padding:10px;">Orders</th>
+          <th style="padding:10px;">Cancellations</th>
+          <th style="padding:10px;">Net Orders</th>
+          <th style="padding:10px;">Retail</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let team of paginatedSmData; let i = index">
+          <!-- Main SM row -->
+          <!-- <tr (click)="showUsers(team.team_id, team.sm_id)" style="cursor:pointer; ">
+            <td style="padding:10px; font-weight:400; display:flex; align-items:center; gap:6px;background-color:white !important">
+              <span>{{ selectedTeamId === team.team_id ? 'v' : '>' }}</span>
+              <span>{{ team.team_name }} </span>
+            </td> -->
+            <tr (click)="showUsers(team.team_id, team.sm_id)" style="cursor:pointer;">
+              <td [ngClass]="{ 'active-sm': selectedTeamId === team.team_id }"
+                style="padding:10px; display:flex; align-items:center; gap:6px; background:white;">
+                <span>{{ selectedTeamId === team.team_id ? 'v' : '>' }}</span>
+                <span>{{ team.team_name }}</span>
+              </td>
+            
+
+            <td style="padding:10px;">{{ getSmDataByTeamId(team.team_id)?.enquiries || 0 }}</td>
+            <td style="padding:10px;">{{ getSmDataByTeamId(team.team_id)?.testDrives || 0 }}</td>
+            <td style="padding:10px;">{{ getSmDataByTeamId(team.team_id)?.orders || 0 }}</td>
+            <td style="padding:10px;">{{ getSmDataByTeamId(team.team_id)?.cancellations || 0 }}</td>
+            <td style="padding:10px;">{{ getSmDataByTeamId(team.team_id)?.net_orders || 0 }}</td>
+            <td style="padding:10px;">{{ getSmDataByTeamId(team.team_id)?.retail || 0 }}</td>
+          </tr>
+
+          <!-- Sub-row: Users under this SM -->
+          <ng-container *ngIf="selectedTeamId === team.team_id">
+            <tr *ngFor="let user of team.ps_list; let j = index"
+              (click)="selectCompareUser(user.ps_id, team.sm_id); $event.stopPropagation()"
+              style="background:#fafafa;cursor:pointer;">
+
+           
+<td style="padding:10px; display:flex; align-items:center; gap:8px;background-color: white  !important;">
+  <div class="user-name">{{ user.ps_fname }} {{ user.ps_lname }}</div>
+</td>
+
+              <!-- User metrics -->
+              <td style="padding:10px;background-color: white  !important;">{{ user.enquiries || 0 }}</td>
+              <td style="padding:10px;background-color: white  !important;">{{ user.testDrives || 0 }}</td>
+              <td style="padding:10px;background-color: white  !important;">{{ user.orders || 0 }}</td>
+              <td style="padding:10px;background-color: white  !important;">{{ user.cancellations || 0 }}</td>
+              <td style="padding:10px;background-color: white  !important;">{{ user.net_orders || 0 }}</td>
+              <td style="padding:10px;background-color: white  !important;">{{ user.retail || 0 }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+
+  </ng-container>
+</div>
 
 
       <!-- Footer with summary and pagination -->
